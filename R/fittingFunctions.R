@@ -346,7 +346,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     out <- x[drop=TRUE]
     dim(out) <- dim(x)[1:2]
     dimnames(out) <- dimnames(x)[1:2]
-    if (nrow(out) == 1 && dimnames(out)[[1]] == "all") dimnames(out)[[1]] <- NA_character_  # -1 denotes a biomass survey
+    if (nrow(out) == 1 && dimnames(out)[[1]] == "all") dimnames(out)[[1]] <- NA_character_  # "all" denotes a biomass survey
     out 
   }
 
@@ -360,6 +360,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
                      
   # calculate appropriate centering for observations on log scale
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
+  center.log[] <- 0
 
   # convert to dataframe
   list2df <- function(fleet)
@@ -448,6 +449,8 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # it would actually be easiest to present all auxilliary data and covariates as a data.frame and the observations as a matrix...
   temp.full.df <- expand.grid(lapply(full.df[3:1],function(x) sort(unique(x))),  KEEP.OUT.ATTRS = FALSE)[3:1]
   for (i in seq_along(indices)) {
+    # if biomass survey skip this step
+    if (is.na(range(indices[[i]])["min"])) next
     .ages <- temp.full.df $ age [temp.full.df $ fleet == levels(full.df $ fleet)[i+1]]
     .range <- range(subset(full.df, fleet == levels(full.df $ fleet)[i+1]) $ age)
     .ages[.ages < .range[1]] <- .range[1]
@@ -519,26 +522,30 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # builder functions - could be more hadley...
   bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
     if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
-    list(srr = "bevholt", amodel = a, b = b, srrCV = CV, ID = 1)
+    list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
+  }
+  bevholtSV <- function(h = ~ 1, v = ~ 1, SPR0 = 1, CV = 0.5) {
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
+    list(srr = "bevholtSV", a = h, b = v, SPR0 = SPR0, srrCV = CV, ID = 5)
   }
   ricker <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
     if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
-    list(srr = "ricker", a = a, b = b, srrCV = CV, ID = 2)
+    list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
   }
   hockey <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
     if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
-    list(srr = "hockey", a = a, b = b, srrCV = CV, ID = 3)
+    list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
   }
   geomean <- function(a = ~ 1, CV = 0.5) {
     if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
-    list(srr = "geomean", a = a, b = ~ 1, srrCV = CV, ID = 4)
+    list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
   }
   none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, srrCV = -1, ID = 4)
 
   # now separate model elements, find SR models, stop if more than one specified
   facs <- strsplit(as.character(srmodel)[length(srmodel)], "[+]")[[1]]
   facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
-  a4as <- grepl(paste("(^",c("bevholt", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
+  a4as <- grepl(paste("(^",c("bevholt", "bevholtSV", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
   if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
   srrmod <- if (sum(a4as) == 0) "none()" else facs[a4as]
   if (sum(a4as) == 0 && max(full.df $ year) > max(df.data $ year)) stop("you need to specify a stock recruitment relationship to forecast with out survey information.")
@@ -691,6 +698,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# R model config for the a4a model",
     "\n# SR model ID:",srr $ srr,"\n", srr $ ID,
     "\n# SR CV:\n", srr $ srrCV,
+    "\n# SPR0 :\n", srr $ SPR0,
     "\n# a model params\n", ncol(Xsra), 
     "\n# a model number of rows\n", nrow(Xsra),
     "\n# a model design matrix\n", file = filename); write.t(Xsra)
@@ -732,7 +740,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   #
   # ------------------------------------------------------------------------
 
-  # run a4a plit
+  # run a4a split
   my.time.used[2] <- Sys.time() 
  
   # arguments
@@ -761,6 +769,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   }
   # hold off on the error for now - we can still get the hessian and perhaps do somehting with it...
   #if (echoc != 0) stop("Bad return from a4a executable: probably solution is not unique, try reducing parameters.\n")
+
 
 
   # ------------------------------------------------------------------------

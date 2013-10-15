@@ -201,8 +201,11 @@ DATA_SECTION
   !! if(srCV>0){SRaphase = 2;}else{SRaphase = -1;}
   //!! TRACE(SRaphase)
   int SRbphase // swith of b if using geomean model
-  !! if(srCV<0 | Rmodel > 3){SRbphase = -1;}else{SRbphase = 2;}
+  !! if(srCV < 0 | Rmodel == 3){SRbphase = -1;}else{SRbphase = 2;}
+  !! if(srCV < 0 | Rmodel == 4){SRbphase = -1;}else{SRbphase = 2;}
   //!! TRACE(SRbphase)
+  init_number spr0 // only used with SV models
+  //!! TRACE(spr0)
   // First the fixed effects for the a param (the level) 
   init_int noRapar
   //!! TRACE(noRapar)
@@ -423,7 +426,6 @@ PROCEDURE_SECTION
   double locObs;
   dvariable locZ;
   dvariable locVar;
-  dvariable locBiomass;
   for (int i=1; i<=noobs; ++i) {
     obsVec   = obs(i);
     locFleet = obsVec(1);
@@ -446,13 +448,12 @@ PROCEDURE_SECTION
       
     } else { // an observation of biomass
     
-      locBiomass = 0;
+      pred(i) = 0; // not sure i need to but best to be safe
       for(int a=minAge; a<=maxAge; ++a) {
         locZ     = exp(f(locYear,a)) + exp(m(locYear,a));
-        locBiomass += stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
+        pred(i) += exp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
-      pred(i) = q(locFleet-1,locYear,minAge) + log(locBiomass); // note q and variance are stored in the minimum age column
-      locVar = exp(2.0 * v(locFleet, locYear, minAge));
+      locVar = exp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
           
     }
@@ -481,6 +482,9 @@ PROCEDURE_SECTION
     //
     dvariable predLogR; 
     dvariable varLogR;
+    dvariable h;
+    dvariable v;
+
     if (Rmodel == 1) { // beverton holt
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
@@ -505,6 +509,15 @@ PROCEDURE_SECTION
     if (Rmodel == 4) { // geomean
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y);
+        varLogR = srCV;
+        nll += nldnorm(r(y), predLogR, varLogR);    
+      }
+    }
+    if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
+      for(int y=minYear+1; y<=maxYear; ++y){
+        h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
+        v = exp(rb(y));
+        predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
         varLogR = srCV;
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
