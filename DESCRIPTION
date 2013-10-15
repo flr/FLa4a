@@ -19,7 +19,9 @@ Depends:
     latticeExtra,
     splines,
     np,
-    Matrix
+    Matrix,
+    RColorBrewer,
+    methods
 LazyLoad: yes
 LazyData: yes
 Collate:
