@@ -296,7 +296,8 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
                 n1model = ~ factor(age), 
                 vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
                 stock, indices, covar = NULL, 
-                wkdir = NULL, verbose = FALSE, fit = "assessment", niters = 1000)
+                wkdir = NULL, verbose = FALSE, fit = "assessment", 
+                niters = 1000, center = TRUE)
 {
 
 
@@ -360,7 +361,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
                      
   # calculate appropriate centering for observations on log scale
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
-  center.log[] <- 0
+  if (!center) center.log[] <- 0
 
   # convert to dataframe
   list2df <- function(fleet)
