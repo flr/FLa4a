@@ -54,7 +54,7 @@ data(ple4.indices)
 fmodel <- ~ s(age, k=4) + factor(year)
 # three surveys - try 'length(ple4.indices)' - so three formulas
 qmodel <- list(~ s(age, k=4), ~ s(age, k=4), ~ age)
-fit <- a4a(fmodel = fmodel, qmodel = qmodel, stock = ple4, indices = ple4.indices)
+fit <- a4a(fmodel = fmodel, qmodel = qmodel, stock = ple4, indices = ple4.indices, fit = "assessment")
 
 # add the fit to the stock, but with fitting error
 fitstk <- propagate(ple4, 1000) + fit
