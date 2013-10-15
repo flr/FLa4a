@@ -1,0 +1,5 @@
+Change the LD parameter in the make file to where your R packages are installed to.
+
+Then copy the make file to the packages folder and you are away!
+
+Remember not to add the makefile to the git repository other wise it will mess up the LD path in other peoples makefile

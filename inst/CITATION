@@ -1,0 +1,32 @@
+citHeader("To cite package 'a4a' in publications use:")
+
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+
+citEntry(entry = "Manual",
+         title = "a4a: A flexible and robust stock assessment framework",
+         author = personList(as.person("Colin Millar"),
+                             as.person("Ernesto Jardim")),
+         year = year,
+         note = vers,
+
+         textVersion =
+         paste0("Colin Millar and Ernesto Jardim (",
+                year,
+                "). a4a: A flexible and robust stock assessment framework. ",
+                vers, "."))
+
+citEntry(entry   = "Article",
+         title   = "a4a: A flexible and robust stock assessment framework",
+         journal = "Subbmitted to PLOSone",
+         volume  = "xx",
+         number  = "x",
+         pages   = "xx-xx",
+         year    = "201x",
+         author  = personList(as.person("Colin P. Millar"),
+                             as.person("Ernesto Jardim"),
+                             as.person("G. Chato Osio"),
+                             as.person("Iago Mosqueira")),
+
+         textVersion="Millar, C.P., Jardim, E., Osio G.C., Mosqueira, I. 201x. a4a: A flexible and robust stock assessment framework. Submitted to PLOSone." )
+
