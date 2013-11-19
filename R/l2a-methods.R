@@ -185,8 +185,10 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 	lst$desc <- object@desc
 	stk <- do.call("FLStock", lst)
 	# set the plus group on the first non continuous age
-	setPlusGroup(stk, plusgroup, na.rm=T)
-})
+	stk <- setPlusGroup(stk, plusgroup, na.rm=T)
+	# set harvest units
+	units(harvest(stk)) <- units(object@harvest)
+	})
 
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	warning("Catch in numbers will be summed accross lenghths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
