@@ -181,9 +181,12 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       out @ stock.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- stock.n(istock)
       out @ catch.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- catch.n(istock)
       # add indices
+      for (j in 1:length(iindices)) {
+        out @ index[[j]][,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- index(outi)[[j]]
+      }
 
     }
-    
+
     if (fit %in% c("assessment", "Ext")) {
 
       # store everything in a a4aFit SA object
@@ -191,6 +194,9 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       out @ stock.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- stock.n(outi)
       out @ catch.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- catch.n(outi)
       # add indices
+      for (j in 1:length(iindices)) {
+        out @ index[[j]][,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- index(outi)[[j]]
+      }
 
       # fill up models
       if (i == 1) {
