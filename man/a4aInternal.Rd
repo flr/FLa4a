@@ -7,7 +7,8 @@
     srmodel = ~factor(year), n1model = ~factor(age),
     vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
     stock, indices, covar = NULL, wkdir = NULL,
-    verbose = FALSE, fit = "assessment", niters = 1000)
+    verbose = FALSE, fit = "assessment", niters = 1000,
+    center = TRUE)
 }
 \arguments{
   \item{fmodel}{a formula object depicting the model for
