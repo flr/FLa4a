@@ -20,6 +20,10 @@
 \note{
   \code{.onAttach} is intended to be used internally
 }
+\examples{
+# set up grapical options
+ lattice.options(default.theme = geta4aLatticeOptions())
+}
 \author{
   Colin Millar \email{colin.millar@jrc.ec.europa.eu}
 }

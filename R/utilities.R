@@ -10,6 +10,9 @@
 #' @note \code{.onAttach} is intended to be used internally
 #' @author Colin Millar \email{colin.millar@@jrc.ec.europa.eu}
 #' @export
+#' @examples
+#' # set up grapical options
+#'  lattice.options(default.theme = geta4aLatticeOptions())
 geta4aLatticeOptions <- function(...) 
 {
   opts <- standard.theme(color = FALSE)
@@ -124,10 +127,6 @@ getADMBHessian <- function(wkdir) {
   sep <- if (os.type("linux")) ":" else if (os.type("windows")) ";" else ","
   path <- paste0(a4a.dir(), sep, Sys.getenv("PATH"))
   Sys.setenv(PATH=path)
-  
-  ## set up grapical options
-  ## TODO consider removing this
-  lattice.options(default.theme = geta4aLatticeOptions())
 
   ## message with version number
   tbl <- library(help = FLa4a)$info[[1]]
