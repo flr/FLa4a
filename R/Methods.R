@@ -503,7 +503,19 @@ setGeneric("coef", function(object, ...) standardGeneric("coef"))
 #' @aliases coef,FLa4aFit-method
 setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
-	object @ coefficients[1:object@fit.sum["nopar"]]
+	  coef(object @ pars)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "SCAPars"),
+  function(object) {
+    list(
+      stkmodel = object @ stkmodel @ params,
+      qmodel   = lapply(object @ qmodel, function(x) x @ params),
+      vmodel   = lapply(object @ vmodel, function(x) x @ params)
+    )
   })
 
 
