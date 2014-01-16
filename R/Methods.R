@@ -501,7 +501,7 @@ setGeneric("coef", function(object, ...) standardGeneric("coef"))
 
 #' @rdname coef-methods
 #' @aliases coef,FLa4aFit-method
-setMethod("coef", signature(object = "a4aFit"),
+setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
 	object @ coefficients[1:object@fit.sum["nopar"]]
   })
