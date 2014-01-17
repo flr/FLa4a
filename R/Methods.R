@@ -551,13 +551,27 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 #' @rdname coef-methods
 #' @aliases coef,FLa4aFit-method
 setMethod("simulate", signature(object = "SCAPars"),
-  function(object, nsim = 1, seed = NULL, iter = 1) {
+  function(object, nsim = 1, seed = NULL, iter = NULL) {
 
     # sanity checks
-    iter <- as.integer(iter)
-    if (iter > dim(object @ stkmodel @ params)[2] | iter < 0) {
-      message("supplied value of iter is not sensible... simulating from iter = 1")
-      iter <- 1
+    if (is.null(iter)) {
+      if (nsim == 1) iter <- seq_along(dim(object @ stkmodel @ params)[2])
+      if (nsim > 1) iter <- 1
+    } else
+    {
+      if (nsim == 1) {
+        if (any(iter > dim(object @ stkmodel @ params)[2]) | any(iter < 0)) {
+          message("supplied values of iter are not sensible... simulating from all iters")
+          iter <- seq_along(dim(object @ stkmodel @ params)[2])
+        }
+    } else
+      {
+        if (length(iter) > 1) stop("if nsim > 1 iter must be of length 1")
+        if (iter > dim(object @ stkmodel @ params)[2] | iter < 0) {
+          message("supplied values of iter are not sensible... simulating from iter = 1")
+          iter <- 1
+        }
+      }
     }
 
     if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
@@ -582,11 +596,10 @@ setMethod("simulate", signature(object = "SCAPars"),
     vvars   <- lapply(object @ vmodel, function(x) x @ vcov)
 
     # simulate some new params from the first iteration only!
-    if (dim(stkpars)[2] > 1) message("Note: only one iteration is being used for simulations.\n\tIf you want to change this change the iter argument")
-    stkparsim <- t(mvrnorm(nsim, c(stkpars[,iter]), stkvars[,,iter]))
-    qparsim <- lapply(seq_along(qpars), function(i) t(mvrnorm(nsim, c(qpars[[i]][,iter]), qvars[[i]][,,iter])))
-    vparsim <- lapply(seq_along(vpars), function(i) t(mvrnorm(nsim, c(vpars[[i]][,iter]), vvars[[i]][,,iter])))
-
+    if(iter > dim(object @ stkmodel @ vcov)[2]) itervar <- 1
+    stkparsim <- t(mvrnorm(nsim, c(stkpars[,iter]), stkvars[,,itervar]))
+    qparsim <- lapply(seq_along(qpars), function(i) t(mvrnorm(nsim, c(qpars[[i]][,iter]), qvars[[i]][,,itervar])))
+    vparsim <- lapply(seq_along(vpars), function(i) t(mvrnorm(nsim, c(vpars[[i]][,iter]), vvars[[i]][,,itervar])))
     # load simpars into a SCAPars object and return
     out <- object
     
@@ -629,11 +642,53 @@ setMethod("simulate", signature(object = "SCAPars"),
 #' genFLQuant(harvest(ple4), method = "ac")
 setGeneric("vcov", function(object, ...) standardGeneric("vcov"))
 
-#' @rdname vcov-methods
-#' @aliases vcov,FLa4aFit-method
-setMethod("vcov", signature(object = "a4aFit"),
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov", signature(object = "a4aFitSA"),
   function(object) {
-	  object @ covariance[1:object@fit.sum["nopar"], 1:object@fit.sum["nopar"]]
+    vcov(object @ pars)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov", signature(object = "SCAPars"),
+  function(object) {
+    list(
+      stkmodel = object @ stkmodel @ vcov,
+      qmodel   = lapply(object @ qmodel, function(x) x @ vcov),
+      vmodel   = lapply(object @ vmodel, function(x) x @ vcov)
+    )
+  })
+
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov<-", signature(object = "a4aFitSA"),
+  function(object, value) {
+    vcov(object @ pars) <- value
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov<-", signature(object = "SCAPars"),
+  function(object, value) {
+    v <- vcov(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    object @ stkmodel @ vcov[] <- new[grep("stkmodel", names(old))]
+    for (i in seq_along(object @ qmodel)) {
+      object @ qmodel[[i]] @ vcov[] <- new[grep(paste0("qmodel.", object @ qmodel[[i]] @ name), names(old))]  
+    }
+    for (i in seq_along(object @ vmodel)) {
+      object @ vmodel[[i]] @ vcov[] <- new[grep(paste0("vmodel.", object @ vmodel[[i]] @ name), names(old))]  
+    }
+    object
   })
 
 
