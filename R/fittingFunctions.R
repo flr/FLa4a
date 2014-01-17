@@ -844,7 +844,8 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       # resulting in non-poitive definate vcov mats for subsets of parameters.
       hess <- getADMBHessian(wkdir) $ hes
       out $ cov <- solve(hess)
-      out $ prec <- hess 
+      out $ prec <- hess
+      out $ nopar <- ncol(hess)
     }
 
     # read residuals
