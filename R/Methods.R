@@ -519,6 +519,96 @@ setMethod("coef", signature(object = "SCAPars"),
   })
 
 
+
+#' Calculate the median accross iterations
+#'
+#' @param object an FLQuant with iters
+#'
+#' @param ... Additional argument list that might not ever
+#'  be used.
+#'
+#' @return an FLQuant
+#' 
+#' @seealso \code{\link{print}} and \code{\link{cat}}
+#' 
+#' @export
+#' @docType methods
+#' @rdname coef-methods
+#'
+#' @examples
+#' data(ple4)
+#' genFLQuant(harvest(ple4), method = "ac")
+setGeneric("simulate", useAsDefault = stats::simulate)
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("simulate", signature(object = "a4aFitSA"),
+  function(object, nsim = 1, seed = NULL) {
+    simulate(object @ pars)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("simulate", signature(object = "SCAPars"),
+  function(object, nsim = 1, seed = NULL, iter = 1) {
+
+    # sanity checks
+    iter <- as.integer(iter)
+    if (iter > dim(object @ stkmodel @ params)[2] | iter < 0) {
+      message("supplied value of iter is not sensible... simulating from iter = 1")
+      iter <- 1
+    }
+
+    if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
+        runif(1)
+    if (is.null(seed)) 
+        RNGstate <- get(".Random.seed", envir = .GlobalEnv)
+    else {
+        R.seed <- get(".Random.seed", envir = .GlobalEnv)
+        set.seed(seed)
+        RNGstate <- structure(seed, kind = as.list(RNGkind()))
+        on.exit(assign(".Random.seed", R.seed, envir = .GlobalEnv))
+    }
+    
+    # get parameter estimates
+    stkpars <- object @ stkmodel @ params
+    qpars   <- lapply(object @ qmodel, function(x) x @ params)
+    vpars   <- lapply(object @ vmodel, function(x) x @ params)
+    
+    # get parameter variance matrices
+    stkvars <- object @ stkmodel @ vcov
+    qvars   <- lapply(object @ qmodel, function(x) x @ vcov)
+    vvars   <- lapply(object @ vmodel, function(x) x @ vcov)
+
+    # simulate some new params from the first iteration only!
+    if (dim(stkpars)[2] > 1) message("Note: only one iteration is being used for simulations.\n\tIf you want to change this change the iter argument")
+    stkparsim <- t(mvrnorm(nsim, c(stkpars[,iter]), stkvars[,,iter]))
+    qparsim <- lapply(seq_along(qpars), function(i) t(mvrnorm(nsim, c(qpars[[i]][,iter]), qvars[[i]][,,iter])))
+    vparsim <- lapply(seq_along(vpars), function(i) t(mvrnorm(nsim, c(vpars[[i]][,iter]), vvars[[i]][,,iter])))
+
+    # load simpars into a SCAPars object and return
+    out <- object
+    
+    out @ stkmodel @ params <- propagate(object @ stkmodel @ params[,1], nsim)
+    out @ stkmodel @ params[] <- c(stkparsim)
+
+    for (i in seq_along(out @ qmodel)) {
+      out @ qmodel[[i]] @ params <- propagate(object @ qmodel[[i]] @ params[,1], nsim)
+      out @ qmodel[[i]] @ params[] <- c(qparsim[[i]])
+    }
+
+    for (i in seq_along(out @ vmodel)) {
+      out @ vmodel[[i]] @ params <- propagate(object @ vmodel[[i]] @ params[,1], nsim)
+      out @ vmodel[[i]] @ params[] <- c(vparsim[[i]])
+    }
+
+    return(out)
+  })
+
+
+
+
 #' Calculate the median accross iterations
 #'
 #' @param object an FLQuant with iters
