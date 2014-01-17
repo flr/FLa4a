@@ -565,7 +565,7 @@ RUNTIME_SECTION
 //
 // *********************************
 
-//convergence_criteria 0.05,1E-10
+convergence_criteria 1E-2,1E-6
 //maximum_function_evaluations 10,20,1000
 
 // *********************************
