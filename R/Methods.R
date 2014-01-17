@@ -33,29 +33,18 @@ setMethod("logLik", signature(object = "a4aFit"),
 #' @rdname show-methods
 #' @aliases show,FLa4aFit-method
 setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
-  function (x, y, ratio = 1.5, file = "", onefile = TRUE, what = c("N","F","Q","Res"), Ftext = FALSE, ...) 
+  function (x, y, ratio = 1.5, file = "", onefile = TRUE, 
+            #what = c("N","F","Q","Res"),
+            what = c("N", "F", "Res"), 
+            Ftext = TRUE, ask = TRUE, ...) 
   {
 
-  # some checks
-  
- 
-  # add fit to stock in case it hasnt been done
-  y <- merge(y, x)
+  op <- par(ask = ask, no.readonly = TRUE)
 
+  ages  <- as.numeric(dimnames(stock.n(x)) $ age)
+  years <- as.numeric(dimnames(stock.n(x)) $ year)
 
-    if (file == "") {
-      sub.dev.new <- function() dev.new(width = 7 * ratio, height = 7)
-    }
-    else { # will need different dev.new if file == pdf
-      sub.dev.new <- function() NULL
-      file <- if (onefile) paste0(file, ".pdf") else paste0(file, "%03d.pdf")
-      pdf(onefile = onefile, file = file, width = 6 * ratio, height = 6)
-    }
-
-    ages  <- as.numeric(dimnames(stock.n(x)) $ age)
-    years <- as.numeric(dimnames(stock.n(x)) $ year)
-
-    cols <- 
+  cols <- 
      c(rgb(215, 48, 39, max = 255), 
        rgb(252, 141, 89, max = 255),
        rgb(254, 224, 144, max = 255),
@@ -63,15 +52,13 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
        rgb(145, 191, 219, max = 255),
        rgb(69, 117, 180, max = 255))
 
-    # N plot
-    zeros <- function(n) paste(rev(rep(c("0", "0", " 0"), length = n)), collapse = "")
-    age.col <- colorRampPalette(cols[c(1, 6)])(length(ages))
+  zeros <- function(n) paste(rev(rep(c("0", "0", " 0"), length = n)), collapse = "")
+  age.col <- colorRampPalette(cols[c(1, 6)])(length(ages))
       
   if ("N" %in% what) {  
-    
+    # N plot
     scale <- ceiling(max(log(stock.n(x)[drop=TRUE], 10))) - 2
     
-    sub.dev.new()
     matplot(years, t(stock.n(x)[drop=TRUE]) * 10^{-scale},  
             ylab =paste0("N at age ('",zeros(scale),"s)"), xlab = "Year", 
             col = age.col,
@@ -86,7 +73,6 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
 
     fest <- harvest(x)[drop=TRUE]
 
-    sub.dev.new()
     # F plot
     matplot(years, t(fest),  
             ylab = "F at age", xlab = "Year", 
@@ -97,12 +83,10 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
     legend(lx, ly, legend = paste("age", ages), col = age.col, lty = 1, lwd = 2, xjust = 1, yjust = 1)
 
 
-    sub.dev.new()
     # another F plot
     p <- matrix.plot(fest, cols = cols, xlab = "Year", ylab = "Age", main = "F-at-age", ymin = min(ages), xmin = min(years), text = Ftext)
     print(p)
 
-    sub.dev.new()
     # Yet another F plot
     p <- wireframe(fest, drape = TRUE, colorkey = FALSE,
              screen = list(z = 240, x = -60), 
@@ -133,7 +117,6 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
       qages  <- as.numeric(dimnames(qest) $ age)
       qyears <- as.numeric(dimnames(qest) $ year)
 
-      sub.dev.new()
       matplot(qages, qest[drop=TRUE],  
               ylab="log catchability", xlab="Age", main = names(x @ logq)[i],
               col = colorRampPalette(cols[c(1, 6)])(length(qyears)),
@@ -146,12 +129,10 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
              panel.aspect = 1/ratio, ylab = "Year", xlab = "Age", 
              zlab = "log catchability", main = paste("log catchability-at-age of", names(x @ logq)[i]),
              par.box = c(col = "transparent"))
-      sub.dev.new()
       print(p) 
     }
 
     # q plots
-    sub.dev.new()
     rec.age <- range(y)["min"]
     ssb.x <- ssb(y)[,seq(rec.age) - length(ssb(y)) - 1][drop=TRUE]
     rec.y <- rec(y)[,-seq(rec.age)][drop=TRUE]
@@ -161,19 +142,17 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
   }
 
   if ("Res" %in% what) {  
-
-    sub.dev.new()
     
     par(oma = c(4,0,0,0))
     
     # Residual plot 
     div <- list(c(1,1), c(2,1), c(3,1), c(2,2), c(3,2), c(3,2), c(3,3), c(3,3), c(3,3), c(4,3), c(4,3), c(4,3))
-    nind <- length(x @ logq)
-    op <- par(mfrow = div[[nind + 1]], mar = c(4,4,1,2), mgp = c(2,1,0))
+    nind <- length(x @ index)
+    op2 <- par(mfrow = div[[nind + 1]], mar = c(4,4,1,2), mgp = c(2,1,0), no.readonly = TRUE)
     ylim <- range(as.numeric(dimnames(stock.n(x)) $ age)) + c(-.5, .5)
     xlim <- range(as.numeric(dimnames(stock.n(x)) $ year)) + c(-.5, .5)
 
-    res <- catch.lres(x)
+    res <- log(catch.n(y) / catch.n(x))
     ages  <- as.numeric(dimnames(res) $ age)
     years <- as.numeric(dimnames(res) $ year)
 
@@ -185,26 +164,26 @@ setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
 
     
 
-    for(i in 1:nind) {
-      res <- index.lres(x)[[i]]
-      ages  <- as.numeric(dimnames(res) $ age)
-      years <- as.numeric(dimnames(res) $ year)
+#    for(i in 1:nind) {
+#      res <- index.lres(x)[[i]]
+#      ages  <- as.numeric(dimnames(res) $ age)
+#      years <- as.numeric(dimnames(res) $ year)
 
-      bp(rep(years, each = length(ages)), rep(ages, length(years)), 
-         c(res[drop=TRUE]), 
-         ylim = ylim, xlim = xlim, 
-         xlab = 'year', ylab = 'Age', main = names(x @ logq)[i], 
-         scale = 3, las = 1)
-    }
+#      bp(rep(years, each = length(ages)), rep(ages, length(years)), 
+#         c(res[drop=TRUE]), 
+#         ylim = ylim, xlim = xlim, 
+#         xlab = 'year', ylab = 'Age', main = names(x @ logq)[i], 
+#         scale = 3, las = 1)
+#    }
 
     mtext("Standardised residuals: Positive (red) and negative (blue).  \n50% of dots should be light coloured, 95% should be light and medium, \n5% of dots should be dark.", 
           side = 1, line = 6, adj = 0)
-
+    par(op2)
   }
-
-    if (file != "") dev.off()
-  }
-)
+  
+  par(op)
+ 
+})
 
 
 #' Calculate the median accross iterations
