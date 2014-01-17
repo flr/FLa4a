@@ -816,9 +816,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       # check .cor file exisits
       if (!file.exists(paste0(wkdir, '/a4a.cor'))) stop("Hessian was not positive definate.")
       
-      #hess <- getADMBHessian(wkdir) $ hes
-      #Cov <- solve(hess)
-      
       # read .cor file
       lin <- readLines(paste0(wkdir, '/a4a.cor'))
       npar <- length(lin) - 2
@@ -831,14 +828,23 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       out $ par.std <- lapply(names(out $ par.est), function(x) par.std[which(par.names==x)])
       names(out $ par.std) <- names(out $ par.est)
       
-      out $ cor <- matrix(NA, npar, npar, dimnames = list(par.names, par.names))
-      corvec <- unlist(sapply(1:length(sublin), function(i) sublin[[i]][5:(4+i)]))
-      out $ cor[upper.tri(out $ cor, diag = TRUE)] <- as.numeric(corvec)
-      out $ cor[lower.tri(out $ cor)] <- t(out $ cor)[lower.tri(out $ cor)]
-      out $ cov <- out $ cor * (par.std %o% par.std)
+      #out $ cor <- matrix(NA, npar, npar, dimnames = list(par.names, par.names))
+      #corvec <- unlist(sapply(1:length(sublin), function(i) sublin[[i]][5:(4+i)]))
+      #out $ cor[upper.tri(out $ cor, diag = TRUE)] <- as.numeric(corvec)
+      #out $ cor[lower.tri(out $ cor)] <- t(out $ cor)[lower.tri(out $ cor)]
+      #out $ cov <- out $ cor * (par.std %o% par.std)
 
-      # remove ssb and fbar final year from vcov
-      out $ cov <- out $ cov[1:(npar-2), 1:(npar-2)]
+      # remove ssb and fbar final year from vcov and correlation matrices
+      #out $ cov <- out $ cov[1:(npar-2), 1:(npar-2)]
+      #out $ cor <- out $ cor[1:(npar-2), 1:(npar-2)]
+
+      # use this as it seems to be more robust.. strangely...
+      # I think it is because the solve method that ADMB uses is not
+      # as good as the R one.... small numerical errors are
+      # resulting in non-poitive definate vcov mats for subsets of parameters.
+      hess <- getADMBHessian(wkdir) $ hes
+      out $ cov <- solve(hess)
+      out $ prec <- hess 
     }
 
     # read residuals
@@ -913,9 +919,9 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
 
     a4aout @ index <- FLQuants(index)
 
-   tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data)))
+    tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data)))
                              #logDetHess = logDetHess,           
-   a4aout @ fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
+    a4aout @ fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
                               
     
     if (fit %in% c("assessment", "debug", "Ext")) {
@@ -945,14 +951,19 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
                                         
       active <- sapply(out $ par.std, length) > 0
 
-      dimnames(out $ cov) <- list(unlist(pnames), unlist(pnames))
+      dimnames(out $ cov) <- dimnames(out $ prec) <- list(unlist(pnames), unlist(pnames))
       stkactive <- active
       stkactive[2:3] <- FALSE
       a4aout @ pars @ stkmodel @ params <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
       units(a4aout @ pars @ stkmodel @ params) <- "NA"
 
       a4aout @ pars @ stkmodel @ distr <- "norm"
-      whichcol <-  grep(paste("(^",c("f","n1","r","sra","srb"),"Mod:)",collapse="|",sep=""), colnames(out $ cov))
+      whichcol <-  grep(paste("(^",c("f","n1","r","sra","srb"),"Mod:)",collapse="|",sep=""), unlist(pnames))
+      # we can use the inverse of a subset of the precision matrix
+      # if we want the vcov matrix conditional on the
+      # other (qmodel etc.) parameter estimates.
+      ##a4aout @ pars @ stkmodel @ vcov <- solve(out $ prec[whichcol, whichcol])
+      # or just the full vcov matrix, unconditional on the other things...
       a4aout @ pars @ stkmodel @ vcov <- out $ cov[whichcol, whichcol]
 
       #
@@ -1004,6 +1015,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
         a4aout <- a4aFitExt(a4aout)
         a4aout @ Sigma <- out $ cov
         a4aout @ L <- chol(out $ cov)
+        # consider adding L to submodels in a4aFitSA class...
         pars <- unlist(out $ par.est)
         names(pars) <- unlist(pnames)
         which <- names(pars) %in% colnames(out $ cov)
