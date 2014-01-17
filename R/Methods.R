@@ -13,9 +13,16 @@
 setMethod("logLik", signature(object = "a4aFit"),
   function(object, ...) 
   {  
-    val <- -1 * unname(object @ fitSumm["nlogl",])
-    attr(val, "nobs") <- unname(object @ fitSumm["nobs",])
-    attr(val, "df") <- unname(object@fitSumm["nopar",])
+    dim2 <- length(dim(object @ fitSumm))
+    if (dim2 == 1) {
+      val <- -1 * unname(object @ fitSumm["nlogl"])
+      attr(val, "nobs") <- unname(object @ fitSumm["nobs"])
+      attr(val, "df") <- unname(object@fitSumm["nopar"])
+    } else if (dim2 == 2) {
+      val <- -1 * unname(object @ fitSumm["nlogl",])
+      attr(val, "nobs") <- unname(object @ fitSumm["nobs",])
+      attr(val, "df") <- unname(object@fitSumm["nopar",])
+    }
     class(val) <- "logLik"
     val
  })
