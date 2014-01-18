@@ -541,7 +541,7 @@ setMethod("simulate", signature(object = "SCAPars"),
 
     # sanity checks
     if (is.null(iter)) {
-      if (nsim == 1) iter <- seq_along(dim(object @ stkmodel @ params)[2])
+      if (nsim == 1) iter <- seq(dim(object @ stkmodel @ params)[2])
       if (nsim > 1) iter <- 1
     } else
     {
@@ -560,11 +560,10 @@ setMethod("simulate", signature(object = "SCAPars"),
       }
     }
 
-    if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
-        runif(1)
-    if (is.null(seed)) 
+    if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) runif(1)
+    if (is.null(seed)) {
         RNGstate <- get(".Random.seed", envir = .GlobalEnv)
-    else {
+    } else {
         R.seed <- get(".Random.seed", envir = .GlobalEnv)
         set.seed(seed)
         RNGstate <- structure(seed, kind = as.list(RNGkind()))
@@ -582,25 +581,63 @@ setMethod("simulate", signature(object = "SCAPars"),
     vvars   <- lapply(object @ vmodel, function(x) x @ vcov)
 
     # simulate some new params from the first iteration only!
-    if(iter > dim(object @ stkmodel @ vcov)[2]) itervar <- 1
-    stkparsim <- t(mvrnorm(nsim, c(stkpars[,iter]), stkvars[,,itervar]))
-    qparsim <- lapply(seq_along(qpars), function(i) t(mvrnorm(nsim, c(qpars[[i]][,iter]), qvars[[i]][,,itervar])))
-    vparsim <- lapply(seq_along(vpars), function(i) t(mvrnorm(nsim, c(vpars[[i]][,iter]), vvars[[i]][,,itervar])))
+    if (dim(object @ stkmodel @ vcov)[3] == 1) {
+      itervar <- rep(1, length(iter))
+    } else {
+      itervar = iter
+    }
+    stkparsim <-
+      sapply(seq_along(iter),
+        function(i) 
+          t(mvrnorm(nsim, c(stkpars[,iter[i]]), stkvars[,,itervar[i]])))
+
+    qparsim <- 
+      lapply(seq_along(qpars), 
+        function(j) 
+          sapply(seq_along(iter), 
+            function(i) 
+              t(mvrnorm(nsim, c(qpars[[j]][,iter[i]]), qvars[[j]][,,itervar[i]]))))
+
+    vparsim <- 
+      lapply(seq_along(vpars), 
+        function(j) 
+          sapply(seq_along(iter), 
+            function(i) 
+              t(mvrnorm(nsim, c(vpars[[j]][,iter[i]]), vvars[[j]][,,itervar[i]]))))
+    
     # load simpars into a SCAPars object and return
     out <- object
     
-    out @ stkmodel @ params <- propagate(object @ stkmodel @ params[,1], nsim)
+    if (nsim == 1) { 
+      out @ stkmodel @ params <- object @ stkmodel @ params
+    } else {
+      out @ stkmodel @ params <- propagate(object @ stkmodel @ params[,iter], nsim)
+    }
     out @ stkmodel @ params[] <- c(stkparsim)
 
     for (i in seq_along(out @ qmodel)) {
-      out @ qmodel[[i]] @ params <- propagate(object @ qmodel[[i]] @ params[,1], nsim)
+      if (nsim == 1) { 
+        out @ qmodel[[i]] @ params <- object @ qmodel[[i]] @ params
+      } else {
+        out @ qmodel[[i]] @ params <- propagate(object @ qmodel[[i]] @ params[,1], nsim)
+      }
       out @ qmodel[[i]] @ params[] <- c(qparsim[[i]])
     }
 
     for (i in seq_along(out @ vmodel)) {
-      out @ vmodel[[i]] @ params <- propagate(object @ vmodel[[i]] @ params[,1], nsim)
+      if (nsim == 1) { 
+        out @ vmodel[[i]] @ params <- object @ vmodel[[i]] @ params
+      } else {
+        out @ vmodel[[i]] @ params <- propagate(object @ vmodel[[i]] @ params[,1], nsim)
+      }
       out @ vmodel[[i]] @ params[] <- c(vparsim[[i]])
     }
+
+    ####
+    # note we set the variance matrices to zero
+    # since having a variance no longer makes sense...
+    ####
+    vcov(out) <- 0
 
     return(out)
   })
@@ -719,6 +756,18 @@ setMethod("+", c("FLStock", "SCAPars"), function(e1, e2)
 {
 
   niters <- dims(e1) $ iter
+  niters2 <- dim(e2 @ stkmodel @ params)[2]
+  if (niters > 1 & niters2 == 1) {
+    nsim = niters
+  } else {
+    nsim = 1
+    if (niters > niters2) stop("oh oh")
+    if (niters == 1 & niters2 > 0) {
+      niters <- niters2
+      e1 <- propagate(e1, niters)
+    }
+  }
+
 
   years <- range(e1)[c("minyear","maxyear")]
   ages <- range(e1)[c("min","max")]
@@ -769,7 +818,7 @@ setMethod("+", c("FLStock", "SCAPars"), function(e1, e2)
   options(opts)
 
   # always simulate from b distribution for SA class.  If you want fitted values do FLStock + a4aFit(a4aFitSA)
-  b.sim <- Matrix(simulate(e2, nsim = niters) @ stkmodel @ params @ .Data)
+  b.sim <- Matrix(simulate(e2, nsim = nsim) @ stkmodel @ params @ .Data)
 
   # matrix of predictions
   Xbeta <- bdiag(Xf, Xny1, Xr) %*% b.sim
