@@ -198,7 +198,7 @@ DATA_SECTION
   init_number srCV
   //!!TRACE(srCV) 
   int SRaphase
-  !! if(srCV>0){SRaphase = 2;}else{SRaphase = -1;}
+  !! if(srCV>0){SRaphase = 3;}else{SRaphase = -1;}
   //!! TRACE(SRaphase)
   int SRbphase // swith of b if using geomean model
   !! if(srCV < 0 | Rmodel == 3){SRbphase = -1;}else{SRbphase = 2;}
@@ -565,7 +565,7 @@ RUNTIME_SECTION
 //
 // *********************************
 
-convergence_criteria 1E-2,1E-6
+convergence_criteria 1E-1,1E-2,1E-4
 //maximum_function_evaluations 10,20,1000
 
 // *********************************
