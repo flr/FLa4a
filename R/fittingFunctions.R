@@ -208,6 +208,8 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
         out @ pars @ stkmodel @ params    <- propagate(outi @ pars @ stkmodel @ params, niters)
         tmpvcov <- outi @ pars @ stkmodel @ vcov
         out @ pars @ stkmodel @ vcov      <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
+        out @ pars @ stkmodel @ m         <- propagate(outi @ pars @ stkmodel @ m, niters)
+        out @ pars @ stkmodel @ units     <- units(catch.n(stock))
         # qmodel
         out @ pars @ qmodel               <- outi @ pars @ qmodel
         for (j in seq(length(indices))) {
@@ -229,6 +231,7 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       out @ pars @ stkmodel @ centering[i] <- outi @ pars @ stkmodel @ centering     
       out @ pars @ stkmodel @ params[,i]   <- outi @ pars @ stkmodel @ params
       out @ pars @ stkmodel @ vcov[,,i]    <- outi @ pars @ stkmodel @ vcov
+      out @ pars @ stkmodel @ m[,,,,,i]    <- outi @ pars @ stkmodel @ m
       # qmodel
       for (j in seq(length(indices))) {
         out @ pars @ qmodel[[j]] @ params[,i] <- outi @ pars @ qmodel[[j]] @ params
@@ -947,6 +950,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       a4aout @ pars @ stkmodel @  fMod     <- fmodel
       a4aout @ pars @ stkmodel @ n1Mod     <- n1model 
       a4aout @ pars @ stkmodel @ srMod     <- srmodel
+      a4aout @ pars @ stkmodel @ m         <- m(stock)
       
       pars <- out $ par.est
                                         
@@ -966,6 +970,8 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       ##a4aout @ pars @ stkmodel @ vcov <- solve(out $ prec[whichcol, whichcol])
       # or just the full vcov matrix, unconditional on the other things...
       a4aout @ pars @ stkmodel @ vcov <- out $ cov[whichcol, whichcol]
+
+
 
       #
       # fill up qmodel
