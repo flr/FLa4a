@@ -24,6 +24,9 @@ setClass("SCAPars",
                  vmodel    = new("submodels"))
 )
 
+setMethod("m", signature(object="SCAPars"),
+  function(object) m(stkmodel(object)))
+
 
 # constructor
 #' Calculate the median accross iterations
