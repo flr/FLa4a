@@ -24,6 +24,10 @@ setClass("a4aFitSA",
                 pars    = new('SCAPars'))
 )
 
+setMethod("m", signature(object="a4aFitSA"),
+  function(object) m(pars(object)))
+
+
 # show method
 
 #' Hello 
