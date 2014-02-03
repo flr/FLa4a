@@ -263,6 +263,61 @@ check.executable <- function() {
 #	apply(x, -match("iter", names(dimnames(x))), median)
 #})
 
+###################################################################################
+# internal functions
+###################################################################################
+
+# utility to convert to a 2d array
+
+quant2mat <- function(x) {
+	out <- x[drop=TRUE]
+	dim(out) <- dim(x)[1:2]
+	dimnames(out) <- dimnames(x)[1:2]
+	if (nrow(out) == 1 && dimnames(out)[[1]] == "all") dimnames(out)[[1]] <- NA_character_  # "all" denotes a biomass survey
+	out 
+}
+
+# convert to dataframe
+list2df <- function(fleet, list.obs, list.var, center.log) {
+	x <- list.obs[[fleet]]
+	v <- as.vector(list.var[[fleet]])
+	year <- as.numeric(colnames(x)[col(x)])
+	age <- as.numeric(rownames(x)[row(x)])
+	obs <- log(as.vector(x)) - center.log[fleet]
+	if (all(is.na(v))) {
+		wts <- 1
+	} else { # use inverse variance weighting
+		wts <-  1 / v # inverse variance weigting
+	}
+	ret <- data.frame(fleet = fleet, year = year, age = age, obs = obs, weights = wts)
+	ret <- ret[!is.na(ret $ obs), ]
+	if (any(is.na(ret[,5])) || any(ret[,5] <= 0)) {
+		ret[,5] <- 1
+		warning("*** NA and/or non-positive variances found in: ", names(list.obs)[fleet], " - all variances set to 1", call. = FALSE)
+	}
+	ret
+}
+
+# build a full data frame first (we will use this for the variance model so it is not a waste)
+make.df <- function(fleet, stock, indices) {
+	thing <- if (fleet == 1) stock else indices[[fleet - 1]]
+	expand.grid(age = if (is.na(range(thing)["min"])) NA else range(thing)["min"]:range(thing)["max"], 
+				year = range(thing)["minyear"]:range(thing)["maxyear"])[2:1]
+}
+
+# local utility
+write.t <- function(x, file, ...) write.table(x, row.names = FALSE, col.names = FALSE, quote = FALSE, sep = '\t', file = file, append = TRUE)
+
+write.t.sparse <- function(x, file, ...) {
+	x <- as(x, "dsCMatrix")
+	cat("\n# i\n", x @ i, "\n# p\n", x @ p, "\n# x\n", x @ x, file = file, append = TRUE)  
+}  
+
+  
+
+
+
+
 
 
 

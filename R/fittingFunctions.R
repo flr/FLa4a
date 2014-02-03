@@ -349,53 +349,21 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   if (any(is.infinite(log(catch.n(stock))))) stop("only non-zero catches allowed.")
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))  stop("only non-zero survey indices allowed.")
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))  stop("only non-zero survey index variances allowed.")
-   
-  # utility to convert to a 2d array
-  quant2mat <- 
-  function(x) {
-    out <- x[drop=TRUE]
-    dim(out) <- dim(x)[1:2]
-    dimnames(out) <- dimnames(x)[1:2]
-    if (nrow(out) == 1 && dimnames(out)[[1]] == "all") dimnames(out)[[1]] <- NA_character_  # "all" denotes a biomass survey
-    out 
-  }
 
   # convert catches and indices to a list of named arrays
-  list.obs <- c(list(catch = quant2mat(catch.n(stock))),
-                     lapply(indices, function(x) quant2mat(index(x)) ))
+  list.obs <- c(list(catch = FLa4a:::quant2mat(catch.n(stock))),
+                     lapply(indices, function(x) FLa4a:::quant2mat(index(x)) ))
                      
   # convert the variances of catches and indices to a list of named arrays
-  list.var <- c(list(catch = quant2mat(catch.n(stock) @ var)),
-                     lapply(indices, function(x) quant2mat(index.var(x)) ))                
+  list.var <- c(list(catch = FLa4a:::quant2mat(catch.n(stock) @ var)),
+                     lapply(indices, function(x) FLa4a:::quant2mat(index.var(x)) ))                
                      
   # calculate appropriate centering for observations on log scale
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
   if (!center) center.log[] <- 0
 
   # convert to dataframe
-  list2df <- function(fleet)
-  {
-    x <- list.obs[[fleet]]
-    v <- as.vector(list.var[[fleet]])
-    year <- as.numeric(colnames(x)[col(x)])
-    age <- as.numeric(rownames(x)[row(x)])
-    obs <- log(as.vector(x)) - center.log[fleet]
-    if (all(is.na(v))) {
-      wts <- 1
-    } else # use inverse variance weighting
-    {
-      wts <-  1 / v # inverse variance weigting
-    }
-    ret <- data.frame(fleet = fleet, year = year, age = age, obs = obs, weights = wts)
-    ret <- ret[!is.na(ret $ obs), ]
-    if (any(is.na(ret[,5])) || any(ret[,5] <= 0)) {
-      ret[,5] <- 1
-      warning("*** NA and/or non-positive variances found in: ", names(list.obs)[fleet], " - all variances set to 1", call. = FALSE)
-    }
-    ret
-  }
-
-  df.data <- do.call(rbind, lapply(1:length(list.obs), list2df))
+  df.data <- do.call(rbind, lapply(1:length(list.obs), FLa4a:::list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
   
   if (any(df.data[,5] != 1)) message("Note: Provided variances will be used to weight observations.\n\tWeighting assumes variances are on the log scale or equivalently log(CV^2 + 1).")
 
@@ -414,13 +382,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # ------------------------------------------------------------------------
  
   # build a full data frame first (we will use this for the variance model so it is not a waste)
-  make.df <- function(fleet) {
-    thing <- if (fleet == 1) stock else indices[[fleet - 1]]
-    expand.grid(age = if (is.na(range(thing)["min"])) NA else range(thing)["min"]:range(thing)["max"], 
-                year = range(thing)["minyear"]:range(thing)["maxyear"])[2:1]
-  }
-    
-  full.df <- do.call(rbind, lapply(1:length(list.obs), function(i) cbind(fleet = i, make.df(i))))
+  full.df <- do.call(rbind, lapply(1:length(list.obs), function(i) cbind(fleet = i, FLa4a:::make.df(i, stock=stock, indices=indices))))
 
   if (!is.null(covar)) {
   # add in covariates to data.frame - it is easiest to provide covariates in one list
@@ -622,18 +584,8 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   #
   # ------------------------------------------------------------------------
 
-  # local utility
-  write.t <- function(x, ...) write.table(x, row.names = FALSE, col.names = FALSE, quote = FALSE, sep = '\t', file = filename, append = TRUE)
-  write.t.sparse <- function(x, ...) {
-     x <- as(x, "dsCMatrix")
-     cat("\n# i\n", x @ i, 
-         "\n# p\n", x @ p,
-         "\n# x\n", x @ x, file = filename, append = TRUE)  
-  }  
-
   # write to data file 
   # ------------------
-   
   filename <- paste0(wkdir,'/a4a.dat')
 
   # change NA to -1 for admb
@@ -648,11 +600,11 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     "\n# Last age group considered plus group 0=no 1=yes\n", plusgroup,
     "\n# Number of observations\n", nrow(df.data),
     "\n# Observation data frame",
-    "\n# fleet\tyear\tage\tobservation\tweights\n", file=filename); write.t(df.data)
+    "\n# fleet\tyear\tage\tobservation\tweights\n", file=filename); FLa4a:::write.t(df.data, file=filename)
   df.aux <- unique(full.df[c("year","age","m","m.spwn","harvest.spwn","mat.wt","stock.wt")])
   cat("# Auxilliary data frame", # should include offsets here?!
     "\n# Number of auxilliary data\n", nrow(df.aux),
-    "\n# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\n", file=filename, append = TRUE); write.t(df.aux)
+    "\n# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\n", file=filename, append = TRUE); FLa4a:::write.t(df.aux, file=filename)
   
   # write config files
   # ------------------
@@ -663,12 +615,12 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# F model config for the a4a model",
     "\n# model params\n", ncol(Xf), 
     "\n# number of rows\n", nrow(Xf),
-    "\n# design matrix\n", file = filename); write.t(Xf)
+    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xf, file=filename)
 
   Covf <- getCov(nrow(Xf), model = "iid", tau = 1)
   cat("# prior model (in sparse format)",
     "\n# flag to turn F-deviations on and off 0=off 1=on\n", 0, # off for now - until we work on the interface for randomness
-    "\n# var-cov matrix\n", file = filename, append = TRUE); write.t.sparse(Covf)
+    "\n# var-cov matrix\n", file = filename, append = TRUE); FLa4a:::write.t.sparse(Covf, file=filename)
  
   # qmodel
   filename <- paste0(wkdir,'/qmodel.cfg')
@@ -676,12 +628,12 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# Q model config for the a4a model",
     "\n# model params\n", ncol(Xq), 
     "\n# number of rows\n", nrow(Xq),
-    "\n# design matrix\n", file = filename); write.t(Xq)
+    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xq, file=filename)
 
   Covq <- getCov(nrow(Xq), model = "iid", tau = 1)
   cat("# prior model (in sparse format)",
     "\n# flag to turn Q-deviations on and off 0=off 1=on\n", 0, # off for now - until we work on the interface for randomness
-    "\n# var-cov matrix\n", file = filename, append = TRUE); write.t.sparse(Covq)
+    "\n# var-cov matrix\n", file = filename, append = TRUE); FLa4a:::write.t.sparse(Covq, file=filename)
 
   
   # vmodel no random effects for variances
@@ -690,7 +642,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# variance model config for the a4a model",
     "\n# model params\n", ncol(Xv), 
     "\n# number of rows\n", nrow(Xv),
-    "\n# design matrix\n", file = filename); write.t(Xv)
+    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xv, file=filename)
 
 
   # n1model no random effects for initial ages
@@ -699,7 +651,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# initial age structure model config for the a4a model",
     "\n# model params\n", ncol(Xny1), 
     "\n# number of rows\n", nrow(Xny1),
-    "\n# design matrix\n", file = filename); write.t(Xny1)
+    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xny1, file=filename)
 
    
   # rmodel
@@ -711,15 +663,15 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     "\n# SPR0 :\n", srr $ SPR0,
     "\n# a model params\n", ncol(Xsra), 
     "\n# a model number of rows\n", nrow(Xsra),
-    "\n# a model design matrix\n", file = filename); write.t(Xsra)
+    "\n# a model design matrix\n", file = filename); FLa4a:::write.t(Xsra, file=filename)
   cat("# b model params\n", ncol(Xsrb), 
     "\n# b model number of rows\n", nrow(Xsrb),
-    "\n# b model design matrix\n", file = filename, append = TRUE); write.t(Xsrb)
+    "\n# b model design matrix\n", file = filename, append = TRUE); FLa4a:::write.t(Xsrb, file=filename)
 
   Covr <- getCov(nrow(Xsra), model = "iid", tau = 1)
   cat("# prior model for the SRR a param",
     "\n# flag to turn SRR a param deviations on and off 0=off 1=on\n", 0, # off for now - until we work on the interface for randomness
-    "\n# var-cov matrix\n", file = filename, append = TRUE); write.t.sparse(Covr)
+    "\n# var-cov matrix\n", file = filename, append = TRUE); FLa4a:::write.t.sparse(Covr, file=filename)
  
   # r internal model 
   filename <- paste0(wkdir,'/rmodel.cfg')
@@ -727,7 +679,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# internal model for recruits: orthoganal design",
     "\n# model params\n", ncol(Xr), 
     "\n# number of rows\n", nrow(Xr),
-    "\n# design matrix\n", file = filename); write.t(Xr)
+    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xr, file=filename)
      
    # set up variable names
   pnames <- list(paste0("fMod:",colnames(Xf)), 
@@ -779,8 +731,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   }
   # hold off on the error for now - we can still get the hessian and perhaps do somehting with it...
   #if (echoc != 0) stop("Bad return from a4a executable: probably solution is not unique, try reducing parameters.\n")
-
-
 
   # ------------------------------------------------------------------------
   #
@@ -851,9 +801,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
       out $ nopar <- ncol(hess)
     }
 
-    # read residuals
-    #out $ res <- read.table(paste0(wkdir, '/a4a.res'), header = TRUE)
-
     # read derived model quantities
     ages <- sort(unique(full.df $ age))
     years <- sort(unique(full.df $ year))
@@ -911,13 +858,13 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     Z <- a4aout @ harvest + m(stock)  # TODO what if surveys are bigger... require that stock is bigger but with NA catches!
     
     a4aout @ catch.n <- a4aout @ harvest / Z * (1 - exp(-Z)) * a4aout @ stock.n
-
     index <- lapply(1:length(indices), function(i) {
                       dmns <- dimnames(logq[[i]]) 
                       if (dmns $ age[1] == "all") {
                         exp(logq[[i]] - center.log[1] + center.log[i+1]) * yearTotals(stock.n(a4aout)[, dmns[[2]]] * stock.wt(stock)[, dmns[[2]]])[1,]  
                       } else {
-                        stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])
+                        #stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])
+                        stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])*exp(-Z*surveytime)[dmns[[1]], dmns[[2]]]
                       }})
     names(index) <- ind.names
 
@@ -1053,40 +1000,9 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # remove temporary directory - keep only true when dir is not temp dir
   if (!keep) unlink(wkdir)
 
-  #
   #attr(a4aout, "stuff") <- out
   return(a4aout)  
 }
   
-  
-#  out @ index.name <- ind.names
-#  out @ logq <- do.call(FLQuants, logq)
-
-#  out @ catch.lvar <- getres(fit $ res, "sd", 1)^2 
-#  out @ catch.lhat <- getres(fit $ res, "pred", 1) + center.log[1]
-#  out @ catch.lres <- getres(fit $ res, "res", 1) 
-
-#  out @ index <- lapply(getres2(fit $ res, "obs"), exp)
-#  out @ index.lvar <- lapply(getres2(fit $ res, "sd"), "^", 2) 
-#  out @ index.lhat <- getres2(fit $ res, "pred")
-#  out @ index.lres <- getres2(fit $ res, "res") 
-  
-#  for (i in 1:length(out @ index)) {
-#    out @ index[[i]]     <- out @ index[[i]] * exp(center.log[i+1])
-#    out @ index.lhat[[i]] <- out @ index.lhat[[i]] + center.log[i+1]
-#    out @ logq[[i]] <- out @ logq[[i]] + center.log[i+1] - center.log[1]
-#  }  
-  
-#  out @ logQ <- out @ index
-#  for (i in 1:length(out @ logQ)) out @ logQ[[i]] @ .Data <- fit $ logQ[[i]]
-
-
-#  out @ coefficients <- fit $ est
-#  out @ covariance <- fit $ cov
-#  names(out @ coefficients) <- fit $ names
-#  colnames(out @ covariance) <- rownames(out @ covariance) <- fit $ names
-
-
-
 
 
