@@ -861,7 +861,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     index <- lapply(1:length(indices), function(i) {
                       dmns <- dimnames(logq[[i]]) 
                       if (dmns $ age[1] == "all") {
-                        exp(logq[[i]] - center.log[1] + center.log[i+1]) * yearTotals(stock.n(a4aout)[, dmns[[2]]] * stock.wt(stock)[, dmns[[2]]])[1,]  
+                        exp(logq[[i]] - center.log[1] + center.log[i+1]) * yearTotals(stock.n(a4aout)[, dmns[[2]]] * exp(-Z*surveytime)[dmns[[1]], dmns[[2]]] * stock.wt(stock)[, dmns[[2]]])[1,]  
                       } else {
                         #stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])
                         stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])*exp(-Z*surveytime)[dmns[[1]], dmns[[2]]]
