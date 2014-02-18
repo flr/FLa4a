@@ -100,7 +100,6 @@ setReplaceMethod("distr", "a4aStkParams", function(object, value){
 
 setMethod("vcov", "a4aStkParams", function(object) object@vcov)
 
-setGeneric("vcov<-", function(object, value) standardGeneric("vcov<-"))
 setReplaceMethod("vcov", "a4aStkParams", function(object, value){
     if(all.equal(is(value), is(object@vcov))) object@vcov <- value
     object
