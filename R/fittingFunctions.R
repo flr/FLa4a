@@ -493,23 +493,23 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # process recruitment formula: 
   # builder functions - could be more hadley...
   bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
     list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
   }
   bevholtSV <- function(h = ~ 1, v = ~ 1, SPR0 = 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
     list(srr = "bevholtSV", a = h, b = v, SPR0 = SPR0, srrCV = CV, ID = 5)
   }
   ricker <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
     list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
   }
   hockey <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
     list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
   }
   geomean <- function(a = ~ 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be les than zero")
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
     list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
   }
   none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, srrCV = -1, ID = 4)

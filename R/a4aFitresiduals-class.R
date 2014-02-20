@@ -87,7 +87,7 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 #' fmodel <- ~factor(age) + factor(year)
 #' qmodel <- list(~factor(age))
 #' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
+#' stdlogres(catch.n(ple4), catch.n(fit.))
 
 setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 
@@ -120,7 +120,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' fmodel <- ~factor(age) + factor(year)
 #' qmodel <- list(~factor(age))
 #' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' stdlogres(catch.n(ple4), catch.n(fit.))
+#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
 #' plot(flqs)
 
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
@@ -148,7 +148,7 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 #' fmodel <- ~factor(age) + factor(year)
 #' qmodel <- list(~factor(age))
 #' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' stdlogres(catch.n(ple4), catch.n(fit.))
+#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
 #' qqmath(flqs)
 
 setGeneric("qqmath", function(x, data, ...) standardGeneric("qqmath"))
@@ -178,7 +178,7 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 #' fmodel <- ~factor(age) + factor(year)
 #' qmodel <- list(~factor(age))
 #' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' stdlogres(catch.n(ple4), catch.n(fit.))
+#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
 #' bubbles(flqs)
 
 setMethod("bubbles", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
