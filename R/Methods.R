@@ -577,6 +577,15 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 
     # initial age structure model matrix
     Xny1 <- getX(object @ stkmodel @ n1Mod, subset(full.df, year == min(year) & age > min(age)))
+
+    # Q model matrix  
+    fleet.names <- c("catch", names(object @ qmodel))
+    Xqlist <- lapply(seq_along(object @ qmodel), function(i) getX(object @ qmodel[[i]] @ Mod, subset(full.df, fleet == fleet.names[i+1])))
+    Xq <- as.matrix(do.call(bdiag, Xqlist))  
+  
+    # var model matrix
+    Xvlist <- lapply(1:length(fleet.names), function(i) getX(object @ vmodel[[i]] @ Mod, subset(full.df, fleet == fleet.names[i])))
+    Xv <- as.matrix(do.call(bdiag, Xvlist))   
     
     # now separate the sr model element
     facs <- strsplit(as.character(object @ stkmodel @ srMod)[length(object @ stkmodel @ srMod)], "[+]")[[1]]
