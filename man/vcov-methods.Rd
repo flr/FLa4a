@@ -1,7 +1,6 @@
 \docType{methods}
 \name{vcov}
 \alias{vcov}
-\alias{vcov,FLa4aFit-method}
 \title{Calculate the median accross iterations}
 \arguments{
   \item{object}{an FLQuant with iters}
