@@ -463,6 +463,13 @@ setMethod("catch.lres", signature(object = "a4aFit"),
   })
 
 
+# -------------------------------------------------------------------
+#
+#
+#    coef  methods
+#
+#
+# -------------------------------------------------------------------
 
 
 #' Calculate the median accross iterations
@@ -489,7 +496,7 @@ setGeneric("coef", function(object, ...) standardGeneric("coef"))
 #' @aliases coef,FLa4aFit-method
 setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
-	  coef(object @ pars)
+	  coef(pars(object))
   })
 
 
@@ -498,12 +505,215 @@ setMethod("coef", signature(object = "a4aFitSA"),
 setMethod("coef", signature(object = "SCAPars"),
   function(object) {
     list(
-      stkmodel = object @ stkmodel @ params,
-      qmodel   = lapply(object @ qmodel, function(x) x @ params),
-      vmodel   = lapply(object @ vmodel, function(x) x @ params)
+      stkmodel = coef(stkmodel(object)),
+      qmodel   = coef(qmodel(object)),
+      vmodel   = coef(vmodel(object))
     )
   })
 
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "a4aStkParams"),
+  function(object) {
+      object @ params
+  })
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "submodels"),
+  function(object) {
+      lapply(object, coef)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "submodel"),
+  function(object) {
+      object @ params
+  })
+
+
+# -------------------------------------------------------------------
+#
+#
+#    coef<-  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef<-", signature(object = "a4aFitSA", value = "numeric"),
+  function(object, ..., value) {
+    coef(object @ pars) <- value
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
+  function(object, ..., value) {
+    v <- coef(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    coef(object @ stkmodel) <- new[grep("stkmodel", names(old))]
+    coef(object @ qmodel) <- new[grep("qmodel.", names(old))]
+    coef(object @ vmodel) <- new[grep("vmodel.", names(old))]
+
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFitSA-method
+setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
+  function(object, ..., value) {    
+    object @ params[] <- value
+    object
+  })
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFitSA-method
+setMethod("coef<-", signature(object = "submodels", value = "numeric"),
+  function(object, ..., value) {
+    v <- coef(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    for (i in seq_along(object)) {
+      object[[i]] @ params[] <- new[grep(object[[i]] @ name, names(old))]  
+    }
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef<-", signature(object = "submodel", value = "numeric"),
+  function(object, ..., value) {
+      object @ params[] <- value
+      object
+  })
+
+# -------------------------------------------------------------------
+#
+#
+#    vcov  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "a4aFitSA"),
+  function(object) {
+    vcov(pars(object))
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "SCAPars"),
+  function(object) {
+    list(
+      stkmodel = vcov(stkmodel(object)),
+      qmodel   = vcov(qmodel(object)),
+      vmodel   = vcov(vmodel(object))
+    )
+  })
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "a4aStkParams"),
+  function(object) {
+      object @ vcov
+  })
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "submodels"),
+  function(object) {
+      lapply(object, vcov)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov", signature(object = "submodel"),
+  function(object) {
+      object @ vcov
+  })
+
+
+# -------------------------------------------------------------------
+#
+#
+#    vcov<-  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFit-method
+setMethod("vcov<-", signature(object = "a4aFitSA", value = "numeric"),
+  function(object, ..., value) {
+    vcov(object @ pars) <- value
+    object
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFit-method
+setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
+  function(object, ..., value) {
+    v <- vcov(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    vcov(object @ stkmodel) <- new[grep("stkmodel", names(old))]
+    vcov(object @ qmodel) <- new[grep("qmodel.", names(old))]
+    vcov(object @ vmodel) <- new[grep("vmodel.", names(old))]
+
+    object
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
+  function(object, ..., value) {    
+    object @ vcov[] <- value
+    object
+  })
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
+  function(object, ..., value) {
+    v <- vcov(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    for (i in seq_along(object)) {
+      object[[i]] @ vcov[] <- new[grep(object[[i]] @ name, names(old))]  
+    }
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov<-", signature(object = "submodel", value = "numeric"),
+  function(object, ..., value) {
+      object @ vcov[] <- value
+      object
+  })
 
 
 #' Calculate the median accross iterations
@@ -762,74 +972,6 @@ setMethod("simulate", signature(object = "SCAPars"),
 
 
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname vcov-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
-setGeneric("vcov", function(object, ...) standardGeneric("vcov"))
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov", signature(object = "a4aFitSA"),
-  function(object) {
-    vcov(object @ pars)
-  })
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov", signature(object = "SCAPars"),
-  function(object) {
-    list(
-      stkmodel = object @ stkmodel @ vcov,
-      qmodel   = lapply(object @ qmodel, function(x) x @ vcov),
-      vmodel   = lapply(object @ vmodel, function(x) x @ vcov)
-    )
-  })
-
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov<-", signature(object = "a4aFitSA"),
-  function(object, value) {
-    vcov(object @ pars) <- value
-    object
-  })
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov<-", signature(object = "SCAPars"),
-  function(object, value) {
-    v <- vcov(object)
-    old <- unlist(v)
-    new <- rep_len(unlist(value), length = length(old))
-    
-    object @ stkmodel @ vcov[] <- new[grep("stkmodel", names(old))]
-    for (i in seq_along(object @ qmodel)) {
-      object @ qmodel[[i]] @ vcov[] <- new[grep(paste0("qmodel.", object @ qmodel[[i]] @ name), names(old))]  
-    }
-    for (i in seq_along(object @ vmodel)) {
-      object @ vmodel[[i]] @ vcov[] <- new[grep(paste0("vmodel.", object @ vmodel[[i]] @ name), names(old))]  
-    }
-    object
-  })
 
 
 
