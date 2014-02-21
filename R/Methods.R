@@ -716,6 +716,92 @@ setMethod("vcov<-", signature(object = "submodel", value = "numeric"),
   })
 
 
+# -------------------------------------------------------------------
+#
+#
+#    predict  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname predict-methods
+#' @aliases predict,FLa4aFit-method
+setMethod("predict", signature(object = "a4aFitSA"),
+  function(object) {
+    predict(pars(object))
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "SCAPars"),
+  function(object) {
+    list(
+      stkmodel = coef(stkmodel(object)),
+      qmodel   = coef(qmodel(object)),
+      vmodel   = coef(vmodel(object))
+    )
+  })
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "a4aStkParams"),
+  function(object) {
+      ages <- range(object)["min"]:range(object)["max"]
+      years <- range(object)["minyear"]:range(object)["maxyear"]
+      cnames <- rownames(coef(object))
+      df <- expand.grid(age = ages,
+                        year = years)
+      X <- getX(object @ fMod, df)
+      b <- coef(object)[grep("fMod", cnames)]
+      fit <- exp(c(X %*% b))
+      harvest <- FLQuant(array(fit, dim = c(length(ages), length(years)), 
+                               dimnames = list(age = ages, year = years)), 
+                         units = "f")
+
+      X <- getX(object @ n1Mod, data.frame(age = ages[-1]))
+      b <- coef(object)[grep("n1Mod", cnames)]
+      fit <- c(NA, exp(c(X %*% b) + object @ centering))
+      ny1 <- FLQuant(array(fit, dim = length(ages), 
+                               dimnames = list(age = ages)))      
+
+      X <- getX(object @ srMod, data.frame(year = years))
+      b <- coef(object)[grep("rMod", cnames)]
+      fit <- c(exp(c(X %*% b) + object @ centering))
+      rec <- FLQuant(array(fit, dim = c(1,length(years)), 
+                               dimnames = list(age = ages[1], year = years)))      
+
+
+      list(harvest = harvest, rec = rec, ny1 = ny1)
+})
+
+predict(stk.params)
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "submodels"),
+  function(object, ...) {
+      lapply(object, predict)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "submodel"),
+  function(object, ...) {
+      ages <- range(object)["min"]:range(object)["max"]
+      years <- range(object)["minyear"]:range(object)["maxyear"]
+      df <- expand.grid(age = ages,
+                        year = years)
+      X <- getX(object @ Mod, df)
+      fit <- exp(c(X %*% coef(object)) + object @ centering)
+      FLQuant(array(fit, dim = c(length(ages), length(years)), dimnames = list(age = ages, year = years)))
+  })
+
+
+
 #' Calculate the median accross iterations
 #'
 #' @param object an FLQuant with iters
