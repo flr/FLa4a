@@ -33,12 +33,6 @@
 #' sim.F <- genFLQuant(harvest(ple4))
 setGeneric("genFLStock", function(object, R, C, F, ...) standardGeneric("genFLStock"))
 
-#' @rdname au-methods
-#' @aliases au,a4aFitSA,missing,a4aFitSA-method
-setMethod("genFLStock", c("a4aFitSA", "missing", "missing", "missing"), 
-  function(object, ...){
-    simulate(object)
-})
 
 
 #' @rdname au-methods

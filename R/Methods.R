@@ -542,6 +542,7 @@ setMethod("coef", signature(object = "submodel"),
 #
 # -------------------------------------------------------------------
 
+setGeneric("coef<-", function(object, ..., value) standardGeneric("coef<-"))
 
 #' @rdname coef-methods
 #' @aliases coef,FLa4aFit-method
@@ -812,10 +813,17 @@ setMethod("predict", signature(object = "submodel"),
 # -------------------------------------------------------------------
 #
 #
-#    gen  methods
+#    simulate  methods
 #
 #
 # -------------------------------------------------------------------
+
+#' @rdname au-methods
+#' @aliases au,a4aFitSA,missing,a4aFitSA-method
+setMethod("genFLStock", c("a4aFitSA", "missing", "missing", "missing"), 
+  function(object, ...){
+    simulate(object)
+})
 
 
 #' Calculate the median accross iterations
