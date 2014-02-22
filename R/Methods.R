@@ -735,12 +735,12 @@ setMethod("predict", signature(object = "a4aFitSA"),
 
 #' @rdname coef-methods
 #' @aliases coef,FLa4aFit-method
-setMethod("coef", signature(object = "SCAPars"),
+setMethod("predict", signature(object = "SCAPars"),
   function(object) {
     list(
-      stkmodel = coef(stkmodel(object)),
-      qmodel   = coef(qmodel(object)),
-      vmodel   = coef(vmodel(object))
+      stkmodel = predict(stkmodel(object)),
+      qmodel   = predict(qmodel(object)),
+      vmodel   = predict(vmodel(object))
     )
   })
 
@@ -776,8 +776,6 @@ setMethod("predict", signature(object = "a4aStkParams"),
       list(harvest = harvest, rec = rec, ny1 = ny1)
 })
 
-predict(stk.params)
-
 
 #' @rdname coef-methods
 #' @aliases coef,FLa4aFit-method
@@ -800,6 +798,24 @@ setMethod("predict", signature(object = "submodel"),
       FLQuant(array(fit, dim = c(length(ages), length(years)), dimnames = list(age = ages, year = years)))
   })
 
+
+# -------------------------------------------------------------------
+#
+#
+#    residual  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+
+# -------------------------------------------------------------------
+#
+#
+#    gen  methods
+#
+#
+# -------------------------------------------------------------------
 
 
 #' Calculate the median accross iterations

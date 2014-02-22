@@ -34,6 +34,14 @@
 setGeneric("genFLStock", function(object, R, C, F, ...) standardGeneric("genFLStock"))
 
 #' @rdname au-methods
+#' @aliases au,a4aFitSA,missing,a4aFitSA-method
+setMethod("genFLStock", c("a4aFitSA", "missing", "missing", "missing"), 
+  function(object, ...){
+    simulate(object)
+})
+
+
+#' @rdname au-methods
 #' @aliases au,FLStock,FLQuant,FLQuant,missing-method
 setMethod("genFLStock", c("FLStock", "FLQuant", "FLQuant", "missing"), function(object, R, C, F, ...){
 	cat("Not implemented yet\n")
