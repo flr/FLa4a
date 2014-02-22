@@ -55,7 +55,7 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 	# catch
 	lst[[1]] <- stdlogres(catch.n(stock), catch.n(object))
 	# indices
-	idx <- index(fit.)
+	idx <- index(object)
 	for(i in 1:length(indices)){
 		lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]])
 	}
