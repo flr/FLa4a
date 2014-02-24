@@ -85,6 +85,11 @@ setGeneric("clock", function(object, ...) standardGeneric("clock"))
 setMethod("clock", "a4aFit", function(object) object@clock)
 
 #' @rdname a4aFit-class
+#' @aliases clock,a4aFit-method
+setGeneric("fitSumm", function(object, ...) standardGeneric("fitSumm"))
+setMethod("fitSumm", "a4aFit", function(object) object@fitSumm)
+
+#' @rdname a4aFit-class
 #' @aliases stock.n,a4aFit-method
 setMethod("stock.n", "a4aFit", function(object) object@stock.n)
 

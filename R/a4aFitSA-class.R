@@ -1,20 +1,18 @@
-
-
-
-#' a4aFitSA extends \code{"a4aFit"} class.
+#' @title S4 class \code{a4aFitSA}
 #'
-#' Some details about this class and my plans for it in the body.
+#' @description The \code{a4aFitSA} class extends \code{a4aFit} to store information about the parameters of the model.
 #'
+#' @section Slots:
 #' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
+#'    \item{SCAPars}{An object of class \code{SCAPars} with model parameters information}
 #'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
-#'  }
+#' @template Accessors
+#' @template Constructors
+#' @docType class
 #' @name a4aFitSA-class
 #' @rdname a4aFitSA-class
-#' @exportClass a4aFitSA
+#' @alias a4aFitSA-class
+#' @template Example-a4aFitSA
 setClass("a4aFitSA",
         representation(
                 "a4aFit",
@@ -28,12 +26,7 @@ setMethod("m", signature(object="a4aFitSA"),
   function(object) m(pars(object)))
 
 
-# show method
-
-#' Hello 
-#' @name show
-#' @docType methods
-#' @rdname show-methods
+#' @rdname a4aFitSA-class
 #' @aliases show,a4aFitSA-method
 setMethod("show", signature(object = "a4aFitSA"),
   function(object) 
@@ -65,37 +58,12 @@ setMethod("show", signature(object = "a4aFitSA"),
    
  })
 
-
-
-
-
-
-# constructor
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname a4aFitSA-class
+#' @alias a4aFitSA a4aFitSA-methods
 setGeneric("a4aFitSA", function(object, ...) standardGeneric("a4aFitSA"))
 
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
+#' @rdname a4aFitSA-class
+#' @alias a4aFitSA,missing-method
 setMethod("a4aFitSA", signature(object="missing"),
   function(...) {
     # empty
@@ -110,6 +78,8 @@ setMethod("a4aFitSA", signature(object="missing"),
   }
 )
 
+#' @rdname a4aFitSA-class
+#' @alias a4aFit,a4aFitSA-method
 setMethod("a4aFit", signature(object="a4aFitSA"),
   function(object, ...) {
     out <- a4aFit()
@@ -127,7 +97,8 @@ setMethod("a4aFit", signature(object="a4aFitSA"),
   }
 )
 
-
+#' @rdname a4aFitSA-class
+#' @alias a4aFitSA,a4aFit-method
 setMethod("a4aFitSA", signature(object="a4aFit"),
   function(object, ...) {
     out <- a4aFitSA()
@@ -145,60 +116,9 @@ setMethod("a4aFitSA", signature(object="a4aFit"),
   }
 )
 
-# accessors
-
-#setMethod("call", "a4aFitSA", function(object) object@call)
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
-setGeneric("fitSumm", function(object, ...) standardGeneric("fitSumm"))
-
-#' Title 
-#' @name fitSumm
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
-setMethod("fitSumm", "a4aFitSA", function(object) object@fitSumm)
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname pars-methods
-#'
-#' @examples
-#' data(ple4)
-setGeneric("pars", function(object, ...) standardGeneric("pars"))
-
-#' Title 
-#' @name pars
-#' @docType methods
-#' @rdname pars-methods
+#' @rdname a4aFitSA-class
 #' @aliases pars,a4aFitSA-method
+setGeneric("pars", function(object, ...) standardGeneric("pars"))
 setMethod("pars", "a4aFitSA", function(object) object@pars)
 
 

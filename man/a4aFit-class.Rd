@@ -7,6 +7,7 @@
 \alias{catch.n,a4aFit-method}
 \alias{clock}
 \alias{clock,a4aFit-method}
+\alias{fitSumm}
 \alias{harvest}
 \alias{harvest,a4aFit-method}
 \alias{index}
