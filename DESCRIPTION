@@ -6,12 +6,11 @@ Date: 2013-06-01
 Author: Colin P. Millar and Ernesto Jardim
 Maintainer: Colin Millar <colinpmillar@googlemail.com>
 Description: A simple and robust statistical catch at age model
-License: GPL (>= 2)
+License: file LICENSE
 Depends:
     R (>= 3.0.0),
     stats,
     Matrix,
-    mgcv,
     copula,
     triangle,
     mgcv,
@@ -19,9 +18,8 @@ Depends:
     latticeExtra,
     splines,
     np,
-    Matrix,
     RColorBrewer,
-    methods,
+		methods,
     FLCore (>= 2.5.0-20130317)
 LazyLoad: yes
 LazyData: yes

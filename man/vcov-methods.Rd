@@ -1,24 +1,19 @@
-\docType{methods}
 \name{vcov}
+\alias{coef,submodel-method}
 \alias{vcov}
-\title{Calculate the median accross iterations}
-\arguments{
-  \item{object}{an FLQuant with iters}
-
-  \item{...}{Additional argument list that might not ever
-  be used.}
-}
-\value{
-  an FLQuant
-}
+\alias{vcov,a4aFitSA-method}
+\alias{vcov,a4aStkParams-method}
+\alias{vcov,SCAPars-method}
+\alias{vcov,submodels-method}
+\alias{vcov<-}
+\alias{vcov<-,a4aFitSA,numeric-method}
+\alias{vcov<-,a4aStkParams,numeric-method}
+\alias{vcov<-,SCAPars,numeric-method}
+\alias{vcov<-,submodel,numeric-method}
+\alias{vcov<-,submodels,numeric-method}
+\title{Methods to extract and replace the variance-covariance matrix}
 \description{
-  Calculate the median accross iterations
-}
-\examples{
-data(ple4)
-genFLQuant(harvest(ple4), method = "ac")
-}
-\seealso{
-  \code{\link{print}} and \code{\link{cat}}
+  Methods to extract and replace the variance-covariance
+  matrix
 }
 

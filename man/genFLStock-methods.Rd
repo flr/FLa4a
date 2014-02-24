@@ -1,7 +1,6 @@
 \docType{methods}
 \name{genFLStock}
 \alias{genFLStock}
-\alias{genFLStock,a4aFitSA,missing,a4aFitSA-method}
 \alias{genFLStock,FLStock,FLQuant,FLQuant,missing-method}
 \title{Methods to generate FLStock objects}
 \arguments{

@@ -1,30 +1,6 @@
-#' Hello 
-#' @name logLik
-#' @docType methods
-#' @rdname logLik-methods
-#' @aliases logLik,FLa4aFit-method
-setMethod("logLik", signature(object = "a4aFit"),
-  function(object, ...) 
-  {  
-    dim2 <- length(dim(object @ fitSumm))
-    if (dim2 == 1) {
-      val <- -1 * unname(object @ fitSumm["nlogl"])
-      attr(val, "nobs") <- unname(object @ fitSumm["nobs"])
-      attr(val, "df") <- unname(object@fitSumm["nopar"])
-    } else if (dim2 == 2) {
-      val <- -1 * unname(object @ fitSumm["nlogl",])
-      attr(val, "nobs") <- unname(object @ fitSumm["nobs",])
-      attr(val, "df") <- unname(object@fitSumm["nopar",])
-    }
-    class(val) <- "logLik"
-    val
- })
-
-##' Hello 
-##' @name show
-##' @docType methods
-##' @rdname show-methods
-##' @aliases show,FLa4aFit-method
+#==================================================================== 
+# Experimental code for plotting
+#==================================================================== 
 #setMethod("plot", signature(x = "a4aFit", y = "FLStock"),
 #  function (x, y, ratio = 1.5, file = "", onefile = TRUE, 
 #            #what = c("N","F","Q","Res"),
@@ -178,315 +154,19 @@ setMethod("logLik", signature(object = "a4aFit"),
 # 
 #})
 
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname logq-methods
-##'
-##' @examples
-##' data(ple4)
-##' genFLQuant(harvest(ple4), method = "ac")
-#setGeneric("logq", function(object, ...) standardGeneric("logq"))
-
-##' @rdname logq-methods
-##' @aliases logq,FLa4aFit-method
-#setMethod("logq", signature(object = "a4aFit"),
-#  function(object) {
-#	object @ logq
-#  })
-
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname catch.hat-methods
-#setGeneric("catch.hat", function(object, ...) standardGeneric("catch.hat"))
-
-
-##' Hello 
-##' @name catch.hat
-##' @docType methods
-##' @rdname catch.hat-methods
-##' @aliases catch.hat,FLa4aFit-method
-#setMethod("catch.hat", signature(object = "a4aFit"),
-#  function (object, ...) 
-#  {
-#    exp(object @ catch.lhat)
-#  })
-
-
-#q#' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname index.hat-methods
-#setGeneric("index.hat", function(object, ...) standardGeneric("index.hat"))
-
-
-##' Hello 
-##' @name index.hat
-##' @docType methods
-##' @rdname index.hat-methods
-##' @aliases index.hat,FLa4aFit-method
-#setMethod("index.hat", signature(object = "a4aFit"),
-#  function (object, ...) 
-#  {
-#    lapply(object @ index.lhat, exp)
-#  })
-
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname catch.lhat-methods
-#setGeneric("catch.lhat", function(object, ...) standardGeneric("catch.lhat"))
-
-
-##' Hello 
-##' @name catch.lhat
-##' @docType methods
-##' @rdname catch.lhat-methods
-##' @aliases catch.lhat,FLa4aFit-method
-#setMethod("catch.lhat", signature(object = "a4aFit"),
-#  function (object, ...) 
-#  {
-#    object @ catch.lhat
-#  })
-
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname index.lhat-methods
-#setGeneric("index.lhat", function(object, ...) standardGeneric("index.lhat"))
-
-
-##' Hello 
-##' @name index.lhat
-##' @docType methods
-##' @rdname index.lhat-methods
-##' @aliases index.lhat,FLa4aFit-method
-#setMethod("index.lhat", signature(object = "a4aFit"),
-#  function (object, ...) 
-#  {
-#    object @ index.lhat
-#  })
-
-
-
-
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname catch.lvar-methods
-#setGeneric("catch.lvar", function(object, ...) standardGeneric("catch.lvar"))
-
-
-##' Hello 
-##' @name catch.lvar
-##' @docType methods
-##' @rdname catch.lvar-methods
-##' @aliases catch.lvar,FLa4aFit-method
-#setMethod("catch.lvar", signature(object = "a4aFit"),
-#  function (object, ...) 
-#  {
-#    object @ catch.lvar
-#  })
-
-
-#q#' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname index.lvar-methods
-#setGeneric("index.lvar", function(object, ...) standardGeneric("index.lvar"))
-
-
-##' Hello 
-##' @name index.lvar
-##' @docType methods
-##' @rdname index.lvar-methods
-##' @aliases index.lvar,FLa4aFit-method
-#setMethod("index.lvar", signature(object = "a4aFit"),
-#  function (object, ...) 
-#  {
-#    object @ index.lvar
-#  })
-
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname index.lres-methods
-#setGeneric("index.lres", function(object, ...) standardGeneric("index.lres"))
-
-
-##' Hello 
-##' @name index.lres
-##' @docType methods
-##' @rdname index.lres-methods
-##' @aliases index.lres,FLa4aFit-method
-#setMethod("index.lres", signature(object = "a4aFit"),
-#  function (object, type = "scaled", ...) 
-#  {
-#    type <- match.arg(type, c("scaled", "unscaled"))
-#    if (type == "scaled") {
-#      object @ index.lres
-#    } else if (type == "unscaled") {
-#      out <- object @ index.lres
-#      for (i in 1:length(out)) {
-#        out[[i]] <- out[[i]] * sqrt(object @ index.lvar[[i]])
-#      }
-#      out
-#    }
-#  })
-
-
-##' Calculate the median accross iterations
-##'
-##' @param object an FLQuant with iters
-##'
-##' @param ... Additional argument list that might not ever
-##'  be used.
-##'
-##' @return an FLQuant
-##' 
-##' @seealso \code{\link{print}} and \code{\link{cat}}
-##' 
-##' @export
-##' @docType methods
-##' @rdname catch.lres-methods
-#setGeneric("catch.lres", function(object, ...) standardGeneric("catch.lres"))
-
-
-##' Hello 
-##' @name catch.lres
-##' @docType methods
-##' @rdname catch.lres-methods
-##' @aliases catch.lres,FLa4aFit-method
-#setMethod("catch.lres", signature(object = "a4aFit"),
-#  function (object, type = "scaled", ...) 
-#  {
-#    type <- match.arg(type, c("scaled", "unscaled"))
-#    if (type == "scaled") {
-#      object @ catch.lres
-#    } else if (type == "unscaled") {
-#      object @ catch.lres * sqrt(object @ catch.lvar)
-#    }
-#  })
-
-
-# -------------------------------------------------------------------
-#
-#
+#==================================================================== 
 #    coef  methods
-#
-#
-# -------------------------------------------------------------------
+#==================================================================== 
 
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
+#' Methods to extract and replace the model coefficients
+#' @name coef
 #' @docType methods
 #' @rdname coef-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
+
 setGeneric("coef", function(object, ...) standardGeneric("coef"))
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef,a4aFitSA-method
 setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
 	  coef(pars(object))
@@ -494,7 +174,7 @@ setMethod("coef", signature(object = "a4aFitSA"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef,SCAPars-method
 setMethod("coef", signature(object = "SCAPars"),
   function(object) {
     list(
@@ -505,14 +185,14 @@ setMethod("coef", signature(object = "SCAPars"),
   })
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef,a4aStkParams-method
 setMethod("coef", signature(object = "a4aStkParams"),
   function(object) {
       object @ params
   })
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef,submodels-method
 setMethod("coef", signature(object = "submodels"),
   function(object) {
       lapply(object, coef)
@@ -520,25 +200,20 @@ setMethod("coef", signature(object = "submodels"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef,submodel-method
 setMethod("coef", signature(object = "submodel"),
   function(object) {
       object @ params
   })
 
-
-# -------------------------------------------------------------------
-#
-#
+#==================================================================== 
 #    coef<-  methods
-#
-#
-# -------------------------------------------------------------------
+#==================================================================== 
 
 setGeneric("coef<-", function(object, ..., value) standardGeneric("coef<-"))
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef<-,a4aFitSA,numeric-method
 setMethod("coef<-", signature(object = "a4aFitSA", value = "numeric"),
   function(object, ..., value) {
     coef(object @ pars) <- value
@@ -547,7 +222,7 @@ setMethod("coef<-", signature(object = "a4aFitSA", value = "numeric"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef<-,SCAPars,numeric-method
 setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
   function(object, ..., value) {
     v <- coef(object)
@@ -563,7 +238,7 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFitSA-method
+#' @aliases coef<-,a4aStkParams,numeric-method
 setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
   function(object, ..., value) {    
     object @ params[] <- value
@@ -571,7 +246,7 @@ setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
   })
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFitSA-method
+#' @aliases coef<-,submodels,numeric-method
 setMethod("coef<-", signature(object = "submodels", value = "numeric"),
   function(object, ..., value) {
     v <- coef(object)
@@ -586,24 +261,21 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @aliases coef<-,submodel,numeric-method
 setMethod("coef<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
       object @ params[] <- value
       object
   })
 
-# -------------------------------------------------------------------
-#
-#
+#==================================================================== 
 #    vcov  methods
-#
-#
-# -------------------------------------------------------------------
+#==================================================================== 
 
-
+#' Methods to extract and replace the variance-covariance matrix
+#' @name vcov
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @aliases vcov,a4aFitSA-method
 setMethod("vcov", signature(object = "a4aFitSA"),
   function(object) {
     vcov(pars(object))
@@ -611,7 +283,7 @@ setMethod("vcov", signature(object = "a4aFitSA"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @aliases vcov,SCAPars-method
 setMethod("vcov", signature(object = "SCAPars"),
   function(object) {
     list(
@@ -622,39 +294,33 @@ setMethod("vcov", signature(object = "SCAPars"),
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @aliases vcov,a4aStkParams-method
 setMethod("vcov", signature(object = "a4aStkParams"),
   function(object) {
       object @ vcov
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @aliases vcov,submodels-method
 setMethod("vcov", signature(object = "submodels"),
   function(object) {
       lapply(object, vcov)
   })
 
 
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname vcov-methods
+#' @aliases coef,submodel-method
 setMethod("vcov", signature(object = "submodel"),
   function(object) {
       object @ vcov
   })
 
-
-# -------------------------------------------------------------------
-#
-#
+#==================================================================== 
 #    vcov<-  methods
-#
-#
-# -------------------------------------------------------------------
-
+#==================================================================== 
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFit-method
+#' @aliases vcov<-,a4aFitSA,numeric-method
 setMethod("vcov<-", signature(object = "a4aFitSA", value = "numeric"),
   function(object, ..., value) {
     vcov(object @ pars) <- value
@@ -663,7 +329,7 @@ setMethod("vcov<-", signature(object = "a4aFitSA", value = "numeric"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFit-method
+#' @aliases vcov<-,SCAPars,numeric-method
 setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
   function(object, ..., value) {
     v <- vcov(object)
@@ -679,7 +345,7 @@ setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @aliases vcov<-,a4aStkParams,numeric-method
 setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
   function(object, ..., value) {    
     object @ vcov[] <- value
@@ -687,7 +353,7 @@ setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @aliases vcov<-,submodels,numeric-method
 setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
   function(object, ..., value) {
     v <- vcov(object)
@@ -700,35 +366,30 @@ setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
     object
   })
 
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname vcov-methods
+#' @aliases vcov<-,submodel,numeric-method
 setMethod("vcov<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
       object @ vcov[] <- value
       object
   })
 
-
-# -------------------------------------------------------------------
-#
-#
+#==================================================================== 
 #    predict  methods
-#
-#
-# -------------------------------------------------------------------
+#==================================================================== 
 
-
+#' Predict methods for stock assessment fits
+#' @name predict
 #' @rdname predict-methods
-#' @aliases predict,FLa4aFit-method
+#' @aliases predict,a4aFitSA-method
 setMethod("predict", signature(object = "a4aFitSA"),
   function(object) {
     predict(pars(object))
   })
 
 
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname predict-methods
+#' @aliases predict,SCAPars-method
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
     list(
@@ -738,8 +399,8 @@ setMethod("predict", signature(object = "SCAPars"),
     )
   })
 
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname predict-methods
+#' @aliases predict,a4aStkParams-method
 setMethod("predict", signature(object = "a4aStkParams"),
   function(object) {
       ages <- range(object)["min"]:range(object)["max"]
@@ -782,17 +443,16 @@ setMethod("predict", signature(object = "a4aStkParams"),
       list(harvest = harvest, rec = rec, ny1 = ny1)
 })
 
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname predict-methods
+#' @aliases predict,submodels-method
 setMethod("predict", signature(object = "submodels"),
   function(object, ...) {
       lapply(object, predict)
   })
 
 
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname predict-methods
+#' @aliases predict,submodel-method
 setMethod("predict", signature(object = "submodel"),
   function(object, ...) {
       ages <- range(object)["min"]:range(object)["max"]
@@ -809,49 +469,19 @@ setMethod("predict", signature(object = "submodel"),
                                          iter = seq(niter))))
   })
 
-
-
-
-
-# -------------------------------------------------------------------
-#
-#
+#==================================================================== 
 #    simulate  methods
-#
-#
-# -------------------------------------------------------------------
+#==================================================================== 
 
-#' @rdname genFLStock-methods
-#' @aliases genFLStock,a4aFitSA,missing,a4aFitSA-method
-setMethod("genFLStock", c("FLStock", "a4aFitSA", "missing", "missing"), 
-  function(object, R, ...){
-    object + R
-})
+#setGeneric("simulate", useAsDefault = stats::simulate)
+setGeneric("simulate", useAsDefault = simulate)
 
 
-#' Calculate the median accross iterations
+#' Simulation methods for stock assessment fits
 #'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname coef-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
-setGeneric("simulate", useAsDefault = stats::simulate)
-
-
-#' @rdname vcov-methods
-#' @aliases vcov,FLa4aFit-method
+#' @name simulate
+#' @rdname simulate-methods
+#' @aliases simulate,a4aFitSA-method
 setMethod("simulate", signature(object = "a4aFitSA"),
   function(object, nsim = 1, iter = NULL) {
     out <- object
@@ -895,9 +525,8 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     out
 })
 
-
-#' @rdname vcov-methods
-#' @aliases vcov,FLa4aFit-method
+#' @rdname simulate-methods
+#' @aliases simulate,SCAPars-method
 setMethod("simulate", signature(object = "SCAPars"),
   function(object, nsim = 1, iter = NULL) {    
     out <- object
@@ -909,9 +538,8 @@ setMethod("simulate", signature(object = "SCAPars"),
     out
   })
 
-
-#' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @rdname simulate-methods
+#' @aliases simulate,a4aStkParams-method
 setMethod("simulate", signature(object = "a4aStkParams"),
   function(object, nsim = 1, iter = NULL) {    
 
@@ -973,17 +601,16 @@ setMethod("simulate", signature(object = "a4aStkParams"),
     return(out)
 })
 
-#' @rdname vcov-methods
-#' @aliases vcov,FLa4aFitSA-method
+#' @rdname simulate-methods
+#' @aliases simulate,submodels-method
 setMethod("simulate", signature(object = "submodels"),
   function(object, nsim = 1, iter = NULL) {
     out <- lapply(object, simulate, nsim = nsim, iter = iter)
     submodels(out)
   })
 
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
+#' @rdname simulate-methods
+#' @aliases simulate,submodel-method
 setMethod("simulate", signature(object = "submodel"),
   function(object, nsim = 1, iter = NULL) {
 
@@ -1044,19 +671,14 @@ setMethod("simulate", signature(object = "submodel"),
     return(out)
 })
 
+#==================================================================== 
+# "+" methods
+#==================================================================== 
 
-
-
-
-# -------------------------------------------------------------------
-#
-#
-#    '+'  methods
-#
-#
-# -------------------------------------------------------------------
-
-
+#' + methods
+#' @name +
+#' @rdname addition-methods
+#' @aliases +,a4aFit-method
 setMethod("+", c("FLStock", "a4aFit"), function(e1, e2) 
 {
 
@@ -1073,13 +695,15 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   e1
 })
 
-
+#' @rdname addition-methods
+#' @aliases +,FLStock,a4aFitSA-method
 setMethod("+", c("FLStock", "a4aFitSA"), function(e1, e2) 
 {
   e1 + pars(e2)
 })
 
-
+#' @rdname addition-methods
+#' @aliases +,FLStock,SCAPars-method
 setMethod("+", c("FLStock", "SCAPars"), function(e1, e2) 
 {
 
@@ -1117,7 +741,8 @@ setMethod("+", c("FLStock", "SCAPars"), function(e1, e2)
 })
 
 
-
+#' @rdname addition-methods
+#' @aliases +,FLIndices,a4aFit-method
 setMethod("+", c("FLIndices", "a4aFit"), function(e1, e2) 
 {
 
@@ -1135,12 +760,16 @@ setMethod("+", c("FLIndices", "a4aFit"), function(e1, e2)
   e1
 })
 
+#' @rdname addition-methods
+#' @aliases +,FLIndices,a4aFitSA-method
 setMethod("+", c("FLIndices", "a4aFitSA"), function(e1, e2) 
 {
   e1 + pars(e2)
 })
 
 
+#' @rdname addition-methods
+#' @aliases +,FLIndices,SCAPars-method
 setMethod("+", c("FLIndices", "SCAPars"), function(e1, e2) 
 {
 

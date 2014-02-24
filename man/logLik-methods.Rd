@@ -2,8 +2,8 @@
 \name{logLik}
 \alias{logLik}
 \alias{logLik,FLa4aFit-method}
-\title{Hello}
+\title{Method to extract the log likelihood}
 \description{
-  Hello
+  Method to extract the log likelihood
 }
 
