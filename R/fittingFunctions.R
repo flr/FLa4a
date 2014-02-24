@@ -459,10 +459,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   #
   # ------------------------------------------------------------------------
 
-
-  # make sure contrasts are set to sumto zero for better performance
-  opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly")) 
-
   # F model matrix
   Xf <- getX(fmodel, subset(full.df, fleet == "catch"))
   # F model offsets
@@ -539,10 +535,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # internal r model matrix
   if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year) 
   Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
-
- 
-  # reset contrast options
-  options(opts)
 
   # ------------------------------------------------------------------------
   #
