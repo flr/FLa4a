@@ -1,44 +1,19 @@
 \docType{methods}
 \name{coef}
 \alias{coef}
-\alias{coef,FLa4aFit-method}
-\alias{coef,FLa4aFitSA-method}
+\alias{coef,a4aFitSA-method}
+\alias{coef,a4aStkParams-method}
+\alias{coef,SCAPars-method}
+\alias{coef,submodel-method}
+\alias{coef,submodels-method}
 \alias{coef<-}
-\alias{predict}
-\alias{simulate}
-\alias{vcov}
-\alias{vcov<-}
-\title{Calculate the median accross iterations}
-\arguments{
-  \item{object}{an FLQuant with iters}
-
-  \item{...}{Additional argument list that might not ever
-  be used.}
-
-  \item{object}{an FLQuant with iters}
-
-  \item{...}{Additional argument list that might not ever
-  be used.}
-}
-\value{
-  an FLQuant
-
-  an FLQuant
-}
+\alias{coef<-,a4aFitSA,numeric-method}
+\alias{coef<-,a4aStkParams,numeric-method}
+\alias{coef<-,SCAPars,numeric-method}
+\alias{coef<-,submodel,numeric-method}
+\alias{coef<-,submodels,numeric-method}
+\title{Methods to extract and replace the model coefficients}
 \description{
-  Calculate the median accross iterations
-
-  Calculate the median accross iterations
-}
-\examples{
-data(ple4)
-genFLQuant(harvest(ple4), method = "ac")
-data(ple4)
-genFLQuant(harvest(ple4), method = "ac")
-}
-\seealso{
-  \code{\link{print}} and \code{\link{cat}}
-
-  \code{\link{print}} and \code{\link{cat}}
+  Methods to extract and replace the model coefficients
 }
 

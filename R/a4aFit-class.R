@@ -172,4 +172,25 @@ setMethod("catch.n", "a4aFit", function(object) object@catch.n)
 #' @aliases catch.n,FLa4aFit-method
 setMethod("index", "a4aFit", function(object) object@index)
 
+#' Method to extract the log likelihood 
+#' @name logLik
+#' @docType methods
+#' @rdname logLik-methods
+#' @aliases logLik,FLa4aFit-method
+setMethod("logLik", signature(object = "a4aFit"),
+  function(object, ...) 
+  {  
+    dim2 <- length(dim(object @ fitSumm))
+    if (dim2 == 1) {
+      val <- -1 * unname(object @ fitSumm["nlogl"])
+      attr(val, "nobs") <- unname(object @ fitSumm["nobs"])
+      attr(val, "df") <- unname(object@fitSumm["nopar"])
+    } else if (dim2 == 2) {
+      val <- -1 * unname(object @ fitSumm["nlogl",])
+      attr(val, "nobs") <- unname(object @ fitSumm["nobs",])
+      attr(val, "df") <- unname(object@fitSumm["nopar",])
+    }
+    class(val) <- "logLik"
+    val
+ })
 
