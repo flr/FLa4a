@@ -2,6 +2,9 @@
 \name{coef}
 \alias{coef}
 \alias{coef,FLa4aFit-method}
+\alias{coef,FLa4aFitSA-method}
+\alias{coef<-}
+\alias{predict}
 \alias{simulate}
 \alias{vcov}
 \alias{vcov<-}
