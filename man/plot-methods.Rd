@@ -29,7 +29,7 @@ data(ple4.index)
 fmodel <- ~factor(age) + factor(year)
 qmodel <- list(~factor(age))
 fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-stdlogres(catch.n(ple4), catch.n(fit.))
+flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
 plot(flqs)
 }
 \author{

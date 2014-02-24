@@ -36,6 +36,7 @@ Collate:
     'a4aFitSA-class.R'
     'a4aFitExt-class.R'
     'a4aFitMCMC-class.R'
+    'FLModelSimMethods.R'
     'Methods.R'
     'utilities.R'
     'priorModels.R'
@@ -44,7 +45,6 @@ Collate:
     'plotting.R'
     'setupModel.R'
     'fittingFunctions.R'
-    'FLModelSimMethods.R'
     'assortedMethods.R'
     'a4aM-class.R'
     'a4aM-methods.R'
@@ -55,3 +55,4 @@ Collate:
     'FLCompMethods.R'
     'modelAveragingFunctions.R'
     'a4aFitresiduals-class.R'
+    
