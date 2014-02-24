@@ -821,9 +821,9 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
 
     #
     # fill up stkmodel
-    pars @ stkmodel @ name      <- name
-    pars @ stkmodel @ desc      <- desc
-    pars @ stkmodel @ range     <- range
+    pars @ stkmodel @ name      <- stock @ name
+    pars @ stkmodel @ desc      <- stock @ desc
+    pars @ stkmodel @ range     <- stock @ range
     pars @ stkmodel @ centering <- center.log[1]
     pars @ stkmodel @  fMod     <- fmodel
     pars @ stkmodel @ n1Mod     <- n1model 
@@ -848,8 +848,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     ##pars @ stkmodel @ vcov <- solve(out $ prec[whichcol, whichcol])
     # or just the full vcov matrix, unconditional on the other things...
     pars @ stkmodel @ vcov <- out $ cov[whichcol, whichcol]
-
-
 
     #
     # fill up qmodel
