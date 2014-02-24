@@ -42,7 +42,7 @@ setMethod("show", signature(object = "a4aFitSA"),
     # something to format the qmodel and vmodel    
     printFormList <- function(frmL) {
       if (length(frmL) == 0) return(invisible(NA))
-      mods <- lapply(frmL, model)
+      mods <- lapply(frmL, slot, "Mod")
       mnames <- names(mods)
       maxname <- max(sapply(mnames, nchar))
       for (i in seq(length(mods))) {
