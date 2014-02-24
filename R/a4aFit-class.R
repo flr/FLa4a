@@ -1,7 +1,31 @@
-# a4aFit-class - «Short one line description»
-# a4aFit-class
+#' @title S4 class \code{a4aFit}
+#'
+#' @description The \code{a4aFit} class was built to store the a4a stock assessment fits.
+#'
+#' @section Slots:
+#' \describe{
+#'    \item{call}{The function call}
+#'
+#'    \item{clock}{Information on call duration}
+#'
+#'    \item{fitSumm}{Fit summary}
+#'
+#'    \item{stock.n}{Estimates of stock numbers-at-age}
+#'
+#'    \item{harvest}{Estimates of fishing mortality at age}
+#'
+#'    \item{catch.n}{Estimates of catch numbers-at-age}
+#'
+#'    \item{index}{Estimates of indices at age}
+#'
+#'  }
+#' @template Accessors
+#' @template Constructors
+#' @docType class
+#' @name a4aFit-class
+#' @rdname a4aFit-class
+#' @template Example-a4aFit
 
-##
 va4aFit <- function(object) {
 
         # All FLQuant objects must have same dimensions
@@ -12,20 +36,8 @@ va4aFit <- function(object) {
         return(TRUE)
 }
 
-#' a4aFit extends \code{"FLComp"} class.
-#'
-#' Some details about this class and my plans for it in the body.
-#'
-#' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
-#'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
-#'  }
-#' @name a4aFit-class
 #' @rdname a4aFit-class
-#' @exportClass a4aFit
+#' @alias a4aFit-class
 setClass("a4aFit",
         representation(
                 "FLComp",
@@ -47,32 +59,12 @@ setClass("a4aFit",
         validity = va4aFit
 )
 
-# constructor
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFit-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname a4aFit-class
+#' @alias a4aFit a4aFit-methods
 setGeneric("a4aFit", function(object, ...) standardGeneric("a4aFit"))
 
-#' Title 
-#' @name a4aFit
-#' @docType methods
-#' @rdname a4aFit-methods
-#' @aliases a4aFit,a4aFit-method
+#' @rdname a4aFit-class
+#' @aliases a4aFit,missing-method
 setMethod("a4aFit", signature(object="missing"),
   function(...) {
     # empty
@@ -87,14 +79,28 @@ setMethod("a4aFit", signature(object="missing"),
   }
 )
 
+#' @rdname a4aFit-class
+#' @aliases clock,a4aFit-method
+setGeneric("clock", function(object, ...) standardGeneric("clock"))
+setMethod("clock", "a4aFit", function(object) object@clock)
 
+#' @rdname a4aFit-class
+#' @aliases stock.n,a4aFit-method
+setMethod("stock.n", "a4aFit", function(object) object@stock.n)
 
-# show method
+#' @rdname a4aFit-class
+#' @aliases harvest,a4aFit-method
+setMethod("harvest", "a4aFit", function(object) object@harvest)
 
-#' Hello 
-#' @name show
-#' @docType methods
-#' @rdname show-methods
+#' @rdname a4aFit-class
+#' @aliases catch.n,a4aFit-method
+setMethod("catch.n", "a4aFit", function(object) object@catch.n)
+
+#' @rdname a4aFit-class
+#' @aliases index,a4aFit-method
+setMethod("index", "a4aFit", function(object) object@index)
+
+#' @rdname a4aFit-class
 #' @aliases show,a4aFit-method
 setMethod("show", signature(object = "a4aFit"),
   function(object) 
@@ -141,42 +147,8 @@ setMethod("show", signature(object = "a4aFit"),
 #    cat("\n log Likelihood: ", c(logLik(object)), "\n", sep = "")
 # })
 
-
-# accessors
-
-#' Title 
-#' @name stock.n
-#' @docType methods
-#' @rdname stock.n-methods
-#' @aliases stock.n,a4aFit-method
-setMethod("stock.n", "a4aFit", function(object) object@stock.n)
-
-#' Title 
-#' @name harvest
-#' @docType methods
-#' @rdname harvest-methods
-#' @aliases harvest,FLa4aFit-method
-setMethod("harvest", "a4aFit", function(object) object@harvest)
-
-#' Title 
-#' @name catch.n
-#' @docType methods
-#' @rdname catch.n-methods
-#' @aliases catch.n,FLa4aFit-method
-setMethod("catch.n", "a4aFit", function(object) object@catch.n)
-
-#' Title 
-#' @name catch.n
-#' @docType methods
-#' @rdname catch.n-methods
-#' @aliases catch.n,FLa4aFit-method
-setMethod("index", "a4aFit", function(object) object@index)
-
-#' Method to extract the log likelihood 
-#' @name logLik
-#' @docType methods
-#' @rdname logLik-methods
-#' @aliases logLik,FLa4aFit-method
+#' @rdname a4aFit-class
+#' @aliases logLik,a4aFit-method
 setMethod("logLik", signature(object = "a4aFit"),
   function(object, ...) 
   {  

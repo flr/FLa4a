@@ -1,20 +1,18 @@
-
-
-
-#' a4aFitSA extends \code{"a4aFit"} class.
+#' @title S4 class \code{a4aFitMCMC}
 #'
-#' Some details about this class and my plans for it in the body.
+#' @description The \code{a4aFitMCMC} class extends \code{a4aFit} and was built to store the MCMC simulations of an a4a stock assessment fit.
 #'
+#' @section Slots:
 #' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
+#'    \item{pars}{Matrix with model parameters}
 #'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
 #'  }
-#' @name a4aFitSA-class
-#' @rdname a4aFitSA-class
-#' @exportClass a4aFitSA
+#' @template Accessors
+#' @template Constructors
+#' @docType class
+#' @name a4aFitMCMC-class
+#' @rdname a4aFitMCMC-class
+#' @alias a4aFitMCMC-class
 setClass("a4aFitMCMC",
         representation(
                 "a4aFit",
@@ -24,38 +22,12 @@ setClass("a4aFitMCMC",
                 pars    = new('matrix'))
 )
 
-# show method
-
-
-
-
-
-# constructor
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname a4aFitMCMC-class
+#' @alias a4aFitMCMC a4aFitMCMC-methods
 setGeneric("a4aFitMCMC", function(object, ...) standardGeneric("a4aFitMCMC"))
 
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
+#' @rdname a4aFitMCMC-class
+#' @alias a4aFitMCMC,missing-method
 setMethod("a4aFitMCMC", signature(object="missing"),
   function(...) {
     # empty
@@ -70,6 +42,8 @@ setMethod("a4aFitMCMC", signature(object="missing"),
   }
 )
 
+#' @rdname a4aFitMCMC-class
+#' @alias a4aFit,a4aFitMCMC-method
 setMethod("a4aFit", signature(object="a4aFitMCMC"),
   function(object, ...) {
     out <- a4aFit()
@@ -86,7 +60,8 @@ setMethod("a4aFit", signature(object="a4aFitMCMC"),
   }
 )
 
-
+#' @rdname a4aFitMCMC-class
+#' @alias a4aFitMCMC,a4aFit-method
 setMethod("a4aFitMCMC", signature(object="a4aFit"),
   function(object, ...) {
     out <- a4aFitMCMC()

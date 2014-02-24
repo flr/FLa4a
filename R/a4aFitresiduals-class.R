@@ -1,52 +1,16 @@
-# a4aFitResiduals-class - «Short one line description»
-# a4aFitResiduals-class
-
-#' a4aFitResiduals extends \code{"FLQuant"} class.
+#' @title S4 class \code{a4aFitResiduals}
 #'
-#' Some details about this class and my plans for it in the body.
+#' @description The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default these should be log residuals of catches and indices.
 #'
-#' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
-#'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
-#'  }
+#' @docType class
 #' @name a4aFitResiduals-class
 #' @rdname a4aFitResiduals-class
-#' @exportClass a4aFitResiduals
+#' @alias a4aFitResiduals-class
 setClass("a4aFitResiduals", contain="FLQuants")
 
-# constructor
-
-#' Computes log residuals of catches and indices 
-#'
-#' @param a4aFit object
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitResiduals-methods
-#'
-#' @name a4aFit
-#' @docType methods
-#' @rdname a4aFit-methods
-#' @aliases a4aFit,a4aFit-method
-#' @examples
-#' library(FLa4a)
-#' data(ple4)
-#' data(ple4.index)
-#' fmodel <- ~factor(age) + factor(year)
-#' qmodel <- list(~factor(age))
-#' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
-
+#' @rdname a4aFitResiduals-class
+#' @alias a4aFitResiduals a4aFitResiduals-methods residuals,a4aFit-method
+#' @template Example-a4aFitResiduals
 setMethod("residuals", signature(object="a4aFit"), function(object, stock, indices, ...) {
 	args <- list(...)
 	# object holder
@@ -66,27 +30,20 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 )
 
 
-# std log residuals
-
 #' Standardized log residuals 
 #' @name stdlogres
 #' @docType methods
 #' @rdname stdlogres-methods
-#' @aliases stdlogres,stdlogres-method
-#' Method to get K values
-#'
+#' @aliases stdlogres stdlogres,FLQuant,FLQuant-method
 #' @param obs a \code{FLQuant} object with the observations
 #' @param fit a \code{FLQuant} object with the fitted value
 #' @return a \code{FLQuant} with stardardized log residuals
 #' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
 #' @examples
 #' library(FLa4a)
 #' data(ple4)
 #' data(ple4.index)
-#' fmodel <- ~factor(age) + factor(year)
-#' qmodel <- list(~factor(age))
-#' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
+#' fit. <- a4a(stock=ple4, indices=FLIndices(ple4.index))
 #' stdlogres(catch.n(ple4), catch.n(fit.))
 
 setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
