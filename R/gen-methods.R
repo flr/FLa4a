@@ -5,7 +5,7 @@
 # NOTE #2:
 ###############################################################################
 
-#' Methods to genetate FLStock objects
+#' Methods to generate FLStock objects
 #'
 #' Some additional details about this S4 generic and its methods.
 #' The extra blank line between this section and the title is
@@ -33,20 +33,20 @@
 #' sim.F <- genFLQuant(harvest(ple4))
 setGeneric("genFLStock", function(object, R, C, F, ...) standardGeneric("genFLStock"))
 
-#' @rdname au-methods
-#' @aliases au,FLStock,FLQuant,FLQuant,missing-method
+#' @rdname genFLStock-methods
+#' @aliases genFLStock,FLStock,FLQuant,FLQuant,missing-method
 setMethod("genFLStock", c("FLStock", "FLQuant", "FLQuant", "missing"), function(object, R, C, F, ...){
 	cat("Not implemented yet\n")
 })
 
-#' @rdname au-methods
-#' @aliases au,FLStock,missing,FLQuant,FLQuant-method
+#' @rdname genFLStock-methods
+#' @aliases genFLStock,FLStock,FLQuant,FLQuant,missing-method
 setMethod("genFLStock", c("FLStock", "missing", "FLQuant", "FLQuant"), function(object, R, C, F, ...){
 	cat("Not implemented yet\n")
 })
 
-#' @rdname au-methods
-#' @aliases au,FLStock,FLQuant,missing,FLQuant-method
+#' @rdname genFLStock-methods
+#' @aliases genFLStock,FLStock,FLQuant,FLQuant,missing-method
 setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(object, R, C, F, ...){
 	# requires checking dimensions
 	if(!identical(dim(catch.n(object))[-c(1,6)], dim(R)[-c(1,6)])) stop("Recruitment vector must have consistent dimensions with the stock object")

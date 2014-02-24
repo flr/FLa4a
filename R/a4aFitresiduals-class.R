@@ -124,9 +124,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' plot(flqs)
 
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
-
 	xyplot(data~year|factor(age)*qname, type=c("p", "smooth"), groups=qname, data=x, cex=0.3, lwd=2, ylab="standardized residuals", xlab="", panel=function(x,y,...){panel.abline(h=0, col.line="gray80");panel.xyplot(x,y,...)}, par.settings=list(superpose.symbol=list(col="gray50", pch=19, cex=0.2), superpose.line=list(col=1, lty=1, lwd=2), strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="log residuals of catch and abundance indices", ...)
-
 })
 
 #' qqplot of standardized log residuals 
