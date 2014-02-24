@@ -158,7 +158,7 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
 
     if (i == 1) {
       tmpSumm <- outi @ fitSumm
-      out @ fitSumm                     <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
+      out @ fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
     }
     out @ fitSumm[,i] <- outi @ fitSumm
       

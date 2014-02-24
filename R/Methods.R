@@ -463,6 +463,13 @@ setMethod("catch.lres", signature(object = "a4aFit"),
   })
 
 
+# -------------------------------------------------------------------
+#
+#
+#    coef  methods
+#
+#
+# -------------------------------------------------------------------
 
 
 #' Calculate the median accross iterations
@@ -489,7 +496,7 @@ setGeneric("coef", function(object, ...) standardGeneric("coef"))
 #' @aliases coef,FLa4aFit-method
 setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
-	  coef(object @ pars)
+	  coef(pars(object))
   })
 
 
@@ -498,12 +505,342 @@ setMethod("coef", signature(object = "a4aFitSA"),
 setMethod("coef", signature(object = "SCAPars"),
   function(object) {
     list(
-      stkmodel = object @ stkmodel @ params,
-      qmodel   = lapply(object @ qmodel, function(x) x @ params),
-      vmodel   = lapply(object @ vmodel, function(x) x @ params)
+      stkmodel = coef(stkmodel(object)),
+      qmodel   = coef(qmodel(object)),
+      vmodel   = coef(vmodel(object))
     )
   })
 
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "a4aStkParams"),
+  function(object) {
+      object @ params
+  })
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "submodels"),
+  function(object) {
+      lapply(object, coef)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef", signature(object = "submodel"),
+  function(object) {
+      object @ params
+  })
+
+
+# -------------------------------------------------------------------
+#
+#
+#    coef<-  methods
+#
+#
+# -------------------------------------------------------------------
+
+setGeneric("coef<-", function(object, ..., value) standardGeneric("coef<-"))
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef<-", signature(object = "a4aFitSA", value = "numeric"),
+  function(object, ..., value) {
+    coef(object @ pars) <- value
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
+  function(object, ..., value) {
+    v <- coef(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    coef(object @ stkmodel) <- new[grep("stkmodel", names(old))]
+    coef(object @ qmodel) <- new[grep("qmodel.", names(old))]
+    coef(object @ vmodel) <- new[grep("vmodel.", names(old))]
+
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFitSA-method
+setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
+  function(object, ..., value) {    
+    object @ params[] <- value
+    object
+  })
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFitSA-method
+setMethod("coef<-", signature(object = "submodels", value = "numeric"),
+  function(object, ..., value) {
+    v <- coef(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    for (i in seq_along(object)) {
+      object[[i]] @ params[] <- new[grep(object[[i]] @ name, names(old))]  
+    }
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("coef<-", signature(object = "submodel", value = "numeric"),
+  function(object, ..., value) {
+      object @ params[] <- value
+      object
+  })
+
+# -------------------------------------------------------------------
+#
+#
+#    vcov  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "a4aFitSA"),
+  function(object) {
+    vcov(pars(object))
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "SCAPars"),
+  function(object) {
+    list(
+      stkmodel = vcov(stkmodel(object)),
+      qmodel   = vcov(qmodel(object)),
+      vmodel   = vcov(vmodel(object))
+    )
+  })
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "a4aStkParams"),
+  function(object) {
+      object @ vcov
+  })
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov", signature(object = "submodels"),
+  function(object) {
+      lapply(object, vcov)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov", signature(object = "submodel"),
+  function(object) {
+      object @ vcov
+  })
+
+
+# -------------------------------------------------------------------
+#
+#
+#    vcov<-  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFit-method
+setMethod("vcov<-", signature(object = "a4aFitSA", value = "numeric"),
+  function(object, ..., value) {
+    vcov(object @ pars) <- value
+    object
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFit-method
+setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
+  function(object, ..., value) {
+    v <- vcov(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    vcov(object @ stkmodel) <- new[grep("stkmodel", names(old))]
+    vcov(object @ qmodel) <- new[grep("qmodel.", names(old))]
+    vcov(object @ vmodel) <- new[grep("vmodel.", names(old))]
+
+    object
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
+  function(object, ..., value) {    
+    object @ vcov[] <- value
+    object
+  })
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
+  function(object, ..., value) {
+    v <- vcov(object)
+    old <- unlist(v)
+    new <- rep_len(unlist(value), length = length(old))
+    
+    for (i in seq_along(object)) {
+      object[[i]] @ vcov[] <- new[grep(object[[i]] @ name, names(old))]  
+    }
+    object
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("vcov<-", signature(object = "submodel", value = "numeric"),
+  function(object, ..., value) {
+      object @ vcov[] <- value
+      object
+  })
+
+
+# -------------------------------------------------------------------
+#
+#
+#    predict  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+#' @rdname predict-methods
+#' @aliases predict,FLa4aFit-method
+setMethod("predict", signature(object = "a4aFitSA"),
+  function(object) {
+    predict(pars(object))
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "SCAPars"),
+  function(object) {
+    list(
+      stkmodel = predict(stkmodel(object)),
+      qmodel   = predict(qmodel(object)),
+      vmodel   = predict(vmodel(object))
+    )
+  })
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "a4aStkParams"),
+  function(object) {
+      ages <- range(object)["min"]:range(object)["max"]
+      years <- range(object)["minyear"]:range(object)["maxyear"]
+      cnames <- rownames(coef(object))
+      df <- expand.grid(age = ages,
+                        year = years)
+      X <- getX(object @ fMod, df)
+      b <- coef(object)[grep("fMod", cnames)]
+      niter <- dim(b)[2] # reuse this for the others
+      fit <- exp(c(X %*% b))
+      harvest <- 
+        FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), 
+                      dimnames = list(age = ages, year = years, 
+                                         unit = "unique", season = "all", area = "unique",
+                                         iter = seq(niter))),
+                units = "f")
+
+
+      X <- getX(object @ n1Mod, data.frame(age = ages[-1]))
+      b <- coef(object)[grep("n1Mod", cnames)]
+      fit <- exp(c(rbind(NA, X %*% b)) + object @ centering)
+      ny1 <-       
+        FLQuant(array(fit, dim = c(length(ages), 1, 1, 1, 1, niter), 
+                      dimnames = list(age = ages, year = years[1], 
+                                         unit = "unique", season = "all", area = "unique",
+                                         iter = seq(niter))))
+
+
+      X <- getX(object @ srMod, data.frame(year = years))
+      b <- coef(object)[grep("rMod", cnames)]
+      fit <- c(exp(c(X %*% b) + object @ centering))
+      rec <-     
+        FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter), 
+                      dimnames = list(age = ages[1], year = years, 
+                                         unit = "unique", season = "all", area = "unique",
+                                         iter = seq(niter))))
+
+
+      list(harvest = harvest, rec = rec, ny1 = ny1)
+})
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "submodels"),
+  function(object, ...) {
+      lapply(object, predict)
+  })
+
+
+#' @rdname coef-methods
+#' @aliases coef,FLa4aFit-method
+setMethod("predict", signature(object = "submodel"),
+  function(object, ...) {
+      ages <- range(object)["min"]:range(object)["max"]
+      years <- range(object)["minyear"]:range(object)["maxyear"]
+      df <- expand.grid(age = ages,
+                        year = years)
+      X <- getX(object @ Mod, df)
+      b <- coef(object)
+      niter <- dim(b)[2]
+      fit <- exp(c(X %*% b) + object @ centering)
+      FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), 
+                         dimnames = list(age = ages, year = years, 
+                                         unit = "unique", season = "all", area = "unique",
+                                         iter = seq(niter))))
+  })
+
+
+# -------------------------------------------------------------------
+#
+#
+#    residual  methods
+#
+#
+# -------------------------------------------------------------------
+
+
+
+# -------------------------------------------------------------------
+#
+#
+#    simulate  methods
+#
+#
+# -------------------------------------------------------------------
+
+#' @rdname au-methods
+#' @aliases au,a4aFitSA,missing,a4aFitSA-method
+setMethod("genFLStock", c("a4aFitSA", "missing", "missing", "missing"), 
+  function(object, ...){
+    simulate(object)
+})
 
 
 #' Calculate the median accross iterations
@@ -526,152 +863,166 @@ setMethod("coef", signature(object = "SCAPars"),
 #' genFLQuant(harvest(ple4), method = "ac")
 setGeneric("simulate", useAsDefault = stats::simulate)
 
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, seed = NULL) {
+# #' @rdname coef-methods
+# #' @aliases coef,FLa4aFit-method
+# setMethod("simulate", signature(object = "a4aFitSA"),
+#   function(object, nsim = 1, seed = NULL) {
 
-    if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) runif(1)
-    if (is.null(seed)) {
-        RNGstate <- get(".Random.seed", envir = .GlobalEnv)
-    } else {
-        R.seed <- get(".Random.seed", envir = .GlobalEnv)
-        set.seed(seed)
-        RNGstate <- structure(seed, kind = as.list(RNGkind()))
-        on.exit(assign(".Random.seed", R.seed, envir = .GlobalEnv))
-    }
 
-    object <- pars(object)
+#     object <- pars(object)
 
-    years <- range(object @ stkmodel)[c("minyear","maxyear")]
-    ages <- range(object @ stkmodel)[c("min","max")]
+#     years <- range(object @ stkmodel)[c("minyear","maxyear")]
+#     ages <- range(object @ stkmodel)[c("min","max")]
   
-    #
-    # Build design matrix for catches only
-    #
-    full.df <- expand.grid(age  = ages[1]:ages[2],
-                           year = years[1]:years[2])[2:1]
+#     #
+#     # Build design matrix for catches only
+#     #
+#     full.df <- expand.grid(age  = ages[1]:ages[2],
+#                            year = years[1]:years[2])[2:1]
  
-#    if (!is.null(covar)) {
-#    # add in covariates to data.frame - it is easiest to provide covariates in one list
-#    tmp <- 
-#      lapply(seq_along(covar), 
-#        function(i) {
-#          x <- as.data.frame(covar[[i]])[c(1,2,7)]
-#          if (length(unique(x $ age)) == 1) x <- x[names(x) != "age"]
-#          if (length(unique(x $ year)) == 1) x <- x[names(x) != "year"]
-#          names(x) <- gsub("data", names(covar)[i], names(x))
-#          x
-#        })
-#    covar.df <- tmp[[1]]
-#    for (i in seq(length(covar) - 1)) covar.df <- merge(covar.df, tmp[[i + 1]], all = TRUE, sort = FALSE)
-#
-#    full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
-#    } 
+# #    if (!is.null(covar)) {
+# #    # add in covariates to data.frame - it is easiest to provide covariates in one list
+# #    tmp <- 
+# #      lapply(seq_along(covar), 
+# #        function(i) {
+# #          x <- as.data.frame(covar[[i]])[c(1,2,7)]
+# #          if (length(unique(x $ age)) == 1) x <- x[names(x) != "age"]
+# #          if (length(unique(x $ year)) == 1) x <- x[names(x) != "year"]
+# #          names(x) <- gsub("data", names(covar)[i], names(x))
+# #          x
+# #        })
+# #    covar.df <- tmp[[1]]
+# #    for (i in seq(length(covar) - 1)) covar.df <- merge(covar.df, tmp[[i + 1]], all = TRUE, sort = FALSE)
+# #
+# #    full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
+# #    } 
 
-    # make sure contrasts are set to sumto zero to match fit
-    opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly")) 
+#     # make sure contrasts are set to sumto zero to match fit
+#     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly")) 
   
-    # f model matrix
-    Xf <- Matrix(getX(object @ stkmodel @ fMod, full.df))
+#     # f model matrix
+#     Xf <- Matrix(getX(object @ stkmodel @ fMod, full.df))
 
-    # initial age structure model matrix
-    Xny1 <- getX(object @ stkmodel @ n1Mod, subset(full.df, year == min(year) & age > min(age)))
+#     # initial age structure model matrix
+#     Xny1 <- getX(object @ stkmodel @ n1Mod, subset(full.df, year == min(year) & age > min(age)))
+
+#     # Q model matrix  
+#     fleet.names <- c("catch", names(object @ qmodel))
+#     Xqlist <- lapply(seq_along(object @ qmodel), function(i) getX(object @ qmodel[[i]] @ Mod, subset(full.df, fleet == fleet.names[i+1])))
+#     Xq <- as.matrix(do.call(bdiag, Xqlist))  
+  
+#     # var model matrix
+#     Xvlist <- lapply(1:length(fleet.names), function(i) getX(object @ vmodel[[i]] @ Mod, subset(full.df, fleet == fleet.names[i])))
+#     Xv <- as.matrix(do.call(bdiag, Xvlist))   
     
-    # now separate the sr model element
-    facs <- strsplit(as.character(object @ stkmodel @ srMod)[length(object @ stkmodel @ srMod)], "[+]")[[1]]
-    facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
-    a4as <- grepl(paste("(^",c("bevholt", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
+#     # now separate the sr model element
+#     facs <- strsplit(as.character(object @ stkmodel @ srMod)[length(object @ stkmodel @ srMod)], "[+]")[[1]]
+#     facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
+#     a4as <- grepl(paste("(^",c("bevholt", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
 
-    # internal r model matrix
-    if (sum(a4as) == 0) rmodel <- object @ stkmodel @ srMod else rmodel <- ~ factor(year) 
-    Xr <- getX(rmodel, subset(full.df, age == min(age)))
+#     # internal r model matrix
+#     if (sum(a4as) == 0) rmodel <- object @ stkmodel @ srMod else rmodel <- ~ factor(year) 
+#     Xr <- getX(rmodel, subset(full.df, age == min(age)))
 
-    # reset options
-    options(opts)
+#     # reset options
+#     options(opts)
 
-    # always simulate from b distribution for SA class.  If you want fitted values do FLStock + a4aFit(a4aFitSA)
-    b.sim <- Matrix(simulate(object, nsim = nsim) @ stkmodel @ params @ .Data)
+#     # always simulate from b distribution for SA class.  If you want fitted values do FLStock + a4aFit(a4aFitSA)
+#     b.sim <- Matrix(simulate(object, nsim = nsim) @ stkmodel @ params @ .Data)
 
-    # matrix of predictions
-    Xbeta <- bdiag(Xf, Xny1, Xr) %*% b.sim
+#     # matrix of predictions
+#     Xbeta <- bdiag(Xf, Xny1, Xr) %*% b.sim
 
-    # plusgroup?
-    rng <- range(object @ stkmodel)
-    plusgrp <- !is.na(rng["plusgroup"]) && rng["plusgroup"] >= rng["max"]
+#     # plusgroup?
+#     rng <- range(object @ stkmodel)
+#     plusgrp <- !is.na(rng["plusgroup"]) && rng["plusgroup"] >= rng["max"]
 
-    # unpack m - good for recycling
-    Ms   <- c(m(object) @ .Data)
+#     # unpack m - good for recycling
+#     Ms   <- c(m(object) @ .Data)
  
-    # build stock
-    Fs <- Ns <- array(exp(Xbeta[1:nrow(Xf),]), dim = c(diff(ages)+1, diff(years)+1, ncol(Xbeta)))
-    Ns[] <- NA
-    Ns[-1,1,] <- array(exp(Xbeta[nrow(Xf) + 1:nrow(Xny1),]), dim = c(diff(ages), 1, ncol(Xbeta)))
-    Ns[1,,] <- array(exp(Xbeta[nrow(Xf) + nrow(Xny1) + 1:nrow(Xr),]), dim = c(1, diff(years)+1, ncol(Xbeta)))
-    Zs <- Fs + Ms
-    for (a in 2:dim(Ns)[1]) {
-      Ns[a,-1,] <- Ns[a-1, 1:diff(years),] * exp( - Zs[a-1, 1:diff(years),] )
-    }
-    # if plus group
-    if (plusgrp) {
-      for (y in 1:diff(years)) Ns[a,y+1,] <- Ns[a,y+1,] + Ns[a, y,] * exp( - Zs[a, y,] )
-    } 
-    # apply centering
-    Ns <- Ns * exp(object @ stkmodel @ centering)
+#     # build stock
+#     Fs <- Ns <- array(exp(Xbeta[1:nrow(Xf),]), dim = c(diff(ages)+1, diff(years)+1, ncol(Xbeta)))
+#     Ns[] <- NA
+#     Ns[-1,1,] <- array(exp(Xbeta[nrow(Xf) + 1:nrow(Xny1),]), dim = c(diff(ages), 1, ncol(Xbeta)))
+#     Ns[1,,] <- array(exp(Xbeta[nrow(Xf) + nrow(Xny1) + 1:nrow(Xr),]), dim = c(1, diff(years)+1, ncol(Xbeta)))
+#     Zs <- Fs + Ms
+#     for (a in 2:dim(Ns)[1]) {
+#       Ns[a,-1,] <- Ns[a-1, 1:diff(years),] * exp( - Zs[a-1, 1:diff(years),] )
+#     }
+#     # if plus group
+#     if (plusgrp) {
+#       for (y in 1:diff(years)) Ns[a,y+1,] <- Ns[a,y+1,] + Ns[a, y,] * exp( - Zs[a, y,] )
+#     } 
+#     # apply centering
+#     Ns <- Ns * exp(object @ stkmodel @ centering)
  
-    zfrac <- Fs / Zs * (1 - exp(-Zs))
+#     zfrac <- Fs / Zs * (1 - exp(-Zs))
 
-    dmns <- list(age    = paste(ages[1]:ages[2]), 
-                 year   = paste(years[1]:years[2]),
-                 unit   = "unique", 
-                 season = "all", 
-                 area   = "unique", 
-                 iter   = paste(seq(dim(b.sim)[2])))
+#     dmns <- list(age    = paste(ages[1]:ages[2]), 
+#                  year   = paste(years[1]:years[2]),
+#                  unit   = "unique", 
+#                  season = "all", 
+#                  area   = "unique", 
+#                  iter   = paste(seq(dim(b.sim)[2])))
                
-    dms <- unname(sapply(dmns, length))
+#     dms <- unname(sapply(dmns, length))
 
-    out <- FLStock(
-             stock.n = FLQuant(Ns, dim = dms, dimnames = dmns, units = stkmodel(object) @ units),
-             catch.n = FLQuant(zfrac * Ns, dim = dms, dimnames = dmns, units = stkmodel(object) @ units),
-             harvest = FLQuant(Fs, dim = dms, dimnames = dmns, units = "f"),
-             m       = m(object),
-             range   = object @ stkmodel @ range)
+#     out <- FLStock(
+#              stock.n = FLQuant(Ns, dim = dms, dimnames = dmns, units = stkmodel(object) @ units),
+#              catch.n = FLQuant(zfrac * Ns, dim = dms, dimnames = dmns, units = stkmodel(object) @ units),
+#              harvest = FLQuant(Fs, dim = dms, dimnames = dmns, units = "f"),
+#              m       = m(object),
+#              range   = object @ stkmodel @ range)
+
+#     out
+#   }
+# )
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFit-method
+setMethod("simulate", signature(object = "a4aFitSA"),
+  function(object, nsim = 1, iter = NULL) {
+    out <- object
+    out @ pars <- simulate(pars(object), nsim = nsim, iter = iter)
+    out
+  })
+
+
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFit-method
+setMethod("simulate", signature(object = "SCAPars"),
+  function(object, nsim = 1, iter = NULL) {    
+    out <- object
+    
+    out @ stkmodel <- simulate(object @ stkmodel, nsim = nsim, iter = iter)
+    out @ qmodel <- simulate(object @ qmodel, nsim = nsim, iter = iter)
+    out @ vmodel <- simulate(object @ vmodel, nsim = nsim, iter = iter)
 
     out
-  }
-)
+  })
 
 
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("simulate", signature(object = "SCAPars"),
-  function(object, nsim = 1, seed = NULL, iter = NULL) {
-
-    if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) runif(1)
-    if (is.null(seed)) {
-        RNGstate <- get(".Random.seed", envir = .GlobalEnv)
-    } else {
-        R.seed <- get(".Random.seed", envir = .GlobalEnv)
-        set.seed(seed)
-        RNGstate <- structure(seed, kind = as.list(RNGkind()))
-        on.exit(assign(".Random.seed", R.seed, envir = .GlobalEnv))
-    }
+#' @rdname vcov-methods
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("simulate", signature(object = "a4aStkParams"),
+  function(object, nsim = 1, iter = NULL) {    
 
     # sanity checks
     if (is.null(iter)) {
-      if (nsim == 1) iter <- seq(dim(object @ stkmodel @ params)[2])
+      if (nsim == 1) iter <- seq(dim(object @ params)[2])
       if (nsim > 1) iter <- 1
     } else
     {
       if (nsim == 1) {
-        if (any(iter > dim(object @ stkmodel @ params)[2]) | any(iter < 0)) {
+        if (any(iter > dim(object @ params)[2]) | any(iter < 0)) {
           message("supplied values of iter are not sensible... simulating from all iters")
-          iter <- seq_along(dim(object @ stkmodel @ params)[2])
+          iter <- seq_along(dim(object @ params)[2])
         }
     } else
       {
         if (length(iter) > 1) stop("if nsim > 1 iter must be of length 1")
-        if (iter > dim(object @ stkmodel @ params)[2] | iter < 0) {
+        if (iter > dim(object @ params)[2] | iter < 0) {
           message("supplied values of iter are not sensible... simulating from iter = 1")
           iter <- 1
         }
@@ -679,67 +1030,32 @@ setMethod("simulate", signature(object = "SCAPars"),
     }
     
     # get parameter estimates
-    stkpars <- object @ stkmodel @ params
-    qpars   <- lapply(object @ qmodel, function(x) x @ params)
-    vpars   <- lapply(object @ vmodel, function(x) x @ params)
+    b <- coef(object)
     
     # get parameter variance matrices
-    stkvars <- object @ stkmodel @ vcov
-    qvars   <- lapply(object @ qmodel, function(x) x @ vcov)
-    vvars   <- lapply(object @ vmodel, function(x) x @ vcov)
+    V <- vcov(object)
 
     # simulate some new params from the first iteration only!
-    if (dim(object @ stkmodel @ vcov)[3] == 1) {
+    if (dim(V)[3] == 1) {
       itervar <- rep(1, length(iter))
     } else {
       itervar = iter
     }
-    stkparsim <-
+    parsim <-
       sapply(seq_along(iter),
         function(i) 
-          t(mvrnorm(nsim, c(stkpars[,iter[i]]), stkvars[,,itervar[i]])))
+          t(mvrnorm(nsim, c(b[,iter[i]]), V[,,itervar[i]])))
 
-    qparsim <- 
-      lapply(seq_along(qpars), 
-        function(j) 
-          sapply(seq_along(iter), 
-            function(i) 
-              t(mvrnorm(nsim, c(qpars[[j]][,iter[i]]), qvars[[j]][,,itervar[i]]))))
-
-    vparsim <- 
-      lapply(seq_along(vpars), 
-        function(j) 
-          sapply(seq_along(iter), 
-            function(i) 
-              t(mvrnorm(nsim, c(vpars[[j]][,iter[i]]), vvars[[j]][,,itervar[i]]))))
     
     # load simpars into a SCAPars object and return
     out <- object
     
     if (nsim == 1) { 
-      out @ stkmodel @ params <- object @ stkmodel @ params
+      out @ params <- object @ params
     } else {
-      out @ stkmodel @ params <- propagate(object @ stkmodel @ params[,iter], nsim)
+      out @ params <- propagate(object @ params[,iter], nsim)
     }
-    out @ stkmodel @ params[] <- c(stkparsim)
-
-    for (i in seq_along(out @ qmodel)) {
-      if (nsim == 1) { 
-        out @ qmodel[[i]] @ params <- object @ qmodel[[i]] @ params
-      } else {
-        out @ qmodel[[i]] @ params <- propagate(object @ qmodel[[i]] @ params[,1], nsim)
-      }
-      out @ qmodel[[i]] @ params[] <- c(qparsim[[i]])
-    }
-
-    for (i in seq_along(out @ vmodel)) {
-      if (nsim == 1) { 
-        out @ vmodel[[i]] @ params <- object @ vmodel[[i]] @ params
-      } else {
-        out @ vmodel[[i]] @ params <- propagate(object @ vmodel[[i]] @ params[,1], nsim)
-      }
-      out @ vmodel[[i]] @ params[] <- c(vparsim[[i]])
-    }
+    out @ params[] <- c(parsim)
 
     ####
     # note we set the variance matrices to zero
@@ -748,79 +1064,84 @@ setMethod("simulate", signature(object = "SCAPars"),
     vcov(out) <- 0
 
     return(out)
-  })
+})
 
-
-
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
 #' @rdname vcov-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
-setGeneric("vcov", function(object, ...) standardGeneric("vcov"))
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov", signature(object = "a4aFitSA"),
-  function(object) {
-    vcov(object @ pars)
+#' @aliases vcov,FLa4aFitSA-method
+setMethod("simulate", signature(object = "submodels"),
+  function(object, nsim = 1, iter = NULL) {
+    out <- lapply(object, simulate, nsim = nsim, iter = iter)
+    submodels(out)
   })
 
 
 #' @rdname coef-methods
 #' @aliases coef,FLa4aFit-method
-setMethod("vcov", signature(object = "SCAPars"),
-  function(object) {
-    list(
-      stkmodel = object @ stkmodel @ vcov,
-      qmodel   = lapply(object @ qmodel, function(x) x @ vcov),
-      vmodel   = lapply(object @ vmodel, function(x) x @ vcov)
-    )
-  })
+setMethod("simulate", signature(object = "submodel"),
+  function(object, nsim = 1, iter = NULL) {
 
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov<-", signature(object = "a4aFitSA"),
-  function(object, value) {
-    vcov(object @ pars) <- value
-    object
-  })
-
-
-#' @rdname coef-methods
-#' @aliases coef,FLa4aFit-method
-setMethod("vcov<-", signature(object = "SCAPars"),
-  function(object, value) {
-    v <- vcov(object)
-    old <- unlist(v)
-    new <- rep_len(unlist(value), length = length(old))
+    # sanity checks
+    if (is.null(iter)) {
+      if (nsim == 1) iter <- seq(dim(object @ params)[2])
+      if (nsim > 1) iter <- 1
+    } else
+    {
+      if (nsim == 1) {
+        if (any(iter > dim(object @ params)[2]) | any(iter < 0)) {
+          message("supplied values of iter are not sensible... simulating from all iters")
+          iter <- seq_along(dim(object @ params)[2])
+        }
+    } else
+      {
+        if (length(iter) > 1) stop("if nsim > 1 iter must be of length 1")
+        if (iter > dim(object @ params)[2] | iter < 0) {
+          message("supplied values of iter are not sensible... simulating from iter = 1")
+          iter <- 1
+        }
+      }
+    }
     
-    object @ stkmodel @ vcov[] <- new[grep("stkmodel", names(old))]
-    for (i in seq_along(object @ qmodel)) {
-      object @ qmodel[[i]] @ vcov[] <- new[grep(paste0("qmodel.", object @ qmodel[[i]] @ name), names(old))]  
+    # get parameter estimates
+    b <- coef(object)
+    
+    # get parameter variance matrices
+    V <- vcov(object)
+
+    # simulate some new params from the first iteration of V only!
+    if (dim(V)[3] == 1) {
+      itervar <- rep(1, length(iter))
+    } else {
+      itervar = iter
     }
-    for (i in seq_along(object @ vmodel)) {
-      object @ vmodel[[i]] @ vcov[] <- new[grep(paste0("vmodel.", object @ vmodel[[i]] @ name), names(old))]  
+    parsim <- 
+      sapply(seq_along(iter), 
+            function(i) 
+              t(mvrnorm(nsim, c(b[,iter[i]]), V[,,itervar[i]])))
+
+    # load simpars into a submodel object and return
+    out <- object
+    
+    if (nsim == 1) { 
+      out @ params <- object @ params
+    } else {
+      out @ params <- propagate(object @ params[,iter], nsim)
     }
-    object
-  })
+    out @ params[] <- c(parsim)
+
+    ####
+    # note we set the variance matrices to zero
+    # since having a variance no longer makes sense...
+    ####
+    vcov(out) <- 0
+
+    return(out)
+})
+
+
+
+
+
+
 
 
 

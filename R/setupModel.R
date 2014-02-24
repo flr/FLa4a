@@ -12,6 +12,8 @@ setGeneric("getX", function(object, ...) standardGeneric("getX"))
 
 setMethod("getX", "formula", 
   function(object, df) {
+
+    opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
     model <- object
   
@@ -48,6 +50,9 @@ setMethod("getX", "formula",
         ky <- ceiling(0.35 * length(unique(df $ year)))
         out <- paste("te(", var, ",year, k = c(", ka, ",", ky,"))")
       }
+
+      # reset options
+      options(opts)
       
       out
     }
