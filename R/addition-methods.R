@@ -6,23 +6,11 @@
 #' @name +
 #' @rdname addition-methods
 #' @aliases +,FLStock,a4aFit-method
-setMethod("+", c("FLStock", "a4aFit"), function(e1, e2) 
+setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
 {
 
   niters <- dims(e1) $ iter
   if (niters > 1) stop("adding a basic a4aFit object only makes sence with 1 iteration")
-
-  years <- range(e1)[c("minyear","maxyear")]
-  ages <- range(e1)[c("min","max")]
-
-  dmns <- list(age    = paste(ages[1]:ages[2]), 
-               year   = paste(years[1]:years[2]),
-               unit   = "unique", 
-               season = "all", 
-               area   = "unique", 
-               iter = paste(1:niters))
-               
-  dms <- unname(c(dims(e1) $ age, dims(e1) $ year, 1, 1, 1, dims(e1) $ iter))
 
   stock.n(e1) <- stock.n(e2)
   catch.n(e1) <- catch.n(e2)
@@ -33,6 +21,9 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   
   e1
 })
+
+
+
 
 #' @rdname addition-methods
 #' @aliases +,FLStock,a4aFitSA-method
