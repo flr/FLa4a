@@ -14,8 +14,44 @@ setMethod("simulate", signature(object = "a4aFitSA"),
   function(object, nsim = 1, iter = NULL) {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, iter = iter)
+    
+    # now get catch.n, stock.n, harvest and index
+    preds <- predict(out)
+    out @ harvest <- preds $ stkmodel $  harvest
+    out @ stock.n <- out @ catch.n <- out @ harvest
+    out @ stock.n[1,] <- preds $ stkmodel $  rec
+    out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
+
+    # plusgroup?
+    dms <- dims(object)
+    plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
+  
+    # build stock
+    Zs <- harvest(out) + m(out)
+    for (a in 2:dms $ age) {
+      out @ stock.n[a,-1] <- out @ stock.n[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
+    }
+    # if plus group
+    if (plusgrp) {
+      for (y in 1:(dms $ year-1)) 
+        out @ stock.n[a,y+1,] <- out @ stock.n[a,y+1,] + out @ stock.n[a, y,] * exp( - Zs[a, y,] )
+    } 
+ 
+    # calculate catch
+    zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
+    out @ catch.n <- zfrac * out @ stock.n
+    
+    # work out indices
+    out @ index <- preds $ qmodel
+    for (i in seq(out @ index)) {
+      iages <- rownames(out @ index[[i]])
+      iyears <- colnames(out @ index[[i]])
+      when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
+      out @ index[[i]] <- (out @ stock.n * exp(-Zs * when))[iages, iyears] * out @ index[[i]]
+    }
+
     out
-  })
+})
 
 #' @rdname simulate-methods
 #' @aliases simulate,SCAPars-method

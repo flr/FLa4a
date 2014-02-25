@@ -314,8 +314,8 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
  
 
   # what kind of run is this: 'setup' just writes data files - usefull when developing code
-  fit <- match.arg(fit, c("MP", "assessment", "debug", "setup", "MCMC", "Ext")) # MCMC is experimental
-
+  #fit <- match.arg(fit, c("MP", "assessment", "debug", "setup", "MCMC", "Ext")) # MCMC is experimental
+  fit <- match.arg(fit, c("MP", "assessment", "debug", "setup"))
 
   # ------------------------------------------------------------------------
   #
@@ -437,10 +437,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   #
   # ------------------------------------------------------------------------
 
-
-  # make sure contrasts are set to sumto zero for better performance
-  opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly")) 
-
   # F model matrix
   Xf <- getX(fmodel, subset(full.df, fleet == "catch"))
   # F model offsets
@@ -517,10 +513,6 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # internal r model matrix
   if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year) 
   Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
-
- 
-  # reset contrast options
-  options(opts)
 
   # ------------------------------------------------------------------------
   #

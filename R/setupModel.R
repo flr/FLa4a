@@ -50,9 +50,6 @@ setMethod("getX", "formula",
         ky <- ceiling(0.35 * length(unique(df $ year)))
         out <- paste("te(", var, ",year, k = c(", ka, ",", ky,"))")
       }
-
-      # reset options
-      options(opts)
       
       out
     }
@@ -131,6 +128,9 @@ setMethod("getX", "formula",
       warning("*** ", model.type, " has ", length(rank.deficient)," too many parameter(s)!!\n    i will remove the redundant ones:\n\t", droppar, call. = FALSE)
       X <- X[,-rank.deficient]
     }
+
+    # reset options
+    options(opts)
     
     X
   }
