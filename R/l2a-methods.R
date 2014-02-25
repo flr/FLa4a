@@ -1,11 +1,11 @@
-#' Method to convert age to length 
-#'
+#' @title Method to convert age to length 
+#' @name l2a 
+#' @rdname l2a 
+#' @aliases l2a l2a-methods l2a,FLQuant,a4aGr
 #' @param object a \code{FLQuant} object
 #' @param model a \code{a4aGr} object
 #' @param stat the aggregation statistic, must be \"mean\" or \"sum\"
 #' @return a \code{FLQuant} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
 #' @examples
 #' # red fish
 #' # M=0.05; Linf=58.5, k=0.086
@@ -23,14 +23,6 @@
 #' cthA3 <- l2a(cth, mvrnorm(10, vbObj))
 #' # mod: iter=1, data: iter=n
 #' cthA4 <- l2a(propagate(cth,10), vbObj)
-#' # the following should give the same result for all
-#' # sum(cth[,,,,,1])
-#' # sum(cthA1[,,,,,1])
-#' # sum(cthA2[,,,,,1])
-#' # sum(cthA3[,,,,,1])
-#' # sum(cthA4[,,,,,1])
-#' # mod: iter=n1, data: iter=n2 - MUST FAIL
-#' # l2a(propagate(cth,5), mvrnorm(10, vbObj))
 #' # converting a stock object
 #' rfAge.stk <- l2a(rfLen.stk, vbObj)
 #' rfAge.stk <- l2a(rfLen.stk, mvrnorm(10, vbObj))
@@ -105,6 +97,8 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 	flq
 })
 
+#' @rdname l2a 
+#' @aliases l2a,FLStockLen,a4aGr
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="missing", ...){
 	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)
@@ -190,6 +184,8 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 	units(harvest(stk)) <- units(object@harvest)
 	})
 
+#' @rdname l2a 
+#' @aliases l2a,FLIndex,a4aGr
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	warning("Catch in numbers will be summed accross lenghths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)

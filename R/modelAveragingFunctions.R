@@ -1,5 +1,5 @@
-
-
+#' @rdname mvrnorm-methods
+#' @aliases mvrnorm,numeric,a4aFitSA-method
 setMethod("mvrnorm", signature("numeric", "a4aFitSA"),
   function(n = 1, mu) 
   {
@@ -23,28 +23,14 @@ setMethod("mvrnorm", signature("numeric", "a4aFitSA"),
   }
 )
 
+#' Method to compute log likelihood
+#'
+#' @param b a \code{a4aFitSA} object
+#' @param object a \code{a4a??} object
+#' @param stock a \code{FLStock} object
+#' @return ??
+#' @aliases calcLogLik
 
-setMethod("mvrnorm", signature("numeric", "a4aFitExt"),
-  function(n = 1, mu, tol = 1e-9) 
-  {
-    # get the mean
-    beta <- c(mu @ baseLvlPars)
-    # number of params
-    p <- length(beta)
-    # simlulate iid normals (0,1)
-    Z <- matrix(rnorm(p * n), p)
-    # work out density using Z - the quick way
-    ldens <-  -p/2 * log(2 * pi) + sum(log(diag(mu @ L))) - 0.5 * colSums(Z^2)
-    # transform and rescale
-    X <- drop(beta) + mu @ L %*% Z
-    rownames(X) <- names(beta)
-    attr(X, "logdens") <- ldens
-    X
-  }
-)
-
-
-#' @export
 calcLogLik <- function(b, object, stock) # stock is required for M only
 {
 
@@ -132,22 +118,20 @@ calcLogLik <- function(b, object, stock) # stock is required for M only
   })
 }
 
-#' @export
+#' Method to compute log priors
+#'
+#' @param b a \code{a4aFitSA} object
+#' @param object a \code{a4a??} object
+#' @return ??
+#' @aliases calcLogPrior
 calcLogPrior <- function(b, object)
 {
   sum(dnorm(b, 0, 1e6, log = TRUE))  # flat priors on everthing for now!!  need to change to something better.
 }
 
-
-
-
-
-
-
-
-setMethod("getX", "a4aFitSA",
-function(object) 
-{
+#' @rdname getX-methods
+#' @aliases getX,a4aFitSA-method
+setMethod("getX", "a4aFitSA", function(object) {
 
   e2 <- object
 
@@ -214,9 +198,17 @@ function(object)
   X
 })
 
-
-
-#' @export
+#' @title Make predictions
+#' @name makePrediction
+#' @rdname makePrediction-methods
+#' @description Method to make predictions 
+#'
+#' @param b.sim a \code{a4aFitSA} object
+#' @param X a design matrix
+#' @param e1 whatever
+#' @param e2 whatever
+#' @return ??
+#' @aliases makePrediction
 makePrediction <- function(b.sim, X, e1, e2) {
   
   

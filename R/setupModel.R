@@ -1,4 +1,7 @@
-#' uses the user specified formula to build a model matrix
+#' @title build model matrix
+#' @name getX
+#' @rdname getX-methods
+#' @description uses the user specified formula to build a model matrix
 #'
 #'
 #' @param formula a formula object

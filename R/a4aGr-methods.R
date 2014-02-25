@@ -17,7 +17,7 @@ setMethod("getK", "a4aGr", function(object){
 }) 
 
 #' Method to simulate multivariate normal parameters
-#'
+#' @rdname mvrnorm-methods
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aGr} object
 #' @return a \code{a4aGr} object with n iterations 
