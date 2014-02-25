@@ -1,8 +1,10 @@
 \name{vecyear}
 \alias{vecyear}
-\title{year vector}
+\alias{vecyear-methods}
+\alias{vecyear,FLComp-method}
+\title{year vector extract}
 \arguments{
-  \item{object}{a \code{a4aM} object}
+  \item{object}{a \code{FLComp} object}
 }
 \value{
   a \code{vector} object
@@ -10,8 +12,5 @@
 \description{
   method to extract from \code{FLComp} objects the vector
   of years.
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
 }
 

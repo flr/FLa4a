@@ -1,8 +1,12 @@
 \docType{class}
 \name{a4aFitSA-class}
 \alias{a4aFit}
+\alias{a4aFit,a4aFitSA-method}
 \alias{a4aFitSA}
 \alias{a4aFitSA-class}
+\alias{a4aFitSA-methods}
+\alias{a4aFitSA,a4aFit-method}
+\alias{a4aFitSA,missing-method}
 \alias{pars}
 \alias{pars,a4aFitSA-method}
 \alias{show}
@@ -14,7 +18,7 @@
 }
 \section{Slots}{
   \describe{ \item{SCAPars}{An object of class
-  \code{SCAPars} with model parameters information}
+  \code{SCAPars} with information about model parameters}
 }
 
 \section{Accesors}{

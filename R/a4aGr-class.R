@@ -10,18 +10,25 @@ valida4aGr <- function(object){
 }
 
 #' @title Individual growth class
+#' @docType class
 #' @name a4aGr
 #' @rdname a4aGr-class
 #' @template ClassDescription
 #' @section Slot: 
 #' \describe{
+#'
 #'	\item{\code{grMod}}{the formula of the growth model, \emph{e.g.} von bertallanffy}
+#'
 #'	\item{\code{grInvMod}}{the formula of the inverse of the growth model having length as the independent variable}
+#'
 #'	\item{\code{params}}{a FLPar object with the parameters of the model. Must match the equations in the models}
+#'
 #'	\item{\code{vcov}}{an array with the variance covariance matrix of the parameters}
+#'
 #'	\item{\code{distr}}{a character with the parameters statistical distribution, it must match a known distribution for R, \emph{e.g.} "norm" for gaussian, so that \code{rnorm} can be called}
+#'
 #' }
-#' @alias a4aGr-class
+#' @aliases a4aGr-class
 
 setClass("a4aGr",
         representation(
@@ -44,15 +51,9 @@ setClass("a4aGr",
 )
 
 #' @rdname a4aGr-class
-#' @alias a4aGr a4aGr-methods a4aGr,missing-method
-#' @section Constructor: 
-#' \describe{
-#'	\item{grMod}{a \code{formula} with the growth model (length~age)}
-#' 	\item{grInvMod}{a \code{formula} with the inverse growth model (age~length)}
-#' 	\item{params}{a \code{FLPar} object with the parameters of the models}
-#' 	\item{vcov}{a \code{array} with the variance covariance matrix of the parameters}
-#' 	\item{distr}{a \code{character} with the distribution of the parameters}
-#' }
+#' @aliases a4aGr a4aGr-methods a4aGr,missing-method
+#' @template Accessors
+#' @template Constructors
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
@@ -75,89 +76,83 @@ setMethod("a4aGr", signature(object="missing"),
 )
 
 #' @rdname a4aGr-class
-#' @alias grMod grMod-methods grMod,a4aGr-method
+#' @aliases grMod grMod-methods grMod,a4aGr-method
 setGeneric("grMod", function(object, ...) standardGeneric("grMod"))
 setMethod("grMod", "a4aGr", function(object) object@grMod)
 
 #' @rdname a4aGr-class
-#' @alias grMod<- grMod<--methods grMod<-,a4aGr-method
+#' @aliases grMod<- grMod<--methods grMod<-,a4aGr,formula-method
 setGeneric("grMod<-", function(object,value) standardGeneric("grMod<-"))
-setReplaceMethod("grMod", "a4aGr", function(object, value){
-	if(all.equal(is(value), is(object@grMod))) object@grMod <- value
+setReplaceMethod("grMod", signature("a4aGr","formula"), function(object, value){
+	object@grMod <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @alias grInvMod grInvMod-methods grInvMod,a4aGr-method
+#' @aliases grInvMod grInvMod-methods grInvMod,a4aGr-method
 setGeneric("grInvMod", function(object, ...) standardGeneric("grInvMod"))
 setMethod("grInvMod", "a4aGr", function(object) object@grInvMod)
 
 #' @rdname a4aGr-class
-#' @alias grInvMod<- grInvMod<--methods grInvMod<-,a4aGr-method
+#' @aliases grInvMod<- grInvMod<--methods grInvMod<-,a4aGr,formula-method
 setGeneric("grInvMod<-", function(object,value) standardGeneric("grInvMod<-"))
-setReplaceMethod("grInvMod", "a4aGr", function(object, value){
-	if(all.equal(is(value), is(object@grInvMod))) object@grInvMod <- value
+setReplaceMethod("grInvMod", signature("a4aGr","formula"), function(object, value){
+	object@grInvMod <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @alias params,a4aGr-method
+#' @aliases params,a4aGr-method
 setMethod("params", "a4aGr", function(object) object@params)
 
 #' @rdname a4aGr-class
-#' @alias params<- params<-methods params<-,a4aGr-method
+#' @aliases params<- params<--methods params<-,a4aGr,FLPar-method
 setGeneric("params<-", function(object, value) standardGeneric("params<-"))
-setReplaceMethod("params", "a4aGr", function(object, value){
-	if(all.equal(is(value), is(object@params))) object@params <- value
+setReplaceMethod("params", signature("a4aGr","FLPar"), function(object, value){
+	object@params <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @alias distr distr-methods distr,a4aGr-method
+#' @aliases distr distr-methods distr,a4aGr-method
 setGeneric("distr", function(object, ...) standardGeneric("distr"))
 setMethod("distr", "a4aGr", function(object) object@distr)
 
 #' @rdname a4aGr-class
-#' @alias distr<- distr<--methods distr<-,a4aGr-method
+#' @aliases distr<- distr<--methods distr<-,a4aGr,character-method
 setGeneric("distr<-", function(object, value) standardGeneric("distr<-"))
-setReplaceMethod("distr", "a4aGr", function(object, value){
-	if(all.equal(is(value), is(object@distr))) object@distr <- value
+setReplaceMethod("distr", signature("a4aGr","character"), function(object, value){
+	object@distr <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @alias vcov,a4aGr-method
+#' @aliases vcov,a4aGr-method
 setMethod("vcov", "a4aGr", function(object) object@vcov)
 
+#' @name vcov<-
 #' @rdname a4aGr-class
-#' @alias vcov<-,a4aGr-method
-setReplaceMethod("vcov", "a4aGr", function(object, value){
-	if(all.equal(is(value), is(object@vcov))) object@vcov <- value
+#' @aliases vcov<-,a4aGr,numeric-method
+setReplaceMethod("vcov", signature(object = "a4aGr", value = "numeric"), function(object, value){
+	object@vcov <- value
 	object
 })
 
 #' @name rnglen
 #' @rdname rnglen
-#' @title length range
-#' @description method to extract from \code{a4aGr} objects the length range.
+#' @title length range extract and replacement
+#' @description Methods to extract from \code{a4aGr} objects the length range or replace its value.
 #' @param object a \code{a4aGr} object
-#' @return a \code{vector} object
-#' @alias rnglen rnglen-methods rnglen,a4aGr-method
+#' @param value a \code{vector} with max and min age range to replace the object info. 
+#' @return a \code{vector} object when extracting or a \code{a4aGr} object when replacing
+#' @aliases rnglen rnglen-methods rnglen,a4aGr-method rnglen<- rnglen<--methods rnglen<-,a4aGr,numeric-method
 setGeneric("rnglen", function(object, ...) standardGeneric("rnglen"))
 setMethod("rnglen", "a4aGr", function(object){
 	object@range[c("min","max")]
 })
 
-#' @name rnglen
-#' @rdname rnglenrplc
-#' @title length range replacement
-#' @description method to replace \code{a4aGr} object's length range.
-#' @param object a \code{a4aGr} object
-#' @param value a \code{vector} with max and min age range 
-#' @return a \code{a4aGr} object
-#' @alias rnglen<- rnglen<--methods rnglen<-,a4aGr-method
 setGeneric("rnglen<-", function(object,value) standardGeneric("rnglen<-"))
-setReplaceMethod("rnglen", "a4aGr", function(object, value){
+setReplaceMethod("rnglen", signature("a4aGr","numeric"), function(object, value){
 	object@range[c("min","max")] <- sort(value)
 	object
 })
@@ -168,7 +163,7 @@ setReplaceMethod("rnglen", "a4aGr", function(object, value){
 #' @description method to extract from \code{a4aGr} objects the vector of lengths.
 #' @param object a \code{a4aGr} object
 #' @return a \code{vector} object
-#' @alias veclen veclen-methods veclen,a4aGr-method
+#' @aliases veclen veclen-methods veclen,a4aGr-method
 setGeneric("veclen", function(object, ...) standardGeneric("veclen"))
 setMethod("veclen", "a4aGr", function(object){
 	rng <- object@range[c("min","max")]
@@ -181,7 +176,7 @@ setMethod("veclen", "a4aGr", function(object){
 #' @description method to extract from \code{a4aGr} objects the number of iterations.
 #' @param object a \code{a4aGr} object
 #' @return a \code{numeric} object
-#' @alias niters,a4aGr-method
+#' @aliases niters,a4aGr-method
 setMethod("niters", "a4aGr", function(object){
 	dim(params(object))[2]
 })

@@ -1,26 +1,12 @@
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
+#' @title Block bootstrap method
 #' @docType methods
-#' @rdname logq-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
+#' @name FLblockboot
+#' @rdname FLblockboot-methods
+#' @aliases FLblockboot FLblockboot-methods
 setGeneric("FLblockboot", function(object, ...) standardGeneric("FLblockboot"))
 
-#' @rdname logq-methods
-#' @aliases logq,FLa4aFit-method
+#' @rdname FLblockboot-methods
+#' @aliases FLblockboot,FLQuant-method
 setMethod("FLblockboot", signature(object = "FLQuant"),
   function(object, R = 999) {
     	
@@ -97,19 +83,14 @@ setMethod("FLblockboot", signature(object = "FLQuant"),
   }
 )
 
-
-
-
-#' Calculate the optimal block length for stationary block bootstrap
-#'
-#' @param object an FLQuant
-#'
-#' @return an FLQuant containing the optimal block lengths for each year
-#' 
-#' @export
+#' @title Block bootstrap method
 #' @docType methods
+#' @name FLblockboot
 #' @rdname FLBstar-methods
-#'
+#' @aliases FLBstar FLBstar-methods FLBstar,FLQuant-method
+#' @description Calculate the optimal block length for stationary block bootstrap
+#' @param object an FLQuant
+#' @return an FLQuant containing the optimal block lengths for each year
 #' @examples
 #' data(ple4)
 #' FLBstar(catch.n(ple4))

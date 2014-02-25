@@ -7,30 +7,21 @@
 
 #' Methods to generate FLStock objects
 #'
-#' Some additional details about this S4 generic and its methods.
-#' The extra blank line between this section and the title is
-#' critical for roxygen2 to differentiate the title from the
-#' description section.
+#' @description This method computes the \code{FLStock} slots consistently with the information provided by the \code{FLQuant}. It requires two of the triplet R/C/F to compute the third consistent with Baranov and survival's equations.
 #'
-#' @param object an FLQuant
-#' @param rec an FLQuant
-#' @param catch.n an FLQuant
-#' @param harvest an FLQuant
+#' @param object an FLStock
+#' @param R an FLQuant with iterations or missing
+#' @param C an FLQuant with iterations or missing
+#' @param F an FLQuant with iterations or missing
 #'
 #' @param ... Additional argument list that might not ever
 #'  be used.
 #'
-#' @return an FLQuant
+#' @return an FLStock
 #' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
 #' @docType methods
 #' @rdname genFLStock-methods
-#'
-#' @examples
-#' data(ple4)
-#' sim.F <- genFLQuant(harvest(ple4))
+#' @aliases genFLStock genFLStock-methods
 setGeneric("genFLStock", function(object, R, C, F, ...) standardGeneric("genFLStock"))
 
 #' @rdname genFLStock-methods
@@ -40,13 +31,13 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "FLQuant", "missing"), function(
 })
 
 #' @rdname genFLStock-methods
-#' @aliases genFLStock,FLStock,FLQuant,FLQuant,missing-method
+#' @aliases genFLStock,FLStock,missing,FLQuant,FLQuant-method
 setMethod("genFLStock", c("FLStock", "missing", "FLQuant", "FLQuant"), function(object, R, C, F, ...){
 	cat("Not implemented yet\n")
 })
 
 #' @rdname genFLStock-methods
-#' @aliases genFLStock,FLStock,FLQuant,FLQuant,missing-method
+#' @aliases genFLStock,FLStock,FLQuant,missing,FLQuant-method
 setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(object, R, C, F, ...){
 	# requires checking dimensions
 	if(!identical(dim(catch.n(object))[-c(1,6)], dim(R)[-c(1,6)])) stop("Recruitment vector must have consistent dimensions with the stock object")
@@ -97,65 +88,39 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
 	object
 })
 
-#' Methods to add uncertainty to FLQuant objects
-#'
-#' Some additional details about this S4 generic and its methods.
-#' The extra blank line between this section and the title is
-#' critical for roxygen2 to differentiate the title from the
-#' description section.
-#'
-#' @param object an FLQuant
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
+#' @name getAcor
 #' @rdname getAcor-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
+#' @title compute log correlation matrix
+#' @description method to compute the log correlation matrix
+#' @param object an \code{FLQuant} object
+#' @return a \code{FLQuant} object with the age correlation matrix
+#' @aliases getAcor getAcor-methods getAcor,FLQuant-method
 setGeneric("getAcor", function(object, ...) standardGeneric("getAcor"))
 
-#' @rdname getAcor-methods
-#' @aliases getAcor,FLQuant-method
 setMethod("getAcor", c("FLQuant"), function(object, tf=log, ...) {
 		mu <- log(object)
 		Rho <- cor(t(mu[drop = TRUE]))
 		return(Rho)
 })
 
-#' Methods to genetate FLStock objects
+#' @title Methods to generate FLQuant objects
 #'
-#' Some additional details about this S4 generic and its methods.
-#' The extra blank line between this section and the title is
-#' critical for roxygen2 to differentiate the title from the
-#' description section.
+#' @description This method uses the age correlation matrix of the \code{FLQuant} and generates a new \code{FLQuant} using a lognormal multivariate distribution
 #'
 #' @param object an FLQuant
-#' @param rec an FLQuant
-#' @param catch.n an FLQuant
-#' @param harvest an FLQuant
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
+#' @param cv the coefficient of variation
+#' @param method the ethod used to compute the correlation matrix, for now only "ac" - autocorrelation
+#' @param niter number of iterations to be generated
 #'
 #' @return an FLQuant
 #' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
 #' @docType methods
 #' @rdname genFLQuant-methods
+#' @aliases genFLQuant genFLQuant-methods
 #'
 #' @examples
 #' data(ple4)
-#' sim.F <- genFLQuant(harvest(ple4), method = "ac")
+#' sim.F <- genFLQuant(harvest(ple4))
 setGeneric("genFLQuant", function(object, ...) standardGeneric("genFLQuant"))
 
 #' @rdname genFLQuant-methods
@@ -170,73 +135,35 @@ setMethod("genFLQuant", c("FLQuant"), function(object, cv = 0.2, method = "ac", 
 		flq <- FLQuant(c(t(flq)), dimnames = dimnames(mu))
 		flq <- exp(mu + flq)
 	}
-#	if(method == "rw") {
-#		n.ages  <- dim(mu)[1]
-#	  	n.years <- dim(mu)[2]
-#		n <- n.ages * n.years
-#		# set up lcs to extract posterior means
-#		B = diag(n)
-#		B[B==0] <- NA
-#		lcs = inla.make.lincombs(Predictor = B)
-#		# treat mu as a GMRF model - 
-#		# an independant random walk for each age (same variance accross ages)
-#		form <- x ~ f(years, model = 'rw1', replicate = ages)
-#		data <- list(x = c(mu), years = rep(1:n.years, each = n.ages), ages  = rep(1:n.ages, n.years))
-#		result <- inla(form, data = data, control.predictor = list(compute = TRUE), 
-#                      lincomb = lcs, control.inla = list(lincomb.derived.correlation.matrix = TRUE))
-#		# the covariance of the fitted RW
-#		RW.cov <- result $ misc $ lincomb.derived.correlation.matrix
-#		# two options for the mean:
-#		#  1) use the mean estimate of RW process from INLA
-#		#     - this is potentially very smooth and lacking in strucure
-#		#	mu.hat <- result $ summary.linear.predictor $ mean
-#		#	flq <- mvrnorm(niter, mu.hat, cv^2 * RW.cov)
-#		#  2) use the original data and add the noise to that
-#		#  2 is more consistent with ac method and always maintains data structure
-#		flq <- exp(mvrnorm(niter, c(mu), cv^2 * RW.cov))
-#		flq <- FLQuant(c(t(flq)), dimnames = dimnames(propagate(mu, niter)))
-#	}
 	units(flq) <- units(object)
 	return(flq)
 })
 
-#' Methods to create index FLQuants from stock.n
+#' Methods to generate FLIndex objects
 #'
-#' Some additional details about this S4 generic and its methods.
-#' The extra blank line between this section and the title is
-#' critical for roxygen2 to differentiate the title from the
-#' description section.
+#' @description This method generates a \code{FLIndex} by generating the index using \code{genFLQuant} methods.
 #'
-#' @param object an FLQuant containing stock numbers at age
+#' @param object an FLIndex
+#' @param cv the coefficient of variation
+#' @param niter number of iterations to be generated
+#' @param ... Additional argument list that might not ever be used.
 #'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant?
+#' @return an FLIndex
 #' 
-#' @seealso \code{\link{stock.n}} and \code{\link{FLQuant}}
-#' 
-#' @export
 #' @docType methods
 #' @rdname genFLIndex-methods
-#'
-#' @examples
-#' data(ple4)
-#' genFLQuant(harvest(ple4), method = "ac")
+#' @aliases genFLIndex genFLIndex-methods
 setGeneric("genFLIndex", function(object, ...) standardGeneric("genFLIndex"))
 
 #' @rdname genFLIndex-methods
 #' @aliases genFLIndex,FLQuant-method
-setMethod("genFLIndex", c("FLQuant"), 
-    function(object, cv = 0.2, 
-                     catchability = "flat", 
-                     niter = 250) {
+setMethod("genFLIndex", c("FLQuant"), function(object, cv = 0.2, niter = 250) {
       # use log transform, to be expanded on later versions
       mu <- log(object)
       
       if(method == "ac") {
         Rho <- cor(t(mu[drop = TRUE]))
-        flq <- mvrnorm(niter * dim(mu)[2], rep(0, nrow(Rho)), cv^2 * Rho)
+        flq <- mvrnorm(niter * dim(mu)[2], rep(0, nrow(Rho)), log(cv^2+1) * Rho)
         mu <- propagate(mu, niter)
         flq <- FLQuant(c(t(flq)), dimnames = dimnames(mu))
         flq <- exp(mu + flq)

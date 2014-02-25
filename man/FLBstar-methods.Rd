@@ -1,8 +1,10 @@
 \docType{methods}
-\name{FLBstar}
+\name{FLblockboot}
+\alias{FLblockboot}
 \alias{FLBstar}
+\alias{FLBstar-methods}
 \alias{FLBstar,FLQuant-method}
-\title{Calculate the optimal block length for stationary block bootstrap}
+\title{Block bootstrap method}
 \arguments{
   \item{object}{an FLQuant}
 }

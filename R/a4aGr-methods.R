@@ -2,8 +2,7 @@
 #'
 #' @param object a \code{a4aGr} object
 #' @return a \code{vector} with K values
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases getK getK-methods getK,a4aGr-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
@@ -22,8 +21,7 @@ setMethod("getK", "a4aGr", function(object){
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aGr} object
 #' @return a \code{a4aGr} object with n iterations 
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases mvrnorm,numeric,a4aGr-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
@@ -45,8 +43,7 @@ setMethod("mvrnorm", signature("numeric", "a4aGr"), function(n=1, mu) {
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aGr} object
 #' @return a \code{a4aGr} object with n iterations 
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases mvrtriangle,numeric,a4aGr-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
@@ -71,8 +68,7 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{FLModelSim} object with n groups of parameters
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases mvrcop,numeric,a4aGr-method
 #' @seealso \code{\link{rMvdc}}, \code{\link{copula}}
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
@@ -99,8 +95,7 @@ setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 #' @param object the \code{a4aGr} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{matrix} object with lengths or ages
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases predict,a4aGr-method
 #' @examples
 #' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")))
 #' predict(vbObj, len=1:50+0.5)

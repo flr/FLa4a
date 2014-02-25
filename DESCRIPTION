@@ -24,7 +24,6 @@ Depends:
 LazyLoad: yes
 LazyData: yes
 Collate:
-    'FLa4a-package.R'
     'gen-methods.R'
     'a4aFit-class.R'
     'a4aStkParams-class.R'
@@ -45,7 +44,6 @@ Collate:
     'plotting.R'
     'setupModel.R'
     'fittingFunctions.R'
-    'assortedMethods.R'
     'a4aM-class.R'
     'a4aM-methods.R'
     'a4aGr-class.R'

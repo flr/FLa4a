@@ -1,5 +1,6 @@
 \name{m}
 \alias{m}
+\alias{m,a4aM-method}
 \title{Method to compute natural mortality}
 \arguments{
   \item{object}{a \code{a4aM} object}
@@ -56,8 +57,5 @@ mod1 <- FLModelSim(model=~exp(-age-0.5))
 mod3 <- FLModelSim(model=~1+b*v, params=FLPar(b=0.05))
 mObj <- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3, range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
 m(mObj, v=1:4)
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
 }
 

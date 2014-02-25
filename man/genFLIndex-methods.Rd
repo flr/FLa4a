@@ -1,28 +1,24 @@
 \docType{methods}
 \name{genFLIndex}
 \alias{genFLIndex}
+\alias{genFLIndex-methods}
 \alias{genFLIndex,FLQuant-method}
-\title{Methods to create index FLQuants from stock.n}
+\title{Methods to generate FLIndex objects}
 \arguments{
-  \item{object}{an FLQuant containing stock numbers at age}
+  \item{object}{an FLIndex}
+
+  \item{cv}{the coefficient of variation}
+
+  \item{niter}{number of iterations to be generated}
 
   \item{...}{Additional argument list that might not ever
   be used.}
 }
 \value{
-  an FLQuant?
+  an FLIndex
 }
 \description{
-  Some additional details about this S4 generic and its
-  methods. The extra blank line between this section and
-  the title is critical for roxygen2 to differentiate the
-  title from the description section.
-}
-\examples{
-data(ple4)
-genFLQuant(harvest(ple4), method = "ac")
-}
-\seealso{
-  \code{\link{stock.n}} and \code{\link{FLQuant}}
+  This method generates a \code{FLIndex} by generating the
+  index using \code{genFLQuant} methods.
 }
 

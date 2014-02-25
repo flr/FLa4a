@@ -1,17 +1,23 @@
 \name{rngage}
 \alias{rngage}
-\title{age range}
+\alias{rngage-methods}
+\alias{rngage,FLComp-method}
+\alias{rngage<-}
+\alias{rngage<--methods}
+\alias{rngage<-,FLComp,numeric-method}
+\title{age range extract and replacement}
 \arguments{
   \item{object}{a \code{FLComp} object}
+
+  \item{value}{a \code{vector} with max and min age range
+  to replace the object info.}
 }
 \value{
-  a \code{vector} object
+  a \code{vector} object when extracting or a \code{FLComp}
+  object when replacing
 }
 \description{
-  method to extract from \code{FLComp} objects the age
-  range.
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
+  Methods to extract from \code{FLComp} objects the age
+  range or replace its value.
 }
 

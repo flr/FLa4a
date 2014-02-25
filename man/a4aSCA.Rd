@@ -1,15 +1,13 @@
 \docType{methods}
-\name{a4aInternal}
-\alias{a4aInternal}
-\title{stock assessment model advanced method}
+\name{a4aSCA}
+\alias{a4a}
+\alias{a4aSCA}
+\title{stock assessment model method}
 \usage{
-  a4aInternal(fmodel = ~s(age, k = 3) + factor(year),
+  a4a(fmodel = ~s(age, k = 3) + factor(year),
     qmodel = lapply(seq(length(indices)), function(i) ~1),
-    srmodel = ~factor(year), n1model = ~factor(age),
-    vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
-    stock, indices, covar = NULL, wkdir = NULL,
-    verbose = FALSE, fit = "assessment", niters = 1000,
-    center = TRUE)
+    srmodel = ~factor(year), stock, indices, covar = NULL,
+    wkdir = NULL, verbose = FALSE, fit = "MP")
 }
 \arguments{
   \item{fmodel}{a formula object depicting the model for
@@ -20,12 +18,6 @@
 
   \item{srmodel}{a formula object depicting the model for
   log recruitment}
-
-  \item{n1model}{a formula object depicting the model for
-  the first year of catch data}
-
-  \item{vmodel}{a list of formula objects depicting the
-  models for log survey and log fishing mortality variance}
 
   \item{stock}{an FLStock object containing catch and stock
   information}
@@ -45,18 +37,13 @@
   \item{fit}{Character with type of fit, 'MP' or
   'assessment', the first doesn't require the hessian to be
   computed, while the former does.}
-
-  \item{niters}{number of iterations to be simulated}
-
-  \item{center}{\code{logical} should data be centered
-  before estimating or not}
 }
 \value{
   an \code{a4aFit} object if fit is "MP" or an
   \code{a4aFitSA} if fit is "assessment"
 }
 \description{
-  The advanced user interface to the a4a fitting routine.
+  The user interface to the a4a fitting routine.
 }
 \examples{
 data(ple4)

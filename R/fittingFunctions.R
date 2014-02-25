@@ -1,20 +1,11 @@
-
-#' The user interface to the a4a fitting routine.
-#'
-#'
-#' @param fmodel a formula object depicting the model for log fishing mortality at age
-#' @param qmodel a list of formula objects depicting the models for log survey catchability at age
-#' @param rmodel a formula object depicting the model for log recruitment
-#' @param stock an FLStock object containing catch and stock information
-#' @param indices an FLIndices object containing survey indices 
-#' @param fmodel.extra a named list of expressions used to add covariates to the model for log fishing mortality at age
-#' @param qmodel.extra a named list of expressions used to add covariates the models for log survey catchability at age
-#' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
-#' @param verbose if true admb fitting information is printed to the screen
-#' @return an FLa4aFit object
-#' @author Colin Millar \email{colin.millar@@jrc.ec.europa.eu}
-#' @author Ernesto Jardim \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @title collapse seasons
+#' @name collapseSeasons
+#' @docType methods
+#' @rdname collapseSeasons
+#' @description Method to collapse seasons of \code{FLStock} objects. M and catch-at-age are summed while mean weights at age, maturity at age and mortalities before spawning are averaged.   
+#' @param stock a FLStock object
+#' @return a FLStock object
+#' @aliases collapseSeasons
 collapseSeasons <- function (stock) {
   
   if (dims(stock) $ season == 1) return (stock) # do nothing
@@ -44,23 +35,24 @@ collapseSeasons <- function (stock) {
   out
 }
 
-
-#' The user interface to the a4a fitting routine.
-#'
+#' @title stock assessment model method
+#' @name a4aSCA
+#' @docType methods
+#' @rdname a4aSCA
+#' @description The user interface to the a4a fitting routine.
 #'
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
-#' @param rmodel a formula object depicting the model for log recruitment
+#' @param srmodel a formula object depicting the model for log recruitment
 #' @param stock an FLStock object containing catch and stock information
 #' @param indices an FLIndices object containing survey indices 
-#' @param fmodel.extra a named list of expressions used to add covariates to the model for log fishing mortality at age
-#' @param qmodel.extra a named list of expressions used to add covariates the models for log survey catchability at age
+#' @param covar a list with covariates 
 #' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
 #' @param verbose if true admb fitting information is printed to the screen
-#' @return an FLa4aFit object
-#' @author Colin Millar \email{colin.millar@@jrc.ec.europa.eu}
-#' @author Ernesto Jardim \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
+#' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
+#' @aliases a4a
+#' @template Example-a4a
 a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year), 
                 qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
                 srmodel = ~ factor(year),
@@ -263,42 +255,28 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   out
 }
 
-
-#' The user interface to the a4a fitting routine.
-#'
+#' @title stock assessment model advanced method
+#' @name a4aInternal
+#' @docType methods
+#' @rdname a4aInternal
+#' @description The advanced user interface to the a4a fitting routine.
 #'
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
-#' @param rmodel a formula object depicting the model for log recruitment
+#' @param srmodel a formula object depicting the model for log recruitment
+#' @param n1model a formula object depicting the model for the first year of catch data
+#' @param vmodel a list of formula objects depicting the models for log survey and log fishing mortality variance
 #' @param stock an FLStock object containing catch and stock information
 #' @param indices an FLIndices object containing survey indices 
-#' @param fmodel.extra a named list of expressions used to add covariates to the model for log fishing mortality at age
-#' @param qmodel.extra a named list of expressions used to add covariates the models for log survey catchability at age
+#' @param covar a list with covariates 
 #' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
 #' @param verbose if true admb fitting information is printed to the screen
-#' @return an FLa4aFit object
-#' @author Colin Millar \email{colin.millar@@jrc.ec.europa.eu}
-#' @author Ernesto Jardim \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
-#' @examples
-#' data(ple4)
-#' data(ple4.indices)
-#'
-#' # define sub models
-#' fmodel <- ~ s(age, k=4) + factor(year)
-#' # three surveys - try 'length(ple4.indices)' - so three formulas
-#' qmodel <- list(~ s(age, k=4), ~ s(age, k=4), ~ age)
-#' fit <- a4a(fmodel = fmodel, qmodel = qmodel, stock = ple4, indices = ple4.indices, fit = "assessment")
-#'
-#' # add the fit to the stock, but with fitting error
-#' fitstk <- propagate(ple4, 1000) + fit
-#' 
-#' doOne <- function(p, object) cbind(as.data.frame(apply(object, 1:5, quantile, p)), p = p[1])
-#' dat <- do.call(rbind, lapply(c(0.025, 0.5, 0.975), doOne, object = ssb(fitstk)))
-#' xyplot(I(data/1000) ~ year, group = p, data = dat, 
-#'        type = c("l","g"), lwd = c(1,2,1), lty = c(2,1,2), col = 1,
-#'        ylab = "SSB (thousand tonnes)", xlab = "Year")
-#' # end of example
+#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
+#' @param niters number of iterations to be simulated
+#' @param center \code{logical} should data be centered before estimating or not
+#' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
+#' @aliases a4aInternal
+#' @template Example-a4aInternal
 a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year), 
                 qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
                 srmodel = ~ factor(year),

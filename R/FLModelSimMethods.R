@@ -1,5 +1,3 @@
-#' @import copula triangle
-
 #' @title Simulation with a copula model and triangle distributions 
 #'
 #' @description Simulates the model parameters using elliptic copulas and triangle margins. 
@@ -7,8 +5,7 @@
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{FLModelSim} object with n groups of parameters
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases mvrtriangle,numeric,FLModelSim-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
@@ -101,8 +98,7 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{FLModelSim} object with n groups of parameters
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases mvrcop,numeric,FLModelSim-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
@@ -158,13 +154,13 @@ setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula
 	}
 )
 
-
-#' Checks that the name of the second dimension in params is "iter". 
-#' For internal use, not very interesting for users 
-#' @param object a \code{FLPar} object
-#' @return logical
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @title Check that the second dimension in params is "iter"
+#' @name pars2dim
+#' @rdname pars2dim-methods
+#' @aliases pars2dim pars2dim-methods pars2dim,FLModelSim-method
+#' @description Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLModelSim} object and returns a \code{logical}
+#' @examples
+#' pars2dim(FLModelSim())
 
 setGeneric("pars2dim", function(object) standardGeneric("pars2dim"))
 setMethod("pars2dim", "FLModelSim", function(object) {

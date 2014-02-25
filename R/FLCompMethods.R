@@ -1,71 +1,64 @@
-#' @title year range 
-#' @description method to extract from \code{FLComp} objects the year range.
+#' @name rngyear
+#' @rdname rngyear
+#' @title year range extract and replacement
+#' @description Methods to extract from \code{FLComp} objects the year range or replace its value.
 #' @param object a \code{FLComp} object
-#' @return a \code{vector} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @param value a \code{vector} with max and min year range to replace the object info. 
+#' @return a \code{vector} object when extracting or a \code{FLComp} object when replacing
+#' @aliases rngyear rngyear-methods rngyear,FLComp-method rngyear<- rngyear<--methods rngyear<-,FLComp,numeric-method
 setGeneric("rngyear", function(object, ...) standardGeneric("rngyear"))
 setMethod("rngyear", "FLComp", function(object){
 	object@range[c("minyear","maxyear")]
 })
 
-#' @title year range replacement
-#' @description method to replace \code{FLComp} object's year range.
-#' @param object a \code{FLComp} object
-#' @param value a \code{vector} with max and min year range 
-#' @return a \code{a4aM} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
 setGeneric("rngyear<-", function(object,value) standardGeneric("rngyear<-"))
-setReplaceMethod("rngyear", "FLComp", function(object, value){
+setReplaceMethod("rngyear", signature("FLComp","numeric"), function(object, value){
 	object@range[c("minyear","maxyear")] <- value
 	object
 })
 
-#' @title age range
-#' @description method to extract from \code{FLComp} objects the age range.
+#' @name rngage
+#' @rdname rngage
+#' @title age range extract and replacement
+#' @description Methods to extract from \code{FLComp} objects the age range or replace its value.
 #' @param object a \code{FLComp} object
-#' @return a \code{vector} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @param value a \code{vector} with max and min age range to replace the object info. 
+#' @return a \code{vector} object when extracting or a \code{FLComp} object when replacing
+#' @aliases rngage rngage-methods rngage,FLComp-method rngage<- rngage<--methods rngage<-,FLComp,numeric-method
 setGeneric("rngage", function(object, ...) standardGeneric("rngage"))
 setMethod("rngage", "FLComp", function(object){
 	object@range[c("min","max")]
 })
 
-#' @title age range replacement
-#' @description method to replace \code{FLComp} object's age range.
-#' @param object a \code{FLComp} object
-#' @param value a \code{vector} with max and min age range 
-#' @return a \code{a4aM} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
 setGeneric("rngage<-", function(object,value) standardGeneric("rngage<-"))
-setReplaceMethod("rngage", "FLComp", function(object, value){
+setReplaceMethod("rngage", signature("FLComp","numeric"), function(object, value){
 	object@range[c("min","max")] <- value
 	object
 })
 
-#' @title year vector
+#' @name vecyear
+#' @rdname vecyear
+#' @title year vector extract
 #' @description method to extract from \code{FLComp} objects the vector of years.
-#' @param object a \code{a4aM} object
+#' @param object a \code{FLComp} object
 #' @return a \code{vector} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases vecyear vecyear-methods vecyear,FLComp-method
 setGeneric("vecyear", function(object, ...) standardGeneric("vecyear"))
 setMethod("vecyear", "FLComp", function(object){
 	rng <- object@range[c("minyear","maxyear")]
 	rng[1]:rng[2]
 })
 
-#' @title age vector
-#' @description method to extract from \code{FLComp} objects the vector of ages.
-#' @param object a \code{a4aM} object
+#' @name vecage
+#' @rdname vecage
+#' @title age vector extract
+#' @description method to extract from \code{FLComp} objects the vector of ages
+#' @param object a \code{FLComp} object
 #' @return a \code{vector} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases vecage vecage-methods vecage,FLComp-method
 setGeneric("vecage", function(object, ...) standardGeneric("vecage"))
 setMethod("vecage", "FLComp", function(object){
 	rng <- object@range[c("min","max")]
 	rng[1]:rng[2]
 })
+

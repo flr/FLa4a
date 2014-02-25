@@ -4,14 +4,14 @@
 #'
 #' @section Slots:
 #' \describe{
-#'    \item{SCAPars}{An object of class \code{SCAPars} with model parameters information}
+#'    \item{SCAPars}{An object of class \code{SCAPars} with information about model parameters}
 #'
 #' @template Accessors
 #' @template Constructors
 #' @docType class
 #' @name a4aFitSA-class
 #' @rdname a4aFitSA-class
-#' @alias a4aFitSA-class
+#' @aliases a4aFitSA-class
 #' @template Example-a4aFitSA
 setClass("a4aFitSA",
         representation(
@@ -59,11 +59,11 @@ setMethod("show", signature(object = "a4aFitSA"),
  })
 
 #' @rdname a4aFitSA-class
-#' @alias a4aFitSA a4aFitSA-methods
+#' @aliases a4aFitSA a4aFitSA-methods
 setGeneric("a4aFitSA", function(object, ...) standardGeneric("a4aFitSA"))
 
 #' @rdname a4aFitSA-class
-#' @alias a4aFitSA,missing-method
+#' @aliases a4aFitSA,missing-method
 setMethod("a4aFitSA", signature(object="missing"),
   function(...) {
     # empty
@@ -79,7 +79,7 @@ setMethod("a4aFitSA", signature(object="missing"),
 )
 
 #' @rdname a4aFitSA-class
-#' @alias a4aFit,a4aFitSA-method
+#' @aliases a4aFit,a4aFitSA-method
 setMethod("a4aFit", signature(object="a4aFitSA"),
   function(object, ...) {
     out <- a4aFit()
@@ -98,7 +98,7 @@ setMethod("a4aFit", signature(object="a4aFitSA"),
 )
 
 #' @rdname a4aFitSA-class
-#' @alias a4aFitSA,a4aFit-method
+#' @aliases a4aFitSA,a4aFit-method
 setMethod("a4aFitSA", signature(object="a4aFit"),
   function(object, ...) {
     out <- a4aFitSA()

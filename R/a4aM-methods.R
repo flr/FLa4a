@@ -5,8 +5,7 @@
 #' @param ... placeolder for covariates of the models. The names must match formula's variables (not parameters), with the exception of the \code{a4aGr} individual growth model. To use a growth model it must be called \code{grMod} and be of class \code{a4aGr}, in which case the parameters will be matched. The main objective if to be able to use \code{K} from von Bertalanffy models in M. 
 #' @details If the models use \code{age} and/or \code{year} as terms the method expects these to be included in the call (will be passed through the \ldots argument). If they're not, the method will use the range slot to work out the ages and/or years that should be predicted. If \code{age} and/or \code{year} are not model terms, the method will use the range slot to define the dimensions of the resulting \code{M} \code{FLQuant}.    
 #' @return a \code{FLQuant} object
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases m,a4aM-method
 #' @examples
 #' age <- 0:15
 #' k <- 0.4
@@ -109,8 +108,7 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aM} object
 #' @return a \code{a4aM} object with n iterations 
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @aliases mvrnorm,numeric,a4aM,missing,missing,missing,missing-method
 #' @examples
 #' mod1 <- FLModelSim(model=~exp(-age-0.5))
 #' mod2 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c("k","t"), iter=1:2))), vcov=array(c(0.004, 0.00,0.00, 0.001), dim=c(2,2,2)))
@@ -135,9 +133,3 @@ setMethod("mvrnorm", c(n="numeric", mu="a4aM", Sigma="missing",
 	mu	
 })
 
-setMethod("show", "a4aM", function(object){
-	cat(paste("a4aM object", object@name, ":\n", sep=""))
-	cat(paste("  shape: ", deparse(object@shape@model), "\n", sep=""))
-	cat(paste("  level: ", deparse(object@level@model), "\n", sep=""))
-	cat(paste("  trend: ", deparse(object@trend@model), "\n", sep=""))
-})
