@@ -1,5 +1,7 @@
 \name{mvrcop}
 \alias{mvrcop}
+\alias{mvrcop,numeric,a4aGr-method}
+\alias{mvrcop,numeric,FLModelSim-method}
 \title{Simulation using copula models}
 \arguments{
   \item{n}{the number of iterations}
@@ -44,11 +46,6 @@ vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
 pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 vbObj <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
 splom(data.frame(t(params(vbObj)@.Data)), pch=".")
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
-
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
 }
 \seealso{
   \code{\link{rMvdc}}, \code{\link{copula}}

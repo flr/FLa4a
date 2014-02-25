@@ -12,7 +12,7 @@
 \alias{coef<-,SCAPars,numeric-method}
 \alias{coef<-,submodel,numeric-method}
 \alias{coef<-,submodels,numeric-method}
-\title{Methods to extract and replace the model coefficients}
+\title{coefficients extract and replacement}
 \description{
   Methods to extract and replace the model coefficients
 }

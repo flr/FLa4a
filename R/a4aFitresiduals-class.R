@@ -5,11 +5,11 @@
 #' @docType class
 #' @name a4aFitResiduals-class
 #' @rdname a4aFitResiduals-class
-#' @alias a4aFitResiduals-class
+#' @aliases a4aFitResiduals-class
 setClass("a4aFitResiduals", contain="FLQuants")
 
 #' @rdname a4aFitResiduals-class
-#' @alias a4aFitResiduals a4aFitResiduals-methods residuals,a4aFit-method
+#' @aliases a4aFitResiduals a4aFitResiduals-methods residuals,a4aFit-method
 #' @template Example-a4aFitResiduals
 setMethod("residuals", signature(object="a4aFit"), function(object, stock, indices, ...) {
 	args <- list(...)

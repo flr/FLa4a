@@ -1,34 +1,31 @@
 \docType{methods}
 \name{genFLStock}
 \alias{genFLStock}
+\alias{genFLStock-methods}
 \alias{genFLStock,FLStock,FLQuant,FLQuant,missing-method}
+\alias{genFLStock,FLStock,FLQuant,missing,FLQuant-method}
+\alias{genFLStock,FLStock,missing,FLQuant,FLQuant-method}
 \title{Methods to generate FLStock objects}
 \arguments{
-  \item{object}{an FLQuant}
+  \item{object}{an FLStock}
 
-  \item{rec}{an FLQuant}
+  \item{R}{an FLQuant with iterations or missing}
 
-  \item{catch.n}{an FLQuant}
+  \item{C}{an FLQuant with iterations or missing}
 
-  \item{harvest}{an FLQuant}
+  \item{F}{an FLQuant with iterations or missing}
 
   \item{...}{Additional argument list that might not ever
   be used.}
 }
 \value{
-  an FLQuant
+  an FLStock
 }
 \description{
-  Some additional details about this S4 generic and its
-  methods. The extra blank line between this section and
-  the title is critical for roxygen2 to differentiate the
-  title from the description section.
-}
-\examples{
-data(ple4)
-sim.F <- genFLQuant(harvest(ple4))
-}
-\seealso{
-  \code{\link{print}} and \code{\link{cat}}
+  This method computes the \code{FLStock} slots
+  consistently with the information provided by the
+  \code{FLQuant}. It requires two of the triplet R/C/F to
+  compute the third consistent with Baranov and survival's
+  equations.
 }
 

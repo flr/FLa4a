@@ -37,7 +37,7 @@ va4aFit <- function(object) {
 }
 
 #' @rdname a4aFit-class
-#' @alias a4aFit-class
+#' @aliases a4aFit-class
 setClass("a4aFit",
         representation(
                 "FLComp",
@@ -60,7 +60,7 @@ setClass("a4aFit",
 )
 
 #' @rdname a4aFit-class
-#' @alias a4aFit a4aFit-methods
+#' @aliases a4aFit a4aFit-methods
 setGeneric("a4aFit", function(object, ...) standardGeneric("a4aFit"))
 
 #' @rdname a4aFit-class

@@ -1,34 +1,29 @@
 \docType{methods}
 \name{genFLQuant}
 \alias{genFLQuant}
+\alias{genFLQuant-methods}
 \alias{genFLQuant,FLQuant-method}
-\title{Methods to genetate FLStock objects}
+\title{Methods to generate FLQuant objects}
 \arguments{
   \item{object}{an FLQuant}
 
-  \item{rec}{an FLQuant}
+  \item{cv}{the coefficient of variation}
 
-  \item{catch.n}{an FLQuant}
+  \item{method}{the ethod used to compute the correlation
+  matrix, for now only "ac" - autocorrelation}
 
-  \item{harvest}{an FLQuant}
-
-  \item{...}{Additional argument list that might not ever
-  be used.}
+  \item{niter}{number of iterations to be generated}
 }
 \value{
   an FLQuant
 }
 \description{
-  Some additional details about this S4 generic and its
-  methods. The extra blank line between this section and
-  the title is critical for roxygen2 to differentiate the
-  title from the description section.
+  This method uses the age correlation matrix of the
+  \code{FLQuant} and generates a new \code{FLQuant} using a
+  lognormal multivariate distribution
 }
 \examples{
 data(ple4)
-sim.F <- genFLQuant(harvest(ple4), method = "ac")
-}
-\seealso{
-  \code{\link{print}} and \code{\link{cat}}
+sim.F <- genFLQuant(harvest(ple4))
 }
 

@@ -1,5 +1,7 @@
 \name{mvrtriangle}
 \alias{mvrtriangle}
+\alias{mvrtriangle,numeric,a4aGr-method}
+\alias{mvrtriangle,numeric,FLModelSim-method}
 \title{Simulation with a copula model and triangle distributions}
 \arguments{
   \item{n}{the number of iterations}
@@ -54,10 +56,5 @@ vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
 pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 vbObj <- mvrtriangle(10000, vbObj, paramMargins=pars)
 splom(data.frame(t(params(vbObj)@.Data)), pch=".")
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
-
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
 }
 

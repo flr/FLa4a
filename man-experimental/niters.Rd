@@ -1,16 +1,15 @@
 \name{niters}
 \alias{niters}
-\title{Compute number of iterations}
+\alias{niters,a4aGr-method}
+\title{number of iterations}
 \arguments{
-  \item{object}{object a FL* class object}
+  \item{object}{a \code{a4aGr} object}
 }
 \value{
-  numeric
+  a \code{numeric} object
 }
 \description{
-  Compute number of iterations
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
+  method to extract from \code{a4aGr} objects the number of
+  iterations.
 }
 

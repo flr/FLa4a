@@ -1,17 +1,16 @@
 \name{vecage}
 \alias{vecage}
-\title{age vector}
+\alias{vecage-methods}
+\alias{vecage,FLComp-method}
+\title{age vector extract}
 \arguments{
-  \item{object}{a \code{a4aM} object}
+  \item{object}{a \code{FLComp} object}
 }
 \value{
   a \code{vector} object
 }
 \description{
   method to extract from \code{FLComp} objects the vector
-  of ages.
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
+  of ages
 }
 
