@@ -35,6 +35,65 @@ collapseSeasons <- function (stock) {
   out
 }
 
+
+
+#' @title stock assessment model method
+#' @name sca
+#' @docType methods
+#' @rdname sca
+#' @description The simple user interface to the a4a fitting routine.
+#'
+#' @param stock an FLStock object containing catch and stock information
+#' @param indices an FLIndices object containing survey indices 
+#' @return an \code{a4aFitSA} object
+#' @aliases a4a
+#' @template Example-a4a
+sca <- function(stock, indices)
+{
+
+  # check inputs
+  isStk <- inherits(stock, "FLStock")
+  isInd <- inherits(indices, "FLIndices")
+  if (!isStk) stop("stock must be an FLStock")
+  if (!isInd) stop("indices must be an FLIndices")
+
+  # set up a robust model...  this needs some work...
+  stkdms <- dims(stock)
+  ka <- stkdms $ age
+  ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
+  ky <- floor(.5 * stkdms $ year)
+
+  if (ka >= 3) {
+    fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
+  } else {
+    fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
+  }
+
+  if (stkdms $ age > 10) {
+    n1model <- ~ s(age, k = 10) 
+  } else {
+    n1model <- ~ factor(age)
+  }  
+
+  srmodel <- ~ factor(year)
+
+  inddms <- lapply(indices, dims)
+  ka <- sapply(inddms, "[[", "age")
+  ka <- pmin(pmax(2, floor(.7 * ka)), 7)
+
+  qmodel <- lapply(ka, function(i) if (i == 2) ~ age else formula(paste("~ s(age, k = ", ka, ")")))
+
+  vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
+  vmodel[[1]] <- ~ s(age, k = 3)
+
+  a4aSCA(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, 
+         n1model = n1model, vmodel = vmodel,
+         stock = stock, indices = indices, covar = NULL, 
+         wkdir = NULL, verbose = FALSE, fit = "assessment",
+         center = TRUE)  
+}
+
+
 #' @title stock assessment model method
 #' @name a4aSCA
 #' @docType methods
@@ -53,19 +112,23 @@ collapseSeasons <- function (stock) {
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4a
 #' @template Example-a4a
-a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year), 
-                qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
-                srmodel = ~ factor(year),
-                stock, indices, covar = NULL, 
-                wkdir = NULL, verbose = FALSE, fit = "MP")
+a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year), 
+                   qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
+                   srmodel = ~ factor(year),
+                   n1model = ~ factor(age), 
+                   vmodel  = NULL,
+                   stock, indices, covar = NULL, 
+                   wkdir = NULL, verbose = FALSE, fit = "assessment",
+                   center = TRUE)
 {
 
-  fit <- match.arg(fit, c("MP", "assessment", "sim", "Ext"))
+  fit <- match.arg(fit, c("MP", "assessment"))
 
-  # hard coded settings
-  n1model <- ~ factor(age)
-  vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
-  vmodel[[1]] <- ~ s(age, k = 3)
+  # set up default for vmodel
+  if (is.null(vmodel)) {
+    vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
+    vmodel[[1]] <- ~ s(age, k = 3)
+  }
   
   #
   # now to deal with iterations ...
@@ -146,7 +209,7 @@ a4a <- function(fmodel  = ~ s(age, k = 3) + factor(year),
                         n1model = n1model, vmodel = vmodel,
                         stock = istock, indices = iindices, covar = icovar, 
                         wkdir = wkdir, verbose = verbose, 
-                        fit = ifit)
+                        fit = ifit, center = center)
 
     if (i == 1) {
       tmpSumm <- outi @ fitSumm

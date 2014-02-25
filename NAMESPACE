@@ -1,5 +1,6 @@
 export(a4a.dir)
-export(a4a)
+export(sca)
+export(a4aSCA)
 export(a4aInternal)
 export(calcLogLik)
 export(calcLogPrior)
