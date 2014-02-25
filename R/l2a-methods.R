@@ -1,7 +1,7 @@
 #' @title Method to convert age to length 
 #' @name l2a 
 #' @rdname l2a 
-#' @aliases l2a l2a-methods l2a,FLQuant,a4aGr
+#' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
 #' @param object a \code{FLQuant} object
 #' @param model a \code{a4aGr} object
 #' @param stat the aggregation statistic, must be \"mean\" or \"sum\"
@@ -98,7 +98,7 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 })
 
 #' @rdname l2a 
-#' @aliases l2a,FLStockLen,a4aGr
+#' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="missing", ...){
 	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)
@@ -185,7 +185,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 	})
 
 #' @rdname l2a 
-#' @aliases l2a,FLIndex,a4aGr
+#' @aliases l2a,FLIndex,a4aGr-method
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	warning("Catch in numbers will be summed accross lenghths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)
