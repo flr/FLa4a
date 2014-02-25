@@ -924,7 +924,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
                       params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
                       vcov = out $ cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
                       distr = "norm",
-                      centering = center.log[i+1] - center.log[1],
+                      centering = center.log[i+1],
                       name = fleet.names[i+1],
                       desc = indices[[i]] @ desc,
                       range = indices[[i]] @ range)
