@@ -2,6 +2,7 @@
 \name{a4aFit-class}
 \alias{a4aFit}
 \alias{a4aFit-class}
+\alias{a4aFit-methods}
 \alias{a4aFit,missing-method}
 \alias{catch.n}
 \alias{catch.n,a4aFit-method}
@@ -66,7 +67,7 @@
 \examples{
 data(ple4)
 data(ple4.index)
-obj <- a4a(stock=ple4, indices=FLIndices(ple4.index))
+obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
 obj
 clock(obj)
 fitSumm(obj)

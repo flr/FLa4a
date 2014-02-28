@@ -1,46 +1,18 @@
-\docType{class}
 \name{a4aFitExt-class}
-\alias{a4aFitExt}
 \alias{a4aFitExt-class}
-\alias{baseLvlPars}
-\alias{designMatrix}
-\alias{L}
-\alias{Sigma}
-\title{S4 class \code{a4aFitExt}}
+\title{a4aFitSA-class - «Short one line description»
+a4aFitSA-class
+a4aFitSA extends \code{"a4aFit"} class.}
 \description{
-  The \code{a4aFitExt} calss extends \code{a4aFitSA} and
-  was built to store extra slots like the hessian, which
-  maybe needed for advanced users.
+  Some details about this class and my plans for it in the
+  body.
 }
-\section{Slots}{
-  \describe{ \item{Sigma}{The variance-covariance matrix.}
+\details{
+  \describe{ \item{myslot1}{A logical keeping track of
+  something.}
 
-  \item{L}{Likelihood}
+  \item{myslot2}{An integer specifying something else.}
 
-  \item{designMatrix}{The design matrix of the model}
-
-  \item{baseLvlPars}{...}
-
-  }
-}
-
-\section{Accesors}{
-  All slots in the class have accessor and replacement
-  methods defined that allow retrieving and substituting
-  individual slots.
-
-  The values passed for replacement need to be of the class
-  of that slot. A numeric vector can also be used when
-  replacing FLQuant slots, and the vector will be used to
-  substitute the values in the slot, but not its other
-  attributes.
-}
-
-\section{Constructor}{
-  A construction method exists for this class that can take
-  named arguments for any of its slots. All slots are then
-  created to match the requirements of the class validity.
-  If an unnamed \code{FLQuant} object is provided, this is
-  used for sizing but not stored in any slot.
+  \item{myslot3}{A data.frame holding some data.} }
 }
 

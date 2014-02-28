@@ -1,5 +1,6 @@
 \name{+}
 \alias{+}
+\alias{+,FLIndices,a4aFit-method}
 \alias{+,FLIndices,a4aFitSA-method}
 \alias{+,FLIndices,SCAPars-method}
 \alias{+,FLStock,a4aFit-method}

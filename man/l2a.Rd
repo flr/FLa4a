@@ -1,9 +1,9 @@
 \name{l2a}
 \alias{l2a}
 \alias{l2a-methods}
-\alias{l2a,FLIndex,a4aGr}
-\alias{l2a,FLQuant,a4aGr}
-\alias{l2a,FLStockLen,a4aGr}
+\alias{l2a,FLIndex,a4aGr-method}
+\alias{l2a,FLQuant,a4aGr-method}
+\alias{l2a,FLStockLen,a4aGr-method}
 \title{Method to convert age to length}
 \arguments{
   \item{object}{a \code{FLQuant} object}

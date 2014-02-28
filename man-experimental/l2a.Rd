@@ -1,5 +1,9 @@
 \name{l2a}
 \alias{l2a}
+\alias{l2a-methods}
+\alias{l2a,FLIndex,a4aGr-method}
+\alias{l2a,FLQuant,a4aGr-method}
+\alias{l2a,FLStockLen,a4aGr-method}
 \title{Method to convert age to length}
 \arguments{
   \item{object}{a \code{FLQuant} object}
@@ -32,14 +36,6 @@ cthA2 <- l2a(propagate(cth,10), mvrnorm(10, vbObj))
 cthA3 <- l2a(cth, mvrnorm(10, vbObj))
 # mod: iter=1, data: iter=n
 cthA4 <- l2a(propagate(cth,10), vbObj)
-# the following should give the same result for all
-# sum(cth[,,,,,1])
-# sum(cthA1[,,,,,1])
-# sum(cthA2[,,,,,1])
-# sum(cthA3[,,,,,1])
-# sum(cthA4[,,,,,1])
-# mod: iter=n1, data: iter=n2 - MUST FAIL
-# l2a(propagate(cth,5), mvrnorm(10, vbObj))
 # converting a stock object
 rfAge.stk <- l2a(rfLen.stk, vbObj)
 rfAge.stk <- l2a(rfLen.stk, mvrnorm(10, vbObj))
@@ -48,8 +44,5 @@ rfAge.stk <- l2a(propagate(rfLen.stk, 10), vbObj)
 rfAge.idx <- l2a(rfTrawl.idx, vbObj)
 rfAge.idx <- l2a(rfTrawl.idx, mvrnorm(10, vbObj))
 rfAge.idx <- l2a(propagate(rfTrawl.idx, 10), vbObj)
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
 }
 

@@ -1,13 +1,7 @@
 \docType{methods}
-\name{plot}
+\name{bubbles}
 \alias{bubbles}
-\alias{bubbles,bubbles-method}
-\alias{Method}
-\alias{of}
-\alias{plot}
-\alias{residuals}
-\alias{standardized}
-\alias{to}
+\alias{bubbles,a4aFitResiduals,missing-method}
 \title{bubbles plot of standardized log residuals}
 \arguments{
   \item{x}{a \code{a4aFitResiduals} object with the
@@ -20,7 +14,7 @@
   a \code{bubbles} plot with stardardized log residuals
 }
 \description{
-  bubbles plot of standardized log residuals
+  Method to plot bubbles of standardized residuals
 }
 \examples{
 library(FLa4a)

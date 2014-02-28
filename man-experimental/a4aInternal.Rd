@@ -7,7 +7,7 @@
     qmodel = lapply(seq(length(indices)), function(i) ~1),
     srmodel = ~factor(year), n1model = ~factor(age),
     vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
-    stock, indices, covar = NULL, wkdir = NULL,
+    stock, indices, covar = "missing", wkdir = "missing",
     verbose = FALSE, fit = "assessment", niters = 1000,
     center = TRUE)
 }

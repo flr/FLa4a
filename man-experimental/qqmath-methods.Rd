@@ -1,13 +1,7 @@
 \docType{methods}
-\name{plot}
-\alias{Method}
-\alias{of}
-\alias{plot}
-\alias{qqmath,qqmath-method}
-\alias{qqplots}
-\alias{residuals}
-\alias{standardized}
-\alias{to}
+\name{qqmath}
+\alias{qqmath}
+\alias{qqmath,a4aFitResiduals,missing-method}
 \title{qqplot of standardized log residuals}
 \arguments{
   \item{x}{a \code{a4aFitResiduals} object with the
@@ -20,7 +14,7 @@
   a \code{qqplot} with stardardized log residuals
 }
 \description{
-  qqplot of standardized log residuals
+  Method to plot qqplots of standardized residuals
 }
 \examples{
 library(FLa4a)
@@ -31,8 +25,5 @@ qmodel <- list(~factor(age))
 fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
 flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
 qqmath(flqs)
-}
-\author{
-  EJ \email{ernesto.jardim@jrc.ec.europa.eu}
 }
 

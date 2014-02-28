@@ -67,7 +67,7 @@
 \examples{
 data(ple4)
 data(ple4.index)
-obj <- a4a(stock=ple4, indices=FLIndices(ple4.index))
+obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
 obj
 clock(obj)
 fitSumm(obj)

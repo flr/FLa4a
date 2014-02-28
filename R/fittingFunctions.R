@@ -1,3 +1,13 @@
+#' @title a4a
+#' @name a4a
+#' @docType methods
+#' @rdname a4a
+#' @description This was the old stock assessment framework user's interface. It was replaced by \code{sca} or the advanced version \code{a4aSCA}.    
+#' @aliases a4a
+a4a <- function(...){
+  warning('The a4a function has been renamed: please use the function a4aSCA in place of a4a.')
+}
+
 #' @title collapse seasons
 #' @name collapseSeasons
 #' @docType methods
@@ -35,38 +45,44 @@ collapseSeasons <- function (stock) {
   out
 }
 
-
-
-#' @title stock assessment model method
+#' @title statistical catch-at-age method
 #' @name sca
 #' @docType methods
 #' @rdname sca
-#' @description The simple user interface to the a4a fitting routine.
-#'
-#' @param stock an FLStock object containing catch and stock information
-#' @param indices an FLIndices object containing survey indices 
-#' @return an \code{a4aFitSA} object
-#' @aliases a4a
-#' @template Example-a4a
-sca <- function(stock, indices)
+#' @description User interface to the statistical catch-at-age method of the a4a stock assessment framework.   
+#' @param stock a \code{FLStock} object
+#' @param indices a \code{FLIndices} object
+#' @param fmodel a formula object depicting the model for log fishing mortality at age
+#' @param qmodel a list of formula objects depicting the models for log survey catchability at age
+#' @param srmodel a formula object depicting the model for log recruitment
+#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
+#' @return a \code{a4aFit} or \code{a4aFitSA} object with the fit results. 
+#' @aliases sca sca-methods sca,FLStock,FLIndices-method sca,FLStock,FLIndex-method
+#' @template Example-sca
+setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
+
+setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP")
 {
 
-  # check inputs
-  isStk <- inherits(stock, "FLStock")
-  isInd <- inherits(indices, "FLIndices")
-  if (!isStk) stop("stock must be an FLStock")
-  if (!isInd) stop("indices must be an FLIndices")
-
-  # set up a robust model...  this needs some work...
   stkdms <- dims(stock)
-  ka <- stkdms $ age
-  ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
-  ky <- floor(.5 * stkdms $ year)
+  if(missing(fmodel)){
+	  # set up a robust model...  this needs some work...
+	  ka <- stkdms $ age
+	  ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
+	  ky <- floor(.5 * stkdms $ year)
+	  if (ka >= 3) {
+		fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
+	  } else {
+		fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
+	  }
+  }
 
-  if (ka >= 3) {
-    fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
-  } else {
-    fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
+  if(missing(qmodel)){
+	  inddms <- lapply(indices, dims)
+	  ka <- sapply(inddms, "[[", "age")
+	  ka <- pmin(pmax(2, floor(.7 * ka)), 7)
+
+	  qmodel <- lapply(ka, function(i) if (i == 2) ~ age else formula(paste("~ s(age, k = ", ka, ")")))
   }
 
   if (stkdms $ age > 10) {
@@ -75,30 +91,23 @@ sca <- function(stock, indices)
     n1model <- ~ factor(age)
   }  
 
-  srmodel <- ~ factor(year)
-
-  inddms <- lapply(indices, dims)
-  ka <- sapply(inddms, "[[", "age")
-  ka <- pmin(pmax(2, floor(.7 * ka)), 7)
-
-  qmodel <- lapply(ka, function(i) if (i == 2) ~ age else formula(paste("~ s(age, k = ", ka, ")")))
-
   vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
   vmodel[[1]] <- ~ s(age, k = 3)
 
-  a4aSCA(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, 
-         n1model = n1model, vmodel = vmodel,
-         stock = stock, indices = indices, covar = NULL, 
-         wkdir = NULL, verbose = FALSE, fit = "assessment",
-         center = TRUE)  
-}
+  a4aSCA(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = stock, indices = indices, fit = fit)  
 
+})
 
-#' @title stock assessment model method
+setMethod("sca", signature("FLStock", "FLIndex"), function(stock, indices, fmodel  = "missing", qmodel  = "missing", srmodel = ~ factor(year), fit = "MP")
+{
+	sca(stock=stock, indices=FLIndices(indices), fmodel=fmodel, qmodel=qmodel, srmodel=srmodel, fit=fit)
+})
+
+#' @title statistical catch-at-age advanced method
 #' @name a4aSCA
 #' @docType methods
 #' @rdname a4aSCA
-#' @description The user interface to the a4a fitting routine.
+#' @description Advanced user interface to the statistical catch-at-age method of the a4a stock assessment framework.   
 #'
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
@@ -110,34 +119,27 @@ sca <- function(stock, indices)
 #' @param verbose if true admb fitting information is printed to the screen
 #' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
-#' @aliases a4a
-#' @template Example-a4a
-a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year), 
-                   qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
-                   srmodel = ~ factor(year),
-                   n1model = ~ factor(age), 
-                   vmodel  = NULL,
-                   stock, indices, covar = NULL, 
-                   wkdir = NULL, verbose = FALSE, fit = "assessment",
-                   center = TRUE)
-{
+#' @aliases a4aSCA a4aSCA-methods a4aSCA,FLStock,FLIndices-method
+#' @template Example-a4aSCA
 
+setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
+
+setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE) {
   fit <- match.arg(fit, c("MP", "assessment"))
 
   # set up default for vmodel
-  if (is.null(vmodel)) {
+  if (missing(vmodel)) {
     vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
     vmodel[[1]] <- ~ s(age, k = 3)
   }
   
-  #
   # now to deal with iterations ...
   
   # create a df for dimension information:
   dms <- do.call(rbind.data.frame, c(list(catch = c(dims(stock), startf = NA, endf = NA)), lapply(indices, dims)))
 
   # average stock over seasons
-  # NOTE: Do we have a warning msg about this ?
+  # NOTE: Do we have a warning msg about this ? YES !
   stock <- collapseSeasons(stock)
   
   # only allow 1 season for surveys
@@ -163,9 +165,6 @@ a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   out @ name <- name(stock)
   out @ range <- range(stock)
   out @ call <- match.call()
-#  out @ harvest <- harvest(stock)[,,,,,rep(1,it)]
-#  out @ stock.n <- stock.n(stock)
-#  out @ catch.n <- catch.n(stock)
   out @ harvest <- ini
   out @ stock.n <- ini
   out @ catch.n <- ini
@@ -175,7 +174,6 @@ a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   	dms$iter <- 1:it
 	FLQuant(NA, dimnames=dms)
   })
-  #out @ index <- FLQuants(lapply(indices, index))
   out @ index <- FLQuants(ini)
 
   if (fit == "assessment") {
@@ -190,27 +188,26 @@ a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year),
 
   niters <- nrow(grid)
   for (i in seq(niters)) {
-    # subset the stock
     #istock <- stock[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]]
     istock <- stock[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(stock)$iter)]
 
 # check: do we need indices to have matching units, areas?
     iindices <- lapply(indices, function(x) x[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(x)$iter)])
     iindices <- FLIndices(iindices)
+
     # check: do we need indices to have matching units, areas?
-    if (!is.null(covar)) {
+    if (!missing(covar) & !missing(wkdir)) {
       icovar <- lapply(covar, function(x) x[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(x)$iter)])
-    } else {
-      icovar <- NULL
-    }
-
-    # run model      
-    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,
-                        n1model = n1model, vmodel = vmodel,
-                        stock = istock, indices = iindices, covar = icovar, 
-                        wkdir = wkdir, verbose = verbose, 
-                        fit = ifit, center = center)
-
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center)
+    } else if(!missing(covar) & missing(wkdir)){
+      icovar <- lapply(covar, function(x) x[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(x)$iter)])
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center)
+    } else if(missing(covar) & !missing(wkdir)){
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center)
+	} else {
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center)
+	}    
+    
     if (i == 1) {
       tmpSumm <- outi @ fitSumm
       out @ fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
@@ -301,8 +298,8 @@ a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     }
     
     if (fit == "Ext") {
-      ### ??
-    }    
+		warning("Not implemented yet!")
+	}    
     
     # keep timing info
     time.used[,i] <- outi @ clock
@@ -316,7 +313,7 @@ a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   
   # return out
   out
-}
+})
 
 #' @title stock assessment model advanced method
 #' @name a4aInternal
@@ -340,13 +337,12 @@ a4aSCA <- function(fmodel  = ~ s(age, k = 3) + factor(year),
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
 #' @template Example-a4aInternal
-a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year), 
+a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), 
                 qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
                 srmodel = ~ factor(year),
                 n1model = ~ factor(age), 
                 vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
-                stock, indices, covar = NULL, 
-                wkdir = NULL, verbose = FALSE, fit = "assessment", 
+                covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", 
                 niters = 1000, center = TRUE)
 {
 
@@ -392,19 +388,19 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))  stop("only non-zero survey index variances allowed.")
 
   # convert catches and indices to a list of named arrays
-  list.obs <- c(list(catch = FLa4a:::quant2mat(catch.n(stock))),
-                     lapply(indices, function(x) FLa4a:::quant2mat(index(x)) ))
+  list.obs <- c(list(catch = quant2mat(catch.n(stock))),
+                     lapply(indices, function(x) quant2mat(index(x)) ))
                      
   # convert the variances of catches and indices to a list of named arrays
-  list.var <- c(list(catch = FLa4a:::quant2mat(catch.n(stock) @ var)),
-                     lapply(indices, function(x) FLa4a:::quant2mat(index.var(x)) ))                
+  list.var <- c(list(catch = quant2mat(catch.n(stock) @ var)),
+                     lapply(indices, function(x) quant2mat(index.var(x)) ))                
                      
   # calculate appropriate centering for observations on log scale
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
   if (!center) center.log[] <- 0
 
-  # convert to dataframe
-  df.data <- do.call(rbind, lapply(1:length(list.obs), FLa4a:::list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
+  # convert to dataframe. NOTE: list2df also logs the observations and centers
+  df.data <- do.call(rbind, lapply(1:length(list.obs), list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
   
   if (any(df.data[,5] != 1)) message("Note: Provided variances will be used to weight observations.\n\tWeighting assumes variances are on the log scale or equivalently log(CV^2 + 1).")
 
@@ -425,7 +421,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   # build a full data frame first (we will use this for the variance model so it is not a waste)
   full.df <- do.call(rbind, lapply(1:length(list.obs), function(i) cbind(fleet = i, FLa4a:::make.df(i, stock=stock, indices=indices))))
 
-  if (!is.null(covar)) {
+  if (!missing(covar)) {
   # add in covariates to data.frame - it is easiest to provide covariates in one list
   tmp <- 
     lapply(seq_along(covar), 
@@ -583,7 +579,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   #
   # ------------------------------------------------------------------------
   
-  if (is.null(wkdir)) keep <- FALSE else keep <- TRUE # keep results if wkdir is set by user
+  if (missing(wkdir)) keep <- FALSE else keep <- TRUE # keep results if wkdir is set by user
   if (keep) {
     # create the directory locally - whereever specified by the user
     wkdir.start <- wkdir
@@ -675,7 +671,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# variance model config for the a4a model",
     "\n# model params\n", ncol(Xv), 
     "\n# number of rows\n", nrow(Xv),
-    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xv, file=filename)
+    "\n# design matrix\n", file = filename); write.t(Xv, file=filename)
 
 
   # n1model no random effects for initial ages
@@ -684,7 +680,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# initial age structure model config for the a4a model",
     "\n# model params\n", ncol(Xny1), 
     "\n# number of rows\n", nrow(Xny1),
-    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xny1, file=filename)
+    "\n# design matrix\n", file = filename); write.t(Xny1, file=filename)
 
    
   # rmodel
@@ -696,15 +692,15 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
     "\n# SPR0 :\n", srr $ SPR0,
     "\n# a model params\n", ncol(Xsra), 
     "\n# a model number of rows\n", nrow(Xsra),
-    "\n# a model design matrix\n", file = filename); FLa4a:::write.t(Xsra, file=filename)
+    "\n# a model design matrix\n", file = filename); write.t(Xsra, file=filename)
   cat("# b model params\n", ncol(Xsrb), 
     "\n# b model number of rows\n", nrow(Xsrb),
-    "\n# b model design matrix\n", file = filename, append = TRUE); FLa4a:::write.t(Xsrb, file=filename)
+    "\n# b model design matrix\n", file = filename, append = TRUE); write.t(Xsrb, file=filename)
 
   Covr <- getCov(nrow(Xsra), model = "iid", tau = 1)
   cat("# prior model for the SRR a param",
     "\n# flag to turn SRR a param deviations on and off 0=off 1=on\n", 0, # off for now - until we work on the interface for randomness
-    "\n# var-cov matrix\n", file = filename, append = TRUE); FLa4a:::write.t.sparse(Covr, file=filename)
+    "\n# var-cov matrix\n", file = filename, append = TRUE); write.t.sparse(Covr, file=filename)
  
   # r internal model 
   filename <- paste0(wkdir,'/rmodel.cfg')
@@ -712,7 +708,7 @@ a4aInternal <- function(fmodel  = ~ s(age, k = 3) + factor(year),
   cat("# internal model for recruits: orthoganal design",
     "\n# model params\n", ncol(Xr), 
     "\n# number of rows\n", nrow(Xr),
-    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xr, file=filename)
+    "\n# design matrix\n", file = filename); write.t(Xr, file=filename)
      
    # set up variable names
   pnames <- list(paste0("fMod:",colnames(Xf)), 

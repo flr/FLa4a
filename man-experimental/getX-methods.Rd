@@ -1,6 +1,7 @@
 \name{getX}
 \alias{getX}
-\title{uses the user specified formula to build a model matrix}
+\alias{getX,a4aFitSA-method}
+\title{build model matrix}
 \arguments{
   \item{formula}{a formula object}
 
