@@ -336,7 +336,6 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 #' @param center \code{logical} should data be centered before estimating or not
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
-#' @template Example-a4aInternal
 a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), 
                 qmodel  = lapply(seq(length(indices)), function(i) ~ 1), 
                 srmodel = ~ factor(year),

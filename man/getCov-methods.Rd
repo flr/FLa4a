@@ -1,6 +1,6 @@
 \name{getCov}
 \alias{getCov}
-\title{returns the covariance matrix of the specified Gaussian markov random feild model}
+\title{Get covariance matrix}
 \usage{
   getCov(n, model, tau)
 }
@@ -16,10 +16,7 @@
   a covariance matrix
 }
 \description{
-  returns the covariance matrix of the specified Gaussian
-  markov random feild model
-}
-\author{
-  Colin Millar \email{colin.millar@jrc.ec.europa.eu}
+  Returns the covariance matrix of the specified Gaussian
+  markov random field model
 }
 

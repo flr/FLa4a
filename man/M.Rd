@@ -1,7 +1,7 @@
-\name{m}
-\alias{m}
+\name{M}
+\alias{M}
 \alias{m,a4aM-method}
-\title{Method to compute natural mortality}
+\title{natural mortality}
 \arguments{
   \item{object}{a \code{a4aM} object}
 

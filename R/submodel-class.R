@@ -1,20 +1,22 @@
-# submodel-class - «Short one line description»
-# submodel-class
-
-#' a4aFitSA extends \code{"a4aFit"} class.
-#'
-#' Some details about this class and my plans for it in the body.
-#'
-#' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
-#'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
-#'  }
-#' @name submodel-class
+#' @title Submodel class
+#' @docType class
+#' @name submodel
 #' @rdname submodel-class
-#' @exportClass submodel
+#' @template ClassDescription
+#' @section Slot: 
+#' \describe{
+#'
+#'	\item{\code{Mod}}{\code{formula} describing the model}
+#'
+#'	\item{\code{params}}{\code{FLPar} with model parameters}
+#'
+#'	\item{\code{vcov}}{\code{array} with variance covariance Paramaters related with the variance model}
+#'
+#'	\item{\code{centering}}{\code{numeric} value used for centering the data}
+#'
+#'	\item{\code{distr}}{a character with the parameters statistical distribution, it must match a known distribution for R, \emph{e.g.} "norm" for gaussian, so that \code{rnorm} can be called}
+#' }
+#' @aliases submodel-class
 setClass("submodel",
         representation(
 				"FLComp",
@@ -36,13 +38,13 @@ setClass("submodel",
 
 
 
-# constructor
-
-#' @export
+#' @rdname submodel-class
+#' @template Accessors
+#' @template Constructors
+#' @aliases submodel submodel-methods submodel,missing-method
 setGeneric("submodel", function(object, ...)
 	standardGeneric("submodel"))
 
-#' @export
 setMethod("submodel", signature(object="missing"),
   function(...) {
     # empty
@@ -57,18 +59,16 @@ setMethod("submodel", signature(object="missing"),
   }
 )
 
-
-# accessors
-
-#' @export
+#' @rdname submodel-class
+#' @aliases pars pars-methods pars,submodel-method
 setGeneric("pars", function(object, ...) standardGeneric("pars"))
-#' @export
 setMethod("pars", "submodel", function(object) object@pars)
 
-#' @export
+#' @rdname submodel-class
+#' @aliases model,submodel-method
 setMethod("model", "submodel", function(object) object@model)
 
-#' @export
+#' @rdname submodel-class
+#' @aliases covar,submodel-method
 setMethod("covar", "submodel", function(object) object@covar)
-
 

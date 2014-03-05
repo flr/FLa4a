@@ -1,8 +1,7 @@
 \name{mvrnorm}
 \alias{mvrnorm}
-\alias{mvrnorm,numeric,a4aFitSA-method}
 \alias{mvrnorm,numeric,a4aGr-method}
-\title{Method to simulate multivariate normal parameters}
+\title{mvrnorm}
 \arguments{
   \item{n}{the number of simulations to be generated}
 
@@ -12,7 +11,8 @@
   a \code{a4aGr} object with n iterations
 }
 \description{
-  Method to simulate multivariate normal parameters
+  Method to simulate multivariate normal parameters for
+  \code{a4aGr} objects.
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)

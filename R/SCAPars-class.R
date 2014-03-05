@@ -1,18 +1,19 @@
-
-#' a4aFitSA extends \code{"a4aFit"} class.
-#'
-#' Some details about this class and my plans for it in the body.
-#'
-#' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
-#'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
-#'  }
-#' @name SCAPars-class
+#' @title Model parameters class
+#' @docType class
+#' @name SCAPars
 #' @rdname SCAPars-class
-#' @exportClass SCAPars
+#' @template ClassDescription
+#' @section Slot: 
+#' \describe{
+#'
+#'	\item{\code{stkmodel}}{Parameters related with the stock dynamics}
+#'
+#'	\item{\code{qmodel}}{Paramaters related with catchability of the tunning fleets}
+#'
+#'	\item{\code{vmodel}}{Paramaters related with the variance model}
+#'
+#' }
+#' @aliases SCAPars-class
 setClass("SCAPars",
         representation(
                stkmodel    = "a4aStkParams",
@@ -28,31 +29,11 @@ setMethod("m", signature(object="SCAPars"),
   function(object) m(stkmodel(object)))
 
 
-# constructor
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @template Accessors
+#' @template Constructors
+#' @aliases SCAPars SCAPars-methods SCAPars,missing-method
 setGeneric("SCAPars", function(object, ...) standardGeneric("SCAPars"))
-
-#' Title 
-#' @name SCAPars
-#' @docType methods
-#' @rdname SCAPars-methods
-#' @aliases SCAPars,SCAPars-method
 setMethod("SCAPars", signature(object="missing"),
   function(...) {
     # empty
@@ -69,481 +50,93 @@ setMethod("SCAPars", signature(object="missing"),
 
 # accessors
 
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases stkmodel stkmodel-methods stkmodel,SCAPars-method
 setGeneric("stkmodel", function(object, ...) standardGeneric("stkmodel"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("stkmodel", "SCAPars", function(object) object @ stkmodel)
 
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases n1model n1model-methods n1model,SCAPars-method
 setGeneric("n1model", function(object, ...) standardGeneric("n1model"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("n1model", "SCAPars", function(object) object @ stkmodel @ n1Mod)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases srmodel srmodel-methods srmodel,SCAPars-method
 setGeneric("srmodel", function(object, ...) standardGeneric("srmodel"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("srmodel", "SCAPars", function(object) object @ stkmodel @ srMod)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases fmodel fmodel-methods fmodel,SCAPars-method
 setGeneric("fmodel", function(object, ...) standardGeneric("fmodel"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("fmodel", "SCAPars", function(object) object @ stkmodel @ fMod)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases qmodel qmodel-methods qmodel,SCAPars-method
 setGeneric("qmodel", function(object, ...) standardGeneric("qmodel"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("qmodel", "SCAPars", function(object) object@qmodel)
 
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases vmodel vmodel-methods vmodel,SCAPars-method
 setGeneric("vmodel", function(object, ...) standardGeneric("vmodel"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("vmodel", "SCAPars", function(object) object@vmodel)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases srPars srPars-methods srPars,SCAPars-method
 setGeneric("srPars", function(object, ...) standardGeneric("srPars"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("srPars", "SCAPars", function(object) object@srmodel@pars)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases srCovar srCovar-methods srCovar,SCAPars-method
 setGeneric("srCovar", function(object, ...) standardGeneric("srCovar"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("srCovar", "SCAPars", function(object) object@srmodel@covar)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases srFrml srFrml-methods srFrml,SCAPars-method
 setGeneric("srFrml", function(object, ...) standardGeneric("srFrml"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("srFrml", "SCAPars", function(object) object@srmodel@model)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases fPars fPars-methods fPars,SCAPars-method
 setGeneric("fPars", function(object, ...) standardGeneric("fPars"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("fPars", "SCAPars", function(object) object@fmodel@pars)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases fCovar fCovar-methods fCovar,SCAPars-method
 setGeneric("fCovar", function(object, ...) standardGeneric("fCovar"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("fCovar", "SCAPars", function(object) object@fmodel@covar)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases fFrml fFrml-methods fFrml,SCAPars-method
 setGeneric("fFrml", function(object, ...) standardGeneric("fFrml"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("fFrml", "SCAPars", function(object) object@fmodel@model)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases qPars qPars-methods qPars,SCAPars-method
 setGeneric("qPars", function(object, ...) standardGeneric("qPars"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("qPars", "SCAPars", function(object) object@qmodel@pars)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases qCovar qCovar-methods qCovar,SCAPars-method
 setGeneric("qCovar", function(object, ...) standardGeneric("qCovar"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("qCovar", "SCAPars", function(object) object@qmodel@covar)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases qFrml qFrml-methods qFrml,SCAPars-method
 setGeneric("qFrml", function(object, ...) standardGeneric("qFrml"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("qFrml", "SCAPars", function(object) object@qmodel@model)
 
-
-
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases vPars vPars-methods vPars,SCAPars-method
 setGeneric("vPars", function(object, ...) standardGeneric("vPars"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("vPars", "SCAPars", function(object) object@vmodel@pars)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases vCovar vCovar-methods vCovar,SCAPars-method
 setGeneric("vCovar", function(object, ...) standardGeneric("vCovar"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("vCovar", "SCAPars", function(object) object@vmodel@covar)
 
-#' Calculate the median accross iterations
-#'
-#' @param object an FLQuant with iters
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
-#' @return an FLQuant
-#' 
-#' @seealso \code{\link{print}} and \code{\link{cat}}
-#' 
-#' @export
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#'
-#' @examples
-#' data(ple4)
+#' @rdname SCAPars-class
+#' @aliases vFrml vFrml-methods vFrml,SCAPars-method
 setGeneric("vFrml", function(object, ...) standardGeneric("vFrml"))
-
-#' Title 
-#' @name a4aFitSA
-#' @docType methods
-#' @rdname a4aFitSA-methods
-#' @aliases a4aFitSA,a4aFitSA-method
 setMethod("vFrml", "SCAPars", function(object) object@vmodel@model)
-
-
-
-
-
 

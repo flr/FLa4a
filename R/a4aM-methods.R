@@ -1,5 +1,7 @@
-#' Method to compute natural mortality 
-#'
+#' @title natural mortality 
+#' @description Method to compute natural mortality 
+#' @name M 
+#' @rdname M 
 #' @param object a \code{a4aM} object
 #' @param grMod a \code{a4aGr} object to get the K from 
 #' @param ... placeolder for covariates of the models. The names must match formula's variables (not parameters), with the exception of the \code{a4aGr} individual growth model. To use a growth model it must be called \code{grMod} and be of class \code{a4aGr}, in which case the parameters will be matched. The main objective if to be able to use \code{K} from von Bertalanffy models in M. 
@@ -103,8 +105,10 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	FLQuant(m)
 })
 
-#' Method to simulate multivariate normal parameters
-#'
+#' @title natural mortality 
+#' @description Method to simulate multivariate normal parameters for a \code{a4aM} object. 
+#' @name mvnorm 
+#' @rdname mvnorm-a4aM 
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aM} object
 #' @return a \code{a4aM} object with n iterations 

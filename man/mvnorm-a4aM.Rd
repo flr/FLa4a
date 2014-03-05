@@ -1,7 +1,7 @@
-\name{mvrnorm}
-\alias{mvrnorm}
+\name{mvnorm}
+\alias{mvnorm}
 \alias{mvrnorm,numeric,a4aM,missing,missing,missing,missing-method}
-\title{Method to simulate multivariate normal parameters}
+\title{natural mortality}
 \arguments{
   \item{n}{the number of simulations to be generated}
 
@@ -11,7 +11,8 @@
   a \code{a4aM} object with n iterations
 }
 \description{
-  Method to simulate multivariate normal parameters
+  Method to simulate multivariate normal parameters for a
+  \code{a4aM} object.
 }
 \examples{
 mod1 <- FLModelSim(model=~exp(-age-0.5))

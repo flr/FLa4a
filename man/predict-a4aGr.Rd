@@ -1,7 +1,7 @@
 \name{predict}
 \alias{predict}
 \alias{predict,a4aGr-method}
-\title{Predicts age or lengths using a growth class}
+\title{predict for \code{a4aGr}}
 \arguments{
   \item{object}{the \code{a4aGr} object}
 

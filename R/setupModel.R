@@ -1,4 +1,4 @@
-#' @title build model matrix
+#' @title Get model matrix
 #' @name getX
 #' @rdname getX-methods
 #' @description uses the user specified formula to build a model matrix
@@ -8,13 +8,10 @@
 #' @param df the data.frame to build the model matrix against
 #' @return a matrix.
 #' @note \code{getX} is intended to be used internally
-#' @author Colin Millar \email{colin.millar@@jrc.ec.europa.eu}
-#' @export
+#' @aliases getX getX-methods getX,formula-method
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
 
-
-setMethod("getX", "formula", 
-  function(object, df) {
+setMethod("getX", "formula", function(object, df) {
 
     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
@@ -140,15 +137,18 @@ setMethod("getX", "formula",
 )
 
 
-#' returns the covariance matrix of the specified Gaussian markov random feild model
+#' @title Get covariance matrix
+#' @name getCov
+#' @rdname getCov-methods
+#' @description Returns the covariance matrix of the specified Gaussian markov random field model
 #'
 #'
 #' @param n integer giving the size of the random feild
 #' @param model chatacter giving the name of the GMRF
 #' @param tau numeric giving the multiplier of the structure matrix for the model
 #' @return a covariance matrix
-#' @author Colin Millar \email{colin.millar@@jrc.ec.europa.eu}
-#' @export
+#' @aliases getCov 
+
 getCov <- function(n, model, tau)
 {
   model <- match.arg(model, c("iid","rw1","rw2"))

@@ -2,7 +2,7 @@
 \alias{getK}
 \alias{getK-methods}
 \alias{getK,a4aGr-method}
-\title{Method to get K values}
+\title{get K}
 \arguments{
   \item{object}{a \code{a4aGr} object}
 }

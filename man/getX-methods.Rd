@@ -1,7 +1,8 @@
 \name{getX}
 \alias{getX}
-\alias{getX,a4aFitSA-method}
-\title{build model matrix}
+\alias{getX-methods}
+\alias{getX,formula-method}
+\title{Get model matrix}
 \arguments{
   \item{formula}{a formula object}
 
@@ -16,8 +17,5 @@
 }
 \note{
   \code{getX} is intended to be used internally
-}
-\author{
-  Colin Millar \email{colin.millar@jrc.ec.europa.eu}
 }
 

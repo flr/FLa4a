@@ -1,5 +1,7 @@
-#' Method to get K values
-#'
+#' @title get K 
+#' @name getK
+#' @rdname getK
+#' @description Method to get K values
 #' @param object a \code{a4aGr} object
 #' @return a \code{vector} with K values
 #' @aliases getK getK-methods getK,a4aGr-method
@@ -16,8 +18,10 @@ setMethod("getK", "a4aGr", function(object){
 	if(length(k)==1) params(object)[k]
 }) 
 
-#' Method to simulate multivariate normal parameters
-#' @rdname mvrnorm-methods
+#' @title mvrnorm 
+#' @name mvrnorm
+#' @rdname mvrnorm-a4aGr
+#' @description Method to simulate multivariate normal parameters for \code{a4aGr} objects.
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aGr} object
 #' @return a \code{a4aGr} object with n iterations 
@@ -38,7 +42,10 @@ setMethod("mvrnorm", signature("numeric", "a4aGr"), function(n=1, mu) {
 	mu	
 })
 
-#' Method to simulate multivariate parameters with triangle marginals and elliptic copulas
+#' @title mvrtriangle 
+#' @name mvrtriangle
+#' @rdname mvrtriangle-a4aGr
+#' @description Method to simulate multivariate parameters with triangle marginals and elliptic copulas for \code{a4aGr} objects.
 #'
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aGr} object
@@ -62,8 +69,10 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 	object	
 })
 
-#' Simulates the model parameters using self defined copulas and margins 
-#'
+#' @title mvrcop 
+#' @name mvrcop
+#' @rdname mvrcop-a4aGr
+#' @description Method to simulate model parameters using self defined copulas and margins for \code{a4aGr} objects.
 #' @param n the number of iterations
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
@@ -90,8 +99,10 @@ setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 	object	
 })
 
-#' Predicts age or lengths using a growth class
-#'
+#' @title predict for \code{a4aGr} 
+#' @name predict
+#' @rdname predict-a4aGr
+#' @description Predicts age or lengths using a growth class
 #' @param object the \code{a4aGr} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{matrix} object with lengths or ages

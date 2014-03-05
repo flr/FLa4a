@@ -7,42 +7,24 @@ vsmods <- function(object){
 	return(TRUE)
 }
 
-# submodel-class - «Short one line description»
-# submodel-class
-
-
-#' a4aFitSA extends \code{"a4aFit"} class.
-#'
-#' Some details about this class and my plans for it in the body.
-#'
-#' \describe{
-#'    \item{myslot1}{A logical keeping track of something.}
-#'
-#'    \item{myslot2}{An integer specifying something else.}
-#' 
-#'    \item{myslot3}{A data.frame holding some data.}
-#'  }
-#' @name submodels-class
+#' @title Submodels class
+#' @docType class
+#' @name submodel
 #' @rdname submodels-class
-#' @exportClass submodels
+#' @template ClassDescription
+#' @note This class is similar to other 'plural' calsses in \code{FLR}. It's a list constraint by having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
+#' @aliases submodels-class
 setClass("submodels", contains="FLComps",
 	validity=vsmods
 )
 
+#' @rdname submodels-class
+#' @template Constructors
+#' @aliases submodels submodels-methods submodels,missing-method
 
-# constructor
-
-#' @export
 setGeneric("submodels", function(object, ...)
 	standardGeneric("submodels"))
 
-#' @export
-setMethod("submodels", signature(object="submodel"), function(object, ...) {
-    lst <- c(object, list(...))
-    submodels(lst)
-})
-
-#' @export
 setMethod("submodels", signature(object="missing"),
   function(...) {
     # empty
@@ -58,7 +40,15 @@ setMethod("submodels", signature(object="missing"),
   }
 )
 
-#' @export
+#' @rdname submodels-class
+#' @aliases submodels,submodel-method
+setMethod("submodels", signature(object="submodel"), function(object, ...) {
+    lst <- c(object, list(...))
+    submodels(lst)
+})
+
+#' @rdname submodels-class
+#' @aliases submodels,list-method
 setMethod("submodels", signature(object="list"),
   function(object, ...) {
     

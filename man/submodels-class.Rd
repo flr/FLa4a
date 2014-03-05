@@ -1,16 +1,28 @@
-\name{submodels-class}
+\docType{class}
+\name{submodel}
+\alias{submodel}
+\alias{submodels}
 \alias{submodels-class}
-\title{a4aFitSA extends \code{"a4aFit"} class.}
+\alias{submodels-methods}
+\alias{submodels,list-method}
+\alias{submodels,missing-method}
+\alias{submodels,submodel-method}
+\title{Submodels class}
 \description{
-  Some details about this class and my plans for it in the
-  body.
+  Class definition (slots), constructors, accessors,
+  replacement (when relevant) and common methods.
 }
-\details{
-  \describe{ \item{myslot1}{A logical keeping track of
-  something.}
-
-  \item{myslot2}{An integer specifying something else.}
-
-  \item{myslot3}{A data.frame holding some data.} }
+\note{
+  This class is similar to other 'plural' calsses in
+  \code{FLR}. It's a list constraint by having all elements
+  of the same class, in this case \code{submodel}.
+  Otherwise it works exacly as any other list.
+}
+\section{Constructor}{
+  A construction method exists for this class that can take
+  named arguments for any of its slots. All slots are then
+  created to match the requirements of the class validity.
+  If an unnamed \code{FLQuant} object is provided, this is
+  used for sizing but not stored in any slot.
 }
 

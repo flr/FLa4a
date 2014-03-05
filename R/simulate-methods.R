@@ -2,12 +2,14 @@
 #    simulate  methods
 #==================================================================== 
 
-#setGeneric("simulate", useAsDefault = stats::simulate)
+#' @title Simulation methods for SCA
+#' @description Simulation methods for a4a stock assessment fits.
+#' @name simulate
+#' @rdname simulate-methods
+#' @aliases simulate simulate-methods
+#' @template Example-simulate
 setGeneric("simulate", useAsDefault = simulate)
 
-#' Simulation methods for stock assessment fits
-#'
-#' @name simulate
 #' @rdname simulate-methods
 #' @aliases simulate,a4aFitSA-method
 setMethod("simulate", signature(object = "a4aFitSA"),

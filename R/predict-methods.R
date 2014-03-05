@@ -2,10 +2,12 @@
 #    predict  methods
 #==================================================================== 
 
-#' Predict methods for stock assessment fits
+#' @title predict methods for SCA
+#' @description Predict methods for a4a stock assessment fits.
 #' @name predict
 #' @rdname predict-methods
 #' @aliases predict,a4aFitSA-method
+#' @template Example-predict
 setMethod("predict", signature(object = "a4aFitSA"),
   function(object) {
     predict(pars(object))
