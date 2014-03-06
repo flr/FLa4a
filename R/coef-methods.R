@@ -72,7 +72,7 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
   function(object, ..., value) {
     v <- coef(object)
     old <- unlist(v)
-    new <- rep_len(unlist(value), length = length(old))
+    new <- rep_len(unlist(value), length.out = length(old))
     
     coef(object @ stkmodel) <- new[grep("stkmodel", names(old))]
     coef(object @ qmodel) <- new[grep("qmodel.", names(old))]
@@ -96,7 +96,7 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
   function(object, ..., value) {
     v <- coef(object)
     old <- unlist(v)
-    new <- rep_len(unlist(value), length = length(old))
+    new <- rep_len(unlist(value), length.out = length(old))
     
     for (i in seq_along(object)) {
       object[[i]] @ params[] <- new[grep(object[[i]] @ name, names(old))]  

@@ -25,13 +25,6 @@ setMethod("vcov", signature(object = "SCAPars"),
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov,a4aStkParams-method
-setMethod("vcov", signature(object = "a4aStkParams"),
-  function(object) {
-      object @ vcov
-  })
-
-#' @rdname vcov-methods
 #' @aliases vcov,submodels-method
 setMethod("vcov", signature(object = "submodels"),
   function(object) {
@@ -40,7 +33,7 @@ setMethod("vcov", signature(object = "submodels"),
 
 
 #' @rdname vcov-methods
-#' @aliases coef,submodel-method
+#' @aliases vcov,submodel-method
 setMethod("vcov", signature(object = "submodel"),
   function(object) {
       object @ vcov
@@ -65,7 +58,7 @@ setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
   function(object, ..., value) {
     v <- vcov(object)
     old <- unlist(v)
-    new <- rep_len(unlist(value), length = length(old))
+    new <- rep_len(unlist(value), length.out = length(old))
     
     vcov(object @ stkmodel) <- new[grep("stkmodel", names(old))]
     vcov(object @ qmodel) <- new[grep("qmodel.", names(old))]
@@ -89,7 +82,7 @@ setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
   function(object, ..., value) {
     v <- vcov(object)
     old <- unlist(v)
-    new <- rep_len(unlist(value), length = length(old))
+    new <- rep_len(unlist(value), length.out = length(old))
     
     for (i in seq_along(object)) {
       object[[i]] @ vcov[] <- new[grep(object[[i]] @ name, names(old))]  

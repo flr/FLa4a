@@ -9,6 +9,8 @@
 \alias{clock}
 \alias{clock,a4aFit-method}
 \alias{fitSumm}
+\alias{fitSumm-methods}
+\alias{fitSumm,a4aFit-method}
 \alias{harvest}
 \alias{harvest,a4aFit-method}
 \alias{index}
@@ -45,7 +47,7 @@
   }
 }
 
-\section{Accesors}{
+\section{Accessors}{
   All slots in the class have accessor and replacement
   methods defined that allow retrieving and substituting
   individual slots.

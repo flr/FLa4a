@@ -5,10 +5,8 @@
 \alias{a4aGr-methods}
 \alias{a4aGr,missing-method}
 \alias{distr}
-\alias{distr-methods}
 \alias{distr,a4aGr-method}
-\alias{distr<-}
-\alias{distr<--methods}
+\alias{distr<- for a4aGr}
 \alias{distr<-,a4aGr,character-method}
 \alias{grInvMod}
 \alias{grInvMod-methods}
@@ -31,7 +29,7 @@
 \alias{params<-,a4aGr,FLPar-method}
 \alias{vcov}
 \alias{vcov,a4aGr-method}
-\alias{vcov<-}
+\alias{vcov<- for a4aGr}
 \alias{vcov<-,a4aGr,numeric-method}
 \title{Individual growth class}
 \description{
@@ -61,7 +59,7 @@
   }
 }
 
-\section{Accesors}{
+\section{Accessors}{
   All slots in the class have accessor and replacement
   methods defined that allow retrieving and substituting
   individual slots.

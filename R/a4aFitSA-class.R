@@ -22,10 +22,6 @@ setClass("a4aFitSA",
                 pars    = new('SCAPars'))
 )
 
-setMethod("m", signature(object="a4aFitSA"),
-  function(object) m(pars(object)))
-
-
 #' @rdname a4aFitSA-class
 #' @aliases show,a4aFitSA-method
 setMethod("show", signature(object = "a4aFitSA"),
@@ -120,5 +116,10 @@ setMethod("a4aFitSA", signature(object="a4aFit"),
 #' @aliases pars,a4aFitSA-method
 setGeneric("pars", function(object, ...) standardGeneric("pars"))
 setMethod("pars", "a4aFitSA", function(object) object@pars)
+
+#' @rdname a4aFitSA-class
+#' @aliases m,a4aFitSA-method
+setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
+
 
 

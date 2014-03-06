@@ -445,9 +445,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   full.df $ fleet <- factor(names(list.obs)[full.df $ fleet], levels = names(list.obs))
 
   # set weights for missing values to zero
-  full.df $ weights[is.na(full.df $ obs)] <- 0
+  full.df $ weights[is.na(full.df$obs)] <- 0
   # inform that missing values will be treated as missing at random
-  if (any(is.na(full.df $ obs))) 
+  if (any(is.na(full.df$obs))) 
     message("Note: The following observations are treated as being missing at random:\n\t", 
              paste(capture.output(print(subset(full.df,is.na(obs))[c("fleet","year","age")], row.names = FALSE)), collapse = "\n\t"),
           "\n      Predictions will be made for missing observations." )

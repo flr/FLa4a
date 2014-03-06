@@ -114,13 +114,12 @@ setReplaceMethod("params", signature("a4aGr","FLPar"), function(object, value){
 })
 
 #' @rdname a4aGr-class
-#' @aliases distr distr-methods distr,a4aGr-method
-setGeneric("distr", function(object, ...) standardGeneric("distr"))
+#' @aliases distr,a4aGr-method
 setMethod("distr", "a4aGr", function(object) object@distr)
 
+#' @name distr<- for a4aGr
 #' @rdname a4aGr-class
-#' @aliases distr<- distr<--methods distr<-,a4aGr,character-method
-setGeneric("distr<-", function(object, value) standardGeneric("distr<-"))
+#' @aliases distr<-,a4aGr,character-method
 setReplaceMethod("distr", signature("a4aGr","character"), function(object, value){
 	object@distr <- value
 	object
@@ -130,7 +129,7 @@ setReplaceMethod("distr", signature("a4aGr","character"), function(object, value
 #' @aliases vcov,a4aGr-method
 setMethod("vcov", "a4aGr", function(object) object@vcov)
 
-#' @name vcov<-
+#' @name vcov<- for a4aGr
 #' @rdname a4aGr-class
 #' @aliases vcov<-,a4aGr,numeric-method
 setReplaceMethod("vcov", signature(object = "a4aGr", value = "numeric"), function(object, value){
@@ -170,7 +169,7 @@ setMethod("veclen", "a4aGr", function(object){
 	rng[1]:rng[2]
 })
 
-#' @name niters
+#' @name niters for a4aGr
 #' @rdname niters
 #' @title number of iterations
 #' @description method to extract from \code{a4aGr} objects the number of iterations.

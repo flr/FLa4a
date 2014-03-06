@@ -19,13 +19,13 @@ setMethod("getK", "a4aGr", function(object){
 }) 
 
 #' @title mvrnorm 
-#' @name mvrnorm
+#' @name mvrnorm for a4aGr
 #' @rdname mvrnorm-a4aGr
 #' @description Method to simulate multivariate normal parameters for \code{a4aGr} objects.
 #' @param n the number of simulations to be generated
 #' @param mu a \code{a4aGr} object
 #' @return a \code{a4aGr} object with n iterations 
-#' @aliases mvrnorm,numeric,a4aGr-method
+#' @aliases mvrnorm,numeric,a4aGr-method mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
@@ -43,7 +43,7 @@ setMethod("mvrnorm", signature("numeric", "a4aGr"), function(n=1, mu) {
 })
 
 #' @title mvrtriangle 
-#' @name mvrtriangle
+#' @name mvrtriangle for a4aGr 
 #' @rdname mvrtriangle-a4aGr
 #' @description Method to simulate multivariate parameters with triangle marginals and elliptic copulas for \code{a4aGr} objects.
 #'
@@ -70,7 +70,7 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 })
 
 #' @title mvrcop 
-#' @name mvrcop
+#' @name mvrcop for a4aGr
 #' @rdname mvrcop-a4aGr
 #' @description Method to simulate model parameters using self defined copulas and margins for \code{a4aGr} objects.
 #' @param n the number of iterations
@@ -100,7 +100,7 @@ setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 })
 
 #' @title predict for \code{a4aGr} 
-#' @name predict
+#' @name predict for a4aGr
 #' @rdname predict-a4aGr
 #' @description Predicts age or lengths using a growth class
 #' @param object the \code{a4aGr} object

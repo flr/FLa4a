@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A simple and robust statistical catch at age model
-Version: 0.60.0
+Version: 0.61.0
 Date: 2013-06-01
 Author: Colin P. Millar and Ernesto Jardim
 Maintainer: Colin Millar <colinpmillar@googlemail.com>
@@ -24,6 +24,9 @@ Depends:
 LazyLoad: yes
 LazyData: yes
 Collate:
+    'FLCompMethods.R'
+    'FLModelSimMethods.R'
+    'utilities.R'
     'gen-methods.R'
     'a4aFit-class.R'
     'a4aStkParams-class.R'
@@ -31,13 +34,11 @@ Collate:
     'submodels-class.R'
     'SCAPars-class.R'
     'a4aFitSA-class.R'
-    'FLModelSimMethods.R'
     'coef-methods.R'
     'vcov-methods.R'
     'predict-methods.R'
     'simulate-methods.R'
     'addition-methods.R'
-    'utilities.R'
     'internal.R'
     'hake-data.R'
     'redfish-data.R'
@@ -48,7 +49,5 @@ Collate:
     'a4aGr-class.R'
     'a4aGr-methods.R'
     'l2a-methods.R'
-    'boot-methods.R'
-    'FLCompMethods.R'
     'a4aFitresiduals-class.R'
 

@@ -1,9 +1,8 @@
 \name{vcov}
-\alias{coef,submodel-method}
 \alias{vcov}
 \alias{vcov,a4aFitSA-method}
-\alias{vcov,a4aStkParams-method}
 \alias{vcov,SCAPars-method}
+\alias{vcov,submodel-method}
 \alias{vcov,submodels-method}
 \alias{vcov<-}
 \alias{vcov<-,a4aFitSA,numeric-method}

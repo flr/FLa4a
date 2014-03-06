@@ -1,5 +1,5 @@
-\name{mvrcop}
-\alias{mvrcop}
+\name{mvrcop for a4aGr}
+\alias{mvrcop for a4aGr}
 \alias{mvrcop,numeric,a4aGr-method}
 \title{mvrcop}
 \arguments{

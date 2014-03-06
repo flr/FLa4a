@@ -1,6 +1,5 @@
 \docType{class}
-\name{submodel}
-\alias{submodel}
+\name{submodels}
 \alias{submodels}
 \alias{submodels-class}
 \alias{submodels-methods}

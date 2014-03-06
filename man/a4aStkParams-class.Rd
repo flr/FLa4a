@@ -25,7 +25,7 @@
 \alias{params}
 \alias{params,a4aStkParams-method}
 \alias{params<-}
-\alias{params<-,a4aStkParams,FLQuant-method}
+\alias{params<-,a4aStkParams,FLPar-method}
 \alias{rMod}
 \alias{rMod-methods}
 \alias{rMod,a4aStkParams-method}
@@ -54,7 +54,7 @@
   \code{character}} }
 }
 
-\section{Accesors}{
+\section{Accessors}{
   All slots in the class have accessor and replacement
   methods defined that allow retrieving and substituting
   individual slots.

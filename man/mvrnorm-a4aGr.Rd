@@ -1,6 +1,7 @@
-\name{mvrnorm}
-\alias{mvrnorm}
+\name{mvrnorm for a4aGr}
+\alias{mvrnorm for a4aGr}
 \alias{mvrnorm,numeric,a4aGr-method}
+\alias{mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method}
 \title{mvrnorm}
 \arguments{
   \item{n}{the number of simulations to be generated}

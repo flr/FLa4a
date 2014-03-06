@@ -35,7 +35,7 @@
   \item{\code{trend}}{the yearly trend in M} }
 }
 
-\section{Accesors}{
+\section{Accessors}{
   All slots in the class have accessor and replacement
   methods defined that allow retrieving and substituting
   individual slots.

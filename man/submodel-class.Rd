@@ -35,7 +35,7 @@
   that \code{rnorm} can be called} }
 }
 
-\section{Accesors}{
+\section{Accessors}{
   All slots in the class have accessor and replacement
   methods defined that allow retrieving and substituting
   individual slots.

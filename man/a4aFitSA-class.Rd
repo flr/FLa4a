@@ -7,6 +7,8 @@
 \alias{a4aFitSA-methods}
 \alias{a4aFitSA,a4aFit-method}
 \alias{a4aFitSA,missing-method}
+\alias{m}
+\alias{m,a4aFitSA-method}
 \alias{pars}
 \alias{pars,a4aFitSA-method}
 \alias{show}
@@ -21,7 +23,7 @@
   \code{SCAPars} with information about model parameters}
 }
 
-\section{Accesors}{
+\section{Accessors}{
   All slots in the class have accessor and replacement
   methods defined that allow retrieving and substituting
   individual slots.

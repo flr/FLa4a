@@ -18,10 +18,8 @@
   indices and catch-at-age residuals.
 }
 \examples{
-library(FLa4a)
 data(ple4)
 data(ple4.index)
-fit. <- a4a(stock=ple4, indices=FLIndices(ple4.index))
-stdlogres(catch.n(ple4), catch.n(fit.))
+obj <- sca(ple4, FLIndices(ple4.index))
 }
 

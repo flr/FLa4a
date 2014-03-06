@@ -10,7 +10,9 @@ setClass("a4aFitResiduals", contain="FLQuants")
 
 #' @rdname a4aFitResiduals-class
 #' @aliases a4aFitResiduals a4aFitResiduals-methods residuals,a4aFit-method
-#' @template Example-a4aFitResiduals
+#' @template runsca
+#' @examples
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 setMethod("residuals", signature(object="a4aFit"), function(object, stock, indices, ...) {
 	args <- list(...)
 	# object holder
@@ -39,12 +41,9 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 #' @param obs a \code{FLQuant} object with the observations
 #' @param fit a \code{FLQuant} object with the fitted value
 #' @return a \code{FLQuant} with stardardized log residuals
+#' @template runsca
 #' @examples
-#' library(FLa4a)
-#' data(ple4)
-#' data(ple4.index)
-#' fit. <- a4a(stock=ple4, indices=FLIndices(ple4.index))
-#' stdlogres(catch.n(ple4), catch.n(fit.))
+#' stdlogres(catch.n(ple4), catch.n(obj))
 setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 
@@ -65,14 +64,9 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' @param x a \code{a4aFitResiduals} object with the standardized residuals
 #' @param ... Additional argument list that might not ever be used.
 #' @return a \code{plot} with stardardized log residuals
+#' @template runsca
 #' @examples
-#' library(FLa4a)
-#' data(ple4)
-#' data(ple4.index)
-#' fmodel <- ~factor(age) + factor(year)
-#' qmodel <- list(~factor(age))
-#' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' plot(flqs)
 
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
@@ -88,14 +82,9 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 #' @param x a \code{a4aFitResiduals} object with the standardized residuals
 #' @param ... Additional argument list that might not ever be used.
 #' @return a \code{qqplot} with stardardized log residuals
+#' @template runsca
 #' @examples
-#' library(FLa4a)
-#' data(ple4)
-#' data(ple4.index)
-#' fmodel <- ~factor(age) + factor(year)
-#' qmodel <- list(~factor(age))
-#' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' qqmath(flqs)
 setGeneric("qqmath", function(x, data, ...) standardGeneric("qqmath"))
 
@@ -113,16 +102,9 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 #' @param x a \code{a4aFitResiduals} object with the standardized residuals
 #' @param ... Additional argument list that might not ever be used.
 #' @return a \code{bubbles} plot with stardardized log residuals
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#' @export
+#' @template runsca
 #' @examples
-#' library(FLa4a)
-#' data(ple4)
-#' data(ple4.index)
-#' fmodel <- ~factor(age) + factor(year)
-#' qmodel <- list(~factor(age))
-#' fit. <- a4a(stock=ple4, qmodel = qmodel, fmodel=fmodel, indices=FLIndices(ple4.index), fit ="assessment", wkdir="test")
-#' flqs <- residuals(fit., ple4, FLIndices(idx=ple4.index))
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' bubbles(flqs)
 
 setMethod("bubbles", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){

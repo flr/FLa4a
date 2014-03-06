@@ -25,10 +25,6 @@ setClass("SCAPars",
                  vmodel    = new("submodels"))
 )
 
-setMethod("m", signature(object="SCAPars"),
-  function(object) m(stkmodel(object)))
-
-
 #' @rdname SCAPars-class
 #' @template Accessors
 #' @template Constructors
@@ -139,4 +135,10 @@ setMethod("vCovar", "SCAPars", function(object) object@vmodel@covar)
 #' @aliases vFrml vFrml-methods vFrml,SCAPars-method
 setGeneric("vFrml", function(object, ...) standardGeneric("vFrml"))
 setMethod("vFrml", "SCAPars", function(object) object@vmodel@model)
+
+#' @rdname SCAPars-class
+#' @aliases m,SCAPars-method
+setMethod("m", signature(object="SCAPars"), function(object) m(stkmodel(object)))
+
+
 

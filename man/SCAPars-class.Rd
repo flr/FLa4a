@@ -12,6 +12,8 @@
 \alias{fPars}
 \alias{fPars-methods}
 \alias{fPars,SCAPars-method}
+\alias{m}
+\alias{m,SCAPars-method}
 \alias{n1model}
 \alias{n1model-methods}
 \alias{n1model,SCAPars-method}

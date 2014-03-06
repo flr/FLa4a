@@ -1,5 +1,5 @@
-\name{niters}
-\alias{niters}
+\name{niters for a4aGr}
+\alias{niters for a4aGr}
 \alias{niters,a4aGr-method}
 \title{number of iterations}
 \arguments{

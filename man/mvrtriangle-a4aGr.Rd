@@ -1,5 +1,5 @@
-\name{mvrtriangle}
-\alias{mvrtriangle}
+\name{mvrtriangle for a4aGr}
+\alias{mvrtriangle for a4aGr}
 \alias{mvrtriangle,numeric,a4aGr-method}
 \title{mvrtriangle}
 \arguments{
