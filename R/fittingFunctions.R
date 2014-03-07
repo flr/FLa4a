@@ -18,7 +18,7 @@ a4a <- function(...){
 #' @aliases collapseSeasons
 collapseSeasons <- function (stock) {
   
-  if (dims(stock) $ season == 1) return (stock) # do nothing
+  if (dims(stock)$season == 1) return (stock) # do nothing
   
   out <- FLStock(catch.n      = seasonSums(catch.n(stock)), 
                  # straight forward averages
@@ -67,9 +67,9 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
   stkdms <- dims(stock)
   if(missing(fmodel)){
 	  # set up a robust model...  this needs some work...
-	  ka <- stkdms $ age
+	  ka <- stkdms$age
 	  ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
-	  ky <- floor(.5 * stkdms $ year)
+	  ky <- floor(.5 * stkdms$year)
 	  if (ka >= 3) {
 		fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
 	  } else {
@@ -85,7 +85,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 	  qmodel <- lapply(ka, function(i) if (i == 2) ~ age else formula(paste("~ s(age, k = ", ka, ")")))
   }
 
-  if (stkdms $ age > 10) {
+  if (stkdms$age > 10) {
     n1model <- ~ s(age, k = 10) 
   } else {
     n1model <- ~ factor(age)
@@ -143,14 +143,14 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   stock <- collapseSeasons(stock)
   
   # only allow 1 season for surveys
-  if (any(dms $ season[-1] > 1)) stop("only one season per survey - please split into seperate surveys.")
+  if (any(dms$season[-1] > 1)) stop("only one season per survey - please split into seperate surveys.")
   
   # now do a fit for each combination of unit, area and iter...
   # if fit = MP then we return an a4aFit with the same dimensions as stock
   # if fit = assessment then we return a4aFitSA with same dimensions as stock....  \TODO only true with iters so far
   
-  grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3,5)], list(iter = 1:max(dms $ iter))))
-  #if (!identical(sort(unique(dms $ iter)), sort(unique(c(1L, max(dms $ iter))))))
+  grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3,5)], list(iter = 1:max(dms$iter))))
+  #if (!identical(sort(unique(dms$iter)), sort(unique(c(1L, max(dms$iter))))))
   if(length(unique(dms$iter[dms$iter>1]))>1) 
   	stop("incosistent number of iterations in stock and indices")
   it <- max(dms$iter)
@@ -161,25 +161,25 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   dms$iter <- 1:it
   ini <- FLQuant(NA, dimnames=dms)
   out <- if (fit %in% c("MP", "sim")) a4aFit() else a4aFitSA()
-  out @ desc <- desc(stock)
-  out @ name <- name(stock)
-  out @ range <- range(stock)
-  out @ call <- match.call()
-  out @ harvest <- ini
-  out @ stock.n <- ini
-  out @ catch.n <- ini
+  out@desc <- desc(stock)
+  out@name <- name(stock)
+  out@range <- range(stock)
+  out@call <- match.call()
+  out@harvest <- ini
+  out@stock.n <- ini
+  out@catch.n <- ini
   # idx
   ini <- lapply(indices, function(x){
   	dms <- dimnames(index(x))
   	dms$iter <- 1:it
 	FLQuant(NA, dimnames=dms)
   })
-  out @ index <- FLQuants(ini)
+  out@index <- FLQuants(ini)
 
   if (fit == "assessment") {
-    out @ pars @ stkmodel @ fMod <- fmodel
-    out @ pars @ stkmodel @ n1Mod <- n1model
-    out @ pars @ stkmodel @ srMod <- srmodel
+    out@pars@stkmodel@fMod <- fmodel
+    out@pars@stkmodel@n1Mod <- n1model
+    out@pars@stkmodel@srMod <- srmodel
     # and the same for indices    
   }
 
@@ -188,19 +188,19 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 
   niters <- nrow(grid)
   for (i in seq(niters)) {
-    #istock <- stock[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]]
-    istock <- stock[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(stock)$iter)]
+    #istock <- stock[,, grid$unit[i], grid$area[i], , grid$iter[i]]
+    istock <- stock[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(stock)$iter)]
 
 # check: do we need indices to have matching units, areas?
-    iindices <- lapply(indices, function(x) x[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(x)$iter)])
+    iindices <- lapply(indices, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
     iindices <- FLIndices(iindices)
 
     # check: do we need indices to have matching units, areas?
     if (!missing(covar) & !missing(wkdir)) {
-      icovar <- lapply(covar, function(x) x[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(x)$iter)])
+      icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center)
     } else if(!missing(covar) & missing(wkdir)){
-      icovar <- lapply(covar, function(x) x[,, grid $ unit[i], grid $ area[i], , min(grid $ iter[i], dims(x)$iter)])
+      icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center)
     } else if(missing(covar) & !missing(wkdir)){
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center)
@@ -209,107 +209,108 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 	}    
     
     if (i == 1) {
-      tmpSumm <- outi @ fitSumm
-      out @ fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
+      tmpSumm <- outi@fitSumm
+      out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
     }
-    out @ fitSumm[,i] <- outi @ fitSumm
+    out@fitSumm[,i] <- outi@fitSumm
       
     if (fit == "MP") {
       # copy results
-      out @ harvest[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- harvest(outi)
-      out @ stock.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- stock.n(outi)
-      out @ catch.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- catch.n(outi)
+      out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
+      out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
+      out@catch.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(outi)
       # add indices
       for (j in 1:length(iindices)) {
-        out @ index[[j]][,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- index(outi)[[j]]
+        out@index[[j]][,, grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
       }
     }
     
-    if (fit == "sim") {
+#    if (fit == "sim") {
 
-      # copy results with noise
-      istock <- istock + outi # this automatically adds noise
-      out @ harvest[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- harvest(istock)
-      out @ stock.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- stock.n(istock)
-      out @ catch.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- catch.n(istock)
+#      # copy results with noise
+#      istock <- istock + outi # this automatically adds noise
+#      out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(istock)
+#      out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(istock)
+#      out@catch.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(istock)
+#      # add indices
+#      for (j in 1:length(iindices)) {
+#        out@index[[j]][,, grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
+#      }
+
+#    }
+
+#    if (fit %in% c("assessment", "Ext")) {
+    if (fit=="assessment") {
+
+      # store everything in a a4aFitSA object
+      out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
+      out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
+      out@catch.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(outi)
       # add indices
       for (j in 1:length(iindices)) {
-        out @ index[[j]][,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- index(outi)[[j]]
-      }
-
-    }
-
-    if (fit %in% c("assessment", "Ext")) {
-
-      # store everything in a a4aFit SA object
-      out @ harvest[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- harvest(outi)
-      out @ stock.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- stock.n(outi)
-      out @ catch.n[,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- catch.n(outi)
-      # add indices
-      for (j in 1:length(iindices)) {
-        out @ index[[j]][,, grid $ unit[i], grid $ area[i], , grid $ iter[i]] <- index(outi)[[j]]
+        out@index[[j]][,, grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
       }
 
       # fill up models
       if (i == 1) {
         # stkmodel
-        out @ pars @ stkmodel @ name      <- outi @ name
-        out @ pars @ stkmodel @ desc      <- outi @ desc
-        out @ pars @ stkmodel @ range     <- outi @ range
-        out @ pars @ stkmodel @ centering <- rep(0, niters)  
-        out @ pars @ stkmodel @ params    <- propagate(outi @ pars @ stkmodel @ params, niters)
-        tmpvcov <- outi @ pars @ stkmodel @ vcov
-        out @ pars @ stkmodel @ vcov      <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
-        out @ pars @ stkmodel @ m         <- propagate(outi @ pars @ stkmodel @ m, niters)
-        out @ pars @ stkmodel @ units     <- units(catch.n(stock))
+        out@pars@stkmodel@name      <- outi@name
+        out@pars@stkmodel@desc      <- outi@desc
+        out@pars@stkmodel@range     <- outi@range
+        out@pars@stkmodel@centering <- rep(0, niters)  
+        out@pars@stkmodel@params    <- propagate(outi@pars@stkmodel@params, niters)
+        tmpvcov <- outi@pars@stkmodel@vcov
+        out@pars@stkmodel@vcov      <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
+        out@pars@stkmodel@m         <- propagate(outi@pars@stkmodel@m, niters)
+        out@pars@stkmodel@units     <- units(catch.n(stock))
         # qmodel
-        out @ pars @ qmodel               <- outi @ pars @ qmodel
+        out@pars@qmodel               <- outi@pars@qmodel
         for (j in seq(length(indices))) {
-          out @ pars @ qmodel[[j]] @ params <- propagate(outi @ pars @ qmodel[[j]] @ params, niters)
-          tmpvcov <- outi @ pars @ qmodel[[j]] @ vcov
-          out @ pars @ qmodel[[j]] @ vcov        <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
+          out@pars@qmodel[[j]]@params <- propagate(outi@pars@qmodel[[j]]@params, niters)
+          tmpvcov <- outi@pars@qmodel[[j]]@vcov
+          out@pars@qmodel[[j]]@vcov        <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
         }
         # vmodel
-        out @ pars @ vmodel               <- outi @ pars @ vmodel
+        out@pars@vmodel               <- outi@pars@vmodel
         for (j in seq(length(indices)+1)) {
-          out @ pars @ vmodel[[j]] @ params <- propagate(outi @ pars @ vmodel[[j]] @ params, niters)
-          tmpvcov <- outi @ pars @ vmodel[[j]] @ vcov
-          out @ pars @ vmodel[[j]] @ vcov        <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
+          out@pars@vmodel[[j]]@params <- propagate(outi@pars@vmodel[[j]]@params, niters)
+          tmpvcov <- outi@pars@vmodel[[j]]@vcov
+          out@pars@vmodel[[j]]@vcov        <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
         }
       }
 
     
       # now the a4aFitSA bits                                 
-      out @ pars @ stkmodel @ centering[i] <- outi @ pars @ stkmodel @ centering     
-      out @ pars @ stkmodel @ params[,i]   <- outi @ pars @ stkmodel @ params
-      out @ pars @ stkmodel @ vcov[,,i]    <- outi @ pars @ stkmodel @ vcov
-      out @ pars @ stkmodel @ m[,,,,,i]    <- outi @ pars @ stkmodel @ m
+      out@pars@stkmodel@centering[i] <- outi@pars@stkmodel@centering     
+      out@pars@stkmodel@params[,i]   <- outi@pars@stkmodel@params
+      out@pars@stkmodel@vcov[,,i]    <- outi@pars@stkmodel@vcov
+      out@pars@stkmodel@m[,,,,,i]    <- outi@pars@stkmodel@m
       # qmodel
       for (j in seq(length(indices))) {
-        out @ pars @ qmodel[[j]] @ params[,i] <- outi @ pars @ qmodel[[j]] @ params
-        out @ pars @ qmodel[[j]] @ vcov[,,i]  <- outi @ pars @ qmodel[[j]] @ vcov
+        out@pars@qmodel[[j]]@params[,i] <- outi@pars@qmodel[[j]]@params
+        out@pars@qmodel[[j]]@vcov[,,i]  <- outi@pars@qmodel[[j]]@vcov
       }
       # vmodel
       for (j in seq(length(indices)+1)) {
-        out @ pars @ vmodel[[j]] @ params[,i] <- outi @ pars @ vmodel[[j]] @ params
-        out @ pars @ vmodel[[j]] @ vcov[,,i]   <- outi @ pars @ vmodel[[j]] @ vcov
+        out@pars@vmodel[[j]]@params[,i] <- outi@pars@vmodel[[j]]@params
+        out@pars@vmodel[[j]]@vcov[,,i]   <- outi@pars@vmodel[[j]]@vcov
       }
 
     }
     
-    if (fit == "Ext") {
-		warning("Not implemented yet!")
-	}    
+#    if (fit == "Ext") {
+#		warning("Not implemented yet!")
+#	}    
     
     # keep timing info
-    time.used[,i] <- outi @ clock
+    time.used[,i] <- outi@clock
   }
    
-  units(out @ harvest) <- "f"  
+  units(out@harvest) <- "f"  
    
   # add in combined timings
-  out @ clock <- outi @ clock # to get names
-  out @ clock[] <- rowSums(time.used)
+  out@clock <- outi@clock # to get names
+  out@clock[] <- rowSums(time.used)
   
   # return out
   out
@@ -373,7 +374,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
   # what kind of run is this: 'setup' just writes data files - usefull when developing code
   #fit <- match.arg(fit, c("MP", "assessment", "debug", "setup", "MCMC", "Ext")) # MCMC is experimental
-  fit <- match.arg(fit, c("MP", "assessment", "debug", "setup"))
+  fit <- match.arg(fit, c("MP", "assessment", "setup"))
 
   # ------------------------------------------------------------------------
   #
@@ -391,7 +392,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                      lapply(indices, function(x) quant2mat(index(x)) ))
                      
   # convert the variances of catches and indices to a list of named arrays
-  list.var <- c(list(catch = quant2mat(catch.n(stock) @ var)),
+  list.var <- c(list(catch = quant2mat(catch.n(stock)@var)),
                      lapply(indices, function(x) quant2mat(index.var(x)) ))                
                      
   # calculate appropriate centering for observations on log scale
@@ -408,7 +409,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   plusgroup <- as.integer( !is.na(range(stock)["plusgroup"]), range(stock)["plusgroup"] >= range(stock)["max"] )
 
   # extract auxilliary survey info - always assume oldest age is true age TODO TODO TODO !! 
-  surveytime <- unname(sapply(indices, function(x) mean(c(dims(x) $ startf, dims(x) $ endf))))
+  surveytime <- unname(sapply(indices, function(x) mean(c(dims(x)$startf, dims(x)$endf))))
   if (any(is.na(surveytime))) stop("You need to define startf and endf for each index!!")
 
   # ------------------------------------------------------------------------
@@ -418,7 +419,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # ------------------------------------------------------------------------
  
   # build a full data frame first (we will use this for the variance model so it is not a waste)
-  full.df <- do.call(rbind, lapply(1:length(list.obs), function(i) cbind(fleet = i, FLa4a:::make.df(i, stock=stock, indices=indices))))
+  full.df <- do.call(rbind, lapply(1:length(list.obs), function(i) cbind(fleet = i, make.df(i, stock=stock, indices=indices))))
 
   if (!missing(covar)) {
   # add in covariates to data.frame - it is easiest to provide covariates in one list
@@ -426,8 +427,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     lapply(seq_along(covar), 
       function(i) {
         x <- as.data.frame(covar[[i]])[c(1,2,7)]
-        if (length(unique(x $ age)) == 1) x <- x[names(x) != "age"]
-        if (length(unique(x $ year)) == 1) x <- x[names(x) != "year"]
+        if (length(unique(x$age)) == 1) x <- x[names(x) != "age"]
+        if (length(unique(x$year)) == 1) x <- x[names(x) != "year"]
         names(x) <- gsub("data", names(covar)[i], names(x))
         x
       })
@@ -440,12 +441,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # add in data
   full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
   # put biomass surveys in min age position
-  full.df $ age <- with(full.df, replace(age, is.na(age), min(age, na.rm = TRUE)))
+  full.df$age <- with(full.df, replace(age, is.na(age), min(age, na.rm = TRUE)))
 
-  full.df $ fleet <- factor(names(list.obs)[full.df $ fleet], levels = names(list.obs))
+  full.df$fleet <- factor(names(list.obs)[full.df$fleet], levels = names(list.obs))
 
   # set weights for missing values to zero
-  full.df $ weights[is.na(full.df$obs)] <- 0
+  full.df$weights[is.na(full.df$obs)] <- 0
   # inform that missing values will be treated as missing at random
   if (any(is.na(full.df$obs))) 
     message("Note: The following observations are treated as being missing at random:\n\t", 
@@ -459,11 +460,11 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   for (i in seq_along(indices)) {
     # if biomass survey skip this step
     if (is.na(range(indices[[i]])["min"])) next
-    .ages <- temp.full.df $ age [temp.full.df $ fleet == levels(full.df $ fleet)[i+1]]
-    .range <- range(subset(full.df, fleet == levels(full.df $ fleet)[i+1]) $ age)
+    .ages <- temp.full.df$age [temp.full.df$fleet == levels(full.df$fleet)[i+1]]
+    .range <- range(subset(full.df, fleet == levels(full.df$fleet)[i+1])$age)
     .ages[.ages < .range[1]] <- .range[1]
     .ages[.ages > .range[2]] <- .range[2] 
-    temp.full.df $ age [temp.full.df $ fleet == levels(full.df $ fleet)[i+1]] <- .ages 
+    temp.full.df$age [temp.full.df$fleet == levels(full.df$fleet)[i+1]] <- .ages 
   }
   full.df <- merge(temp.full.df, full.df, all.x = TRUE)
   
@@ -471,12 +472,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # add in auxilliary data - maturity, natural mortality etc.
   aux.df <-
     cbind(as.data.frame(stock.n(stock))[c("year","age")], 
-          m = log(as.data.frame(m(stock)) $ data), mat = as.data.frame(mat(stock)) $ data,
-          stock.wt = as.data.frame(stock.wt(stock)) $ data, catch.wt = as.data.frame(catch.wt(stock)) $ data,
-          m.spwn = as.data.frame(m.spwn(stock)) $ data, harvest.spwn = as.data.frame(harvest.spwn(stock)) $ data)
+          m = log(as.data.frame(m(stock))$data), mat = as.data.frame(mat(stock))$data,
+          stock.wt = as.data.frame(stock.wt(stock))$data, catch.wt = as.data.frame(catch.wt(stock))$data,
+          m.spwn = as.data.frame(m.spwn(stock))$data, harvest.spwn = as.data.frame(harvest.spwn(stock))$data)
   
   full.df <- merge(full.df, aux.df, all.x = TRUE, all.y = FALSE)
-  full.df $ mat.wt <- full.df $ stock.wt * full.df $ mat 
+  full.df$mat.wt <- full.df$stock.wt * full.df$mat 
 
   # set unspecified covariates and aux data to 0
   # TODO we should warn about this... or check before the merge that there are covars and m and mat for requested predictions
@@ -552,7 +553,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   a4as <- grepl(paste("(^",c("bevholt", "bevholtSV", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
   if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
   srrmod <- if (sum(a4as) == 0) "none()" else facs[a4as]
-  if (sum(a4as) == 0 && max(full.df $ year) > max(df.data $ year)) stop("you need to specify a stock recruitment relationship to forecast with out survey information.")
+  if (sum(a4as) == 0 && max(full.df$year) > max(df.data$year)) stop("you need to specify a stock recruitment relationship to forecast with out survey information.")
     
   # extract a and b model formulas and add on any extra bits to amodel. 
   # NB SRR models should be parametrised so that amodel is the level of recruitment!!!
@@ -560,10 +561,10 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   if (sum(a4as) > 0 && any(!a4as)) {
     # ignore .. the following line adds these onto the end of amod
     message("Note: Trailing formula elements in the srmodel have been removed")
-    #srr $ amodel <- eval(parse(text = paste("~", as.character(srr $ amodel)[length(srr$amodel)], "+", paste(facs[!a4as], collapse = " + ")) ))
+    #srr$amodel <- eval(parse(text = paste("~", as.character(srr$amodel)[length(srr$amodel)], "+", paste(facs[!a4as], collapse = " + ")) ))
   }
-  Xsra <- getX(srr $ a, subset(full.df, fleet == "catch" & age == dims(stock)$min))  
-  Xsrb <- getX(srr $ b, subset(full.df, fleet == "catch" & age == dims(stock)$min))  
+  Xsra <- getX(srr$a, subset(full.df, fleet == "catch" & age == dims(stock)$min))  
+  Xsrb <- getX(srr$b, subset(full.df, fleet == "catch" & age == dims(stock)$min))  
  
   # can we do a quick check for identifiability of the srr model? ...
   if (ncol(Xsra) + ncol(Xsrb) > dims(stock)$year) stop("Stock recruitment model is over parameterised, please reduce the number parameters")
@@ -617,22 +618,22 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   filename <- paste0(wkdir,'/a4a.dat')
 
   # change NA to -1 for admb
-  df.data $ age <- with(df.data, replace(age, is.na(age), -1))
+  df.data$age <- with(df.data, replace(age, is.na(age), -1))
 
   cat("# Data for the a4a model",
-    "\n# Full age range\n", range(full.df $ age),
-    "\n# Full year range\n", range(full.df $ year),
-    "\n# Number of surveys\n", length(unique(full.df $ fleet)) - 1,
+    "\n# Full age range\n", range(full.df$age),
+    "\n# Full year range\n", range(full.df$year),
+    "\n# Number of surveys\n", length(unique(full.df$fleet)) - 1,
     "\n# Survey time as a fraction into the year (one for each survey)\n", paste(surveytime, collapse = " "), 
     "\n# fbar range\n", paste(fbar, collapse = " "),
     "\n# Last age group considered plus group 0=no 1=yes\n", plusgroup,
     "\n# Number of observations\n", nrow(df.data),
     "\n# Observation data frame",
-    "\n# fleet\tyear\tage\tobservation\tweights\n", file=filename); FLa4a:::write.t(df.data, file=filename)
+    "\n# fleet\tyear\tage\tobservation\tweights\n", file=filename); write.t(df.data, file=filename)
   df.aux <- unique(full.df[c("year","age","m","m.spwn","harvest.spwn","mat.wt","stock.wt")])
   cat("# Auxilliary data frame", # should include offsets here?!
     "\n# Number of auxilliary data\n", nrow(df.aux),
-    "\n# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\n", file=filename, append = TRUE); FLa4a:::write.t(df.aux, file=filename)
+    "\n# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\n", file=filename, append = TRUE); write.t(df.aux, file=filename)
   
   # write config files
   # ------------------
@@ -643,12 +644,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   cat("# F model config for the a4a model",
     "\n# model params\n", ncol(Xf), 
     "\n# number of rows\n", nrow(Xf),
-    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xf, file=filename)
+    "\n# design matrix\n", file = filename); write.t(Xf, file=filename)
 
   Covf <- getCov(nrow(Xf), model = "iid", tau = 1)
   cat("# prior model (in sparse format)",
     "\n# flag to turn F-deviations on and off 0=off 1=on\n", 0, # off for now - until we work on the interface for randomness
-    "\n# var-cov matrix\n", file = filename, append = TRUE); FLa4a:::write.t.sparse(Covf, file=filename)
+    "\n# var-cov matrix\n", file = filename, append = TRUE); write.t.sparse(Covf, file=filename)
  
   # qmodel
   filename <- paste0(wkdir,'/qmodel.cfg')
@@ -656,12 +657,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   cat("# Q model config for the a4a model",
     "\n# model params\n", ncol(Xq), 
     "\n# number of rows\n", nrow(Xq),
-    "\n# design matrix\n", file = filename); FLa4a:::write.t(Xq, file=filename)
+    "\n# design matrix\n", file = filename); write.t(Xq, file=filename)
 
   Covq <- getCov(nrow(Xq), model = "iid", tau = 1)
   cat("# prior model (in sparse format)",
     "\n# flag to turn Q-deviations on and off 0=off 1=on\n", 0, # off for now - until we work on the interface for randomness
-    "\n# var-cov matrix\n", file = filename, append = TRUE); FLa4a:::write.t.sparse(Covq, file=filename)
+    "\n# var-cov matrix\n", file = filename, append = TRUE); write.t.sparse(Covq, file=filename)
 
   
   # vmodel no random effects for variances
@@ -686,9 +687,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   filename <- paste0(wkdir,'/srrmodel.cfg')
 
   cat("# R model config for the a4a model",
-    "\n# SR model ID:",srr $ srr,"\n", srr $ ID,
-    "\n# SR CV:\n", srr $ srrCV,
-    "\n# SPR0 :\n", srr $ SPR0,
+    "\n# SR model ID:",srr$srr,"\n", srr$ID,
+    "\n# SR CV:\n", srr$srrCV,
+    "\n# SPR0 :\n", srr$SPR0,
     "\n# a model params\n", ncol(Xsra), 
     "\n# a model number of rows\n", nrow(Xsra),
     "\n# a model design matrix\n", file = filename); write.t(Xsra, file=filename)
@@ -718,7 +719,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                  paste0("sraMod:",colnames(Xsra)), 
                  paste0("srbMod:",colnames(Xsrb)))    
   
-  if (srr $ srrCV < 0) pnames <- pnames[-c(6,7)]   
+  if (srr$srrCV < 0) pnames <- pnames[-c(6,7)]   
      
   # end here if we just want to write the data and model files
   if (fit == "setup") return(wkdir)
@@ -736,7 +737,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # arguments
   args <- character(0)
   #TODO do we want to allow the use of this?
-  if (fit == "MCMC") args <- c(args, paste0("-mcmc ", niters * 10," -mcsave 10"))
+  # if (fit == "MCMC") args <- c(args, paste0("-mcmc ", niters * 10," -mcsave 10"))
   # if running an MSE no need to work out hessian
   if (fit == "MP") args <- c(args, "-est")
   args <- paste(args, collapse = " ")
@@ -769,17 +770,17 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # post processing split
   my.time.used[3] <- Sys.time()
 
-
-  if (fit == "MCMC") {
-  
-    filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
-    nopar <- readBin(filen, what = integer(), n = 1)
-    out <- readBin(filen, what = numeric(), n = nopar * niters * 10)  ## TODO check this line
-    close(filen)
-    out <- matrix(out, byrow = TRUE, ncol = nopar)
-    colnames(out) <- unlist(pnames)    
-
-  } else if (fit %in% c("MP","assessment","Ext")) {
+#================== EXPERIMENTAL ================#
+#  if (fit == "MCMC") {
+#    filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
+#    nopar <- readBin(filen, what = integer(), n = 1)
+#    out <- readBin(filen, what = numeric(), n = nopar * niters * 10)  ## TODO check this line
+#    close(filen)
+#    out <- matrix(out, byrow = TRUE, ncol = nopar)
+#    colnames(out) <- unlist(pnames)    
+#  } else if (fit %in% c("MP","assessment","Ext")) {
+#================== /EXPERIMENTAL ===============#
+  if (fit %in% c("MP","assessment")) {
 
     # read admb output from file
     out <- list()
@@ -788,60 +789,61 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     out[c("nopar","nlogl","maxgrad")] <- 
         as.numeric(scan(paste0(wkdir, '/a4a.par'), what = '', nlines = 1, quiet = TRUE)[c(6, 11, 16)])
     lin <- matrix(readLines(paste0(wkdir, '/a4a.par'))[-1], ncol = 2, byrow = TRUE)
-    out $ par.est <- lapply(strsplit(sub(" ", "",lin[,2]), " "), as.numeric)
-    names(out $ par.est) <- gsub("[# |:]", "", lin[,1])
+    out$par.est <- lapply(strsplit(sub(" ", "",lin[,2]), " "), as.numeric)
+    names(out$par.est) <- gsub("[# |:]", "", lin[,1])
 
 
-    if (fit %in% c("assessment", "Ext")) {
+    #if (fit %in% c("assessment", "Ext")) {
+    if (fit == "assessment") {
     
       # check .cor file exisits
-      if (!file.exists(paste0(wkdir, '/a4a.cor'))) stop("Hessian was not positive definate.")
+      if (!file.exists(paste0(wkdir, '/a4a.cor'))) stop("Hessian was not positive definite.")
       
       # read .cor file
       lin <- readLines(paste0(wkdir, '/a4a.cor'))
       npar <- length(lin) - 2
-      out $ logDetHess <- as.numeric(strsplit(lin[1], '=')[[1]][2])
+      out$logDetHess <- as.numeric(strsplit(lin[1], '=')[[1]][2])
       
       sublin <- lapply(strsplit(lin[1:npar + 2], ' '), function(x) x[x != ''])
       par.names <- unlist(lapply(sublin, function(x) x[2]))
       par.std <- as.numeric(unlist(lapply(sublin, function(x) x[4])))
 
-      out $ par.std <- lapply(names(out $ par.est), function(x) par.std[which(par.names==x)])
-      names(out $ par.std) <- names(out $ par.est)
+      out$par.std <- lapply(names(out$par.est), function(x) par.std[which(par.names==x)])
+      names(out$par.std) <- names(out$par.est)
       
-      #out $ cor <- matrix(NA, npar, npar, dimnames = list(par.names, par.names))
+      #out$cor <- matrix(NA, npar, npar, dimnames = list(par.names, par.names))
       #corvec <- unlist(sapply(1:length(sublin), function(i) sublin[[i]][5:(4+i)]))
-      #out $ cor[upper.tri(out $ cor, diag = TRUE)] <- as.numeric(corvec)
-      #out $ cor[lower.tri(out $ cor)] <- t(out $ cor)[lower.tri(out $ cor)]
-      #out $ cov <- out $ cor * (par.std %o% par.std)
+      #out$cor[upper.tri(out$cor, diag = TRUE)] <- as.numeric(corvec)
+      #out$cor[lower.tri(out$cor)] <- t(out$cor)[lower.tri(out$cor)]
+      #out$cov <- out$cor * (par.std %o% par.std)
 
       # remove ssb and fbar final year from vcov and correlation matrices
-      #out $ cov <- out $ cov[1:(npar-2), 1:(npar-2)]
-      #out $ cor <- out $ cor[1:(npar-2), 1:(npar-2)]
+      #out$cov <- out$cov[1:(npar-2), 1:(npar-2)]
+      #out$cor <- out$cor[1:(npar-2), 1:(npar-2)]
 
       # use this as it seems to be more robust.. strangely...
       # I think it is because the solve method that ADMB uses is not
       # as good as the R one.... small numerical errors are
-      # resulting in non-poitive definate vcov mats for subsets of parameters.
-      hess <- getADMBHessian(wkdir) $ hes
-      out $ cov <- solve(hess)
-      out $ prec <- hess
-      out $ nopar <- ncol(hess)
+      # resulting in non-positive definite vcov mats for subsets of parameters.
+      hess <- getADMBHessian(wkdir)$hes
+      out$cov <- solve(hess)
+      out$prec <- hess
+      out$nopar <- ncol(hess)
     }
 
     # read derived model quantities
-    ages <- sort(unique(full.df $ age))
-    years <- sort(unique(full.df $ year))
+    ages <- sort(unique(full.df$age))
+    years <- sort(unique(full.df$year))
 
-    out $ N <- as.matrix(read.table(paste0(wkdir, '/n.out'), header = FALSE))
-    out $ F <- as.matrix(read.table(paste0(wkdir, '/f.out'), header = FALSE))
-    out $ Q <- as.matrix(read.table(paste0(wkdir, '/q.out'), header = FALSE))
-    dim(out $ Q) <- c(length(years), length(indices), length(ages))
-    out $ Q <- aperm(out $ Q, c(3,1,2))
+    out$N <- as.matrix(read.table(paste0(wkdir, '/n.out'), header = FALSE))
+    out$F <- as.matrix(read.table(paste0(wkdir, '/f.out'), header = FALSE))
+    out$Q <- as.matrix(read.table(paste0(wkdir, '/q.out'), header = FALSE))
+    dim(out$Q) <- c(length(years), length(indices), length(ages))
+    out$Q <- aperm(out$Q, c(3,1,2))
   
-    colnames(out $ N) <- colnames(out $ F) <- ages
-    rownames(out $ N) <- rownames(out $ F) <- years
-    dimnames(out $ Q) <- list(ages, years, names(indices))
+    colnames(out$N) <- colnames(out$F) <- ages
+    rownames(out$N) <- rownames(out$F) <- years
+    dimnames(out$Q) <- list(ages, years, names(indices))
 
   }
 
@@ -851,20 +853,21 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   #
   # ------------------------------------------------------------------------
 
-  if (fit %in% c("MP", "assessment", "debug", "Ext")) {
+  	#if (fit %in% c("MP", "assessment", "debug", "Ext")) {
+  if (fit %in% c("MP", "assessment")) {
   
     a4aout <- a4aFit()
  
     ind.names <- names(indices)
 
-    stk.n <- t(out $ N)
+    stk.n <- t(out$N)
     names(dimnames(stk.n)) <- c("age","year")
 
-    hvst <- t(out $ F)
+    hvst <- t(out$F)
     names(dimnames(hvst)) <- c("age","year")
     
     logq <- lapply(1:length(indices), function(i) { 
-                                        x <- drop(out $ Q[,,i])
+                                        x <- drop(out$Q[,,i])
                                         names(dimnames(x)) <- c("age","year")
                                         if (is.na(range(indices[[i]])["min"])) {
                                           x <- with(dimnames(index(indices[[i]])), x[1, year,drop = FALSE])
@@ -876,19 +879,19 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     names(logq) <- ind.names
  
     # First the a4aFit bits
-    a4aout @ name    <- stock @ name
-    a4aout @ desc    <- stock @ desc
-    a4aout @ range   <- stock @ range
-    a4aout @ call    <- match.call()
-    a4aout @ stock.n <- FLQuant(stk.n) * exp(center.log[1])
-    a4aout @ harvest <- FLQuant(hvst, units = "f")
+    a4aout@name    <- stock@name
+    a4aout@desc    <- stock@desc
+    a4aout@range   <- stock@range
+    a4aout@call    <- match.call()
+    a4aout@stock.n <- FLQuant(stk.n) * exp(center.log[1])
+    a4aout@harvest <- FLQuant(hvst, units = "f")
     
-    Z <- a4aout @ harvest + m(stock)  # TODO what if surveys are bigger... require that stock is bigger but with NA catches!
+    Z <- a4aout@harvest + m(stock)  # TODO what if surveys are bigger... require that stock is bigger but with NA catches!
     
-    a4aout @ catch.n <- a4aout @ harvest / Z * (1 - exp(-Z)) * a4aout @ stock.n
+    a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
     index <- lapply(1:length(indices), function(i) {
                       dmns <- dimnames(logq[[i]]) 
-                      if (dmns $ age[1] == "all") {
+                      if (dmns$age[1] == "all") {
                         #exp(logq[[i]] - center.log[1] + center.log[i+1]) * apply(stock.n(a4aout)[, dmns[[2]]] * exp(-Z[, dmns[[2]]]*surveytime) * stock.wt(stock)[, dmns[[2]]],2:6, sum, na.rm=T)
                         exp(logq[[i]] - center.log[1] + center.log[i+1]) * apply(stock.n(a4aout)[, dmns[[2]]] * stock.wt(stock)[, dmns[[2]]],2:6, sum, na.rm=T)
                       } else {
@@ -897,14 +900,15 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                       }})
     names(index) <- ind.names
 
-    a4aout @ index <- FLQuants(index)
+    a4aout@index <- FLQuants(index)
 
     tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data)))
                              #logDetHess = logDetHess,           
-    a4aout @ fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
+    a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
                               
     
-    if (fit %in% c("assessment", "debug", "Ext")) {
+    #if (fit %in% c("assessment", "debug", "Ext")) {
+    if (fit =="assessment") {
 
       # fill up an a4aFitSA object
       a4aout <- a4aFitSA(a4aout)
@@ -913,39 +917,39 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
       #tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data)))
                              #logDetHess = logDetHess, 
                              
-      #a4aout @ fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
+      #a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
                                    
-      a4aout @ pars <- new("SCAPars")
+      a4aout@pars <- new("SCAPars")
   
       #
       # fill up stkmodel
-      a4aout @ pars @ stkmodel @ name      <- a4aout @ name
-      a4aout @ pars @ stkmodel @ desc      <- a4aout @ desc
-      a4aout @ pars @ stkmodel @ range     <- a4aout @ range
-      a4aout @ pars @ stkmodel @ centering <- center.log[1]
-      a4aout @ pars @ stkmodel @  fMod     <- fmodel
-      a4aout @ pars @ stkmodel @ n1Mod     <- n1model 
-      a4aout @ pars @ stkmodel @ srMod     <- srmodel
-      a4aout @ pars @ stkmodel @ m         <- m(stock)
+      a4aout@pars@stkmodel@name      <- a4aout@name
+      a4aout@pars@stkmodel@desc      <- a4aout@desc
+      a4aout@pars@stkmodel@range     <- a4aout@range
+      a4aout@pars@stkmodel@centering <- center.log[1]
+      a4aout@pars@stkmodel@ fMod     <- fmodel
+      a4aout@pars@stkmodel@n1Mod     <- n1model 
+      a4aout@pars@stkmodel@srMod     <- srmodel
+      a4aout@pars@stkmodel@m         <- m(stock)
       
-      pars <- out $ par.est
+      pars <- out$par.est
                                         
-      active <- sapply(out $ par.std, length) > 0
+      active <- sapply(out$par.std, length) > 0
 
-      dimnames(out $ cov) <- dimnames(out $ prec) <- list(unlist(pnames), unlist(pnames))
+      dimnames(out$cov) <- dimnames(out$prec) <- list(unlist(pnames), unlist(pnames))
       stkactive <- active
       stkactive[2:3] <- FALSE
-      a4aout @ pars @ stkmodel @ params <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
-      units(a4aout @ pars @ stkmodel @ params) <- "NA"
+      a4aout@pars@stkmodel@params <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
+      units(a4aout@pars@stkmodel@params) <- "NA"
 
-      a4aout @ pars @ stkmodel @ distr <- "norm"
+      a4aout@pars@stkmodel@distr <- "norm"
       whichcol <-  grep(paste("(^",c("f","n1","r","sra","srb"),"Mod:)",collapse="|",sep=""), unlist(pnames))
       # we can use the inverse of a subset of the precision matrix
       # if we want the vcov matrix conditional on the
       # other (qmodel etc.) parameter estimates.
-      ##a4aout @ pars @ stkmodel @ vcov <- solve(out $ prec[whichcol, whichcol])
+      ##a4aout@pars@stkmodel@vcov <- solve(out$prec[whichcol, whichcol])
       # or just the full vcov matrix, unconditional on the other things...
-      a4aout @ pars @ stkmodel @ vcov <- out $ cov[whichcol, whichcol]
+      a4aout@pars@stkmodel@vcov <- out$cov[whichcol, whichcol]
 
 
 
@@ -958,17 +962,17 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
              which <- grepl(fleet.names[i+1], pnames[[2]])
              submodel(Mod = qmodel[[i]],
                       params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
-                      vcov = out $ cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
+                      vcov = out$cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
                       distr = "norm",
                       centering = center.log[i+1],
                       name = fleet.names[i+1],
-                      desc = indices[[i]] @ desc,
-                      range = indices[[i]] @ range)
+                      desc = indices[[i]]@desc,
+                      range = indices[[i]]@range)
           })
       
       names(qmodels) <- fleet.names[-1]
-      a4aout @ pars @ qmodel <- submodels(qmodels)
-      #names(a4aout @ pars @ qmodel) <- fleet.names[-1]
+      a4aout@pars@qmodel <- submodels(qmodels)
+      #names(a4aout@pars@qmodel) <- fleet.names[-1]
             
       #
       # fill up vmodel
@@ -979,51 +983,54 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
              which <- grepl(fleet.names[i], pnames[[3]])
              submodel(Mod = vmodel[[i]],
                       params = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
-                      vcov = out $ cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
+                      vcov = out$cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
                       distr = "norm",
                       centering = 0,
                       name = fleet.names[i],
                       desc = "",
-                      range = if (i==1) stock @ range else indices[[i-1]] @ range)
+                      range = if (i==1) stock@range else indices[[i-1]]@range)
           })
       
       names(vmodels) <- fleet.names
-      a4aout @ pars @ vmodel <- submodels(vmodels)        
-      #names(a4aout @ pars @ vmodel) <- fleet.names
- 
- 
-      if (fit == "Ext") {
-  
-        # just while code is developing
-        a4aout <- a4aFitExt(a4aout)
-        a4aout @ Sigma <- out $ cov
-        a4aout @ L <- chol(out $ cov)
-        # consider adding L to submodels in a4aFitSA class...
-        pars <- unlist(out $ par.est)
-        names(pars) <- unlist(pnames)
-        which <- names(pars) %in% colnames(out $ cov)
-        a4aout @ baseLvlPars <- pars[which]
-        a4aout @ designMatrix <- list(Xf = Xf, Xq = Xq, Xn1 = Xny1, Xv = Xv, Xsra = Xsra, Xsrb = Xsrb, Xr = Xr)
-
-        # info about where to split?        
-      }
+      a4aout@pars@vmodel <- submodels(vmodels)        
+      #names(a4aout@pars@vmodel) <- fleet.names
     }
-  } else if (fit == "MCMC") {
-  
-    # no MCMC class stuff yet... could use FLQuantDistr?
-    a4aout <- a4aFitMCMC()
-    a4aout @ pars <- out    
+  }	
+ 
+#================== EXPERIMENTAL ================#
+#      if (fit == "Ext") {
+#  
+#        # just while code is developing
+#        a4aout <- a4aFitExt(a4aout)
+#        a4aout@Sigma <- out$cov
+#        a4aout@L <- chol(out$cov)
+#        # consider adding L to submodels in a4aFitSA class...
+#        pars <- unlist(out$par.est)
+#        names(pars) <- unlist(pnames)
+#        which <- names(pars) %in% colnames(out$cov)
+#        a4aout@baseLvlPars <- pars[which]
+#        a4aout@designMatrix <- list(Xf = Xf, Xq = Xq, Xn1 = Xny1, Xv = Xv, Xsra = Xsra, Xsrb = Xsrb, Xr = Xr)
 
-  }
+#        # info about where to split?        
+#      }
+#    }
+#  }	
+#  } #else if (fit == "MCMC") {
+#  
+#    # no MCMC class stuff yet... could use FLQuantDistr?
+#    a4aout <- a4aFitMCMC()
+#    a4aout@pars <- out    
+#  }
+#================== /EXPERIMENTAL ================#
 
   # end time
   my.time.used[4] <- Sys.time() 
-  a4aout @ clock <- c("Pre-processing"  = diff(my.time.used)[1], 
+  a4aout@clock <- c("Pre-processing"  = diff(my.time.used)[1], 
                       "Running a4a"     = diff(my.time.used)[2], 
                       "Post-processing" = diff(my.time.used)[3], 
                        Total            = my.time.used[4] - my.time.used[1])
   
-  units(a4aout @ harvest) <- "f"  
+  units(a4aout@harvest) <- "f"  
 
   
   # remove temporary directory - keep only true when dir is not temp dir
