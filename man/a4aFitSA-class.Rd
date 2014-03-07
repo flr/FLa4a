@@ -20,7 +20,7 @@
 }
 \section{Slots}{
   \describe{ \item{SCAPars}{An object of class
-  \code{SCAPars} with information about model parameters}
+  \code{SCAPars} with information about model parameters} }
 }
 
 \section{Accessors}{

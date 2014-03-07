@@ -5,6 +5,7 @@
 #' @section Slots:
 #' \describe{
 #'    \item{SCAPars}{An object of class \code{SCAPars} with information about model parameters}
+#' }
 #'
 #' @template Accessors
 #' @template Constructors

@@ -279,4 +279,44 @@
 #   }
 # )
 
+#' @rdname assorted-methods
+#' @aliases plotIters
+#' @section plotIters:
+#' Plot iterations.
+plotIters <- function(object, nsamples = 5, ylab = "", by = "quant", col = 1, ...) {
+
+  by <- match.arg(by, c("year","quant"))
+  quant(object) <- "quant"
+
+  x <- setdiff(c("year","quant"), by)
+
+  doOne <- function(p, object) cbind(as.data.frame(apply(object, 1:5, quantile, p)), p = p)
+
+  dat <- do.call(rbind, lapply(c(0.025, 0.5, 0.975), doOne, object = object))
+
+  dat $ by <- dat[[by]]
+  dat $ x <- dat[[x]]
+
+
+  p1 <- xyplot(data ~ x | factor(by), group = p, data = dat,
+               type = c("l","g"), scales = list(y = list(relation = "free")), 
+               lwd = c(1,2,1), lty = c(2,1,2), col = col,
+                ylab = ylab, xlab = x, as.table = TRUE, ...)
+  if (nsamples > 0) {
+  
+    nsamples <- min(nsamples, min(9, dim(object)[6]))
+    dat2 <- do.call(rbind, lapply(sample(dims(object) $ iter, nsamples), function(i) cbind(as.data.frame(object[,,,,,i]), p = i)))
+    dat2 $ by <- dat2[[by]]
+    dat2 $ x <- dat2[[x]]          
+
+    p2 <- xyplot(data ~ x | factor(by), group = p, data = dat2,
+                 type = "l", col =  brewer.pal(max(3, nsamples), "Set1"), lty = 1)
+               
+    p1 + p2
+  } else {
+    p1
+  }
+}
+
+
 

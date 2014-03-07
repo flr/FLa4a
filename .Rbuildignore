@@ -2,3 +2,6 @@ code-experimental
 man-experimental
 tests
 man-roxygen
+.git
+.gitignore
+

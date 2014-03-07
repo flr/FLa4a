@@ -11,15 +11,11 @@
 \alias{niters,FLModelSim-method}
 \alias{pars2dim}
 \alias{pars2dim,FLPar-method}
-\alias{plotIters}
 \title{Assorted methods needed by FLa4a}
 \usage{
   is.empty(object)
 
   geta4aLatticeOptions(...)
-
-  plotIters(object, nsamples = 5, ylab = "", by = "quant",
-    col = 1, ...)
 }
 \description{
   Assorted methods needed by FLa4a
@@ -52,10 +48,6 @@
 
 \section{geta4aLatticeOptions}{
   Set lattice options for a4a plots.
-}
-
-\section{plotIters}{
-  Plot iterations.
 }
 \examples{
 is.empty(list())

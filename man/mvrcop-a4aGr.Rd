@@ -26,7 +26,4 @@ pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.
 vbObj <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
 splom(data.frame(t(params(vbObj)@.Data)), pch=".")
 }
-\seealso{
-  \code{\link{rMvdc}}, \code{\link{copula}}
-}
 

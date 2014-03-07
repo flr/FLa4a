@@ -78,7 +78,6 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{FLModelSim} object with n groups of parameters
 #' @aliases mvrcop,numeric,a4aGr-method
-#' @seealso \code{\link{rMvdc}}, \code{\link{copula}}
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
