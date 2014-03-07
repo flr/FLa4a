@@ -951,8 +951,6 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
       # or just the full vcov matrix, unconditional on the other things...
       a4aout@pars@stkmodel@vcov <- out$cov[whichcol, whichcol]
 
-
-
       #
       # fill up qmodel
       qmodels <- 
