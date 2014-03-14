@@ -106,8 +106,7 @@ setReplaceMethod("grInvMod", signature("a4aGr","formula"), function(object, valu
 setMethod("params", "a4aGr", function(object) object@params)
 
 #' @rdname a4aGr-class
-#' @aliases params<- params<--methods params<-,a4aGr,FLPar-method
-setGeneric("params<-", function(object, value) standardGeneric("params<-"))
+#' @aliases params<-,a4aGr,FLPar-method
 setReplaceMethod("params", signature("a4aGr","FLPar"), function(object, value){
 	object@params <- value
 	object
