@@ -1,40 +1,66 @@
 \docType{class}
-\name{m}
+\name{a4aGr}
 \alias{a4aGr}
+\alias{a4aGr,missing-method}
 \alias{a4aGr-class}
 \alias{a4aGr-methods}
-\alias{a4aGr,missing-method}
-\alias{distr}
 \alias{distr,a4aGr-method}
 \alias{distr<- for a4aGr}
 \alias{distr<-,a4aGr,character-method}
 \alias{grInvMod}
-\alias{grInvMod-methods}
 \alias{grInvMod,a4aGr-method}
+\alias{grInvMod-methods}
 \alias{grInvMod<-}
-\alias{grInvMod<--methods}
 \alias{grInvMod<-,a4aGr,formula-method}
+\alias{grInvMod<--methods}
 \alias{grMod}
-\alias{grMod-methods}
 \alias{grMod,a4aGr-method}
+\alias{grMod-methods}
 \alias{grMod<-}
-\alias{grMod<--methods}
 \alias{grMod<-,a4aGr,formula-method}
-\alias{m}
+\alias{grMod<--methods}
 \alias{m,a4aStkParams-method}
-\alias{params}
 \alias{params,a4aGr-method}
 \alias{params<-}
-\alias{params<--methods}
 \alias{params<-,a4aGr,FLPar-method}
-\alias{vcov}
+\alias{params<--methods}
 \alias{vcov,a4aGr-method}
 \alias{vcov<- for a4aGr}
 \alias{vcov<-,a4aGr,numeric-method}
 \title{Individual growth class}
+\usage{
+a4aGr(object, ...)
+
+grMod(object, ...)
+
+grMod(object) <- value
+
+grInvMod(object, ...)
+
+grInvMod(object) <- value
+
+\S4method{params}{a4aGr}(object)
+
+params(object) <- value
+
+\S4method{distr}{a4aGr}(object)
+
+\S4method{vcov}{a4aGr}(object)
+
+\S4method{m}{a4aStkParams}(object)
+}
+\arguments{
+  \item{object}{ a fitted model object, typically.
+  Sometimes also a \code{\link{summary}()} object of such a
+  fitted model.  }
+
+  \item{...}{ additional arguments for method functions.
+  For the \code{\link{glm}} method this can be used to pass
+  a \code{dispersion} parameter.  }
+}
 \description{
-  Class definition (slots), constructors, accessors,
-  replacement (when relevant) and common methods.
+Class definition (slots), constructors, accessors,
+replacement (when relevant) and common methods.
 }
 \section{Slot}{
   \describe{

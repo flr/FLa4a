@@ -1,24 +1,29 @@
 \docType{methods}
 \name{methods}
-\alias{geta4aLatticeOptions}
 \alias{getYidx}
-\alias{getYidx-methods}
 \alias{getYidx,FLQuant-method}
+\alias{getYidx-methods}
+\alias{geta4aLatticeOptions}
 \alias{is.empty}
 \alias{methods}
 \alias{niters}
-\alias{niters-methods}
 \alias{niters,FLModelSim-method}
-\alias{pars2dim}
+\alias{niters-methods}
 \alias{pars2dim,FLPar-method}
 \title{Assorted methods needed by FLa4a}
 \usage{
-  is.empty(object)
+is.empty(object)
 
-  geta4aLatticeOptions(...)
+\S4method{pars2dim}{FLPar}(object)
+
+getYidx(object, ...)
+
+niters(object, ...)
+
+geta4aLatticeOptions(...)
 }
 \description{
-  Assorted methods needed by FLa4a
+Assorted methods needed by FLa4a
 }
 \section{is.empty}{
   Method \code{is.empty} checks if object is empty. Takes

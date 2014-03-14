@@ -1,7 +1,11 @@
+\docType{methods}
 \name{M}
 \alias{M}
 \alias{m,a4aM-method}
 \title{natural mortality}
+\usage{
+\S4method{m}{a4aM}(object, grMod = "missing", ...)
+}
 \arguments{
   \item{object}{a \code{a4aM} object}
 
@@ -17,20 +21,20 @@
   M.}
 }
 \value{
-  a \code{FLQuant} object
+a \code{FLQuant} object
 }
 \description{
-  Method to compute natural mortality
+Method to compute natural mortality
 }
 \details{
-  If the models use \code{age} and/or \code{year} as terms
-  the method expects these to be included in the call (will
-  be passed through the \ldots argument). If they're not,
-  the method will use the range slot to work out the ages
-  and/or years that should be predicted. If \code{age}
-  and/or \code{year} are not model terms, the method will
-  use the range slot to define the dimensions of the
-  resulting \code{M} \code{FLQuant}.
+If the models use \code{age} and/or \code{year} as terms
+the method expects these to be included in the call (will
+be passed through the \ldots argument). If they're not, the
+method will use the range slot to work out the ages and/or
+years that should be predicted. If \code{age} and/or
+\code{year} are not model terms, the method will use the
+range slot to define the dimensions of the resulting
+\code{M} \code{FLQuant}.
 }
 \examples{
 age <- 0:15

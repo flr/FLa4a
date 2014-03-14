@@ -1,69 +1,109 @@
 \docType{class}
 \name{SCAPars}
-\alias{fCovar}
-\alias{fCovar-methods}
-\alias{fCovar,SCAPars-method}
-\alias{fFrml}
-\alias{fFrml-methods}
-\alias{fFrml,SCAPars-method}
-\alias{fmodel}
-\alias{fmodel-methods}
-\alias{fmodel,SCAPars-method}
-\alias{fPars}
-\alias{fPars-methods}
-\alias{fPars,SCAPars-method}
-\alias{m}
-\alias{m,SCAPars-method}
-\alias{n1model}
-\alias{n1model-methods}
-\alias{n1model,SCAPars-method}
-\alias{qCovar}
-\alias{qCovar-methods}
-\alias{qCovar,SCAPars-method}
-\alias{qFrml}
-\alias{qFrml-methods}
-\alias{qFrml,SCAPars-method}
-\alias{qmodel}
-\alias{qmodel-methods}
-\alias{qmodel,SCAPars-method}
-\alias{qPars}
-\alias{qPars-methods}
-\alias{qPars,SCAPars-method}
 \alias{SCAPars}
+\alias{SCAPars,missing-method}
 \alias{SCAPars-class}
 \alias{SCAPars-methods}
-\alias{SCAPars,missing-method}
+\alias{fCovar}
+\alias{fCovar,SCAPars-method}
+\alias{fCovar-methods}
+\alias{fFrml}
+\alias{fFrml,SCAPars-method}
+\alias{fFrml-methods}
+\alias{fPars}
+\alias{fPars,SCAPars-method}
+\alias{fPars-methods}
+\alias{fmodel}
+\alias{fmodel,SCAPars-method}
+\alias{fmodel-methods}
+\alias{m,SCAPars-method}
+\alias{n1model}
+\alias{n1model,SCAPars-method}
+\alias{n1model-methods}
+\alias{qCovar}
+\alias{qCovar,SCAPars-method}
+\alias{qCovar-methods}
+\alias{qFrml}
+\alias{qFrml,SCAPars-method}
+\alias{qFrml-methods}
+\alias{qPars}
+\alias{qPars,SCAPars-method}
+\alias{qPars-methods}
+\alias{qmodel}
+\alias{qmodel,SCAPars-method}
+\alias{qmodel-methods}
 \alias{srCovar}
-\alias{srCovar-methods}
 \alias{srCovar,SCAPars-method}
+\alias{srCovar-methods}
 \alias{srFrml}
-\alias{srFrml-methods}
 \alias{srFrml,SCAPars-method}
-\alias{srmodel}
-\alias{srmodel-methods}
-\alias{srmodel,SCAPars-method}
+\alias{srFrml-methods}
 \alias{srPars}
-\alias{srPars-methods}
 \alias{srPars,SCAPars-method}
+\alias{srPars-methods}
+\alias{srmodel}
+\alias{srmodel,SCAPars-method}
+\alias{srmodel-methods}
 \alias{stkmodel}
-\alias{stkmodel-methods}
 \alias{stkmodel,SCAPars-method}
+\alias{stkmodel-methods}
 \alias{vCovar}
-\alias{vCovar-methods}
 \alias{vCovar,SCAPars-method}
+\alias{vCovar-methods}
 \alias{vFrml}
-\alias{vFrml-methods}
 \alias{vFrml,SCAPars-method}
-\alias{vmodel}
-\alias{vmodel-methods}
-\alias{vmodel,SCAPars-method}
+\alias{vFrml-methods}
 \alias{vPars}
-\alias{vPars-methods}
 \alias{vPars,SCAPars-method}
+\alias{vPars-methods}
+\alias{vmodel}
+\alias{vmodel,SCAPars-method}
+\alias{vmodel-methods}
 \title{Model parameters class}
+\usage{
+SCAPars(object, ...)
+
+stkmodel(object, ...)
+
+n1model(object, ...)
+
+srmodel(object, ...)
+
+fmodel(object, ...)
+
+qmodel(object, ...)
+
+vmodel(object, ...)
+
+srPars(object, ...)
+
+srCovar(object, ...)
+
+srFrml(object, ...)
+
+fPars(object, ...)
+
+fCovar(object, ...)
+
+fFrml(object, ...)
+
+qPars(object, ...)
+
+qCovar(object, ...)
+
+qFrml(object, ...)
+
+vPars(object, ...)
+
+vCovar(object, ...)
+
+vFrml(object, ...)
+
+\S4method{m}{SCAPars}(object)
+}
 \description{
-  Class definition (slots), constructors, accessors,
-  replacement (when relevant) and common methods.
+Class definition (slots), constructors, accessors,
+replacement (when relevant) and common methods.
 }
 \section{Slot}{
   \describe{

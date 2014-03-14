@@ -1,9 +1,15 @@
 \docType{methods}
 \name{genFLQuant}
 \alias{genFLQuant}
-\alias{genFLQuant-methods}
 \alias{genFLQuant,FLQuant-method}
+\alias{genFLQuant-methods}
 \title{Methods to generate FLQuant objects}
+\usage{
+genFLQuant(object, ...)
+
+\S4method{genFLQuant}{FLQuant}(object, cv = 0.2, method = "ac",
+  niter = 250)
+}
 \arguments{
   \item{object}{an FLQuant}
 
@@ -15,12 +21,12 @@
   \item{niter}{number of iterations to be generated}
 }
 \value{
-  an FLQuant
+an FLQuant
 }
 \description{
-  This method uses the age correlation matrix of the
-  \code{FLQuant} and generates a new \code{FLQuant} using a
-  lognormal multivariate distribution
+This method uses the age correlation matrix of the
+\code{FLQuant} and generates a new \code{FLQuant} using a
+lognormal multivariate distribution
 }
 \examples{
 data(ple4)

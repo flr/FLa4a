@@ -2,6 +2,9 @@
 \alias{mvrcop}
 \alias{mvrcop,numeric,FLModelSim-method}
 \title{Simulation using copula models}
+\usage{
+mvrcop(n, mvdc, ...)
+}
 \arguments{
   \item{n}{the number of iterations}
 
@@ -11,11 +14,11 @@
   methods}
 }
 \value{
-  a \code{FLModelSim} object with n groups of parameters
+a \code{FLModelSim} object with n groups of parameters
 }
 \description{
-  Simulates the model parameters using a self defined
-  copula model and margins.
+Simulates the model parameters using a self defined copula
+model and margins.
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)
