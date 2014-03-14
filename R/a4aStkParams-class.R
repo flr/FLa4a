@@ -117,7 +117,6 @@ setMethod("params", "a4aStkParams", function(object) object@params)
 
 #' @rdname a4aStkParams-class
 #' @aliases params<-,a4aStkParams,FLPar-method
-setGeneric("params<-", function(object, value) standardGeneric("params<-"))
 setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){
     if(all.equal(is(value), is(object@params))) object@params <- value
     object
