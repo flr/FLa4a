@@ -19,7 +19,7 @@ Depends:
     splines,
     np,
     RColorBrewer,
-	methods,
+		methods,
     FLCore (>= 2.5.0-20130317)
 LazyLoad: yes
 LazyData: yes
@@ -50,4 +50,3 @@ Collate:
     'a4aGr-methods.R'
     'l2a-methods.R'
     'a4aFitresiduals-class.R'
-
