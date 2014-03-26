@@ -2,10 +2,11 @@
 #' @name l2a 
 #' @rdname l2a 
 #' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
-#' @param object a \code{FLQuant} object
+#' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model a \code{a4aGr} object
-#' @param stat the aggregation statistic, must be \"mean\" or \"sum\"
-#' @return a \code{FLQuant} object
+#' @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
+#' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
+#' @return an age based \class{FLQuant}, \class{FLStock}
 #' @examples
 #' # red fish
 #' # M=0.05; Linf=58.5, k=0.086
@@ -45,9 +46,9 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 	if(mit>1 & qit>1 & mit!=qit) stop("Can not operate with diferent iterations in each object.")
 
 	# model
-	mod <- FLModelSim(model=grInvMod(model), params=params(model), vcov=vcov(model), distr=distr(model))
-	age <- floor(predict(mod, len=len))
-
+	#mod <- FLModelSim(model=grInvMod(model), params=params(model), vcov=vcov(model), distr=distr(model))
+	#age <- floor(predict(mod, len=len))
+	age <- floor(predict(model, len=len))
 	# aggregates all lengths above linf
 	age <- apply(age, 2, function(x){
 		x[which.max(x[!is.infinite(x)]):length(x)] <- max(x[!is.infinite(x)], na.rm=T)
@@ -117,88 +118,45 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 #' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="missing", ...){
 	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
-	args <- list(...)
-	args$model <- model
-	args$FUN <- "l2a"	
-	dnms <- dimnames(catch.n(object))
-	
-	# trick to get the relevant slots
-	lst <- qapply(object, function(x) list(x))
-	lst <- lapply(lst, "[[", 1)	
-	nms <- qapply(object, quant)
 
-	# first the sums	
-	isLen <- lapply(nms, "==", "len")
-	# aggregated are not lenghts
-	isLen[c("catch", "stock", "landings", "discards")][] <- FALSE
-	# whatelse
-	isLen[c("catch.wt", "stock.wt", "landings.wt", "discards.wt", "mat", "m", "m.spwn", "harvest.spwn", "harvest")][] <- FALSE
-	lst[unlist(isLen)] <- lapply(lst[unlist(isLen)], function(x){
-		args$object <- x
-		do.call("l2a", args)
-	})
-	
-	# now the means	
-	isLen <- lapply(nms, "==", "len")
-	# aggregated are not lenghts
-	isLen[c("catch", "stock", "landings", "discards")][] <- FALSE
-	# whatelse
-	isLen[c("catch.n", "stock.n", "landings.n", "discards.n", "catch.wt", "stock.wt", "landings.wt", "discards.wt")][] <- FALSE
-	args$stat <- "mean"
-	lst[unlist(isLen)] <- lapply(lst[unlist(isLen)], function(x){
-		args$object <- x
-		do.call("l2a", args)
-	})
-	# now the weighted means
-	#==============================
-	# WARNING: IT'S NOT WORKING YET	
-	#==============================
-	isLen <- lapply(nms, "==", "len")
-	# aggregated are not lenghts
-	isLen[c("catch", "stock", "landings", "discards")][] <- FALSE
-	# whatelse
-	isLen[c("catch.n", "stock.n", "landings.n", "discards.n", "mat", "m", "m.spwn", "harvest.spwn", "harvest")][] <- FALSE
-	args$stat <- "mean"
-	lst[unlist(isLen)] <- lapply(lst[unlist(isLen)], function(x){
-		args$object <- x
-		do.call("l2a", args)
-	})
+    # Slots to be summed
+    sum_slots_names <- list("catch.n","discards.n","landings.n","stock.n")
+    # Slots to be meaned
+    mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn","harvest")
 
-	# set the plus group on the first non continuous age
-	isLen[] <- TRUE
-	isLen[c("catch", "stock", "landings", "discards")][] <- FALSE
-	lst00 <- lst[unlist(isLen)]
-
-	if(missing(plusgroup)){
-		lst0 <- lapply(lst00, function(x){
-			v <- as.numeric(dimnames(x)[[1]])
-			min(v[-length(v)][(v[-length(v)]-v[-1])< -1])
-		}) 
-		plusgroup <- min(unlist(lst0))
-	}
-	
-	# spagethi ...	
-	lst1 <- lapply(lst00, function(x){
-		v <- as.numeric(dimnames(x)[[1]])
-		min(v):max(v)	
-	}) 
-	dnms$age <- sort(unique(unlist(lst1)))
-	dnms$len <- NULL
-	flq <- FLQuant(dimnames=dnms)
-	lst00$flq <- flq
-	lst00 <- mcf(lst00)
-	lst[unlist(isLen)] <- lst00[-match("flq", names(lst00))]
+    sum_slots <- lapply(sum_slots_names, function(x) {l2a(slot(object,x),model, stat="sum",...)})
+    names(sum_slots) <- sum_slots_names
+    mean_slots <- lapply(mean_slots_names, function(x) {l2a(slot(object,x),model, stat="mean",...)})
+    names(mean_slots) <- mean_slots_names
+    lst <- c(sum_slots, mean_slots)
 
 	# create the stock object
 	lst <- lapply(lst, "quant<-", "age")
 	lst$name <- object@name
 	lst$desc <- object@desc
 	stk <- do.call("FLStock", lst)
-	# set the plus group on the first non continuous age
-	stk <- setPlusGroup(stk, plusgroup, na.rm=T)
+
+    # Calc landings, discards, catch and stock
+    # Correct weights as we are using average weights and totals in
+    # age based object should match the length based object
+    landings.wt(stk) <- sweep(landings.wt(stk),2:6, computeLandings(object) / computeLandings(stk), "*")
+    landings(stk) <- computeLandings(stk)
+    discards.wt(stk) <- sweep(discards.wt(stk),2:6, computeDiscards(object) / computeDiscards(stk), "*")
+    discards(stk) <- computeDiscards(stk)
+    catch.wt(stk) <- sweep(catch.wt(stk),2:6, computeCatch(object) / computeCatch(stk), "*")
+    catch(stk) <- computeCatch(stk)
+    stock.wt(stk) <- sweep(stock.wt(stk),2:6, computeStock(object) / computeStock(stk), "*")
+    stock(stk) <- computeStock(stk)
+
 	# set harvest units
 	units(harvest(stk)) <- units(object@harvest)
-	})
+
+	# set the plus group on the first non continuous age
+    if(!missing(plusgroup)){
+        stk <- setPlusGroup(stk, plusgroup, na.rm=T)
+    }
+    return(stk)
+})
 
 #' @rdname l2a 
 #' @aliases l2a,FLIndex,a4aGr-method
