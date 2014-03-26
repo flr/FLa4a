@@ -53,49 +53,65 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 		x[which.max(x[!is.infinite(x)]):length(x)] <- max(x[!is.infinite(x)], na.rm=T)
 		x
 	})
+
+    # Blow up object to have same iters as age 
+    if (qit < mit){
+        object <- propagate(object,iter=mit)
+    }
+
 	# slicing and aggregating
+    qname <- names(dimnames(object))[1]
+    names(dimnames(age))[1] <- qname
+    agem <- melt(age, value.name="age")
+    odf <- as.data.frame(object)
+    # Force to be the same - necessary for join
+    odf$len <- as.numeric(odf$len)
+    agem$len <- as.numeric(agem$len)
 
-	# new flq
-	dnms[[1]] <- as.character(sort(unique(c(age))))
-	if(mit>qit) dnms[[6]] <- as.character(1:mit)
-	flq <- FLQuant(NA, dimnames=dnms, quant="age")
+    # Join the length based data with age-length key
+    if (mit==dim(object)[6]){
+        odf <- left_join(odf,agem, by=c("iter",qname))
+    }
+    # If age matrix has only 1 iter
+    if (mit==1 & (dim(object)[6] > 1)){
+        odf <- left_join(odf,agem[,c(qname,"age")], by=c(qname))
+    }
 
-	# loop :(
-
-	# both have one iter
-	if(mit>qit){
-		object <- object[,,,,,rep(1, mit)]		
-		dimnames(object)$iter <- 1:mit
-		weights <- weights[,,,,,rep(1, mit)]
-		dimnames(weights)$iter <- 1:mit
-		}
-	if(mit<qit){
-		age <- age[,rep(1,qit)]
-		dimnames(age)$iter <- 1:qit
-		}
-	
-	lst <- apply(age, 2, split, x=len)
-
+    
 	if(stat=="sum"){
-		for(j in names(lst)){
-			for(i in dnms[[1]]){
-				flq[i,,,,,j] <- quantSums(object[as.character(lst[[j]][[i]]),,,,,j])
-			}	 
-		}
-	} else if(stat=="mean"){
-		for(j in names(lst)){
-			for(i in dnms[[1]]){
-				wts <- weights[as.character(lst[[j]][[i]]),,,,,j]
-				if(dim(wts)[1]!=0){
-					wts <- apply(wts, 2:6, function(x) x/sum(x))
-					flq[i,,,,,j] <- quantSums(object[as.character(lst[[j]][[i]]),,,,,j]*FLQuant(wts))
-				}
-			}
-		}
-	}
+        out <- summarise(group_by(odf, age, year, unit, season, area, iter), data = sum(data, na.rm = TRUE))
+    }
+
+	if(stat=="mean"){
+        # Blow up weights to match same iters as growth model
+        if (qit < mit){
+            weights <- propagate(weights,iter=mit)
+        }
+        wtdf <- as.data.frame(weights)
+        names(wtdf)[names(wtdf)=="data"] <- "weight"
+        odf <- left_join(odf,wtdf, by=c(qname,"year","unit","season","area","iter"))
+        out <- summarise(group_by(odf, age, year, unit, season, area, iter), data = sum(data * (weight/sum(weight, na.rm = TRUE)), na.rm = TRUE))
+    }
+
+    # Add missing ages as otherwise not contiguous
+    all_ages <- min(out$age):max(out$age)
+    missing_ages <- all_ages[!(all_ages %in% unique(out$age))]
+    extra_rows <- expand.grid(age=missing_ages, year = unique(out$year), unit=unique(out$unit), season=unique(out$season), area=unique(out$area), iter=unique(out$iter), data=0)
+    out <- rbind(out,extra_rows)
+
+    # Turn the out dataframe into an FLQuant
+    # using as* takes ages
+    # flq <- as.FLQuant(outdf)
+    # Use reshape2 instead
+    outa <- acast(out, age~year~unit~season~area~iter, value.var = "data")
+    names(dimnames(outa)) <- c("age","year","unit","season","area","iter")
+    flq <- as.FLQuant(outa)
+    flq[is.na(flq)] <- 0.0 # hack, where are these NAs coming from?
+
 	units(flq) <- units(object)
-	flq
+    return(flq)
 })
+
 
 #' @rdname l2a 
 #' @aliases l2a,FLStockLen,a4aGr-method
