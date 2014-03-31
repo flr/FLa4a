@@ -98,10 +98,21 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 
 })
 
-setMethod("sca", signature("FLStock", "FLIndex"), function(stock, indices, fmodel  = "missing", qmodel  = "missing", srmodel = ~ factor(year), fit = "MP")
-{
-	sca(stock=stock, indices=FLIndices(indices), fmodel=fmodel, qmodel=qmodel, srmodel=srmodel, fit=fit)
-})
+#setMethod("sca", signature("FLStock", "FLIndex"), function(stock, indices, fmodel  = "missing", qmodel  = "missing", srmodel = ~ factor(year), fit = "MP")
+#{
+#browser()
+#	if(missing(fmodel)){
+#		sca(stock=stock, indices=FLIndices(indices), qmodel=qmodel, srmodel=srmodel, fit=fit)
+#	} 
+#	if(missing(qmodel)){
+#		sca(stock=stock, indices=FLIndices(indices), fmodel=fmodel, srmodel=srmodel, fit=fit)
+#	} 
+#	if(missing(qmodel) & missing(fmodel)){
+#		sca(stock=stock, indices=FLIndices(indices), srmodel=srmodel, fit=fit) 
+#	} else {
+#		sca(stock=stock, indices=FLIndices(indices), fmodel=fmodel, qmodel=qmodel, srmodel=srmodel, fit=fit)
+#	}
+#})
 
 #' @title statistical catch-at-age advanced method
 #' @name a4aSCA
