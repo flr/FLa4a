@@ -119,22 +119,27 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="missing", ...){
 	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
 
-    # Slots to be summed
-    sum_slots_names <- list("catch.n","discards.n","landings.n","stock.n")
-    # Slots to be meaned
+
+    # Make the stock piece by piece to avoid memory problems
+    catch.n <- l2a(catch.n(object), model, stat="sum",...)
+    stk <- FLStock(catch.n=catch.n) 
+    cat("Processing sum slots\n")
+    sum_slots_names <- c("discards.n","landings.n","stock.n")
+    for(slot_counter in sum_slots_names){
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum",...)
+        gc()
+    }
+    cat("Processing mean slots\n")
     mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn","harvest")
+    for(slot_counter in mean_slots_names){
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean",...)
+        gc()
+    }
 
-    sum_slots <- lapply(sum_slots_names, function(x) {l2a(slot(object,x),model, stat="sum",...)})
-    names(sum_slots) <- sum_slots_names
-    mean_slots <- lapply(mean_slots_names, function(x) {l2a(slot(object,x),model, stat="mean",...)})
-    names(mean_slots) <- mean_slots_names
-    lst <- c(sum_slots, mean_slots)
-
-	# create the stock object
-	lst <- lapply(lst, "quant<-", "age")
-	lst$name <- object@name
-	lst$desc <- object@desc
-	stk <- do.call("FLStock", lst)
+    cat("Washing up\n")
+	stk@name <- object@name
+	stk@desc <- object@desc
+	units(harvest(stk)) <- units(object@harvest)
 
     # Calc landings, discards, catch and stock
     # Correct weights as we are using average weights and totals in
@@ -148,8 +153,6 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
     stock.wt(stk) <- sweep(stock.wt(stk),2:6, computeStock(object) / computeStock(stk), "*")
     stock(stk) <- computeStock(stk)
 
-	# set harvest units
-	units(harvest(stk)) <- units(object@harvest)
 
 	# set the plus group on the first non continuous age
     if(!missing(plusgroup)){
@@ -163,58 +166,21 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	warning("Catch in numbers will be summed accross lenghths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)
-	args$model <- model
-	args$FUN <- "l2a"	
-	dnms <- dimnames(index(object))
-	
-	# trick to get the relevant slots
-	lst <- qapply(object, function(x) list(x))
-	lst <- lapply(lst, "[[", 1)	
-	nms <- qapply(object, quant)
 
-	# first the sums	
-	isLen <- lapply(nms, "==", "len")
-	# aggregated are not lenghts
-	isLen[c("effort")][] <- FALSE
-	# whatelse 
-	isLen[c("index", "index.var", "catch.wt", "sel.pattern", "index.q")][] <- FALSE
-	lst[unlist(isLen)] <- lapply(lst[unlist(isLen)], function(x){
-		args$object <- x
-		do.call("l2a", args)
-	})
+    catch.n <- l2a(catch.n(object), model, stat="sum",...)
+    idx <- FLIndex(catch.n=catch.n) 
+    mean_slots_names <- c("index","catch.wt","index.var","sel.pattern","index.q")
+    cat("Processing mean slots\n")
+    for(slot_counter in mean_slots_names){
+        slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean",...)
+        gc()
+    }
+    # Weighted means?
 
-	# now the means	
-	isLen <- lapply(nms, "==", "len")
-	# aggregated are not lenghts
-	isLen[c("effort")][] <- FALSE
-	# whatelse
-	isLen[c("catch.n", "catch.wt")][] <- FALSE
-	args$stat <- "mean"
-	lst[unlist(isLen)] <- lapply(lst[unlist(isLen)], function(x){
-		args$object <- x
-		do.call("l2a", args)
-	})
-
-	# now the weighted means	
-	isLen <- lapply(nms, "==", "len")
-	# aggregated are not lenghts
-	isLen[c("effort")][] <- FALSE
-	# whatelse
-	isLen[c("catch.n", "index", "index.var", "sel.pattern", "index.q")][] <- FALSE
-	args$stat <- "mean"
-	lst[unlist(isLen)] <- lapply(lst[unlist(isLen)], function(x){
-		args$object <- x
-		args$weights <- catch.n(object)
-		do.call("l2a", args)
-	})
-
-	# create the index object
-	lst <- lapply(lst, "quant<-", "age")
-	lst$name <- object@name
-	lst$desc <- object@desc
-	idx <- do.call("FLIndex", lst)
+	idx@name <- object@name
+	idx@desc <- object@desc
 	idx@range[c("startf","endf")] <- object@range[c("startf","endf")]
-	idx
+	return(idx)
 })
 
 
