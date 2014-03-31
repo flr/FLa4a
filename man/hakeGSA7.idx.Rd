@@ -4,13 +4,15 @@
 \title{hakeGSA7.idx}
 \format{an \code{FLIndices}.}
 \source{
-  GFCM - STECF - MEDITS
+GFCM - STECF - MEDITS
+}
+\usage{
+hakeGSA7.idx
 }
 \description{
-  Survey index for Gulf of Lions Hake stock.
+Survey index for Gulf of Lions Hake stock.
 }
 \author{
-  Chato Osio
+Chato Osio
 }
-\keyword{datasets}
 

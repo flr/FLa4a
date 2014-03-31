@@ -3,12 +3,14 @@
 \alias{rfTrawlTrd.idx}
 \title{rfTrawlTrd.idx}
 \format{an \code{FLIndex}.}
+\usage{
+rfTrawlTrd.idx
+}
 \description{
-  Trawl survey index for red fish, with a jump in
-  catchability.
+Trawl survey index for red fish, with a jump in
+catchability.
 }
 \author{
-  Daniel Howell
+Daniel Howell
 }
-\keyword{datasets}
 

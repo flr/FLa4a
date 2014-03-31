@@ -1,11 +1,11 @@
 \name{rngmbar}
 \alias{rngmbar}
-\alias{rngmbar-methods}
 \alias{rngmbar,a4aM-method}
-\alias{rngmbar<-}
-\alias{rngmbar<--methods}
-\alias{rngmbar<-,a4aM-method}
+\alias{rngmbar-methods}
 \title{M bar range extract and replacement}
+\usage{
+rngmbar(object, ...)
+}
 \arguments{
   \item{object}{a \code{a4aM} object}
 
@@ -13,11 +13,11 @@
   to replace the object info.}
 }
 \value{
-  a \code{vector} object when extracting or a \code{a4aM}
-  object when replacing
+a \code{vector} object when extracting or a \code{a4aM}
+object when replacing
 }
 \description{
-  Methods to extract from \code{a4aM} objects the M bar
-  range or replace its value.
+Methods to extract from \code{a4aM} objects the M bar range
+or replace its value.
 }
 

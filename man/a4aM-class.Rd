@@ -1,32 +1,52 @@
+\docType{class}
 \name{a4aM}
 \alias{a4aM}
+\alias{a4aM,missing-method}
 \alias{a4aM-class}
 \alias{a4aM-methods}
-\alias{a4aM,missing-method}
 \alias{level}
-\alias{level-methods}
 \alias{level,a4aM-method}
+\alias{level-methods}
 \alias{level<-}
-\alias{level<--methods}
 \alias{level<-,a4aM-method}
+\alias{level<--methods}
 \alias{shape}
-\alias{shape-methods}
 \alias{shape,a4aM-method}
+\alias{shape-methods}
 \alias{shape<-}
-\alias{shape<--methods}
 \alias{shape<-,a4aM-method}
-\alias{show}
+\alias{shape<--methods}
 \alias{show,a4aM-method}
 \alias{trend}
-\alias{trend-methods}
 \alias{trend,a4aM-method}
+\alias{trend-methods}
 \alias{trend<-}
-\alias{trend<--methods}
 \alias{trend<-,a4aM-method}
+\alias{trend<--methods}
 \title{Natural mortality class}
+\usage{
+a4aM(object, ...)
+
+\S4method{show}{a4aM}(object)
+
+shape(object, ...)
+
+shape(object) <- value
+
+level(object, ...)
+
+level(object) <- value
+
+trend(object, ...)
+
+trend(object) <- value
+}
+\arguments{
+  \item{object}{Any R object}
+}
 \description{
-  Class definition (slots), constructors, accessors,
-  replacement (when relevant) and common methods.
+Class definition (slots), constructors, accessors,
+replacement (when relevant) and common methods.
 }
 \section{Slot}{
   \describe{ \item{\code{shape}}{the shape of M by age}

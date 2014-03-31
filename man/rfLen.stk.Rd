@@ -3,11 +3,13 @@
 \alias{rfLen.stk}
 \title{rfLen.stk}
 \format{an \code{FLStock}.}
+\usage{
+rfLen.stk
+}
 \description{
-  Simulated stock based on red fish.
+Simulated stock based on red fish.
 }
 \author{
-  Daniel Howell
+Daniel Howell
 }
-\keyword{datasets}
 

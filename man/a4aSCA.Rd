@@ -1,9 +1,12 @@
 \docType{methods}
 \name{a4aSCA}
 \alias{a4aSCA}
-\alias{a4aSCA-methods}
 \alias{a4aSCA,FLStock,FLIndices-method}
+\alias{a4aSCA-methods}
 \title{statistical catch-at-age advanced method}
+\usage{
+a4aSCA(stock, indices, ...)
+}
 \arguments{
   \item{fmodel}{a formula object depicting the model for
   log fishing mortality at age}
@@ -34,12 +37,12 @@
   computed, while the former does.}
 }
 \value{
-  an \code{a4aFit} object if fit is "MP" or an
-  \code{a4aFitSA} if fit is "assessment"
+an \code{a4aFit} object if fit is "MP" or an
+\code{a4aFitSA} if fit is "assessment"
 }
 \description{
-  Advanced user interface to the statistical catch-at-age
-  method of the a4a stock assessment framework.
+Advanced user interface to the statistical catch-at-age
+method of the a4a stock assessment framework.
 }
 \examples{
 data(ple4)

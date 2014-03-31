@@ -3,6 +3,9 @@
 \alias{bubbles}
 \alias{bubbles,a4aFitResiduals,missing-method}
 \title{bubbles plot of standardized log residuals}
+\usage{
+\S4method{bubbles}{a4aFitResiduals,missing}(x, data = missing, ...)
+}
 \arguments{
   \item{x}{a \code{a4aFitResiduals} object with the
   standardized residuals}
@@ -11,10 +14,10 @@
   be used.}
 }
 \value{
-  a \code{bubbles} plot with stardardized log residuals
+a \code{bubbles} plot with stardardized log residuals
 }
 \description{
-  Method to plot bubbles of standardized residuals
+Method to plot bubbles of standardized residuals
 }
 \examples{
 data(ple4)

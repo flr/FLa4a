@@ -1,18 +1,22 @@
+\docType{methods}
 \name{mvrtriangle for a4aGr}
 \alias{mvrtriangle for a4aGr}
 \alias{mvrtriangle,numeric,a4aGr-method}
 \title{mvrtriangle}
+\usage{
+\S4method{mvrtriangle}{numeric,a4aGr}(n = 1, object, ...)
+}
 \arguments{
   \item{n}{the number of simulations to be generated}
 
   \item{mu}{a \code{a4aGr} object}
 }
 \value{
-  a \code{a4aGr} object with n iterations
+a \code{a4aGr} object with n iterations
 }
 \description{
-  Method to simulate multivariate parameters with triangle
-  marginals and elliptic copulas for \code{a4aGr} objects.
+Method to simulate multivariate parameters with triangle
+marginals and elliptic copulas for \code{a4aGr} objects.
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)

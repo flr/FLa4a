@@ -1,7 +1,11 @@
+\docType{methods}
 \name{mvrcop for a4aGr}
 \alias{mvrcop for a4aGr}
 \alias{mvrcop,numeric,a4aGr-method}
 \title{mvrcop}
+\usage{
+\S4method{mvrcop}{numeric,a4aGr}(n = 1, mvdc, ...)
+}
 \arguments{
   \item{n}{the number of iterations}
 
@@ -11,11 +15,11 @@
   methods}
 }
 \value{
-  a \code{FLModelSim} object with n groups of parameters
+a \code{FLModelSim} object with n groups of parameters
 }
 \description{
-  Method to simulate model parameters using self defined
-  copulas and margins for \code{a4aGr} objects.
+Method to simulate model parameters using self defined
+copulas and margins for \code{a4aGr} objects.
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)

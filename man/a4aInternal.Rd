@@ -3,13 +3,12 @@
 \alias{a4aInternal}
 \title{stock assessment model advanced method}
 \usage{
-  a4aInternal(stock, indices,
-    fmodel = ~s(age, k = 3) + factor(year),
-    qmodel = lapply(seq(length(indices)), function(i) ~1),
-    srmodel = ~factor(year), n1model = ~factor(age),
-    vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
-    covar = missing, wkdir = missing, verbose = FALSE,
-    fit = "assessment", niters = 1000, center = TRUE)
+a4aInternal(stock, indices, fmodel = ~s(age, k = 3) + factor(year),
+  qmodel = lapply(seq(length(indices)), function(i) ~1),
+  srmodel = ~factor(year), n1model = ~factor(age),
+  vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
+  covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment",
+  niters = 1000, center = TRUE)
 }
 \arguments{
   \item{fmodel}{a formula object depicting the model for
@@ -52,10 +51,10 @@
   before estimating or not}
 }
 \value{
-  an \code{a4aFit} object if fit is "MP" or an
-  \code{a4aFitSA} if fit is "assessment"
+an \code{a4aFit} object if fit is "MP" or an
+\code{a4aFitSA} if fit is "assessment"
 }
 \description{
-  The advanced user interface to the a4a fitting routine.
+The advanced user interface to the a4a fitting routine.
 }
 

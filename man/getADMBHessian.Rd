@@ -2,20 +2,20 @@
 \alias{getADMBHessian}
 \title{Get ADMB Hessian}
 \usage{
-  getADMBHessian(wkdir)
+getADMBHessian(wkdir)
 }
 \arguments{
   \item{wkdir}{the location of the admb output}
 }
 \value{
-  a list with the following elements
+a list with the following elements
 }
 \description{
-  Reads the hessian file from any ADMB fit.  Used here with
-  the a4a model.
+Reads the hessian file from any ADMB fit.  Used here with
+the a4a model.
 }
 \note{
-  \code{getADMBHessian} is intended to be used internally
+\code{getADMBHessian} is intended to be used internally
 }
 \examples{
 # load some data
