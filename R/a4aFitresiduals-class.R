@@ -70,7 +70,27 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' plot(flqs)
 
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
-	xyplot(data~year|factor(age)*qname, type=c("p", "smooth"), groups=qname, data=x, cex=0.3, lwd=2, ylab="standardized residuals", xlab="", panel=function(x,y,...){panel.abline(h=0, col.line="gray80");panel.xyplot(x,y,...)}, par.settings=list(superpose.symbol=list(col="gray50", pch=19, cex=0.2), superpose.line=list(col=1, lty=1, lwd=2), strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="log residuals of catch and abundance indices", ...)
+	args <- list()
+	args$data <- as.data.frame(x)
+	args$x <- data~year|factor(age)*qname
+	args$type=c("p", "smooth")
+	args$groups <- quote(qname)
+	args$cex=0.3
+	args$lwd=2
+	args$ylab="standardized residuals"
+	args$xlab=""
+	args$panel=function(x,y,...){
+		panel.abline(h=0, col.line="gray80")
+		panel.xyplot(x,y,...)
+		}
+	args$par.settings=list(
+		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
+		superpose.line=list(col=1, lty=1, lwd=2), 
+		strip.background=list(col="gray90"), 
+		strip.border=list(col="gray90"), 
+		box.rectangle=list(col="gray90"))
+	args$main="log residuals of catch and abundance indices"
+	do.call("xyplot", args)
 })
 
 #' @title qqplot of standardized log residuals 
