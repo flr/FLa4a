@@ -21,9 +21,6 @@ Depends:
     RColorBrewer,
 		methods,
     FLCore (>= 2.5.0-20130317)
-Imports:
-    reshape2,
-    dplyr
 LazyLoad: yes
 LazyData: yes
 Collate:

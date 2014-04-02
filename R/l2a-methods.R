@@ -5,6 +5,8 @@
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model a \code{a4aGr} object
 #' @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
+#' @param min_age minimum age of the FLQuant (all younger ages are set to this age). Only used if the object is a \code{FLQuant}.
+#' @param max_age maximum age of the FLQuant (all older ages are set to this age). Only used if the object is a \code{FLQuant} or an \code{FLIndex}.
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
 #' @return an age based \class{FLQuant}, \class{FLStock}
 #' @examples
@@ -35,7 +37,7 @@
 
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
-setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), ...){
+setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), min_age=0, max_age='missing', ...){
 	# constants
 	cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
@@ -44,73 +46,49 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 	mit <- niters(model)
 	qit <- length(dnms[[6]]) 
 	if(mit>1 & qit>1 & mit!=qit) stop("Can not operate with diferent iterations in each object.")
-
-	# model
-	#mod <- FLModelSim(model=grInvMod(model), params=params(model), vcov=vcov(model), distr=distr(model))
-	#age <- floor(predict(mod, len=len))
 	age <- floor(predict(model, len=len))
 	# aggregates all lengths above linf
 	age <- apply(age, 2, function(x){
 		x[which.max(x[!is.infinite(x)]):length(x)] <- max(x[!is.infinite(x)], na.rm=T)
 		x
 	})
-
-    # Blow up object to have same iters as age 
-    if (qit < mit){
-        object <- propagate(object,iter=mit)
+    # set min and max ages
+    age[age < min_age] <- min_age
+    if (!missing(max_age)){
+        age[age > max_age] <- max_age
     }
-
-	# slicing and aggregating
-    qname <- names(dimnames(object))[1]
-    names(dimnames(age))[1] <- qname
-    agem <- melt(age, value.name="age")
-    odf <- as.data.frame(object)
-    # Force to be the same - necessary for join
-    odf$len <- as.numeric(odf$len)
-    agem$len <- as.numeric(agem$len)
-
-    # Join the length based data with age-length key
-    if (mit==dim(object)[6]){
-        odf <- left_join(odf,agem, by=c("iter",qname))
+	ages <- seq(min(age),max(age))
+	# FUN to use
+    if(stat=="sum"){
+        FUN <- colSums
     }
-    # If age matrix has only 1 iter
-    if (mit==1 & (dim(object)[6] > 1)){
-        odf <- left_join(odf,agem[,c(qname,"age")], by=c(qname))
+    if(stat=="mean"){
+        FUN <- colMeans
     }
-
-    
-	if(stat=="sum"){
-        out <- summarise(group_by(odf, age, year, unit, season, area, iter), data = sum(data, na.rm = TRUE))
+    res <- array(NA, dim=c(length(ages), dim(object)[-c(1,6)], max(qit,mit)))
+    if (mit >= qit){
+        length_array <- array(rep(c(object), dim(age)[2]), dim=c(dim(object)[1:5], mit)) # propagate obj from 1 iter to n iters
+        lak_array <- aperm(array(rep(c(age), times=prod(dim(object)[2:5])), dim=c(dim(object)[1], dim(age)[2],dim(object)[2:5])),c(1,3,4,5,6,2))
     }
-
-	if(stat=="mean"){
-        # Blow up weights to match same iters as growth model
-        if (qit < mit){
-            weights <- propagate(weights,iter=mit)
-        }
-        wtdf <- as.data.frame(weights)
-        names(wtdf)[names(wtdf)=="data"] <- "weight"
-        odf <- left_join(odf,wtdf, by=c(qname,"year","unit","season","area","iter"))
-        out <- summarise(group_by(odf, age, year, unit, season, area, iter), data = sum(data * (weight/sum(weight, na.rm = TRUE)), na.rm = TRUE))
+    if (mit < qit){
+        length_array <- array(c(object), dim=dim(object)) # make object with no dimnames
+        lak_array <- aperm(array(rep(c(age), times=prod(dim(object)[2:6])), dim=c(dim(object)[1], dim(object)[6],dim(object)[2:5])),c(1,3,4,5,6,2))
     }
-
-    # Add missing ages as otherwise not contiguous
-    all_ages <- min(out$age):max(out$age)
-    missing_ages <- all_ages[!(all_ages %in% unique(out$age))]
-    extra_rows <- expand.grid(age=missing_ages, year = unique(out$year), unit=unique(out$unit), season=unique(out$season), area=unique(out$area), iter=unique(out$iter), data=0)
-    out <- rbind(out,extra_rows)
-
-    # Turn the out dataframe into an FLQuant
-    # using as* takes ages
-    # flq <- as.FLQuant(outdf)
-    # Use reshape2 instead
-    outa <- acast(out, age~year~unit~season~area~iter, value.var = "data")
-    names(dimnames(outa)) <- c("age","year","unit","season","area","iter")
-    flq <- as.FLQuant(outa)
-    flq[is.na(flq)] <- 0.0 # hack, where are these NAs coming from?
-
-	units(flq) <- units(object)
-    return(flq)
+    s <- array(NA, dim=c(dim(object)[1:5], max(qit,mit)))
+    unique_ages <- unique(c(age))
+    #for(i in seq(length(unique_ages))) {
+    for(i in unique_ages) {
+        #s[,,,,,] <- 0
+        s[,,,,,] <- NA 
+        #idx <- lak_array == unique_ages[i]
+        idx <- lak_array == i
+        s[idx] <- length_array[idx]
+        res[i-min_age+1,,,,,] <- do.call(FUN,list(s,na.rm=TRUE))
+    }
+    # fill NAs with 0
+    res[is.na(res)] <- 0
+    out <-  FLQuant(res, dimnames=c(list(age=ages), dimnames(object)[-c(1, 6)]), units=units(object))
+	return(out)
 })
 
 
@@ -121,18 +99,27 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 
 
     # Make the stock piece by piece to avoid memory problems
+    cat("Processing sum slots\n")
     catch.n <- l2a(catch.n(object), model, stat="sum",...)
     stk <- FLStock(catch.n=catch.n) 
-    cat("Processing sum slots\n")
     sum_slots_names <- c("discards.n","landings.n","stock.n")
     for(slot_counter in sum_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum",...)
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", max_age=plusgroup,...)
         gc()
     }
     cat("Processing mean slots\n")
-    mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn","harvest")
+    #mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn","harvest")
+    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn","harvest")
     for(slot_counter in mean_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean",...)
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean", max_age=plusgroup,...)
+        gc()
+    }
+
+    cat("Processing weighted mean slots\n")
+    weighted_means_slots_names <- c("catch","discards","landings","stock")
+    for(slot_counter in weighted_means_slots_names){
+        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="mean", max_age=plusgroup,...)
+        slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
         gc()
     }
 
@@ -142,15 +129,9 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 	units(harvest(stk)) <- units(object@harvest)
 
     # Calc landings, discards, catch and stock
-    # Correct weights as we are using average weights and totals in
-    # age based object should match the length based object
-    landings.wt(stk) <- sweep(landings.wt(stk),2:6, computeLandings(object) / computeLandings(stk), "*")
     landings(stk) <- computeLandings(stk)
-    discards.wt(stk) <- sweep(discards.wt(stk),2:6, computeDiscards(object) / computeDiscards(stk), "*")
     discards(stk) <- computeDiscards(stk)
-    catch.wt(stk) <- sweep(catch.wt(stk),2:6, computeCatch(object) / computeCatch(stk), "*")
     catch(stk) <- computeCatch(stk)
-    stock.wt(stk) <- sweep(stock.wt(stk),2:6, computeStock(object) / computeStock(stk), "*")
     stock(stk) <- computeStock(stk)
 
 
@@ -164,18 +145,26 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 #' @rdname l2a 
 #' @aliases l2a,FLIndex,a4aGr-method
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
-	warning("Catch in numbers will be summed accross lenghths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
+	warning("Catch in numbers will be summed accross lengths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)
 
     catch.n <- l2a(catch.n(object), model, stat="sum",...)
     idx <- FLIndex(catch.n=catch.n) 
-    mean_slots_names <- c("index","catch.wt","index.var","sel.pattern","index.q")
+    mean_slots_names <- c("index","index.var","sel.pattern","index.q")
     cat("Processing mean slots\n")
     for(slot_counter in mean_slots_names){
         slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean",...)
         gc()
     }
-    # Weighted means?
+
+    cat("Processing weighted mean slots\n")
+    weighted_means_slots_names <- c("catch")
+    for(slot_counter in weighted_means_slots_names){
+        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="mean",...)
+        slot(idx,paste(slot_counter,".wt",sep="")) <- total_slice / slot(idx,paste(slot_counter,".n",sep=""))
+        gc()
+    }
+
 
 	idx@name <- object@name
 	idx@desc <- object@desc
