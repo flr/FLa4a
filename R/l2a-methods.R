@@ -100,7 +100,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 
     # Make the stock piece by piece to avoid memory problems
     cat("Processing sum slots\n")
-    catch.n <- l2a(catch.n(object), model, stat="sum",...)
+    catch.n <- l2a(catch.n(object), model, stat="sum", max_age=plusgroup,...)
     stk <- FLStock(catch.n=catch.n) 
     sum_slots_names <- c("discards.n","landings.n","stock.n")
     for(slot_counter in sum_slots_names){
