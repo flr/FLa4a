@@ -114,7 +114,7 @@ setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 setMethod("predict", "a4aGr", function(object, ...){
 	model <- object
 	args <- list(...)
-	ll <- all.vars(grInvMod(vbObj))[!all.vars(grMod(vbObj)) %in% all.vars(grInvMod(vbObj))]
+	ll <- all.vars(grInvMod(object))[!all.vars(grMod(object)) %in% all.vars(grInvMod(object))]
 	if(ll %in% names(args)){
 		args$object <- FLModelSim(model=grInvMod(model), params=params(model), vcov=vcov(model), distr=distr(model))
 	} else {
