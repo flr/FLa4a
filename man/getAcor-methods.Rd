@@ -3,16 +3,13 @@
 \alias{getAcor,FLQuant-method}
 \alias{getAcor-methods}
 \title{compute log correlation matrix}
-\usage{
-getAcor(object, ...)
-}
 \arguments{
   \item{object}{an \code{FLQuant} object}
 }
 \value{
-a \code{FLQuant} object with the age correlation matrix
+  a \code{FLQuant} object with the age correlation matrix
 }
 \description{
-method to compute the log correlation matrix
+  method to compute the log correlation matrix
 }
 

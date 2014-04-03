@@ -3,13 +3,11 @@
 \alias{rfTrawl.idx}
 \title{rfTrawl.idx}
 \format{an \code{FLIndex}.}
-\usage{
-rfTrawl.idx
-}
 \description{
-Trawl survey index for red fish.
+  Trawl survey index for red fish.
 }
 \author{
-Daniel Howell
+  Daniel Howell
 }
+\keyword{datasets}
 

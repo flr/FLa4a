@@ -4,10 +4,13 @@
 \alias{a4aSCA,FLStock,FLIndices-method}
 \alias{a4aSCA-methods}
 \title{statistical catch-at-age advanced method}
-\usage{
-a4aSCA(stock, indices, ...)
-}
 \arguments{
+  \item{stock}{an FLStock object containing catch and stock
+  information}
+
+  \item{indices}{an FLIndices object containing survey
+  indices}
+
   \item{fmodel}{a formula object depicting the model for
   log fishing mortality at age}
 
@@ -17,10 +20,11 @@ a4aSCA(stock, indices, ...)
   \item{srmodel}{a formula object depicting the model for
   log recruitment}
 
-  \item{stock}{an FLStock object containing catch and stock
-  information}
+  \item{n1model}{a formula object depicting the model for
+  the population in the first year of the time series}
 
-  \item{indices}{an FLIndices object containing survey
+  \item{vmodel}{a list of formula objects depicting the
+  model for the variance of fishing mortality and the
   indices}
 
   \item{covar}{a list with covariates}
@@ -35,14 +39,17 @@ a4aSCA(stock, indices, ...)
   \item{fit}{Character with type of fit, 'MP' or
   'assessment', the first doesn't require the hessian to be
   computed, while the former does.}
+
+  \item{center}{Logical defining if the data should be
+  centered before fitting}
 }
 \value{
-an \code{a4aFit} object if fit is "MP" or an
-\code{a4aFitSA} if fit is "assessment"
+  an \code{a4aFit} object if fit is "MP" or an
+  \code{a4aFitSA} if fit is "assessment"
 }
 \description{
-Advanced user interface to the statistical catch-at-age
-method of the a4a stock assessment framework.
+  Advanced user interface to the statistical catch-at-age
+  method of the a4a stock assessment framework.
 }
 \examples{
 data(ple4)

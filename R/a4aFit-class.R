@@ -26,6 +26,16 @@
 #' @rdname a4aFit-class
 #' @template Example-a4aFit
 
+va4aFit <- function(object) {
+
+        # All FLQuant objects must have same dimensions
+        Dim <- dim(object@stock.n)
+        if (dim(object@harvest) != Dim | dim(object@catch.n != Dim))
+                return("stock.n, catch.n and harvest slots must have same dimensions")
+        # Everything is fine
+        return(TRUE)
+}
+
 setClass("a4aFit",
         representation(
                 "FLComp",
@@ -46,16 +56,6 @@ setClass("a4aFit",
                 index        = new('FLQuants')),
         validity = va4aFit
 )
-
-va4aFit <- function(object) {
-
-        # All FLQuant objects must have same dimensions
-        Dim <- dim(object@stock.n)
-        if (dim(object@harvest) != Dim | dim(object@catch.n != Dim))
-                return("stock.n, catch.n and harvest slots must have same dimensions")
-        # Everything is fine
-        return(TRUE)
-}
 
 #' @rdname a4aFit-class
 #' @aliases a4aFit a4aFit-methods

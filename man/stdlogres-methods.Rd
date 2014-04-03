@@ -4,21 +4,18 @@
 \alias{stdlogres,FLQuant,FLQuant-method}
 \alias{stdlogres-methods}
 \title{Standardized log residuals}
-\usage{
-stdlogres(obs, fit, ...)
-}
 \arguments{
   \item{obs}{a \code{FLQuant} object with the observations}
 
   \item{fit}{a \code{FLQuant} object with the fitted value}
 }
 \value{
-a \code{FLQuant} with stardardized log residuals
+  a \code{FLQuant} with stardardized log residuals
 }
 \description{
-Method o compute the standardized residuals in the log
-scale for the a4a stock assessment framework. Meaning
-indices and catch-at-age residuals.
+  Method o compute the standardized residuals in the log
+  scale for the a4a stock assessment framework. Meaning
+  indices and catch-at-age residuals.
 }
 \examples{
 data(ple4)

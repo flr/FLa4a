@@ -3,21 +3,14 @@
 \alias{a4aFitResiduals}
 \alias{a4aFitResiduals-class}
 \alias{a4aFitResiduals-methods}
+\alias{residuals}
 \alias{residuals,a4aFit-method}
 \title{S4 class \code{a4aFitResiduals}}
-\usage{
-\S4method{residuals}{a4aFit}(object, stock, indices, ...)
-}
-\arguments{
-  \item{object}{an object for which the extraction of model
-  residuals is meaningful.}
-
-  \item{...}{other arguments.}
-}
 \description{
-The \code{a4aFitResiduals} class extends \code{FLQuants} to
-store residuals of the a4a stock assessment fit. By default
-these should be log residuals of catches and indices.
+  The \code{a4aFitResiduals} class extends \code{FLQuants}
+  to store residuals of the a4a stock assessment fit. By
+  default these should be log residuals of catches and
+  indices.
 }
 \examples{
 data(ple4)

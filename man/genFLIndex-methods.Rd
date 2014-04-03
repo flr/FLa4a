@@ -4,11 +4,6 @@
 \alias{genFLIndex,FLQuant-method}
 \alias{genFLIndex-methods}
 \title{Methods to generate FLIndex objects}
-\usage{
-genFLIndex(object, ...)
-
-\S4method{genFLIndex}{FLQuant}(object, cv = 0.2, niter = 250)
-}
 \arguments{
   \item{object}{an FLIndex}
 
@@ -20,10 +15,10 @@ genFLIndex(object, ...)
   be used.}
 }
 \value{
-an FLIndex
+  an FLIndex
 }
 \description{
-This method generates a \code{FLIndex} by generating the
-index using \code{genFLQuant} methods.
+  This method generates a \code{FLIndex} by generating the
+  index using \code{genFLQuant} methods.
 }
 

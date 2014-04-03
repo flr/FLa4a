@@ -1,22 +1,18 @@
-\docType{methods}
 \name{mvnorm}
 \alias{mvnorm}
 \alias{mvrnorm,numeric,a4aM,missing,missing,missing,missing-method}
 \title{natural mortality}
-\usage{
-\S4method{mvrnorm}{numeric,a4aM,missing,missing,missing,missing}(n = 1, mu)
-}
 \arguments{
   \item{n}{the number of simulations to be generated}
 
   \item{mu}{a \code{a4aM} object}
 }
 \value{
-a \code{a4aM} object with n iterations
+  a \code{a4aM} object with n iterations
 }
 \description{
-Method to simulate multivariate normal parameters for a
-\code{a4aM} object.
+  Method to simulate multivariate normal parameters for a
+  \code{a4aM} object.
 }
 \examples{
 mod1 <- FLModelSim(model=~exp(-age-0.5))

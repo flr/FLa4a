@@ -2,7 +2,7 @@
 \alias{getCov}
 \title{Get covariance matrix}
 \usage{
-getCov(n, model, tau)
+  getCov(n, model, tau)
 }
 \arguments{
   \item{n}{integer giving the size of the random feild}
@@ -13,10 +13,10 @@ getCov(n, model, tau)
   matrix for the model}
 }
 \value{
-a covariance matrix
+  a covariance matrix
 }
 \description{
-Returns the covariance matrix of the specified Gaussian
-markov random field model
+  Returns the covariance matrix of the specified Gaussian
+  markov random field model
 }
 

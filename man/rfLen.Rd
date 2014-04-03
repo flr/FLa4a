@@ -4,16 +4,14 @@
 \title{redfish length data}
 \format{an \code{FLStock}.}
 \source{
-Daniel Howell
-}
-\usage{
-rfLen
+  Daniel Howell
 }
 \description{
-Simulated length data for redfish.  Simulations were done
-using GADGET.
+  Simulated length data for redfish.  Simulations were done
+  using GADGET.
 }
 \author{
-Ernesto Jardim
+  Ernesto Jardim
 }
+\keyword{datasets}
 

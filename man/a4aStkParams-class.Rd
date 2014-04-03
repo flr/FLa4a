@@ -22,8 +22,8 @@
 \alias{n1Mod<-}
 \alias{n1Mod<-,a4aStkParams,formula-method}
 \alias{n1Mod<--methods}
+\alias{params}
 \alias{params,a4aStkParams-method}
-\alias{params<-}
 \alias{params<-,a4aStkParams,FLPar-method}
 \alias{rMod}
 \alias{rMod,a4aStkParams-method}
@@ -31,47 +31,14 @@
 \alias{rMod<-}
 \alias{rMod<-,a4aStkParams,formula-method}
 \alias{rMod<--methods}
+\alias{vcov}
 \alias{vcov,a4aStkParams-method}
 \alias{vcov<-}
 \alias{vcov<-,a4aStkParams-method}
 \title{Stock parameters class}
-\usage{
-a4aStkParams(object, ...)
-
-fMod(object, ...)
-
-fMod(object) <- value
-
-n1Mod(object, ...)
-
-n1Mod(object) <- value
-
-rMod(object, ...)
-
-rMod(object) <- value
-
-\S4method{params}{a4aStkParams}(object)
-
-params(object) <- value
-
-distr(object, ...)
-
-distr(object) <- value
-
-\S4method{vcov}{a4aStkParams}(object)
-}
-\arguments{
-  \item{object}{ a fitted model object, typically.
-  Sometimes also a \code{\link{summary}()} object of such a
-  fitted model.  }
-
-  \item{...}{ additional arguments for method functions.
-  For the \code{\link{glm}} method this can be used to pass
-  a \code{dispersion} parameter.  }
-}
 \description{
-Class definition (slots), constructors, accessors,
-replacement (when relevant) and common methods.
+  Class definition (slots), constructors, accessors,
+  replacement (when relevant) and common methods.
 }
 \section{Slot}{
   \describe{ \item{\code{fMod}}{F submodel \code{formula}}

@@ -1,11 +1,7 @@
-\docType{methods}
 \name{predict for a4aGr}
 \alias{predict for a4aGr}
 \alias{predict,a4aGr-method}
 \title{predict for \code{a4aGr}}
-\usage{
-\S4method{predict}{a4aGr}(object, ...)
-}
 \arguments{
   \item{object}{the \code{a4aGr} object}
 
@@ -13,10 +9,10 @@
   methods}
 }
 \value{
-a \code{matrix} object with lengths or ages
+  a \code{matrix} object with lengths or ages
 }
 \description{
-Predicts age or lengths using a growth class
+  Predicts age or lengths using a growth class
 }
 \examples{
 vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")))

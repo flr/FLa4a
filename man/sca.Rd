@@ -5,9 +5,6 @@
 \alias{sca,FLStock,FLIndices-method}
 \alias{sca-methods}
 \title{statistical catch-at-age method}
-\usage{
-sca(stock, indices, ...)
-}
 \arguments{
   \item{stock}{a \code{FLStock} object}
 
@@ -27,12 +24,12 @@ sca(stock, indices, ...)
   computed, while the former does.}
 }
 \value{
-a \code{a4aFit} or \code{a4aFitSA} object with the fit
-results.
+  a \code{a4aFit} or \code{a4aFitSA} object with the fit
+  results.
 }
 \description{
-User interface to the statistical catch-at-age method of
-the a4a stock assessment framework.
+  User interface to the statistical catch-at-age method of
+  the a4a stock assessment framework.
 }
 \examples{
 data(ple4)

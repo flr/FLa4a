@@ -4,51 +4,30 @@
 \alias{a4aFit,missing-method}
 \alias{a4aFit-class}
 \alias{a4aFit-methods}
+\alias{catch.n}
 \alias{catch.n,a4aFit-method}
 \alias{clock}
 \alias{clock,a4aFit-method}
 \alias{fitSumm}
 \alias{fitSumm,a4aFit-method}
 \alias{fitSumm-methods}
-\alias{harvest,a4aFit,ANY-method}
+\alias{harvest}
 \alias{harvest,a4aFit-method}
+\alias{index}
 \alias{index,a4aFit-method}
+\alias{logLik}
 \alias{logLik,a4aFit-method}
+\alias{show}
 \alias{show,a4aFit-method}
+\alias{stock.n}
 \alias{stock.n,a4aFit-method}
 \title{S4 class \code{a4aFit}}
 \usage{
-va4aFit(object)
-
-a4aFit(object, ...)
-
-\S4method{a4aFit}{missing}(...)
-
-clock(object, ...)
-
-fitSumm(object, ...)
-
-\S4method{stock.n}{a4aFit}(object)
-
-\S4method{harvest}{a4aFit,ANY}(object)
-
-\S4method{catch.n}{a4aFit}(object)
-
-\S4method{index}{a4aFit}(object)
-
-\S4method{show}{a4aFit}(object)
-
-\S4method{logLik}{a4aFit}(object, ...)
-}
-\arguments{
-  \item{object}{Any R object}
-
-  \item{...}{some methods for this generic function require
-  additional arguments.}
+  va4aFit(object)
 }
 \description{
-The \code{a4aFit} class was built to store the a4a stock
-assessment fits.
+  The \code{a4aFit} class was built to store the a4a stock
+  assessment fits.
 }
 \section{Slots}{
   \describe{ \item{call}{The function call}
@@ -63,7 +42,7 @@ assessment fits.
 
   \item{catch.n}{Estimates of catch numbers-at-age}
 
-  \item{index}{Estimates of indices at age}
+  \item{index}{Estimates of survey or CPUE indices-at-age}
 
   }
 }

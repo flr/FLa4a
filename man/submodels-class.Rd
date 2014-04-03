@@ -7,22 +7,15 @@
 \alias{submodels-class}
 \alias{submodels-methods}
 \title{Submodels class}
-\usage{
-submodels(object, ...)
-
-\S4method{submodels}{submodel}(object, ...)
-
-\S4method{submodels}{list}(object, ...)
-}
 \description{
-Class definition (slots), constructors, accessors,
-replacement (when relevant) and common methods.
+  Class definition (slots), constructors, accessors,
+  replacement (when relevant) and common methods.
 }
 \note{
-This class is similar to other 'plural' calsses in
-\code{FLR}. It's a list constraint by having all elements
-of the same class, in this case \code{submodel}. Otherwise
-it works exacly as any other list.
+  This class is similar to other 'plural' calsses in
+  \code{FLR}. It's a list constraint by having all elements
+  of the same class, in this case \code{submodel}.
+  Otherwise it works exacly as any other list.
 }
 \section{Constructor}{
   A construction method exists for this class that can take

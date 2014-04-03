@@ -16,6 +16,7 @@
 \alias{fmodel}
 \alias{fmodel,SCAPars-method}
 \alias{fmodel-methods}
+\alias{m}
 \alias{m,SCAPars-method}
 \alias{n1model}
 \alias{n1model,SCAPars-method}
@@ -60,50 +61,9 @@
 \alias{vmodel,SCAPars-method}
 \alias{vmodel-methods}
 \title{Model parameters class}
-\usage{
-SCAPars(object, ...)
-
-stkmodel(object, ...)
-
-n1model(object, ...)
-
-srmodel(object, ...)
-
-fmodel(object, ...)
-
-qmodel(object, ...)
-
-vmodel(object, ...)
-
-srPars(object, ...)
-
-srCovar(object, ...)
-
-srFrml(object, ...)
-
-fPars(object, ...)
-
-fCovar(object, ...)
-
-fFrml(object, ...)
-
-qPars(object, ...)
-
-qCovar(object, ...)
-
-qFrml(object, ...)
-
-vPars(object, ...)
-
-vCovar(object, ...)
-
-vFrml(object, ...)
-
-\S4method{m}{SCAPars}(object)
-}
 \description{
-Class definition (slots), constructors, accessors,
-replacement (when relevant) and common methods.
+  Class definition (slots), constructors, accessors,
+  replacement (when relevant) and common methods.
 }
 \section{Slot}{
   \describe{

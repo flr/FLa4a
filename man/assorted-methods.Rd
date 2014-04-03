@@ -9,21 +9,16 @@
 \alias{niters}
 \alias{niters,FLModelSim-method}
 \alias{niters-methods}
+\alias{pars2dim}
 \alias{pars2dim,FLPar-method}
 \title{Assorted methods needed by FLa4a}
 \usage{
-is.empty(object)
+  is.empty(object)
 
-\S4method{pars2dim}{FLPar}(object)
-
-getYidx(object, ...)
-
-niters(object, ...)
-
-geta4aLatticeOptions(...)
+  geta4aLatticeOptions(...)
 }
 \description{
-Assorted methods needed by FLa4a
+  Assorted methods needed by FLa4a
 }
 \section{is.empty}{
   Method \code{is.empty} checks if object is empty. Takes

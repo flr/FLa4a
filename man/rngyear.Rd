@@ -6,9 +6,6 @@
 \alias{rngyear<-,FLComp,numeric-method}
 \alias{rngyear<--methods}
 \title{year range extract and replacement}
-\usage{
-rngyear(object, ...)
-}
 \arguments{
   \item{object}{a \code{FLComp} object}
 
@@ -16,11 +13,11 @@ rngyear(object, ...)
   to replace the object info.}
 }
 \value{
-a \code{vector} object when extracting or a \code{FLComp}
-object when replacing
+  a \code{vector} object when extracting or a \code{FLComp}
+  object when replacing
 }
 \description{
-Methods to extract from \code{FLComp} objects the year
-range or replace its value.
+  Methods to extract from \code{FLComp} objects the year
+  range or replace its value.
 }
 

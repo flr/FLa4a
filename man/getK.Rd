@@ -3,17 +3,14 @@
 \alias{getK,a4aGr-method}
 \alias{getK-methods}
 \title{get K}
-\usage{
-getK(object, ...)
-}
 \arguments{
   \item{object}{a \code{a4aGr} object}
 }
 \value{
-a \code{vector} with K values
+  a \code{vector} with K values
 }
 \description{
-Method to get K values
+  Method to get K values
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)

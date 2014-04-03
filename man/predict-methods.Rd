@@ -1,4 +1,3 @@
-\docType{methods}
 \name{predict}
 \alias{predict}
 \alias{predict,SCAPars-method}
@@ -7,26 +6,8 @@
 \alias{predict,submodel-method}
 \alias{predict,submodels-method}
 \title{predict methods for SCA}
-\usage{
-\S4method{predict}{a4aFitSA}(object)
-
-\S4method{predict}{SCAPars}(object)
-
-\S4method{predict}{a4aStkParams}(object)
-
-\S4method{predict}{submodels}(object, ...)
-
-\S4method{predict}{submodel}(object, ...)
-}
-\arguments{
-  \item{object}{a model object for which prediction is
-  desired.}
-
-  \item{...}{additional arguments affecting the predictions
-  produced.}
-}
 \description{
-Predict methods for a4a stock assessment fits.
+  Predict methods for a4a stock assessment fits.
 }
 \examples{
 data(ple4)

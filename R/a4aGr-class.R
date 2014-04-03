@@ -105,6 +105,7 @@ setReplaceMethod("grInvMod", signature("a4aGr","formula"), function(object, valu
 #' @aliases params,a4aGr-method
 setMethod("params", "a4aGr", function(object) object@params)
 
+#' @name a4aGr
 #' @rdname a4aGr-class
 #' @aliases params<-,a4aGr,FLPar-method
 setReplaceMethod("params", signature("a4aGr","FLPar"), function(object, value){

@@ -115,6 +115,7 @@ setReplaceMethod("rMod", signature("a4aStkParams","formula"), function(object, v
 #' @aliases params,a4aStkParams-method
 setMethod("params", "a4aStkParams", function(object) object@params)
 
+#' @name a4aStkParams
 #' @rdname a4aStkParams-class
 #' @aliases params<-,a4aStkParams,FLPar-method
 setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){

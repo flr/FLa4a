@@ -3,9 +3,6 @@
 \alias{getX,formula-method}
 \alias{getX-methods}
 \title{Get model matrix}
-\usage{
-getX(object, ...)
-}
 \arguments{
   \item{formula}{a formula object}
 
@@ -13,12 +10,12 @@ getX(object, ...)
   against}
 }
 \value{
-a matrix.
+  a matrix.
 }
 \description{
-uses the user specified formula to build a model matrix
+  uses the user specified formula to build a model matrix
 }
 \note{
-\code{getX} is intended to be used internally
+  \code{getX} is intended to be used internally
 }
 

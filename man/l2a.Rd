@@ -1,4 +1,3 @@
-\docType{methods}
 \name{l2a}
 \alias{l2a}
 \alias{l2a,FLIndex,a4aGr-method}
@@ -6,26 +5,31 @@
 \alias{l2a,FLStockLen,a4aGr-method}
 \alias{l2a-methods}
 \title{Method to convert age to length}
-\usage{
-l2a(object, model, ...)
-
-\S4method{l2a}{FLStockLen,a4aGr}(object, model, plusgroup = "missing", ...)
-
-\S4method{l2a}{FLIndex,a4aGr}(object, model, ...)
-}
 \arguments{
-  \item{object}{a \code{FLQuant} object}
+  \item{object}{an \code{FLQuant}, or \code{FLStockLen}
+  object.}
 
   \item{model}{a \code{a4aGr} object}
 
   \item{stat}{the aggregation statistic, must be \"mean\"
-  or \"sum\"}
+  or \"sum\". Only used if object is an \code{FLQuant}.}
+
+  \item{min_age}{minimum age of the FLQuant (all younger
+  ages are set to this age). Only used if the object is a
+  \code{FLQuant}.}
+
+  \item{max_age}{maximum age of the FLQuant (all older ages
+  are set to this age). Only used if the object is a
+  \code{FLQuant} or an \code{FLIndex}.}
+
+  \item{plusgroup}{the plusgroup of the stock. Only used if
+  the object is a \code{FLStockLen}.}
 }
 \value{
-a \code{FLQuant} object
+  an age based \class{FLQuant}, \class{FLStock}
 }
 \description{
-Method to convert age to length
+  Method to convert age to length
 }
 \examples{
 # red fish

@@ -1,6 +1,8 @@
 \docType{class}
 \name{submodel}
+\alias{covar}
 \alias{covar,submodel-method}
+\alias{model}
 \alias{model,submodel-method}
 \alias{pars}
 \alias{pars,submodel-method}
@@ -10,18 +12,9 @@
 \alias{submodel-class}
 \alias{submodel-methods}
 \title{Submodel class}
-\usage{
-submodel(object, ...)
-
-pars(object, ...)
-
-\S4method{model}{submodel}(object)
-
-\S4method{covar}{submodel}(object)
-}
 \description{
-Class definition (slots), constructors, accessors,
-replacement (when relevant) and common methods.
+  Class definition (slots), constructors, accessors,
+  replacement (when relevant) and common methods.
 }
 \section{Slot}{
   \describe{

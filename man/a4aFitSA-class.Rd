@@ -1,37 +1,22 @@
 \docType{class}
 \name{a4aFitSA-class}
+\alias{a4aFit}
 \alias{a4aFit,a4aFitSA-method}
 \alias{a4aFitSA}
 \alias{a4aFitSA,a4aFit-method}
 \alias{a4aFitSA,missing-method}
 \alias{a4aFitSA-class}
 \alias{a4aFitSA-methods}
+\alias{m}
 \alias{m,a4aFitSA-method}
 \alias{pars}
 \alias{pars,a4aFitSA-method}
+\alias{show}
 \alias{show,a4aFitSA-method}
 \title{S4 class \code{a4aFitSA}}
-\usage{
-\S4method{show}{a4aFitSA}(object)
-
-a4aFitSA(object, ...)
-
-\S4method{a4aFitSA}{missing}(...)
-
-\S4method{a4aFit}{a4aFitSA}(object, ...)
-
-\S4method{a4aFitSA}{a4aFit}(object, ...)
-
-pars(object, ...)
-
-\S4method{m}{a4aFitSA}(object)
-}
-\arguments{
-  \item{object}{Any R object}
-}
 \description{
-The \code{a4aFitSA} class extends \code{a4aFit} to store
-information about the parameters of the model.
+  The \code{a4aFitSA} class extends \code{a4aFit} to store
+  information about the parameters of the model.
 }
 \section{Slots}{
   \describe{ \item{SCAPars}{An object of class

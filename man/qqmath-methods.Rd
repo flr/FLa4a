@@ -3,9 +3,6 @@
 \alias{qqmath}
 \alias{qqmath,a4aFitResiduals,missing-method}
 \title{qqplot of standardized log residuals}
-\usage{
-qqmath(x, data, ...)
-}
 \arguments{
   \item{x}{a \code{a4aFitResiduals} object with the
   standardized residuals}
@@ -14,10 +11,10 @@ qqmath(x, data, ...)
   be used.}
 }
 \value{
-a \code{qqplot} with stardardized log residuals
+  a \code{qqplot} with stardardized log residuals
 }
 \description{
-Method to plot qqplots of standardized residuals
+  Method to plot qqplots of standardized residuals
 }
 \examples{
 data(ple4)

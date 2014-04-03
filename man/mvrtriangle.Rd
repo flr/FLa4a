@@ -2,9 +2,6 @@
 \alias{mvrtriangle}
 \alias{mvrtriangle,numeric,FLModelSim-method}
 \title{Simulation with a copula model and triangle distributions}
-\usage{
-mvrtriangle(n, object, ...)
-}
 \arguments{
   \item{n}{the number of iterations}
 
@@ -14,11 +11,11 @@ mvrtriangle(n, object, ...)
   methods}
 }
 \value{
-a \code{FLModelSim} object with n groups of parameters
+  a \code{FLModelSim} object with n groups of parameters
 }
 \description{
-Simulates the model parameters using elliptic copulas and
-triangle margins.
+  Simulates the model parameters using elliptic copulas and
+  triangle margins.
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)

@@ -1,23 +1,19 @@
-\docType{methods}
 \name{mvrnorm for a4aGr}
 \alias{mvrnorm for a4aGr}
 \alias{mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method}
 \alias{mvrnorm,numeric,a4aGr-method}
 \title{mvrnorm}
-\usage{
-\S4method{mvrnorm}{numeric,a4aGr,ANY,ANY,ANY,ANY}(n = 1, mu)
-}
 \arguments{
   \item{n}{the number of simulations to be generated}
 
   \item{mu}{a \code{a4aGr} object}
 }
 \value{
-a \code{a4aGr} object with n iterations
+  a \code{a4aGr} object with n iterations
 }
 \description{
-Method to simulate multivariate normal parameters for
-\code{a4aGr} objects.
+  Method to simulate multivariate normal parameters for
+  \code{a4aGr} objects.
 }
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)
