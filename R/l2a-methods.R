@@ -8,7 +8,7 @@
 #' @param min_age minimum age of the FLQuant (all younger ages are set to this age). Only used if the object is a \code{FLQuant}.
 #' @param max_age maximum age of the FLQuant (all older ages are set to this age). Only used if the object is a \code{FLQuant} or an \code{FLIndex}.
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
-#' @return an age based \class{FLQuant}, \class{FLStock}
+#' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
 #' # red fish
 #' # M=0.05; Linf=58.5, k=0.086
@@ -37,7 +37,9 @@
 
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
-setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), min_age=0, max_age='missing', ...){
+setMethod("l2a", c("FLQuant", "a4aGr"),
+	function(object, model, stat="sum", max_age=NA, min_age=0,
+		weights=FLQuant(1, dimnames=dimnames(object))) {
 	# constants
 	cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
@@ -54,10 +56,10 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 	})
     # set min and max ages
     age[age < min_age] <- min_age
-    if (!missing(max_age)){
+    if (!is.na(max_age)){
         age[age > max_age] <- max_age
     }
-	ages <- seq(min(age),max(age))
+	ages <- seq(min(age, na.rm=TRUE),max(age, na.rm=TRUE))
 	# FUN to use
     if(stat=="sum"){
         FUN <- colSums
@@ -94,7 +96,7 @@ setMethod("l2a", c("FLQuant", "a4aGr"), function(object, model, stat="sum", weig
 
 #' @rdname l2a 
 #' @aliases l2a,FLStockLen,a4aGr-method
-setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="missing", ...){
+setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
 
 
@@ -136,7 +138,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup="mi
 
 
 	# set the plus group on the first non continuous age
-    if(!missing(plusgroup)){
+    if(!is.na(plusgroup)){
         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
     }
     return(stk)
