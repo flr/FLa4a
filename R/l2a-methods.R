@@ -40,6 +40,7 @@ setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 setMethod("l2a", c("FLQuant", "a4aGr"),
 	function(object, model, stat="sum", max_age=NA, min_age=0,
 		weights=FLQuant(1, dimnames=dimnames(object))) {
+    
 	# constants
 	cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
@@ -80,13 +81,12 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
     unique_ages <- unique(c(age))
     #for(i in seq(length(unique_ages))) {
     for(i in unique_ages) {
-        #s[,,,,,] <- 0
         s[,,,,,] <- NA 
-        #idx <- lak_array == unique_ages[i]
         idx <- lak_array == i
         s[idx] <- length_array[idx]
-        res[i-min_age+1,,,,,] <- do.call(FUN,list(s,na.rm=TRUE))
+        res[i-min(ages)+1,,,,,] <- do.call(FUN,list(s,na.rm=TRUE))
     }
+	
     # fill NAs with 0
     res[is.na(res)] <- 0
     out <-  FLQuant(res, dimnames=c(list(age=ages), dimnames(object)[-c(1, 6)]), units=units(object))
@@ -98,7 +98,6 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 #' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
-
 
     # Make the stock piece by piece to avoid memory problems
     cat("Processing sum slots\n")
