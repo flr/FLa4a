@@ -63,8 +63,10 @@ setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
 
 setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP")
 {
-
   stkdms <- dims(stock)
+  if(stkdms$quant != "age"){
+    stop("FLStock object must be age based") #Happy now, Rob?
+  }
   if(missing(fmodel)){
 	  # set up a robust model...  this needs some work...
 	  ka <- stkdms$age
@@ -800,8 +802,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
     # read .par file
     out[c("nopar","nlogl","maxgrad")] <- 
-        as.numeric(scan(paste0(wkdir, '/a4a.par'), what = '', nlines = 1, quiet = TRUE)[c(6, 11, 16)])
-    lin <- matrix(readLines(paste0(wkdir, '/a4a.par'))[-1], ncol = 2, byrow = TRUE)
+        as.numeric(scan(paste0(wkdir, '\\a4a.par'), what = '', nlines = 1, quiet = TRUE)[c(6, 11, 16)])
+    lin <- matrix(readLines(paste0(wkdir, '\\a4a.par'))[-1], ncol = 2, byrow = TRUE)
     out$par.est <- lapply(strsplit(sub(" ", "",lin[,2]), " "), as.numeric)
     names(out$par.est) <- gsub("[# |:]", "", lin[,1])
 
