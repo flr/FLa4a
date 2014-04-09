@@ -1,23 +1,21 @@
-/*
-* Copyright (c) 2012-2014 European Union
-* European Commission Joint Research Centre G.04.
-*
-* Authors: Anders Nielsen <an@aqua.dtu.dk>
-* 	       Colin Millar Colin Millar <millarc@marlab.ac.uk>
-*
-* Licensed under the EUPL, Version 1.1 or later (the "Licence");
-* 
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and limitations
-* under the Licence.
-*/
+// Copyright (c) 2012-2014 European Union
+// European Commission Joint Research Centre G.04.
+//
+// Authors: Anders Nielsen <an@aqua.dtu.dk>
+// 	       Colin Millar <millarc@marlab.ac.uk>
+//
+// Licensed under the EUPL, Version 1.1 or later (the "Licence");
+// 
+// You may not use this work except in compliance with the Licence.
+// You may obtain a copy of the Licence at:
+//
+// http://ec.europa.eu/idabc/eupl
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the Licence is distributed on an "AS IS" basis,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the Licence for the specific language governing permissions and limitations
+// under the Licence.
 
 
 GLOBALS_SECTION 
@@ -26,7 +24,6 @@ GLOBALS_SECTION
   #include <df1b2fun.h>
   #include <string>
   using namespace std;
-  #include "nLogNormal.h"
   //ofstream clogf("program.log");
   //#define TRACE(object) clogf<<"line "<<__LINE__<<", file "<<__FILE__<<", "\
   //                           <<#object" =\n"<<object<<endl<<endl;
