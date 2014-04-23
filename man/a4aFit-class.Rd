@@ -22,9 +22,6 @@
 \alias{stock.n}
 \alias{stock.n,a4aFit-method}
 \title{S4 class \code{a4aFit}}
-\usage{
-  va4aFit(object)
-}
 \description{
   The \code{a4aFit} class was built to store the a4a stock
   assessment fits.

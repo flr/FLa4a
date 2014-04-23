@@ -7,6 +7,11 @@
 \alias{a4aFitSA,missing-method}
 \alias{a4aFitSA-class}
 \alias{a4aFitSA-methods}
+\alias{a4aFitSAs}
+\alias{a4aFitSAs,a4aFitSA-methods}
+\alias{a4aFitSAs,list-methods}
+\alias{a4aFitSAs,missing-methods}
+\alias{a4aFitSAs-class}
 \alias{m}
 \alias{m,a4aFitSA-method}
 \alias{pars}

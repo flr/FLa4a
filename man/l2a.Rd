@@ -26,7 +26,7 @@
   the object is a \code{FLStockLen}.}
 }
 \value{
-  an age based \class{FLQuant}, \class{FLStock}
+  an age based \code{FLQuant}, \code{FLStock}
 }
 \description{
   Method to convert age to length
