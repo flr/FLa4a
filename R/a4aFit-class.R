@@ -122,10 +122,10 @@ setMethod("show", signature(object = "a4aFit"),
     #  }
     #  print(x, quote = FALSE)
     #}
-    cat("\nPredicted F-at-age:\n")
-      show(harvest(object))
-    cat("\nPredicted stock numbers-at-age:\n")
-      show(stock.n(object))
+#    cat("\nPredicted F-at-age:\n")
+#      show(harvest(object)[,ac(range(object)["maxyear"])])
+#    cat("\nPredicted stock numbers-at-age:\n")
+#      show(stock.n(object)[,ac(range(object)["maxyear"])])
  })
 
 #setMethod("show", signature(object = "a4aFit"),
