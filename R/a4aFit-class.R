@@ -24,17 +24,8 @@
 #' @docType class
 #' @name a4aFit-class
 #' @rdname a4aFit-class
+#' @aliases a4aFit-class
 #' @template Example-a4aFit
-
-va4aFit <- function(object) {
-
-        # All FLQuant objects must have same dimensions
-        Dim <- dim(object@stock.n)
-        if (dim(object@harvest) != Dim | dim(object@catch.n != Dim))
-                return("stock.n, catch.n and harvest slots must have same dimensions")
-        # Everything is fine
-        return(TRUE)
-}
 
 setClass("a4aFit",
         representation(
@@ -54,7 +45,13 @@ setClass("a4aFit",
                 harvest      = new('FLQuant'),
                 catch.n      = new('FLQuant'),
                 index        = new('FLQuants')),
-        validity = va4aFit
+        validity = function(object) {
+			# All FLQuant objects must have same dimensions
+			Dim <- dim(object@stock.n)
+			if ((sum(dim(object@harvest) != Dim) + sum(dim(object@catch.n) != Dim))>=1)
+				return("stock.n, catch.n and harvest slots must have same dimensions")
+			# Everything is fine
+			return(TRUE)}
 )
 
 #' @rdname a4aFit-class
@@ -168,4 +165,78 @@ setMethod("logLik", signature(object = "a4aFit"),
     class(val) <- "logLik"
     val
  })
+
+#====================================================================
+# plural class for a4aFit (used for model averaging)
+#====================================================================
+
+#' @rdname a4aFit-class
+#' @aliases a4aFits-class
+
+setClass("a4aFits", 
+	contains="FLComps",
+	validity=function(object){
+		if(!all(unlist(lapply(object, is, 'a4aFit'))))
+			return("Components must be a4aFit")	
+		return(TRUE)}
+)
+
+#' @rdname a4aFit-class
+#' @aliases a4aFits a4aFits,list-methods
+setGeneric("a4aFits", function(object, ...) standardGeneric("a4aFits"))
+setMethod("a4aFits", signature(object="list"),
+  function(object, ...) {
+    args <- list(...)
+    
+    # names in args, ... 
+    if("names" %in% names(args)) {
+      names <- args[['names']]
+    } else {
+    # ... or in object,
+      if(!is.null(names(object))) {
+        names <- names(object)
+    # ... or in elements, ...
+      } else {
+        names <- unlist(lapply(object, name))
+        # ... or 1:n
+        idx <- names == "NA" | names == ""
+        if(any(idx))
+          names[idx] <- as.character(length(names))[idx]
+      }
+    }
+
+    # desc & lock
+    args <- c(list(Class="a4aFits", .Data=object, names=names),
+      args[!names(args)%in%'names'])
+
+    return(
+      do.call('new', args)
+      )
+
+})
+
+#' @rdname a4aFit-class
+#' @aliases a4aFits,a4aFit-methods
+setMethod("a4aFits", signature(object="a4aFit"), function(object, ...) {
+    lst <- c(object, list(...))
+    a4aFits(lst)
+})
+
+#' @rdname a4aFit-class
+#' @aliases a4aFits a4aFits,missing-methods
+setMethod("a4aFits", signature(object="missing"),
+  function(...) {
+    # empty
+  	if(missing(...)){
+	  	new("a4aFits")
+    # or not
+  	} else {
+      args <- list(...)
+      object <- args[!names(args)%in%c('names', 'desc', 'lock')]
+      args <- args[!names(args)%in%names(object)]
+      do.call('a4aFits',  c(list(object=object), args))
+	  }
+  }
+)
+
 
