@@ -42,7 +42,7 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 		weights=FLQuant(1, dimnames=dimnames(object))) {
     
 	# constants
-	cat("Converting lengths to ages ...\n")
+	#cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
 	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
 	len <- as.numeric(dnms[[1]])
