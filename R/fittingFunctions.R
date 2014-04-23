@@ -802,8 +802,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
     # read .par file
     out[c("nopar","nlogl","maxgrad")] <- 
-        as.numeric(scan(paste0(wkdir, '\\a4a.par'), what = '', nlines = 1, quiet = TRUE)[c(6, 11, 16)])
-    lin <- matrix(readLines(paste0(wkdir, '\\a4a.par'))[-1], ncol = 2, byrow = TRUE)
+        as.numeric(scan(paste0(wkdir, '/a4a.par'), what = '', nlines = 1, quiet = TRUE)[c(6, 11, 16)])
+    lin <- matrix(readLines(paste0(wkdir, '/a4a.par'))[-1], ncol = 2, byrow = TRUE)
     out$par.est <- lapply(strsplit(sub(" ", "",lin[,2]), " "), as.numeric)
     names(out$par.est) <- gsub("[# |:]", "", lin[,1])
 
@@ -1052,6 +1052,21 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   #attr(a4aout, "stuff") <- out
   return(a4aout)  
 }
-  
+
+#' @title breakpoints 
+#' @name breakpts
+#' @rdname breakpts
+#' @description Method to set breakpoints in submodels
+#' @param var a \code{numeric} object that defines the variable to be "broken"
+#' @param breaks a \code{numeric} object that defines the breakpoints 
+#' @return a \code{factor} with levels according to the defined breaks 
+#' @aliases breakpts breakpts-methods breakpts,numeric,numeric-method
+setGeneric("breakpts", function(object, ...) standardGeneric("breakpts"))
+setMethod("breakpts", c("numeric","numeric"), function(var, breaks, ...) {
+  if (min(var, na.rm = TRUE) < min(breaks)) breaks <- c(min(var, na.rm = TRUE) - 1, breaks)
+  if (max(var, na.rm = TRUE) > max(breaks)) breaks <- c(breaks, max(var, na.rm = TRUE)) 
+  label <- paste0("(",breaks[-length(breaks)], ",", breaks[-1], "]")     
+  cut(var, breaks = breaks, label = label)  
+}
 
 
