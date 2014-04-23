@@ -32,7 +32,45 @@ setMethod("rngage", "FLComp", function(object){
 
 setGeneric("rngage<-", function(object,value) standardGeneric("rngage<-"))
 setReplaceMethod("rngage", signature("FLComp","numeric"), function(object, value){
-	object@range[c("min","max")] <- value
+	object@range[c("min","max")] <- sort(value)
+	object
+})
+
+#' @name rnglen
+#' @rdname rnglen
+#' @title length range extract and replacement
+#' @description Methods to extract from \code{FLComp} objects the length range or replace its value.
+#' @param object a \code{FLComp} object
+#' @param value a \code{vector} with max and min length range to replace the object info. 
+#' @return a \code{vector} object when extracting or a \code{FLComp} object when replacing
+#' @aliases rnglen rnglen-methods rnglen,FLComp-method rnglen<- rnglen<--methods rnglen<-,FLComp,numeric-method
+setGeneric("rnglen", function(object, ...) standardGeneric("rnglen"))
+setMethod("rnglen", "FLComp", function(object){
+	object@range[c("min","max")]
+})
+
+setGeneric("rnglen<-", function(object,value) standardGeneric("rnglen<-"))
+setReplaceMethod("rnglen", signature("FLComp","numeric"), function(object, value){
+	object@range[c("min","max")] <- sort(value)
+	object
+})
+
+#' @name rngquant
+#' @rdname rngquant
+#' @title quant range extract and replacement
+#' @description Methods to extract from \code{FLComp} objects the quant range or replace its value.
+#' @param object a \code{FLComp} object
+#' @param value a \code{vector} with max and min quant range to replace the object info. 
+#' @return a \code{vector} object when extracting or a \code{FLComp} object when replacing
+#' @aliases rngquant rngquant-methods rngquant,FLComp-method rngquant<- rngquant<--methods rngquant<-,FLComp,numeric-method
+setGeneric("rngquant", function(object, ...) standardGeneric("rngquant"))
+setMethod("rngquant", "FLComp", function(object){
+	object@range[c("min","max")]
+})
+
+setGeneric("rngquant<-", function(object,value) standardGeneric("rngquant<-"))
+setReplaceMethod("rngquant", signature("FLComp","numeric"), function(object, value){
+	object@range[c("min","max")] <- sort(value)
 	object
 })
 
@@ -58,6 +96,32 @@ setMethod("vecyear", "FLComp", function(object){
 #' @aliases vecage vecage-methods vecage,FLComp-method
 setGeneric("vecage", function(object, ...) standardGeneric("vecage"))
 setMethod("vecage", "FLComp", function(object){
+	rng <- object@range[c("min","max")]
+	rng[1]:rng[2]
+})
+
+#' @name veclen
+#' @rdname veclen
+#' @title length vector
+#' @description method to extract from \code{FLComp} objects the vector of lengths.
+#' @param object a \code{FLComp} object
+#' @return a \code{vector} object
+#' @aliases veclen veclen-methods veclen,FLComp-method
+setGeneric("veclen", function(object, ...) standardGeneric("veclen"))
+setMethod("veclen", "FLComp", function(object){
+	rng <- object@range[c("min","max")]
+	rng[1]:rng[2]
+})
+
+#' @name vecquant
+#' @rdname vecquant
+#' @title length vector
+#' @description method to extract from \code{FLComp} objects the vector of lengths.
+#' @param object a \code{FLComp} object
+#' @return a \code{vector} object
+#' @aliases vecquant vecquant-methods vecquant,FLComp-method
+setGeneric("vecquant", function(object, ...) standardGeneric("vecquant"))
+setMethod("vecquant", "FLComp", function(object){
 	rng <- object@range[c("min","max")]
 	rng[1]:rng[2]
 })

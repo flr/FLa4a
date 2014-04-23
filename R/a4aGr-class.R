@@ -137,38 +137,6 @@ setReplaceMethod("vcov", signature(object = "a4aGr", value = "numeric"), functio
 	object
 })
 
-#' @name rnglen
-#' @rdname rnglen
-#' @title length range extract and replacement
-#' @description Methods to extract from \code{a4aGr} objects the length range or replace its value.
-#' @param object a \code{a4aGr} object
-#' @param value a \code{vector} with max and min age range to replace the object info. 
-#' @return a \code{vector} object when extracting or a \code{a4aGr} object when replacing
-#' @aliases rnglen rnglen-methods rnglen,a4aGr-method rnglen<- rnglen<--methods rnglen<-,a4aGr,numeric-method
-setGeneric("rnglen", function(object, ...) standardGeneric("rnglen"))
-setMethod("rnglen", "a4aGr", function(object){
-	object@range[c("min","max")]
-})
-
-setGeneric("rnglen<-", function(object,value) standardGeneric("rnglen<-"))
-setReplaceMethod("rnglen", signature("a4aGr","numeric"), function(object, value){
-	object@range[c("min","max")] <- sort(value)
-	object
-})
-
-#' @name veclen
-#' @rdname veclen
-#' @title length vector
-#' @description method to extract from \code{a4aGr} objects the vector of lengths.
-#' @param object a \code{a4aGr} object
-#' @return a \code{vector} object
-#' @aliases veclen veclen-methods veclen,a4aGr-method
-setGeneric("veclen", function(object, ...) standardGeneric("veclen"))
-setMethod("veclen", "a4aGr", function(object){
-	rng <- object@range[c("min","max")]
-	rng[1]:rng[2]
-})
-
 #' @name niters for a4aGr
 #' @rdname niters
 #' @title number of iterations
