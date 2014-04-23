@@ -13,7 +13,7 @@
 #' data(ple4.indices)
 #' f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3)), fit = "assessment")
 #' f2 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=list(~ s(age, k = 4)+year, ~ s(age, k = 4), ~ s(age, k = 3)), fit = "assessment")
-#' stock.sim <- ma(a4aFits(list(f1, f2)), ple4, AIC, nsim = 1000)
+#' stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, AIC, nsim = 100)
 #' stks <- FLStocks(f1=ple4+f1, f2=ple4+f2, ma=stock.sim)
 #' flqs <- lapply(stks, ssb)
 #' flqs <- lapply(flqs, iterMedians)
