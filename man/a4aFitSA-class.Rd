@@ -18,6 +18,8 @@
 \alias{pars,a4aFitSA-method}
 \alias{show}
 \alias{show,a4aFitSA-method}
+\alias{submodels}
+\alias{submodels,a4aFitSA-method}
 \title{S4 class \code{a4aFitSA}}
 \description{
   The \code{a4aFitSA} class extends \code{a4aFit} to store
