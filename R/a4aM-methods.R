@@ -4,20 +4,31 @@
 #' @rdname M 
 #' @param object a \code{a4aM} object
 #' @param grMod a \code{a4aGr} object to get the K from 
-#' @param ... placeolder for covariates of the models. The names must match formula's variables (not parameters), with the exception of the \code{a4aGr} individual growth model. To use a growth model it must be called \code{grMod} and be of class \code{a4aGr}, in which case the parameters will be matched. The main objective if to be able to use \code{K} from von Bertalanffy models in M. 
-#' @details If the models use \code{age} and/or \code{year} as terms the method expects these to be included in the call (will be passed through the \ldots argument). If they're not, the method will use the range slot to work out the ages and/or years that should be predicted. If \code{age} and/or \code{year} are not model terms, the method will use the range slot to define the dimensions of the resulting \code{M} \code{FLQuant}.    
+#' @param ... placeholder for covariates of the models. The names must match formula's variables (not parameters), with the exception of the \code{a4aGr} individual growth model. To use a growth model it must be called \code{grMod} and be of class \code{a4aGr}, in which case the parameters will be matched. The main objective if to be able to use \code{K} from von Bertalanffy models in M. 
+#' @details The method uses the range slot to define the quant and year dimensions of the resulting \code{M} \code{FLQuant}. The name fo the quant dimension is taken as the name of a variable that is present in the \code{shape} formula but is not present in the shape parameters (the \code{params} slot of the \code{shape} model). If more than one such than variable exists then there is a problem with the \code{shape} model definition.
 #' @return a \code{FLQuant} object
 #' @aliases m,a4aM-method
 #' @template Example-a4aM
 setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	args <- list(...)
-	#if(length(args)==0) args$nocovariateprovided <- TRUE
-	#browser()
-	# check variables in models for "age" or "year"
+
+    # Pick out the quant name from the shape model - the only one that goes over quant dimension
+    # The range of this is set by vecquant(object)
+    quantVars <- all.vars(model(shape(object)))
+    quantParams <- dimnames(params(shape(object)))$params
+    qname <- quantVars[!(quantVars %in% quantParams)]
+    if(length(qname) < 1){
+        qname <- "quant"
+    }
+    if(length(qname) > 1){
+        stop("More than one variable in the shape formula with no params value.")
+    }
+
 	allVars <- c(all.vars(model(shape(object))), all.vars(model(level(object))), all.vars(model(trend(object))))
-	if("age" %in% allVars) if(!("age" %in% names(args))) args$age <- vecage(object)
-	if("year" %in% allVars) if(!("year" %in% names(args))) args$year <- vecyear(object)
-	
+
+	args[[qname]] <- vecquant(object)
+	args$year <- vecyear(object)
+
 	#if(sum(c("age", "year") %in% allVars)>0){
 	#	if(!("age" %in% names(args))) args$age <- vecage(object)
 	#	# else rngmbar(object) <- c(min(args$age), max(args$age)) 
@@ -30,6 +41,7 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 		params(level(object))[k] <- getK(grMod)
 	}
 
+    # Use predict, formula argument is called 'object'
 	args$object <- shape(object)
 	shp <- do.call("predict", args)
 	args$object <- level(object)
@@ -38,21 +50,23 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	trd <- do.call("predict", args)
 	
 	# build the FLQuant for output
-	mat <- matrix(1, ncol=6, nrow=3, dimnames=list(model=c("shp","lvl","trd"), dim=c("age","year","unit", "season","area","iter")))
+	mat <- matrix(1, ncol=6, nrow=3, dimnames=list(model=c("shp","lvl","trd"), dim=c(qname,"year","unit", "season","area","iter")))
 	mat["shp",c(1,6)] <- dim(shp)
 	mat["lvl",c(1,6)] <- dim(lvl)
 	mat["trd",c(2,6)] <- dim(trd)
 
 	dm <- apply(mat,2,max)
-	nms12 <- list(age="all",year="1")
+	nms12 <- list(qname="all",year="1")
+    names(nms12)[1] <- qname
 	
 	# a bit spagethi ...
-	if(!("age" %in% allVars)){
-		v <- vecage(object)
-		mat["shp",1] <- dm["age"] <- length(v)	
-		nms12$age <- v
+    # if qname is not in shape model, the dimensions of the predicted shape values are not determined by range and we need to blow up dims to match rng
+	if(!(qname %in% allVars)){  
+		v <- vecquant(object)
+		mat["shp",1] <- dm[qname] <- length(v)	
+		nms12[[qname]] <- v
 	} else {
-		nms12$age <- args$age
+	   nms12[[qname]] <- args[[qname]]
 	}
 
 	if(!("year" %in% allVars)){
@@ -65,6 +79,7 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 
 	flq <- FLQuant(NA, dim=dm)
 	dimnames(flq)[1:2] <- nms12
+    names(dimnames(flq))[1] <- names(nms12)[1]
 
 	flqs <- flq
 	flqs[] <- shp
@@ -77,7 +92,7 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	flqt[] <- trd
 	flqt <- aperm(flqt, c(3,1,4,5,6,2))
 	m <- flqs*flql*flqt/quantMeans(flqs[as.character(vecmbar(object))])[rep(1,dm[1])]
-	FLQuant(m)
+	return(FLQuant(m))
 })
 
 #' @title natural mortality 
