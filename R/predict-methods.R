@@ -13,17 +13,25 @@ setMethod("predict", signature(object = "a4aFitSA"),
     predict(pars(object))
   })
 
-
 #' @rdname predict-methods
 #' @aliases predict,SCAPars-method
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
-    list(
-      stkmodel = predict(stkmodel(object)),
-      qmodel   = predict(qmodel(object)),
+	sm <- stkmodel(object)
+	qm <- qmodel(object)
+	# need to update cenetring to include stock centering
+	for(i in 1:length(qm)) qm[[i]]@centering <- qm[[i]]@centering-sm@centering
+	# run predict 
+    lst <- list(
+      stkmodel = predict(sm),
+      qmodel   = predict(qm),
       vmodel   = predict(vmodel(object))
     )
-  })
+	# rec is being estimated from the srmodel so the n1model doesn't
+	# have a recruitment estimate, need to update from rec predictions
+	lst$stkmodel$ny1[1,1] <- lst$stkmodel$rec[,1]
+	lst
+})
 
 #' @rdname predict-methods
 #' @aliases predict,a4aStkParams-method
@@ -66,7 +74,7 @@ setMethod("predict", signature(object = "a4aStkParams"),
                                          iter = seq(niter))))
 
 
-      list(harvest = harvest, rec = rec, ny1 = ny1)
+      FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
 })
 
 #' @rdname predict-methods
