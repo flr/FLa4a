@@ -7,7 +7,7 @@
 
   \item{grMod}{a \code{a4aGr} object to get the K from}
 
-  \item{...}{placeolder for covariates of the models. The
+  \item{...}{placeholder for covariates of the models. The
   names must match formula's variables (not parameters),
   with the exception of the \code{a4aGr} individual growth
   model. To use a growth model it must be called
@@ -23,14 +23,14 @@
   Method to compute natural mortality
 }
 \details{
-  If the models use \code{age} and/or \code{year} as terms
-  the method expects these to be included in the call (will
-  be passed through the \ldots argument). If they're not,
-  the method will use the range slot to work out the ages
-  and/or years that should be predicted. If \code{age}
-  and/or \code{year} are not model terms, the method will
-  use the range slot to define the dimensions of the
-  resulting \code{M} \code{FLQuant}.
+  The method uses the range slot to define the quant and
+  year dimensions of the resulting \code{M} \code{FLQuant}.
+  The name fo the quant dimension is taken as the name of a
+  variable that is present in the \code{shape} formula but
+  is not present in the shape parameters (the \code{params}
+  slot of the \code{shape} model). If more than one such
+  than variable exists then there is a problem with the
+  \code{shape} model definition.
 }
 \examples{
 age <- 0:15

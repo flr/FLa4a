@@ -1,3 +1,20 @@
+#' @rdname assorted-methods
+#' @aliases geta4aLatticeOptions
+#' @section geta4aLatticeOptions:
+#' Set lattice options for a4a plots.
+#' @examples
+#' # set up grapical options
+#'  lattice.options(default.theme = geta4aLatticeOptions())
+geta4aLatticeOptions <- function(...) 
+{
+  opts <- standard.theme(color = FALSE)
+  opts <- modifyList(opts, list(strip.background = list(col = grey(0.95))))
+  opts <- modifyList(opts, list(plot.symbol = list(pch = 16, col = "black", cex = 0.7)))
+  opts <- modifyList(opts, list(axis.line = list(col = grey(0.8))))
+  opts <- modifyList(opts, list(strip.border = list(col = grey(0.8))))
+
+  opts
+}
 
 #' adds bubbles to a plot - haha!
 #'

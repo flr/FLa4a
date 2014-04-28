@@ -3,7 +3,6 @@
 \alias{getYidx}
 \alias{getYidx,FLQuant-method}
 \alias{getYidx-methods}
-\alias{geta4aLatticeOptions}
 \alias{is.empty}
 \alias{methods}
 \alias{niters}
@@ -14,8 +13,6 @@
 \title{Assorted methods needed by FLa4a}
 \usage{
   is.empty(object)
-
-  geta4aLatticeOptions(...)
 }
 \description{
   Assorted methods needed by FLa4a
@@ -45,10 +42,6 @@
   Compute number of iterations. Takes an object of any
   \code{FLR} class and returns a \code{numeric}.
 }
-
-\section{geta4aLatticeOptions}{
-  Set lattice options for a4a plots.
-}
 \examples{
 is.empty(list())
 is.empty(list(a=2))
@@ -58,7 +51,5 @@ data(ple4)
 flq <- catch(ple4)
 getYidx(flq, 2000:2004)
 flq[, getYidx(flq, 2000:2004)]
-# set up grapical options
- lattice.options(default.theme = geta4aLatticeOptions())
 }
 

@@ -1,7 +1,7 @@
-\name{veclen}
-\alias{veclen}
-\alias{veclen,FLComp-method}
-\alias{veclen-methods}
+\name{vecquant}
+\alias{vecquant}
+\alias{vecquant,FLComp-method}
+\alias{vecquant-methods}
 \title{length vector}
 \arguments{
   \item{object}{a \code{FLComp} object}
