@@ -97,26 +97,33 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 #' @rdname l2a 
 #' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
-	warning("Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.")
+	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
 
     # Make the stock piece by piece to avoid memory problems
-    cat("Processing sum slots\n")
+    #cat("Processing sum slots\n")
     catch.n <- l2a(catch.n(object), model, stat="sum", max_age=plusgroup,...)
-    stk <- FLStock(catch.n=catch.n) 
+    stk <- FLStock(catch.n=catch.n)
+    qsize <- prod(dim(catch.n))
+    # check which slots need slicing
     sum_slots_names <- c("discards.n","landings.n","stock.n")
-    for(slot_counter in sum_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", max_age=plusgroup,...)
-        gc()
-    }
-    cat("Processing mean slots\n")
-    #mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn","harvest")
-    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn","harvest")
+	# if there's no discards landings=catches
+	sum_slots_names <- sum_slots_names[c(rep(sum(is.na(discards.n(object)))!=qsize,2),sum(is.na(stock.n(object)))!=qsize)]
+	if(!is.empty(sum_slots_names)){
+		for(slot_counter in sum_slots_names){
+		    slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", max_age=plusgroup,...)
+		    gc()
+		}
+	}
+
+    #cat("Processing mean slots\n")
+    #mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn")
+    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
     for(slot_counter in mean_slots_names){
         slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean", max_age=plusgroup,...)
         gc()
     }
 
-    cat("Processing weighted mean slots\n")
+    #cat("Processing weighted mean slots\n")
     weighted_means_slots_names <- c("catch","discards","landings","stock")
     for(slot_counter in weighted_means_slots_names){
         total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="mean", max_age=plusgroup,...)
@@ -124,7 +131,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
         gc()
     }
 
-    cat("Washing up\n")
+    #cat("Washing up\n")
 	stk@name <- object@name
 	stk@desc <- object@desc
 	units(harvest(stk)) <- units(object@harvest)
@@ -134,7 +141,6 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     discards(stk) <- computeDiscards(stk)
     catch(stk) <- computeCatch(stk)
     stock(stk) <- computeStock(stk)
-
 
 	# set the plus group on the first non continuous age
     if(!is.na(plusgroup)){
@@ -152,13 +158,13 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     catch.n <- l2a(catch.n(object), model, stat="sum",...)
     idx <- FLIndex(catch.n=catch.n) 
     mean_slots_names <- c("index","index.var","sel.pattern","index.q")
-    cat("Processing mean slots\n")
+    #cat("Processing mean slots\n")
     for(slot_counter in mean_slots_names){
         slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean",...)
         gc()
     }
 
-    cat("Processing weighted mean slots\n")
+    #cat("Processing weighted mean slots\n")
     weighted_means_slots_names <- c("catch")
     for(slot_counter in weighted_means_slots_names){
         total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="mean",...)
