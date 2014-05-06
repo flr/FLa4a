@@ -126,7 +126,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     #cat("Processing weighted mean slots\n")
     weighted_means_slots_names <- c("catch","discards","landings","stock")
     for(slot_counter in weighted_means_slots_names){
-        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="mean", max_age=plusgroup,...)
+        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="sum", max_age=plusgroup,...)
         slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
         gc()
     }
@@ -152,29 +152,31 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 #' @rdname l2a 
 #' @aliases l2a,FLIndex,a4aGr-method
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
-	warning("Catch in numbers will be summed accross lengths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.")
 	args <- list(...)
-
-    catch.n <- l2a(catch.n(object), model, stat="sum",...)
-    idx <- FLIndex(catch.n=catch.n) 
-    mean_slots_names <- c("index","index.var","sel.pattern","index.q")
-    #cat("Processing mean slots\n")
-    for(slot_counter in mean_slots_names){
-        slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean",...)
-        gc()
-    }
-
-    #cat("Processing weighted mean slots\n")
-    weighted_means_slots_names <- c("catch")
-    for(slot_counter in weighted_means_slots_names){
-        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="mean",...)
-        slot(idx,paste(slot_counter,".wt",sep="")) <- total_slice / slot(idx,paste(slot_counter,".n",sep=""))
-        gc()
-    }
-
-
-	idx@name <- object@name
-	idx@desc <- object@desc
+	if(sum(is.na(catch.n(object)))==prod(dim(catch.n(object)))){
+		warning("Catch in numbers are not present, the index will be averaged. sel.pattern not computed.")
+	    idx <- l2a(index(object), model, stat="mean",...)
+	    idx <- FLIndex(index=idx) 
+	    slot(idx, "index.var") <- l2a(slot(object,"index.var")/(ncol(dims(object)$year))^2, model, stat="sum", ...)
+	} else {
+		warning("Catch in numbers will be summed accross lengths; index will be weighted by catch.n. sel.pattern not computed.")
+		ctnl <- catch.n(object)
+	    ctn <- l2a(ctnl, model, stat="sum",...)
+	    idx <- FLIndex(catch.n=ctn) 
+	    #cat("Processing weighted mean slots\n")
+	    mean_slots_names <- c("index","index.q","catch.wt")
+	    for(i in mean_slots_names){
+	        total_slice <- l2a(slot(object,i) * ctnl, model, stat="sum",...)
+	        slot(idx, i) <- total_slice/ctn
+	        gc()
+	    }
+	    #cat("Processing variance slot\n")
+	    slot(idx, "index.var") <- l2a(slot(object,"index.var")*ctnl^2, model, stat="sum", ...)/ctn^2
+	        gc()
+	}
+	effort(idx)[] <- effort(object)
+	name(idx) <- name(object)
+	desc(idx) <- desc(object)
 	idx@range[c("startf","endf")] <- object@range[c("startf","endf")]
 	return(idx)
 })
