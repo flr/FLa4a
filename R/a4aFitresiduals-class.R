@@ -46,12 +46,11 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 #' stdlogres(catch.n(ple4), catch.n(obj))
 setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
-
 	flq <- log(obs/fit)	
-	res <- apply(flq, 2:6, scale, center=FALSE)
+	#res <- apply(flq, c(1,3:6), scale, center=FALSE)
+	res <- flq/sqrt(yearVars(flq)[,rep(1,ncol(flq))])
 	dimnames(res) <- dimnames(flq)
 	FLQuant(res)
-	
 }) 
 
 #' @title plot of standardized log residuals 
