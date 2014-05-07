@@ -157,7 +157,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 		warning("Catch in numbers are not present, the index will be averaged. sel.pattern not computed.")
 	    idx <- l2a(index(object), model, stat="mean",...)
 	    idx <- FLIndex(index=idx) 
-	    slot(idx, "index.var") <- l2a(slot(object,"index.var")/(ncol(dims(object)$year))^2, model, stat="sum", ...)
+        slot(idx, "index.var") <- (l2a(sqrt(slot(object,"index.var")), model, stat="mean", ...))^2
 	} else {
 		warning("Catch in numbers will be summed accross lengths; index will be weighted by catch.n. sel.pattern not computed.")
 		ctnl <- catch.n(object)
@@ -176,7 +176,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	}
 	effort(idx)[] <- effort(object)
 	name(idx) <- name(object)
-	desc(idx) <- desc(object)
+	idx@desc <- object@desc
 	idx@range[c("startf","endf")] <- object@range[c("startf","endf")]
 	return(idx)
 })
