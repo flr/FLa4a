@@ -152,31 +152,34 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 #' @rdname l2a 
 #' @aliases l2a,FLIndex,a4aGr-method
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
+    # Slots are treated differently
+    # Sum: index, index.var, catch.n
+    # Weighted sum: catch.wt, index.q
+    # Ignored: sel.pattern
 	args <- list(...)
-	if(sum(is.na(catch.n(object)))==prod(dim(catch.n(object)))){
-		warning("Catch in numbers are not present, the index will be averaged. sel.pattern not computed.")
-	    idx <- l2a(index(object), model, stat="mean",...)
-	    idx <- FLIndex(index=idx) 
-        slot(idx, "index.var") <- (l2a(sqrt(slot(object,"index.var")), model, stat="mean", ...))^2
-	} else {
-		warning("Catch in numbers will be summed accross lengths; index will be weighted by catch.n. sel.pattern not computed.")
-		ctnl <- catch.n(object)
-	    ctn <- l2a(ctnl, model, stat="sum",...)
-	    idx <- FLIndex(catch.n=ctn) 
-	    #cat("Processing weighted mean slots\n")
-	    mean_slots_names <- c("index","index.q","catch.wt")
-	    for(i in mean_slots_names){
-	        total_slice <- l2a(slot(object,i) * ctnl, model, stat="sum",...)
-	        slot(idx, i) <- total_slice/ctn
-	        gc()
-	    }
-	    #cat("Processing variance slot\n")
-	    slot(idx, "index.var") <- l2a(slot(object,"index.var")*ctnl^2, model, stat="sum", ...)/ctn^2
-	        gc()
-	}
-	effort(idx)[] <- effort(object)
-	name(idx) <- name(object)
+
+    catch.n <- l2a(catch.n(object), model, stat="sum", ...)
+    idx <- FLIndex(catch.n=catch.n)
+
+    sum_slots_names <- c("index","index.var")
+    for(slot_counter in sum_slots_names){
+        slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
+        gc()
+    }
+
+    weighted_means_slots_names <- c("catch.wt","index.q")
+    for(slot_counter in weighted_means_slots_names){
+        total_slice <- l2a(slot(object,slot_counter) * slot(object,"catch.n"), model, stat="sum", ...)
+        slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
+        gc()
+    }
+
+    # Washing up
+	idx@name <- object@name
 	idx@desc <- object@desc
+	idx@distribution <- object@distribution
+	idx@type <- object@type
+	effort(idx)[] <- effort(object)
 	idx@range[c("startf","endf")] <- object@range[c("startf","endf")]
 	return(idx)
 })
