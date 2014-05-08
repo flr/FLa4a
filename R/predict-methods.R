@@ -1,5 +1,5 @@
 #==================================================================== 
-#    predict  methods
+#    predict methods
 #==================================================================== 
 
 #' @title predict methods for SCA
@@ -19,13 +19,14 @@ setMethod("predict", signature(object = "SCAPars"),
   function(object) {
 	sm <- stkmodel(object)
 	qm <- qmodel(object)
-	# need to update cenetring to include stock centering
+	vm <- vmodel(object)
+	# need to update centering to include stock centering
 	for(i in 1:length(qm)) qm[[i]]@centering <- qm[[i]]@centering-sm@centering
 	# run predict 
     lst <- list(
       stkmodel = predict(sm),
       qmodel   = predict(qm),
-      vmodel   = predict(vmodel(object))
+      vmodel   = predict(vm)
     )
 	# rec is being estimated from the srmodel so the n1model doesn't
 	# have a recruitment estimate, need to update from rec predictions
@@ -89,8 +90,10 @@ setMethod("predict", signature(object = "submodels"),
 #' @aliases predict,submodel-method
 setMethod("predict", signature(object = "submodel"),
   function(object, ...) {
-      ages <- range(object)["min"]:range(object)["max"]
-      years <- range(object)["minyear"]:range(object)["maxyear"]
+      ages <- try(range(object)["min"]:range(object)["max"], silent=TRUE)
+      if(is(ages, "try-error")) ages <- "all"
+      years <- try(range(object)["minyear"]:range(object)["maxyear"], silent=TRUE)
+      if(is(years, "try-error")) years <- 1
       df <- expand.grid(age = ages,
                         year = years)
       X <- getX(object @ Mod, df)

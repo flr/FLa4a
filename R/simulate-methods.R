@@ -13,10 +13,9 @@ setGeneric("simulate", useAsDefault = simulate)
 #' @rdname simulate-methods
 #' @aliases simulate,a4aFitSA-method
 setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, iter = NULL) {
+  function(object, nsim = 1, iter = NULL, stock="missing") {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, iter = iter)
-    
     # now get catch.n, stock.n, harvest and index
     preds <- predict(out)
     out @ harvest <- preds $ stkmodel $  harvest
@@ -42,14 +41,36 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     # calculate catch
     zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
     out @ catch.n <- zfrac * out @ stock.n
-    
+
     # work out indices
     out @ index <- preds $ qmodel
     for (i in seq(out @ index)) {
-      iages <- rownames(out @ index[[i]])
-      iyears <- colnames(out @ index[[i]])
-      when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
-      out @ index[[i]] <- (out @ stock.n * exp(-Zs * when))[iages, iyears] * out @ index[[i]]
+      idx <- index(out)[[i]]
+      dnms <- dimnames(idx)	
+      iages <- dnms$age
+      iyears <- dnms$year
+	  when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
+	  # is it a biomass idx ?
+	  bioidx <- FALSE
+	  if(length(iages)==1) if(iages=="all") bioidx <- TRUE 
+      # if biomass index all ages have to be accounted
+      # warning: spagheti code
+	  if(bioidx){
+		if(missing(stock)){
+		   warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
+		   out @ index[[i]][] <- object@index[[i]][]
+		} else {
+			stk <- out@stock.n*exp(-Zs * when)
+			stk <- mcf(list(e1=stk, e2=stock.wt(stock)))
+			stk$e2[] <- stk$e2[,,,,,1]
+			stk <- quantSums(do.call("*", stk))[,iyears]
+	        out @ index[[i]] <- stk * out @ index[[i]]
+		}
+	  # or else it's a age based index
+	  } else {
+	   stk <- (out @ stock.n * exp(-Zs * when))[iages, iyears]
+       out @ index[[i]] <- stk * out @ index[[i]]
+      }
     }
 
     out
@@ -60,11 +81,9 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 setMethod("simulate", signature(object = "SCAPars"),
   function(object, nsim = 1, iter = NULL) {    
     out <- object
-    
     out @ stkmodel <- simulate(object @ stkmodel, nsim = nsim, iter = iter)
     out @ qmodel <- simulate(object @ qmodel, nsim = nsim, iter = iter)
     out @ vmodel <- simulate(object @ vmodel, nsim = nsim, iter = iter)
-
     out
   })
 

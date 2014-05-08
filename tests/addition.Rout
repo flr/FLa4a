@@ -1,0 +1,101 @@
+
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #====================================================================
+> # tests for predict
+> #====================================================================
+> library(FLa4a)
+Loading required package: copula
+Loading required package: FLCore
+Loading required package: grid
+Loading required package: lattice
+Loading required package: MASS
+FLCore 2.5.0 development version
+
+
+Attaching package: ‘FLCore’
+
+The following objects are masked from ‘package:base’:
+
+    cbind, rbind
+
+Loading required package: mgcv
+Loading required package: nlme
+This is mgcv 1.7-26. For overview type 'help("mgcv-package")'.
+Loading required package: splines
+Loading required package: triangle
+This is FLa4a 0.98.0. For overview type 'help("FLa4a-package")'
+
+> data(ple4)
+> data(ple4.indices)
+> data(ple4.index)
+> 
+> #====================================================================
+> # abundance indices
+> #====================================================================
+> #--------------------------------------------------------------------
+> # both assessment types
+> #--------------------------------------------------------------------
+> # 1 x 1
+> fit0 <- sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+Note: The following observations are treated as being missing at random:
+	    fleet year age
+	 BTS-Isis 1997   1
+	 BTS-Isis 1997   2
+      Predictions will be made for missing observations.
+> stk0 <- ple4 + fit0
+> fit <- sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), fit="assessment")
+Note: The following observations are treated as being missing at random:
+	    fleet year age
+	 BTS-Isis 1997   1
+	 BTS-Isis 1997   2
+      Predictions will be made for missing observations.
+> stk <- ple4 + fit
+> all.equal(stk, stk0)
+[1] TRUE
+> 
+> #--------------------------------------------------------------------
+> # N
+> #--------------------------------------------------------------------
+> # must fail
+> #stk0 <- propagate(ple4, 2) + fit0
+> 
+> # N x 1
+> set.seed(1234)
+> stk0 <- propagate(ple4, 2) + fit
+> set.seed(1234)
+> stk <- propagate(ple4, 2) * fit
+> all.equal(stk, stk0)
+[1] TRUE
+> 
+> # 1 x N
+> set.seed(1234)
+> stk0 <- ple4 + simulate(fit, 2)
+> set.seed(1234)
+> stk <- ple4 * simulate(fit, 2)
+> all.equal(stk, stk0)
+[1] TRUE
+> 
+> # N x N
+> set.seed(1234)
+> stk0 <- propagate(ple4, 2) + simulate(fit, 2)
+Error in e1 + as(e2, "a4aFit") : 
+  adding a basic a4aFit object only makes sence with 1 iteration
+Calls: + -> + -> + -> +
+Execution halted
