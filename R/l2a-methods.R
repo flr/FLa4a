@@ -5,8 +5,6 @@
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model a \code{a4aGr} object
 #' @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
-#' @param min_age minimum age of the FLQuant (all younger ages are set to this age). Only used if the object is a \code{FLQuant}.
-#' @param max_age maximum age of the FLQuant (all older ages are set to this age). Only used if the object is a \code{FLQuant} or an \code{FLIndex}.
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
@@ -38,9 +36,7 @@
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 setMethod("l2a", c("FLQuant", "a4aGr"),
-	function(object, model, stat="sum", max_age=NA, min_age=0,
-		weights=FLQuant(1, dimnames=dimnames(object))) {
-    
+	function(object, model, stat="sum", weights=FLQuant(1, dimnames=dimnames(object))) {
 	# constants
 	#cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
@@ -55,11 +51,6 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 		x[which.max(x[!is.infinite(x)]):length(x)] <- max(x[!is.infinite(x)], na.rm=T)
 		x
 	})
-    # set min and max ages
-    age[age < min_age] <- min_age
-    if (!is.na(max_age)){
-        age[age > max_age] <- max_age
-    }
 	ages <- seq(min(age, na.rm=TRUE),max(age, na.rm=TRUE))
 	# FUN to use
     if(stat=="sum"){
@@ -101,7 +92,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 
     # Make the stock piece by piece to avoid memory problems
     #cat("Processing sum slots\n")
-    catch.n <- l2a(catch.n(object), model, stat="sum", max_age=plusgroup,...)
+    catch.n <- l2a(catch.n(object), model, stat="sum", ...)
     stk <- FLStock(catch.n=catch.n)
     qsize <- prod(dim(catch.n))
     # check which slots need slicing
@@ -110,7 +101,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 	sum_slots_names <- sum_slots_names[c(rep(sum(is.na(discards.n(object)))!=qsize,2),sum(is.na(stock.n(object)))!=qsize)]
 	if(!is.empty(sum_slots_names)){
 		for(slot_counter in sum_slots_names){
-		    slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", max_age=plusgroup,...)
+		    slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
 		    gc()
 		}
 	}
@@ -119,16 +110,23 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     #mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn")
     mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
     for(slot_counter in mean_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean", max_age=plusgroup,...)
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean", ...)
         gc()
     }
 
     #cat("Processing weighted mean slots\n")
     weighted_means_slots_names <- c("catch","discards","landings","stock")
     for(slot_counter in weighted_means_slots_names){
-        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="sum", max_age=plusgroup,...)
+        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="sum", ...)
         slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
         gc()
+    }
+
+    # Check for ages < 0; report problem and trim
+    if(range(stk)["min"] < 0){
+        print("Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)")
+        print("Trimming age range to a minimum of 0")
+        stk <- trim(stk, age=0:range(stk)["max"])
     }
 
     #cat("Washing up\n")
@@ -146,6 +144,8 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     if(!is.na(plusgroup)){
         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
     }
+
+
     return(stk)
 })
 
@@ -172,6 +172,13 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
         total_slice <- l2a(slot(object,slot_counter) * slot(object,"catch.n"), model, stat="sum", ...)
         slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
         gc()
+    }
+
+    # Check for ages < 0; report problem and trim
+    if(range(idx)["min"] < 0){
+        print("Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)")
+        print("Trimming age range to a minimum of 0")
+        idx <- trim(idx, age=0:range(idx)["max"])
     }
 
     # Washing up
