@@ -143,7 +143,7 @@ setMethod("getX", "formula", function(object, df) {
     olddf <- merge(olddf, df, all = TRUE)
     olddf <- olddf[order(olddf $ oldid),]
     
-    X[olddf $ id,]
+    X[olddf $ id,,drop=FALSE]
   }
 )
 
