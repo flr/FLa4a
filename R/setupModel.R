@@ -138,10 +138,12 @@ setMethod("getX", "formula", function(object, df) {
     options(opts)
 
     # now remap from df to olddf
-    olddf $ id <- 1:nrow(olddf)
-    olddf <- merge(olddf, cbind(df, X = X), all.x = TRUE)
+    df $ id <- 1:nrow(df)
+    olddf $ oldid <- 1:nrow(olddf)
+    olddf <- merge(olddf, df, all = TRUE)
+    olddf <- olddf[order(olddf $ oldid),]
     
-    olddf $ X[order(olddf $ id),]
+    X[olddf $ id,]
   }
 )
 
