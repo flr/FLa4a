@@ -20,6 +20,11 @@ setMethod("getX", "formula", function(object, df) {
     # drop unused factor levels
     facs <- which(sapply(df, is.factor))
     df[facs] <- lapply(df[facs], function(x) x[drop=TRUE])
+
+    # quick fix for problems predicting with smooths...
+    # this will fail in some instances when covariates are included, 
+    olddf <- df
+    df <- unique(df)
   
     model.type <- deparse(substitute(model))
   
@@ -131,8 +136,12 @@ setMethod("getX", "formula", function(object, df) {
 
     # reset options
     options(opts)
+
+    # now remap from df to olddf
+    olddf $ id <- 1:nrow(olddf)
+    olddf <- merge(olddf, cbind(df, X = X), all.x = TRUE)
     
-    X
+    olddf $ X[order(olddf $ id),]
   }
 )
 
