@@ -104,4 +104,10 @@ getADMBHessian <- function(wkdir) {
   list(num.pars = num.pars, hes = hes, hybrid_bounded_flag = hybrid_bounded_flag, scale = scale)
 }
 
-
+#' @rdname assorted-methods
+#' @aliases dims,a4aStkParams-method
+#' @section dims:
+#' Extracts the dims of the parameters.
+setMethod("dims", "a4aStkParams", function(obj) {
+  dim(obj@params)
+})
