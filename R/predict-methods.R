@@ -94,15 +94,11 @@ setMethod("predict", signature(object = "submodel"),
       if(is(ages, "try-error")) ages <- "all"
       years <- try(range(object)["minyear"]:range(object)["maxyear"], silent=TRUE)
       if(is(years, "try-error")) years <- 1
-      df <- expand.grid(age = ages,
-                        year = years)
+      df <- expand.grid(age = ages, year = years)
       X <- getX(object @ Mod, df)
       b <- coef(object)
       niter <- dim(b)[2]
       fit <- exp(c(X %*% b) + object @ centering)
-      FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), 
-                         dimnames = list(age = ages, year = years, 
-                                         unit = "unique", season = "all", area = "unique",
-                                         iter = seq(niter))))
-  })
+      FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), dimnames = list(age = ages, year = years, unit = "unique", season = "all", area = "unique", iter = seq(niter))))
+})
 

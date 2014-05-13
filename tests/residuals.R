@@ -1,3 +1,4 @@
+library(FLa4a)
 data(ple4)
 data(ple4.indices)
 
@@ -22,12 +23,6 @@ idxs$b2 <- bioidx2
 # fitting the model
 fit <- sca(ple4, idxs, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1))
 res <- residuals(fit, ple4, idxs)
+length(res) == 6
 plot(res)
-
-sca(ple4, idxs[-1], qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1)[-1])
-sca(ple4, idxs[-2], qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1)[-2])
-sca(ple4, idxs[-3], qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1)[-3])
-sca(ple4, idxs[-4], qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1)[-4])
-sca(ple4, idxs[-5], qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1)[-5])
-
 

@@ -14,14 +14,6 @@
   \item{stat}{the aggregation statistic, must be \"mean\"
   or \"sum\". Only used if object is an \code{FLQuant}.}
 
-  \item{min_age}{minimum age of the FLQuant (all younger
-  ages are set to this age). Only used if the object is a
-  \code{FLQuant}.}
-
-  \item{max_age}{maximum age of the FLQuant (all older ages
-  are set to this age). Only used if the object is a
-  \code{FLQuant} or an \code{FLIndex}.}
-
   \item{plusgroup}{the plusgroup of the stock. Only used if
   the object is a \code{FLStockLen}.}
 }

@@ -10,10 +10,10 @@
 #' @aliases +,FLStock,a4aFit-method
 setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
 {
-
-  niters <- dims(e1) $ iter
-  if (niters > 1) stop("adding a basic a4aFit object only makes sence with 1 iteration")
-
+  nit1 <- dims(e1) $ iter
+  nit2 <- dim(catch.n(e2))[6]
+  if(nit1!=nit2) stop("The objects must have the same number of iterations.")
+  
   stock.n(e1) <- stock.n(e2)
   catch.n(e1) <- catch.n(e2)
   harvest(e1) <- harvest(e2)

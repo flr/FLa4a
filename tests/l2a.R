@@ -1,3 +1,4 @@
+library(FLa4a)
 data(rfLen)
 # Make an empty cor matrix
 cm <- diag(c(1,1,1))
