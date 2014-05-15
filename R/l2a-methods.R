@@ -37,9 +37,8 @@
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 setMethod("l2a", c("FLQuant", "a4aGr"),
-	function(object, model, halfwidth=as.numeric(dimnames(object)[[1]]) + c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object))) {
+	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object))) {
 	# constants
-
 	#cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
 	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
@@ -91,7 +90,6 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 #' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
-
     # Make the stock piece by piece to avoid memory problems
     #cat("Processing sum slots\n")
     catch.n <- l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", ...)
@@ -146,7 +144,6 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     if(!is.na(plusgroup)){
         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
     }
-
 
     return(stk)
 })
