@@ -79,16 +79,16 @@ setMethod("*", c("FLStock", "a4aFitSA"), function(e1, e2)
     }
   }
 
-  # build up a4aFitSA to simulate from
-  mod <- new("a4aFitSA")
-  mod @ pars <- pars(e2)
-  mod @ index <- index(e2)
-  mod @ catch.n <- catch.n(e1)
-  mod @ stock.n <- stock.n(e1)
-  mod @ harvest <- harvest(e1)
-  mod @ range <- range(e1)
+#  # build up a4aFitSA to simulate from
+#  mod <- new("a4aFitSA")
+#  mod @ pars <- pars(e2)
+#  mod @ index <- index(e2)
+#  mod @ catch.n <- catch.n(e1)
+#  mod @ stock.n <- stock.n(e1)
+#  mod @ harvest <- harvest(e1)
+#  mod @ range <- range(e1)
 
-  simstock <- simulate(mod, nsim = nsim)  
+  simstock <- simulate(e2, nsim = nsim)  
 
   catch.n(e1) <- catch.n(simstock)
   stock.n(e1) <- stock.n(simstock)

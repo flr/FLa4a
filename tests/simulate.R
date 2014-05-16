@@ -219,6 +219,7 @@ idx2.rat <- iterMedians(idx2.sim)/idx2.fit
 
 max(stk.rat)-min(stk.rat) < err
 max(f.rat)-min(f.rat) < err
+# these ones sometimes fail, I guess the model is quite bad
 max(idx.rat)-min(idx.rat) < err
 max(idx2.rat)-min(idx2.rat) < err
 
