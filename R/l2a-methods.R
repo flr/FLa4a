@@ -4,6 +4,7 @@
 #' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model a \code{a4aGr} object
+#' @param halfwidth the halfwidths of the length classes. A single numeric or numeric vector the size of the number of the number length classes. Not used if object is an \code{FLStockLen} as the \code{halfwidth} slot is used.
 #' @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
 #' @return an age based \code{FLQuant}, \code{FLStock}
@@ -36,12 +37,12 @@
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 setMethod("l2a", c("FLQuant", "a4aGr"),
-	function(object, model, stat="sum", weights=FLQuant(1, dimnames=dimnames(object))) {
+	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object))) {
 	# constants
 	#cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
 	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
-	len <- as.numeric(dnms[[1]])
+	len <- as.numeric(dnms[[1]]) + halfwidth 
 	mit <- niters(model)
 	qit <- length(dnms[[6]]) 
 	if(mit>1 & qit>1 & mit!=qit) stop("Can not operate with diferent iterations in each object.")
@@ -89,10 +90,9 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 #' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
-
     # Make the stock piece by piece to avoid memory problems
     #cat("Processing sum slots\n")
-    catch.n <- l2a(catch.n(object), model, stat="sum", ...)
+    catch.n <- l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", ...)
     stk <- FLStock(catch.n=catch.n)
     qsize <- prod(dim(catch.n))
     # check which slots need slicing
@@ -101,7 +101,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 	sum_slots_names <- sum_slots_names[c(rep(sum(is.na(discards.n(object)))!=qsize,2),sum(is.na(stock.n(object)))!=qsize)]
 	if(!is.empty(sum_slots_names)){
 		for(slot_counter in sum_slots_names){
-		    slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
+		    slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", ...)
 		    gc()
 		}
 	}
@@ -110,14 +110,14 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     #mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn")
     mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
     for(slot_counter in mean_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, stat="mean", ...)
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", ...)
         gc()
     }
 
     #cat("Processing weighted mean slots\n")
     weighted_means_slots_names <- c("catch","discards","landings","stock")
     for(slot_counter in weighted_means_slots_names){
-        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, stat="sum", ...)
+        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, halfwidth=halfwidth(object), stat="sum", ...)
         slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
         gc()
     }
@@ -144,7 +144,6 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     if(!is.na(plusgroup)){
         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
     }
-
 
     return(stk)
 })
