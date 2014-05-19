@@ -1,22 +1,28 @@
 \docType{methods}
-\name{methods}
+\name{a4amethods}
 \alias{getYidx}
 \alias{getYidx,FLQuant-method}
 \alias{getYidx-methods}
 \alias{is.empty}
-\alias{methods}
+\alias{dims,a4aStkParams-method}
 \alias{niters}
 \alias{niters,FLModelSim-method}
 \alias{niters-methods}
-\alias{pars2dim}
 \alias{pars2dim,FLPar-method}
 \title{Assorted methods needed by FLa4a}
 \usage{
   is.empty(object)
 }
+\arguments{
+  \item{object}{Argument to the various methods}
+}
 \description{
   Assorted methods needed by FLa4a
 }
+\section{dims}{
+	Extracts the dims of the parameters.
+}
+
 \section{is.empty}{
   Method \code{is.empty} checks if object is empty. Takes
   any object returns a logical, \code{TRUE} if object is of

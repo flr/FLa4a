@@ -1,6 +1,6 @@
 \name{breakpts}
 \alias{breakpts}
-\alias{breakpts,numeric,numeric-method}
+\alias{breakpts,numeric-method}
 \alias{breakpts-methods}
 \title{breakpoints}
 \arguments{

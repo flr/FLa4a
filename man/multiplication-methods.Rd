@@ -1,5 +1,4 @@
 \name{*}
-\alias{*}
 \alias{*,FLIndices,SCAPars-method}
 \alias{*,FLIndices,a4aFitSA-method}
 \alias{*,FLStock,SCAPars-method}

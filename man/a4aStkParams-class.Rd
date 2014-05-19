@@ -4,10 +4,8 @@
 \alias{a4aStkParams,missing-method}
 \alias{a4aStkParams-class}
 \alias{a4aStkParams-methods}
-\alias{distr}
 \alias{distr,a4aStkParams-method}
 \alias{distr-methods}
-\alias{distr<-}
 \alias{distr<-,a4aStkParams,character-method}
 \alias{distr<--methods}
 \alias{fMod}
@@ -22,7 +20,6 @@
 \alias{n1Mod<-}
 \alias{n1Mod<-,a4aStkParams,formula-method}
 \alias{n1Mod<--methods}
-\alias{params}
 \alias{params,a4aStkParams-method}
 \alias{params<-,a4aStkParams,FLPar-method}
 \alias{rMod}
@@ -31,9 +28,7 @@
 \alias{rMod<-}
 \alias{rMod<-,a4aStkParams,formula-method}
 \alias{rMod<--methods}
-\alias{vcov}
 \alias{vcov,a4aStkParams-method}
-\alias{vcov<-}
 \alias{vcov<-,a4aStkParams-method}
 \title{Stock parameters class}
 \description{

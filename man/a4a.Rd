@@ -10,4 +10,7 @@
   interface. It was replaced by \code{sca} or the advanced
   version \code{a4aSCA}.
 }
+\arguments{
+  \item{...}{Arguments to a4a}
+}
 

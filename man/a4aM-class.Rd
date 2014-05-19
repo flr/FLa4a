@@ -15,7 +15,6 @@
 \alias{shape<-}
 \alias{shape<-,a4aM-method}
 \alias{shape<--methods}
-\alias{show}
 \alias{show,a4aM-method}
 \alias{trend}
 \alias{trend,a4aM-method}

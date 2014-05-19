@@ -1,6 +1,5 @@
 \docType{class}
 \name{a4aFitSA-class}
-\alias{a4aFit}
 \alias{a4aFit,a4aFitSA-method}
 \alias{a4aFitSA}
 \alias{a4aFitSA,a4aFit-method}
@@ -8,17 +7,13 @@
 \alias{a4aFitSA-class}
 \alias{a4aFitSA-methods}
 \alias{a4aFitSAs}
-\alias{a4aFitSAs,a4aFitSA-methods}
-\alias{a4aFitSAs,list-methods}
-\alias{a4aFitSAs,missing-methods}
+\alias{a4aFitSAs,a4aFitSA-method}
+\alias{a4aFitSAs,list-method}
+\alias{a4aFitSAs,missing-method}
 \alias{a4aFitSAs-class}
-\alias{m}
 \alias{m,a4aFitSA-method}
-\alias{pars}
 \alias{pars,a4aFitSA-method}
-\alias{show}
 \alias{show,a4aFitSA-method}
-\alias{submodels}
 \alias{submodels,a4aFitSA-method}
 \title{S4 class \code{a4aFitSA}}
 \description{

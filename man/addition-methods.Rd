@@ -1,8 +1,8 @@
-\name{+}
-\alias{+}
+\name{addition}
 \alias{+,FLIndices,a4aFit-method}
 \alias{+,FLStock,a4aFit-method}
-\title{+ methods}
+\alias{+,FLStock,a4aFitSA-method}
+\title{Addition methods}
 \description{
   Update \code{FLStock} and \code{FLIndex} objects with
   stock assessment results

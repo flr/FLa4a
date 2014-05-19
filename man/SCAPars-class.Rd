@@ -16,7 +16,6 @@
 \alias{fmodel}
 \alias{fmodel,SCAPars-method}
 \alias{fmodel-methods}
-\alias{m}
 \alias{m,SCAPars-method}
 \alias{n1model}
 \alias{n1model,SCAPars-method}

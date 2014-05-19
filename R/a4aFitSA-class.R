@@ -84,7 +84,7 @@ setMethod("submodels", signature(object = "a4aFitSA"),
  })
 
 #' @rdname a4aFitSA-class
-#' @aliases a4aFitSA a4aFitSA-methods
+#' @aliases a4aFitSA a4aFitSA-method
 setGeneric("a4aFitSA", function(object, ...) standardGeneric("a4aFitSA"))
 
 #' @rdname a4aFitSA-class
@@ -143,7 +143,6 @@ setMethod("a4aFitSA", signature(object="a4aFit"),
 
 #' @rdname a4aFitSA-class
 #' @aliases pars,a4aFitSA-method
-setGeneric("pars", function(object, ...) standardGeneric("pars"))
 setMethod("pars", "a4aFitSA", function(object) object@pars)
 
 #' @rdname a4aFitSA-class
@@ -166,7 +165,7 @@ setClass("a4aFitSAs",
 )
 
 #' @rdname a4aFitSA-class
-#' @aliases a4aFitSAs a4aFitSAs,list-methods
+#' @aliases a4aFitSAs a4aFitSAs,list-method
 setGeneric("a4aFitSAs", function(object, ...) standardGeneric("a4aFitSAs"))
 setMethod("a4aFitSAs", signature(object="list"),
   function(object, ...) {
@@ -200,14 +199,14 @@ setMethod("a4aFitSAs", signature(object="list"),
 })
 
 #' @rdname a4aFitSA-class
-#' @aliases a4aFitSAs,a4aFitSA-methods
+#' @aliases a4aFitSAs,a4aFitSA-method
 setMethod("a4aFitSAs", signature(object="a4aFitSA"), function(object, ...) {
     lst <- c(object, list(...))
     a4aFitSAs(lst)
 })
 
 #' @rdname a4aFitSA-class
-#' @aliases a4aFitSAs a4aFitSAs,missing-methods
+#' @aliases a4aFitSAs a4aFitSAs,missing-method
 setMethod("a4aFitSAs", signature(object="missing"),
   function(...) {
     # empty

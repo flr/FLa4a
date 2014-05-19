@@ -4,8 +4,11 @@
 \usage{
   quant2mat(x)
 }
+\arguments{
+  \item{x}{An FLPar object}
+}
 \value{
-  a list with each parametr as one element
+  a list with each parameter as one element
 }
 \description{
   coerces FLPar into list for call

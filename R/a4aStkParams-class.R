@@ -125,12 +125,10 @@ setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, v
 
 #' @rdname a4aStkParams-class
 #' @aliases distr distr-methods distr,a4aStkParams-method
-setGeneric("distr", function(object, ...) standardGeneric("distr"))
 setMethod("distr", "a4aStkParams", function(object) object@distr)
 
 #' @rdname a4aStkParams-class
 #' @aliases distr<- distr<--methods distr<-,a4aStkParams,character-method
-setGeneric("distr<-", function(object, value) standardGeneric("distr<-"))
 setReplaceMethod("distr", signature("a4aStkParams","character"), function(object, value){
     if(all.equal(is(value), is(object@distr))) object@distr <- value
     object

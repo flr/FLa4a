@@ -17,7 +17,6 @@
 \alias{index,a4aFit-method}
 \alias{logLik}
 \alias{logLik,a4aFit-method}
-\alias{show}
 \alias{show,a4aFit-method}
 \alias{stock.n}
 \alias{stock.n,a4aFit-method}

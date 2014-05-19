@@ -1,10 +1,9 @@
 \docType{class}
-\name{m}
+\name{a4aGr}
 \alias{a4aGr}
 \alias{a4aGr,missing-method}
 \alias{a4aGr-class}
 \alias{a4aGr-methods}
-\alias{distr}
 \alias{distr,a4aGr-method}
 \alias{distr<- for a4aGr}
 \alias{distr<-,a4aGr,character-method}
@@ -20,12 +19,9 @@
 \alias{grMod<-}
 \alias{grMod<-,a4aGr,formula-method}
 \alias{grMod<--methods}
-\alias{m}
 \alias{m,a4aStkParams-method}
-\alias{params}
 \alias{params,a4aGr-method}
 \alias{params<-,a4aGr,FLPar-method}
-\alias{vcov}
 \alias{vcov,a4aGr-method}
 \alias{vcov<- for a4aGr}
 \alias{vcov<-,a4aGr,numeric-method}

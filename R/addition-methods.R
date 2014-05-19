@@ -3,7 +3,7 @@
 #==================================================================== 
 
 #' + methods
-#' @name +
+#' @name addition
 #' @description Update \code{FLStock} and \code{FLIndex} objects with stock assessment results
 #' @details If both objects have the same number of iterations, the \code{FLStock} slots will be replaced by the \code{a4aFit} slots, in case of 1 iter, or \code{a4aFitSA} slots, in case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the \code{a4aFitSA} object, to update the slots of the \code{FLStock} object.
 #' @rdname addition-methods
@@ -25,7 +25,7 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
 })
 
 #' @rdname addition-methods
-#' @aliases +,FLStock,a4aFit-method
+#' @aliases +,FLStock,a4aFitSA-method
 setMethod("+", c("FLStock", "a4aFitSA"), function(e1, e2)
 {
   nit1 <- dims(e1) $ iter
