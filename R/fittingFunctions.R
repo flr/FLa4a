@@ -204,10 +204,16 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   niters <- nrow(grid)
   for (i in seq(niters)) {
     #istock <- stock[,, grid$unit[i], grid$area[i], , grid$iter[i]]
-    istock <- stock[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(stock)$iter)]
+    #istock <- stock[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(stock)$iter)]
+    istock <- stock[,, grid$unit[i], grid$area[i]]
+	istock <- iter(istock, min(grid$iter[i], dims(stock)$iter))
 
-# check: do we need indices to have matching units, areas?
-    iindices <- lapply(indices, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
+	# check: do we need indices to have matching units, areas?
+    #iindices <- lapply(indices, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
+    iindices <- lapply(indices, function(x){
+    	idx <- x[,, grid$unit[i], grid$area[i]]
+		iter(idx, min(grid$iter[i], dims(x)$iter))
+    })
     iindices <- FLIndices(iindices)
 
     # check: do we need indices to have matching units, areas?
