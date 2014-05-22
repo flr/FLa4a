@@ -142,7 +142,8 @@ setMethod("a4aFitSA", signature(object="a4aFit"),
 )
 
 #' @rdname a4aFitSA-class
-#' @aliases pars,a4aFitSA-method
+#' @aliases pars pars-method pars,a4aFitSA-method
+setGeneric("pars", function(object) standardGeneric("pars"))
 setMethod("pars", "a4aFitSA", function(object) object@pars)
 
 #' @rdname a4aFitSA-class

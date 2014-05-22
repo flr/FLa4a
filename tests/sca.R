@@ -63,6 +63,7 @@ stk2 <- propagate(ple4, nits)
 
 # Nx1
 fit <- a4aSCA(stk2, FLIndices(ple4.index))
+dims(fit)$iter==nits
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -82,6 +83,7 @@ dim(fit@pars@vmodel[[2]]@params)[2]==nits
 
 # 1xN
 fit <- a4aSCA(ple4, FLIndices(idx2))
+dims(fit)$iter==nits
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -101,6 +103,7 @@ dim(fit@pars@vmodel[[2]]@params)[2]==nits
 
 # NxN
 fit <- a4aSCA(stk2, FLIndices(idx2))
+dims(fit)$iter==nits
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))

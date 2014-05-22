@@ -10,10 +10,14 @@
 #' @aliases +,FLStock,a4aFit-method
 setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
 {
-  nit1 <- dims(e1) $ iter
-  nit2 <- dim(catch.n(e2))[6]
-  if(nit1!=nit2) stop("The objects must have the same number of iterations.")
-  
+  nit1 <- dims(e1)$iter
+  nit2 <- dims(e2)$iter
+  if(nit1>nit2) {
+	e2 <- propagate(e2, nit1)
+  } else if(nit1<nit2){
+  	e1 <- propagate(e1, nit2)
+  }
+
   stock.n(e1) <- stock.n(e2)
   catch.n(e1) <- catch.n(e2)
   harvest(e1) <- harvest(e2)
@@ -24,16 +28,16 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   e1
 })
 
-#' @rdname addition-methods
-#' @aliases +,FLStock,a4aFitSA-method
-setMethod("+", c("FLStock", "a4aFitSA"), function(e1, e2)
-{
-  nit1 <- dims(e1) $ iter
-  nit2 <- dim(qmodel(pars(e2))[[1]]@params)["iter"]
-  v <- c(nit1, nit2)
-  if(min(v)==max(v)) e1 <- e1 + as(e2, "a4aFit") else e1 <- e1 * e2
-  e1
-})
+##' @rdname addition-methods
+##' @aliases +,FLStock,a4aFitSA-method
+#setMethod("+", c("FLStock", "a4aFitSA"), function(e1, e2)
+#{
+#  nit1 <- dims(e1) $ iter
+#  nit2 <- dims(qmodel(pars(e2))[[1]]@params)$iter
+#  v <- c(nit1, nit2)
+#  if(min(v)==max(v)) e1 <- e1 + as(e2, "a4aFit") else e1 <- e1 * e2
+#  e1
+#})
 
 #' @rdname addition-methods
 #' @aliases +,FLIndices,a4aFit-method
@@ -60,44 +64,21 @@ setMethod("+", c("FLIndices", "a4aFit"), function(e1, e2)
 
 #' * methods
 #' @name *
-#' @description Update \code{FLStock} and \code{FLIndex} objects with simulations from stock assessment fits
+#' @description Update \code{FLStock} and \code{FLIndex} objects with simulations from stock assessment fits.
 #' @rdname multiplication-methods
 #' @aliases *,FLStock,a4aFitSA-method
 
 setMethod("*", c("FLStock", "a4aFitSA"), function(e1, e2) 
 {
-  niters <- dims(e1) $ iter
-  niters2 <- dim(pars(e2) @ stkmodel @ params)[2]
-  if (niters > 1 & niters2 == 1) {
+  niters <- dims(e1)$iter
+  niters2 <- dims(e2)$iter
+  if (niters==niters2) {
     nsim = niters
   } else {
-    nsim = 1
-    if (niters > niters2) stop("oh oh")
-    if (niters == 1 & niters2 > 0) {
-      niters <- niters2
-      e1 <- propagate(e1, niters)
-    }
+    nsim = max(c(niters, niters2))
   }
-
-#  # build up a4aFitSA to simulate from
-#  mod <- new("a4aFitSA")
-#  mod @ pars <- pars(e2)
-#  mod @ index <- index(e2)
-#  mod @ catch.n <- catch.n(e1)
-#  mod @ stock.n <- stock.n(e1)
-#  mod @ harvest <- harvest(e1)
-#  mod @ range <- range(e1)
-
-  simstock <- simulate(e2, nsim = nsim)  
-
-  catch.n(e1) <- catch.n(simstock)
-  stock.n(e1) <- stock.n(simstock)
-  harvest(e1) <- harvest(simstock)
-    
-  catch(e1) <- computeCatch(e1)
-  stock(e1) <- computeStock(e1)
-  
-  e1
+  e2 <- simulate(e2, nsim = nsim)  
+  e1 + e2	
 })
 
 #' @rdname multiplication-methods

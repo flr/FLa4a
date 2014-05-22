@@ -33,9 +33,15 @@ setClass("submodel",
 				params = FLPar(),
 				vcov = array(),
 				centering = 0,
-				distr = "lnorm")
+				distr = "lnorm",
+		validity=function(object) {
+			# no unit, area, season fits
+			if(length(dim(object@params)) > 2 | length(dim(object@vcov)) > 3){
+				return("Params or vcov have unit, area or season. Can't work with that!")
+			}
+			# Everything is fine
+			return(TRUE)})
 )
-
 
 
 #' @rdname submodel-class
@@ -60,9 +66,8 @@ setMethod("submodel", signature(object="missing"),
 )
 
 #' @rdname submodel-class
-#' @aliases pars pars-methods pars,submodel-method
-setGeneric("pars", function(object, ...) standardGeneric("pars"))
-setMethod("pars", "submodel", function(object) object@pars)
+#' @aliases params,submodel-method
+setMethod("params", "submodel", function(object) object@params)
 
 #' @rdname submodel-class
 #' @aliases model,submodel-method
@@ -71,4 +76,7 @@ setMethod("model", "submodel", function(object) object@model)
 #' @rdname submodel-class
 #' @aliases covar,submodel-method
 setMethod("covar", "submodel", function(object) object@covar)
+
+
+
 
