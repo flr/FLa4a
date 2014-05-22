@@ -6,12 +6,13 @@
 #'
 #' @param formula a formula object
 #' @param df the data.frame to build the model matrix against
+#' @param df the data.frame to create the model matrix for.
 #' @return a matrix.
 #' @note \code{getX} is intended to be used internally
 #' @aliases getX getX-methods getX,formula-method
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
 
-setMethod("getX", "formula", function(object, df) {
+setMethod("getX", "formula", function(object, df, newdf = df) {
 
     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
@@ -102,7 +103,7 @@ setMethod("getX", "formula", function(object, df) {
     }
 
     # keep final model after processing?  Or provide formula processing as a seprate function?
-    #print(model)
+    # print(model)
   
     # check non gam covariates for NAs
     if (any(!gams)) {
