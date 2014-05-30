@@ -112,40 +112,7 @@ setMethod("show", signature(object = "a4aFit"),
     cat("Time used:\n")
     print(object @ clock)
   
-    #frmtQ <- function(x) {
-    #  x <- as.matrix(drop(x @ .Data))
-    #  if (ncol(x) > 8) {
-    #    x[] <- paste(round(x,2))
-    #    x <- x[,c(1:4,-2:0 + ncol(x))]
-    #    x[,4] <- "..."
-    #    colnames(x)[4] <- "..."
-    #  }
-    #  print(x, quote = FALSE)
-    #}
-#    cat("\nPredicted F-at-age:\n")
-#      show(harvest(object)[,ac(range(object)["maxyear"])])
-#    cat("\nPredicted stock numbers-at-age:\n")
-#      show(stock.n(object)[,ac(range(object)["maxyear"])])
  })
-
-#setMethod("show", signature(object = "a4aFit"),
-#  function(object) 
-#  {
-
-#    cat("Formulas:\n")
-#    cat("   log F", format(object@models$fmodel), "\n")
-#    sapply(object@models$qmodel, function(m) cat("   log Q", format(m), "\n"))
-#    cat("   log R", format(object@models$rmodel), "\n")
-
-#    print(x$formula)
-#    cat("Total model degrees of freedom", object@fit.sum["nopar"], "\n")
-#    cat("   Residual degrees of freedom", object@fit.sum["nobs"] - object@fit.sum["nopar"], "\n")
-#    cat("\nEstimated degrees of freedom:\n")
-    #TODO check that nlogl is not 2 x neg loglik
-#    cat("\n            AIC: ", AIC(object), sep = "")
-#    cat("\n            BIC: ", BIC(object), sep = "")
-#    cat("\n log Likelihood: ", c(logLik(object)), "\n", sep = "")
-# })
 
 #' @rdname a4aFit-class
 #' @aliases logLik,a4aFit-method

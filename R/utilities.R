@@ -111,3 +111,86 @@ getADMBHessian <- function(wkdir) {
 setMethod("dims", "a4aStkParams", function(obj) {
   dim(obj@params)
 })
+
+#' @title Retrospective analysis
+#' @name ra
+#' @rdname ra
+#' @description Runs a retrospective analysis of the fit.
+#' @param stock A \code{FLStock} object.
+#' @param indices A \code{FLIndices} object with the abundance and biomass indices.
+#' @param n A \code{numeric} with the number of years to go back in the retrospectiva analysis.
+#' @param ... To pass the model specifications to fit the model.
+#' @return A \code{FLStocks} object with the \code{n} stocks resulting from removing one year and refitting the model.
+#' @note The default method will use the default submodels of \code{sca}.
+#' @aliases ra ra-methods ra,a4aFit-method
+#' @examples
+#' # load some data
+#' data(ple4)
+#' data(ple4.indices)
+#' retro <- ra(ple4, ple4.indices, 5)
+#' plot(retro)
+
+setGeneric("ra", function(stock, indices, ...) standardGeneric("ra"))
+setMethod("ra", c("FLStock","FLIndices"), function(stock, indices, n, ...){
+
+	args <- list(...)
+	stkdms <- dims(stock)
+	
+	if(is.null(args$qmodel)){
+	  inddms <- lapply(indices, dims)
+	  ka <- sapply(inddms, "[[", "age")
+	  ka <- pmin(pmax(2, floor(.7 * ka)), 7)
+	  args$qmodel <- lapply(ka, function(i) if (i == 2) ~ age else formula(paste("~ s(age, k = ", ka, ")")))
+	}
+
+	if(is.null(args$n1model)){
+		if (stkdms$age > 10) {
+			args$n1model <- ~ s(age, k = 10) 
+	  	} else {
+			args$n1model <- ~ factor(age)
+	  	}  
+	}
+	
+	if(is.null(args$vmodel)){
+		args$vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
+		args$vmodel[[1]] <- ~ s(age, k = 3)
+	}
+
+	mxyr <- range(stock)['maxyear']
+	
+	lst <- list()
+	length(lst) <- n
+
+	for(i in 1:n){
+		# the fmodel must be dealt inside the loop because the
+		# number of years change and so does ky
+		if(is.null(args$fmodel)){
+			# this must be in agreement with sca default
+			ka <- stkdms$age
+			ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
+			ky <- floor(.5 * (stkdms$year - i + 1))
+			if (ka >= 3) {
+				args$fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
+			} else {
+				args$fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
+			}
+			args$stock <- window(stock, end=mxyr-i+1)
+			args$indices <- window(indices, end=mxyr-i+1)
+			lst[[i]] <- args$stock + do.call("a4aSCA", args)
+			args$fmodel <- NULL
+		} else {
+			args$stock <- window(stock, end=mxyr-i+1)
+			args$indices <- window(indices, end=mxyr-i+1)
+			lst[[i]] <- args$stock + do.call("a4aSCA", args)
+		}
+	}
+	FLStocks(lst)
+})
+
+
+
+
+
+
+
+

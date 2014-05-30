@@ -10,6 +10,7 @@
 #' @aliases +,FLStock,a4aFit-method
 setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
 {
+
   nit1 <- dims(e1)$iter
   nit2 <- dims(e2)$iter
   if(nit1>nit2) {
