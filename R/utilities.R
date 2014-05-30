@@ -188,7 +188,95 @@ setMethod("ra", c("FLStock","FLIndices"), function(stock, indices, n, ...){
 })
 
 
+#' @title plot of fitted catch numbers-at-age
+#' @name plot
+#' @docType methods
+#' @rdname plotc
+#' @aliases plot,a4aFit,FLStock-method
+#' @description Method to plot fitted versus observed catch numbers-at-age
+#' @param x a \code{a4aFit} object with the fitted values
+#' @param y a \code{FLStock} object with the observed values
+#' @param ... Additional argument list that might not ever be used.
+#' @return a \code{plot} with fitted and observed catch number-at-age
+#' @template runsca
+#' @examples
+#' plot(fit, ple4)
 
+setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
+	args <- list()
+	args$data <- as.data.frame(FLQuants(fit=catch.n(x), obs=catch.n(y)))
+	args$x <- data~age|factor(year)
+	args$type=c("l")
+	args$groups <- quote(qname)
+	args$ylab="numbers"
+	args$xlab=""
+	args$scales=list(y="free")
+#	args$panel=function(x,y,...){
+#		panel.abline(h=0, col.line="gray80")
+#		panel.xyplot(x,y,...)
+#		}
+#	args$par.settings=list(
+#		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
+#		superpose.line=list(col=1, lty=1, lwd=2), 
+#		strip.background=list(col="gray90"), 
+#		strip.border=list(col="gray90"), 
+#		box.rectangle=list(col="gray90"))
+#	args$main="log residuals of catch and abundance indices"
+	do.call("xyplot", args)
+})
+
+#' @title plot of fitted indices-at-age
+#' @name plot
+#' @docType methods
+#' @rdname ploti
+#' @aliases plot,a4aFit,FLIndices-method
+#' @description Method to plot fitted versus observed indices-at-age
+#'
+#' @param x a \code{a4aFit} object with the fitted values
+#' @param y a \code{FLIndices} object with the observed values
+#' @param ... Additional argument list that might not ever be used.
+#' @return a \code{plot} with fitted and observed indices-at-age
+#' @template runsca
+#' @examples
+#' plot(fit, ple4.indices)
+
+setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
+	args <- list()
+	dfx <- as.data.frame(index(x))
+	dfy <- as.data.frame(lapply(y, index))
+	dfx$src="fit"
+	dfy$src="obs"
+	df0 <- rbind(dfx, dfy)
+	args$x <- data~age|factor(year)*qname
+	args$type=c("l")
+	args$groups <- quote(src)
+	args$ylab="numbers"
+	args$xlab=""
+	args$scales=list(y="free")
+#	args$panel=function(x,y,...){
+#		panel.abline(h=0, col.line="gray80")
+#		panel.xyplot(x,y,...)
+#		}
+#	args$par.settings=list(
+#		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
+#		superpose.line=list(col=1, lty=1, lwd=2), 
+#		strip.background=list(col="gray90"), 
+#		strip.border=list(col="gray90"), 
+#		box.rectangle=list(col="gray90"))
+#	args$main="log residuals of catch and abundance indices"
+
+	if(length(index(x))>1){
+		for(i in names(y)){
+			x11()
+			args$data <- subset(df0, qname==i)
+			args$layout <- c(0,length(unique(args$data$year)))
+			print(do.call("xyplot", args))
+		}
+	} else {
+		args$data <- df0 
+		do.call("xyplot", args)
+	}
+})
 
 
 
