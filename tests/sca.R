@@ -173,7 +173,7 @@ identical(stk + fit3, ret[[3]])
 # hessian non-positive definite
 #====================================================================
 
-fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ factor(year)))
+fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
 sum(stock.n(fit0), na.rm=T)==0
 sum(catch.n(fit0), na.rm=T)==0
 sum(index(fit0)[[1]], na.rm=T)==0
@@ -186,7 +186,7 @@ sum(pars(fit0)@qmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit0)@vmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit0)@vmodel[[2]]@vcov, na.rm=T)==0
 
-fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ factor(year)))
+fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
 sum(stock.n(fit), na.rm=T)==0
 sum(catch.n(fit), na.rm=T)==0
 sum(index(fit)[[1]], na.rm=T)==0
@@ -199,7 +199,7 @@ sum(pars(fit)@qmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit)@vmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit)@vmodel[[2]]@vcov, na.rm=T)==0
 
-fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ factor(year)), fit="assessment")
+fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment")
 sum(stock.n(fit1), na.rm=T)==0
 sum(catch.n(fit1), na.rm=T)==0
 sum(index(fit1)[[1]], na.rm=T)==0
