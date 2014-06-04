@@ -228,7 +228,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 	} else {
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center)
 	}    
-    
+
     if (i == 1) {
       tmpSumm <- outi@fitSumm
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
@@ -813,59 +813,77 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     out$par.est <- lapply(strsplit(sub(" ", "",lin[,2]), " "), as.numeric)
     names(out$par.est) <- gsub("[# |:]", "", lin[,1])
 
-
-    #if (fit %in% c("assessment", "Ext")) {
-    if (fit == "assessment") {
-    
-      # check .cor file exisits
-      if (!file.exists(paste0(wkdir, '/a4a.cor'))) stop("Hessian was not positive definite.")
+	if(fit=="MP"){
+	    	# read derived model quantities
+	    	ages <- sort(unique(full.df$age))
+	    	years <- sort(unique(full.df$year))
+	    	out$N <- as.matrix(read.table(paste0(wkdir, '/n.out'), header = FALSE))
+	    	out$F <- as.matrix(read.table(paste0(wkdir, '/f.out'), header = FALSE))
+	    	out$Q <- as.matrix(read.table(paste0(wkdir, '/q.out'), header = FALSE))
+	    	dim(out$Q) <- c(length(years), length(indices), length(ages))
+	    	out$Q <- aperm(out$Q, c(3,1,2))
+	  		colnames(out$N) <- colnames(out$F) <- ages
+	  		rownames(out$N) <- rownames(out$F) <- years
+	  		dimnames(out$Q) <- list(ages, years, names(indices))
+	} else {
+		if (!file.exists(paste0(wkdir, '/a4a.cor'))) {
+			# this is all a bit spaghetti coding to rever enfgineer Colin's code
+			# the idea is to return an valid object with the correct dimensions
+			# with NA for N and F but with the parameters estimated by ADMB 
+			# although if cor is not present means that it didn't converge ...
+			warning("Hessian was not positive definite.")
+	    	ages <- sort(unique(full.df$age))
+	    	years <- sort(unique(full.df$year))
+	    	rr <- sum(!(out$par.est$rapar>0))==length(out$par.est$rapar)
+	    	out$par.est <- lapply(out$par.est, function(x) x[] <- rep(NA, length(x)))
+	    	out$par.std <- out$par.est
+	    	if(isTRUE(rr)) out$par.std$rapar <- out$par.std$rbpar <- vector(mode="numeric") 
+			out$cov <- array(NA, dim=rep(length(unlist(pnames)), 2))
+			out$prec <- array(NA, dim=rep(length(unlist(pnames)), 2))
+			out$nopar <- NA
+			out$nlogl <- NA
+			out$maxgrad <- NA
+			flqNA <- stock.n(stock)
+			flqNA[] <- NA 
+			out$N <- t(flqNA[drop=T])
+		    out$F <- t(flqNA[drop=T])
+		    out$Q <- array(NA, dim=c(length(ages), length(years), length(indices)), dimnames=list(ages, years, names(indices)))
+		} else {
       
-      # read .cor file
-      lin <- readLines(paste0(wkdir, '/a4a.cor'))
-      npar <- length(lin) - 2
-      out$logDetHess <- as.numeric(strsplit(lin[1], '=')[[1]][2])
-      
-      sublin <- lapply(strsplit(lin[1:npar + 2], ' '), function(x) x[x != ''])
-      par.names <- unlist(lapply(sublin, function(x) x[2]))
-      par.std <- as.numeric(unlist(lapply(sublin, function(x) x[4])))
+			# read .cor file
+			lin <- readLines(paste0(wkdir, '/a4a.cor'))
+			npar <- length(lin) - 2
+			out$logDetHess <- as.numeric(strsplit(lin[1], '=')[[1]][2])
+		  
+			sublin <- lapply(strsplit(lin[1:npar + 2], ' '), function(x) x[x != ''])
+			par.names <- unlist(lapply(sublin, function(x) x[2]))
+			par.std <- as.numeric(unlist(lapply(sublin, function(x) x[4])))
 
-      out$par.std <- lapply(names(out$par.est), function(x) par.std[which(par.names==x)])
-      names(out$par.std) <- names(out$par.est)
-      
-      #out$cor <- matrix(NA, npar, npar, dimnames = list(par.names, par.names))
-      #corvec <- unlist(sapply(1:length(sublin), function(i) sublin[[i]][5:(4+i)]))
-      #out$cor[upper.tri(out$cor, diag = TRUE)] <- as.numeric(corvec)
-      #out$cor[lower.tri(out$cor)] <- t(out$cor)[lower.tri(out$cor)]
-      #out$cov <- out$cor * (par.std %o% par.std)
+			out$par.std <- lapply(names(out$par.est), function(x) par.std[which(par.names==x)])
+			names(out$par.std) <- names(out$par.est)
 
-      # remove ssb and fbar final year from vcov and correlation matrices
-      #out$cov <- out$cov[1:(npar-2), 1:(npar-2)]
-      #out$cor <- out$cor[1:(npar-2), 1:(npar-2)]
-
-      # use this as it seems to be more robust.. strangely...
-      # I think it is because the solve method that ADMB uses is not
-      # as good as the R one.... small numerical errors are
-      # resulting in non-positive definite vcov mats for subsets of parameters.
-      hess <- getADMBHessian(wkdir)$hes
-      out$cov <- solve(hess)
-      out$prec <- hess
-      out$nopar <- ncol(hess)
-    }
-
-    # read derived model quantities
-    ages <- sort(unique(full.df$age))
-    years <- sort(unique(full.df$year))
-
-    out$N <- as.matrix(read.table(paste0(wkdir, '/n.out'), header = FALSE))
-    out$F <- as.matrix(read.table(paste0(wkdir, '/f.out'), header = FALSE))
-    out$Q <- as.matrix(read.table(paste0(wkdir, '/q.out'), header = FALSE))
-    dim(out$Q) <- c(length(years), length(indices), length(ages))
-    out$Q <- aperm(out$Q, c(3,1,2))
-  
-    colnames(out$N) <- colnames(out$F) <- ages
-    rownames(out$N) <- rownames(out$F) <- years
-    dimnames(out$Q) <- list(ages, years, names(indices))
-
+			# use this as it seems to be more robust.. strangely...
+			# I think it is because the solve method that ADMB uses is not
+			# as good as the R one.... small numerical errors are
+			# resulting in non-positive definite vcov mats for subsets of parameters.
+			hess <- getADMBHessian(wkdir)$hes
+			out$cov <- solve(hess, tol=1e-50)
+			out$prec <- hess
+			out$nopar <- ncol(hess)
+	    	# read derived model quantities
+	    	ages <- sort(unique(full.df$age))
+	    	years <- sort(unique(full.df$year))
+	
+	    	out$N <- as.matrix(read.table(paste0(wkdir, '/n.out'), header = FALSE))
+	    	out$F <- as.matrix(read.table(paste0(wkdir, '/f.out'), header = FALSE))
+	    	out$Q <- as.matrix(read.table(paste0(wkdir, '/q.out'), header = FALSE))
+	    	dim(out$Q) <- c(length(years), length(indices), length(ages))
+	    	out$Q <- aperm(out$Q, c(3,1,2))
+	  		colnames(out$N) <- colnames(out$F) <- ages
+	  		rownames(out$N) <- rownames(out$F) <- years
+	  		dimnames(out$Q) <- list(ages, years, names(indices))
+		}
+	}
   }
 
   # ------------------------------------------------------------------------

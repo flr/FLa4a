@@ -23,8 +23,8 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   catch.n(e1) <- catch.n(e2)
   harvest(e1) <- harvest(e2)
   
-  catch(e1) <- computeCatch(e1)
-  stock(e1) <- computeStock(e1)
+  catch(e1) <- computeCatch(e1, na.rm=FALSE)
+  stock(e1) <- computeStock(e1, na.rm=FALSE)
   
   e1
 })

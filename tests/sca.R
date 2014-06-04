@@ -169,41 +169,47 @@ idx <- window(ple4.index, end=range(ple4)["maxyear"]-2)
 fit3 <- a4aSCA(stk, FLIndices(idx), fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
 identical(stk + fit3, ret[[3]])
 
+#====================================================================
+# hessian non-positive definite
+#====================================================================
 
+fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ factor(year)))
+sum(stock.n(fit0), na.rm=T)==0
+sum(catch.n(fit0), na.rm=T)==0
+sum(index(fit0)[[1]], na.rm=T)==0
+sum(pars(fit0)@stkmodel@params, na.rm=T)==0
+sum(pars(fit0)@qmodel[[1]]@params, na.rm=T)==0
+sum(pars(fit0)@vmodel[[1]]@params, na.rm=T)==0
+sum(pars(fit0)@vmodel[[2]]@params, na.rm=T)==0
+sum(pars(fit0)@stkmodel@vcov, na.rm=T)==0
+sum(pars(fit0)@qmodel[[1]]@vcov, na.rm=T)==0
+sum(pars(fit0)@vmodel[[1]]@vcov, na.rm=T)==0
+sum(pars(fit0)@vmodel[[2]]@vcov, na.rm=T)==0
 
+fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ factor(year)))
+sum(stock.n(fit), na.rm=T)==0
+sum(catch.n(fit), na.rm=T)==0
+sum(index(fit)[[1]], na.rm=T)==0
+sum(pars(fit)@stkmodel@params, na.rm=T)==0
+sum(pars(fit)@qmodel[[1]]@params, na.rm=T)==0
+sum(pars(fit)@vmodel[[1]]@params, na.rm=T)==0
+sum(pars(fit)@vmodel[[2]]@params, na.rm=T)==0
+sum(pars(fit)@stkmodel@vcov, na.rm=T)==0
+sum(pars(fit)@qmodel[[1]]@vcov, na.rm=T)==0
+sum(pars(fit)@vmodel[[1]]@vcov, na.rm=T)==0
+sum(pars(fit)@vmodel[[2]]@vcov, na.rm=T)==0
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ factor(year)), fit="assessment")
+sum(stock.n(fit1), na.rm=T)==0
+sum(catch.n(fit1), na.rm=T)==0
+sum(index(fit1)[[1]], na.rm=T)==0
+sum(pars(fit1)@stkmodel@params, na.rm=T)==0
+sum(pars(fit1)@qmodel[[1]]@params, na.rm=T)==0
+sum(pars(fit1)@vmodel[[1]]@params, na.rm=T)==0
+sum(pars(fit1)@vmodel[[2]]@params, na.rm=T)==0
+sum(pars(fit1)@stkmodel@vcov, na.rm=T)==0
+sum(pars(fit1)@qmodel[[1]]@vcov, na.rm=T)==0
+sum(pars(fit1)@vmodel[[1]]@vcov, na.rm=T)==0
+sum(pars(fit1)@vmodel[[2]]@vcov, na.rm=T)==0
 
 
