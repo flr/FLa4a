@@ -456,7 +456,7 @@ PROCEDURE_SECTION
         pred(i) += exp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
       locVar = exp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
-      nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
+      nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...    
           
     }
   }
