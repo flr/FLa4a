@@ -26,3 +26,12 @@ res <- residuals(fit, ple4, idxs)
 length(res) == 6
 plot(res)
 
+## with FLQuantDistr
+#flq <- catch.n(ple4) 
+#flq[] <- 0.1 
+#catch.n(ple4) <- FLQuantDistr(catch.n(ple4), flq)
+#fit <- sca(ple4, ple4.indices)
+#res <- residuals(fit, ple4, ple4.indices)
+
+
+

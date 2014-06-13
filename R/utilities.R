@@ -274,9 +274,12 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 		}
 	} else {
 		args$data <- df0 
+		args$layout <- c(0,length(unique(args$data$year)))
 		do.call("xyplot", args)
 	}
 })
+
+
 
 
 
