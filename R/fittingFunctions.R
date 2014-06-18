@@ -914,7 +914,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                                         } else {
                                           x <- with(dimnames(index(indices[[i]])), x[age, year])
                                         }
-                                        FLQuant(x)}) 
+                                        FLQuant(x, dimnames=dimnames(index(indices[[i]])))}) 
     names(logq) <- ind.names
  
     # First the a4aFit bits
