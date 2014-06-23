@@ -50,7 +50,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	#res <- apply(flq, c(1,3:6), scale, center=FALSE)
 	res <- flq/sqrt(yearVars(flq)[,rep(1,ncol(flq))])
 	dimnames(res) <- dimnames(flq)
-	FLQuant(res)
+	as(res, "FLQuant")
 }) 
 
 #' @title plot of standardized log residuals 

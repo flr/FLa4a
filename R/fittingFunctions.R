@@ -229,6 +229,12 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center)
 	}    
 
+
+
+browser()
+
+
+
     if (i == 1) {
       tmpSumm <- outi@fitSumm
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
@@ -409,8 +415,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))  stop("only non-zero survey index variances allowed.")
 
   # convert catches and indices to a list of named arrays
-  list.obs <- c(list(catch = quant2mat(catch.n(stock))),
-                     lapply(indices, function(x) quant2mat(index(x)) ))
+  list.obs <- c(list(catch = quant2mat(catch.n(stock)@.Data)),
+                     lapply(indices, function(x) quant2mat(index(x)@.Data) ))
                      
   # convert the variances of catches and indices to a list of named arrays
   list.var <- c(list(catch = quant2mat(catch.n(stock)@var)),

@@ -212,4 +212,91 @@ sum(pars(fit1)@qmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit1)@vmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit1)@vmodel[[2]]@vcov, na.rm=T)==0
 
+#====================================================================
+# run sca with recruitment index
+#====================================================================
+fit0 <-  sca(ple4, FLIndices(ple4.index[1]), qmodel=list(~1))
+
+#--------------------------------------------------------------------
+# iters
+#--------------------------------------------------------------------
+
+idx2 <- propagate(ple4.index[1], nits)
+stk2 <- propagate(ple4, nits)
+
+# Nx1
+fit <- sca(stk2, FLIndices(ple4.index[1]), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# 1xN
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# NxN
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+#====================================================================
+# run sca with FLQuantDistr
+#====================================================================
+catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
+index.var(ple4.index) <- (0.2/index(ple4.index))^2
+
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
+
+#--------------------------------------------------------------------
+# iters
+#--------------------------------------------------------------------
+
+idx2 <- propagate(ple4.index, nits)
+stk2 <- propagate(ple4, nits)
+
+# Nx1
+fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# 1xN
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# NxN
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
 

@@ -1,6 +1,7 @@
 library(FLa4a)
 data(ple4)
 data(ple4.indices)
+data(ple4.index)
 
 # creating idx 1
 bioidx <- FLIndex(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
@@ -24,14 +25,15 @@ idxs$b2 <- bioidx2
 fit <- sca(ple4, idxs, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1))
 res <- residuals(fit, ple4, idxs)
 length(res) == 6
-plot(res)
 
-## with FLQuantDistr
-#flq <- catch.n(ple4) 
-#flq[] <- 0.1 
-#catch.n(ple4) <- FLQuantDistr(catch.n(ple4), flq)
-#fit <- sca(ple4, ple4.indices)
-#res <- residuals(fit, ple4, ple4.indices)
+# flquantdistr
+catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
+index.var(ple4.index) <- (0.2/index(ple4.index))^2
+
+fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
+res <- residuals(fit, ple4, FLIndices(ple4.index))
+length(res) == 2
+
 
 
 
