@@ -204,7 +204,7 @@ setMethod("ra", c("FLStock","FLIndices"), function(stock, indices, n, ...){
 
 setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	args <- list()
-	args$data <- as.data.frame(FLQuants(fit=catch.n(x), obs=catch.n(y)))
+	args$data <- as.data.frame(FLQuants(fit=catch.n(x), obs=as(catch.n(y), "FLQuant")))
 	args$x <- data~age|factor(year)
 	args$type=c("l")
 	args$groups <- quote(qname)
@@ -278,10 +278,5 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 		do.call("xyplot", args)
 	}
 })
-
-
-
-
-
 
 

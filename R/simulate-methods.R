@@ -56,13 +56,13 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 	  bioidx <- FALSE
 	  if(length(iages)==1) if(iages=="all") bioidx <- TRUE 
       # if biomass index all ages have to be accounted
-      # warning: spagheti code
+      # WARNING: spagheti code
 	  if(bioidx){
 		if(missing(stock)){
 		   warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
 		   out @ index[[i]][] <- object@index[[i]][]
 		} else {
-			stk <- out@stock.n*exp(-Zs * when)
+			stk <- object@stock.n*exp(-Zs * when)
 			stk <- mcf(list(e1=stk, e2=stock.wt(stock)))
 			stk$e2[] <- stk$e2[,,,,,1]
 			stk <- quantSums(do.call("*", stk))[,iyears]
@@ -70,7 +70,7 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 		}
 	  # or else it's a age based index
 	  } else {
-	   stk <- (out @ stock.n * exp(-Zs * when))[iages, iyears]
+	   stk <- (object @ stock.n * exp(-Zs * when))[iages, iyears]
        out @ index[[i]] <- stk * out @ index[[i]]
       }
     }
