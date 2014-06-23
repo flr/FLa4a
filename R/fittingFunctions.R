@@ -229,12 +229,6 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center)
 	}    
 
-
-
-browser()
-
-
-
     if (i == 1) {
       tmpSumm <- outi@fitSumm
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
