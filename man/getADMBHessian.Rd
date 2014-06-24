@@ -29,10 +29,5 @@ hessInfo <- getADMBHessian(wkdir)
 str(hessInfo)
 # calculate covariance matrix
 Sigma <- solve(hessInfo $ hes)
-# plot correlation matrix of parameters
-Cor <- cov2cor(Sigma)
-diag(Cor) <- 0
-colors <- colorRampPalette(c("blue","grey99","red"))(100)
-image(Matrix(Cor), main = "correlations between parameter estimates", lwd = 0, col.regions = colors)
 }
 
