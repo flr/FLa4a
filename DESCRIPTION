@@ -9,12 +9,11 @@ Description: A simple and robust statistical catch at age model
 License: file LICENSE
 Depends:
     R (>= 3.0.0),
+		methods,
     copula,
     FLCore (>= 2.5.20140624),
-		methods,
     mgcv,
     splines,
-    stats,
     triangle
 Imports:
     lattice,
