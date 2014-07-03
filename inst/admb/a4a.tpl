@@ -490,28 +490,28 @@ PROCEDURE_SECTION
     if (Rmodel == 1) { // beverton holt
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 2) { // ricker
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1)) - exp(rb(y)) * ssb(y-1);
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1) + sqrt(exp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - exp(2.0*rb(y)), 2.0) + 0.0025));
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 4) { // geomean
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y);
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
@@ -520,7 +520,7 @@ PROCEDURE_SECTION
         h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
         v = exp(rb(y));
         predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }

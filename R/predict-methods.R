@@ -64,16 +64,63 @@ setMethod("predict", signature(object = "a4aStkParams"),
                                          unit = "unique", season = "all", area = "unique",
                                          iter = seq(niter))))
 
+	  # check if internal S/R was used
+	  facs <- strsplit(as.character(object @ srMod)[length(object @ srMod)], "[+]")[[1]]
+	  facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
+	  a4as <- grepl(paste("(^",c("bevholt", "bevholtSV", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
+	  if(a4as){
+	      X <- getX(~factor(year), data.frame(year = years))
+	      b <- coef(object)[grep("rMod", cnames)]
+	      fit <- c(exp(c(X %*% b) + object @ centering))
+	      rec <- FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter),
+	      		dimnames = list(age = ages[1], year = years,
+	      		unit = "unique", season = "all", area = "unique",
+	      		iter = seq(niter))))
 
-      X <- getX(object @ srMod, data.frame(year = years))
-      b <- coef(object)[grep("rMod", cnames)]
-      fit <- c(exp(c(X %*% b) + object @ centering))
-      rec <-     
-        FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter), 
-                      dimnames = list(age = ages[1], year = years, 
-                                         unit = "unique", season = "all", area = "unique",
-                                         iter = seq(niter))))
-
+	  # FFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUCCCCCCCCCCCCCCCCCCCCCCCKKKKKKKKKKKKKKKKKKKKK
+#		  bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
+#			if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+#			list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
+#		  }
+#		  bevholtSV <- function(h = ~ 1, v = ~ 1, SPR0 = 1, CV = 0.5) {
+#			if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+#			list(srr = "bevholtSV", a = h, b = v, SPR0 = SPR0, srrCV = CV, ID = 5)
+#		  }
+#		  ricker <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
+#			if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+#			list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
+#		  }
+#		  hockey <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
+#			if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+#			list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
+#		  }
+#		  geomean <- function(a = ~ 1, CV = 0.5) {
+#			if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+#			list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
+#		  }
+#		  # get that stuff
+#	  	  srr <- eval(parse(text = facs))
+#		  # a
+#	      X <- getX(srr$a, data.frame(year = years))
+#	      b <- coef(object)[grep("sraMod", cnames)]
+#	      #fita <- c(exp(c(X %*% b) + object @ centering))
+#	      fita <- X %*% b
+#	      # b
+#	      X <- getX(srr$b, data.frame(year = years))
+#	      b <- coef(object)[grep("srbMod", cnames)]
+#	      fitb <- X %*% b
+#		  # need to compute predictions from S/R and weight with factor(year) ?
+	  # END OF FUCK
+	  
+	  } else {
+	      X <- getX(object @ srMod, data.frame(year = years))
+	      b <- coef(object)[grep("rMod", cnames)]
+	      fit <- c(exp(c(X %*% b) + object @ centering))
+	      rec <- FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter),
+	      		dimnames = list(age = ages[1], year = years,
+	      		unit = "unique", season = "all", area = "unique",
+	      		iter = seq(niter))))
+	  }
 
       FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
 })

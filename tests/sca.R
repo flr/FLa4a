@@ -147,27 +147,27 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0b)[drop=TRUE])
 # retrospective analysis
 #====================================================================
 
-# sca with defaults
-fit0 <-  sca(ple4, FLIndices(ple4.index))
-ret <- ra(ple4, FLIndices(ple4.index), 3)
-stk <- window(ple4, end=range(ple4)["maxyear"]-2)
-idx <- window(ple4.index, end=range(ple4)["maxyear"]-2)
-fit3 <- sca(stk, FLIndices(idx), fit="assessment")
-identical(stk + fit3, ret[[3]])
+## sca with defaults
+#fit0 <-  sca(ple4, FLIndices(ple4.index))
+#ret <- ra(ple4, FLIndices(ple4.index), 3)
+#stk <- window(ple4, end=range(ple4)["maxyear"]-2)
+#idx <- window(ple4.index, end=range(ple4)["maxyear"]-2)
+#fit3 <- sca(stk, FLIndices(idx), fit="assessment")
+#identical(stk + fit3, ret[[3]])
 
-# a4aSCA with setted up models
-fmod <- ~s(age, k=4)+s(year, k=20)
-qmod <- list(~s(age, k=4))
-n1mod <- ~s(age, k=4)
-vmod <- list(~1, ~1)
-srmod <- ~factor(year)
+## a4aSCA with setted up models
+#fmod <- ~s(age, k=4)+s(year, k=20)
+#qmod <- list(~s(age, k=4))
+#n1mod <- ~s(age, k=4)
+#vmod <- list(~1, ~1)
+#srmod <- ~factor(year)
 
-fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
-ret <- ra(ple4, FLIndices(ple4.index), 3, fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
-stk <- window(ple4, end=range(ple4)["maxyear"]-2)
-idx <- window(ple4.index, end=range(ple4)["maxyear"]-2)
-fit3 <- a4aSCA(stk, FLIndices(idx), fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
-identical(stk + fit3, ret[[3]])
+#fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
+#ret <- ra(ple4, FLIndices(ple4.index), 3, fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
+#stk <- window(ple4, end=range(ple4)["maxyear"]-2)
+#idx <- window(ple4.index, end=range(ple4)["maxyear"]-2)
+#fit3 <- a4aSCA(stk, FLIndices(idx), fmodel=fmod, qmodel=qmod, n1model=n1mod, vmodel=vmod, srmodel=srmod)
+#identical(stk + fit3, ret[[3]])
 
 #====================================================================
 # hessian non-positive definite
