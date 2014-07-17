@@ -32,7 +32,7 @@ GLOBALS_SECTION
   #include <df1b2fun.h>
   #include <string>
   using namespace std;
-  #include "nLogNormal.h"
+  //#include "nLogNormal.h"
   //ofstream clogf("program.log");
   //#define TRACE(object) clogf<<"line "<<__LINE__<<", file "<<__FILE__<<", "\
   //                           <<#object" =\n"<<object<<endl<<endl;
