@@ -4,7 +4,7 @@ data(ple4.indices)
 data(ple4.index)
 
 # creating idx 1
-bioidx <- FLIndex(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
+bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
 index(bioidx) <- stock(ple4)*0.001
 index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
 range(bioidx)[c("startf","endf")] <- c(0,0)

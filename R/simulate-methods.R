@@ -51,30 +51,29 @@ setMethod("simulate", signature(object = "a4aFitSA"),
       dnms <- dimnames(idx)	
       iages <- dnms$age
       iyears <- dnms$year
-	  when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
-	  # is it a biomass idx ?
-	  bioidx <- FALSE
-	  if(length(iages)==1) if(iages=="all") bioidx <- TRUE 
-      # if biomass index all ages have to be accounted
+	    when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
+	    # is it a biomass idx ?
+	    bioidx <- FALSE
+	    if(is(idx, 'FLIndexBiomass')) bioidx <- TRUE 
+      # if biomass index use ages in range or all ages have to be accounted
       # WARNING: spagheti code
-	  if(bioidx){
-		if(missing(stock)){
-		   warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
-		   out @ index[[i]][] <- object@index[[i]][]
-		} else {
-			stk <- object@stock.n*exp(-Zs * when)
-			stk <- mcf(list(e1=stk, e2=stock.wt(stock)))
-			stk$e2[] <- stk$e2[,,,,,1]
-			stk <- quantSums(do.call("*", stk))[,iyears]
-	        out @ index[[i]] <- stk * out @ index[[i]]
-		}
-	  # or else it's a age based index
-	  } else {
-	   stk <- (object @ stock.n * exp(-Zs * when))[iages, iyears]
-       out @ index[[i]] <- stk * out @ index[[i]]
+	    if(bioidx){
+  		  if(missing(stock)){
+  		    warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
+  		    out @ index[[i]][] <- object@index[[i]][]
+  		    } else {
+  			  stk <- object@stock.n*exp(-Zs * when)
+  			  stk <- mcf(list(e1=stk, e2=stock.wt(stock)))
+  			  stk$e2[] <- stk$e2[,,,,,1]
+  			  stk <- quantSums(do.call("*", stk))[,iyears]
+  	      out @ index[[i]] <- stk * out @ index[[i]]
+  		    }
+	    # or else it's a age based index
+	    } else {
+	      stk <- (object @ stock.n * exp(-Zs * when))[iages, iyears]
+        out @ index[[i]] <- stk * out @ index[[i]]
       }
     }
-
     out
 })
 

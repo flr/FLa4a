@@ -72,6 +72,10 @@ DATA_SECTION
   // The number of surveys and when they take place */  
   init_int nsurveys // number of surveys
   //!!TRACE (nsurveys)
+  init_vector surveyMinAge(1,nsurveys) // min age of surveys
+  //!!TRACE (surveyMinAge)
+  init_vector surveyMaxAge(1,nsurveys) // max age of surveys
+  //!!TRACE (surveyMaxAge)
   init_vector surveyTimes(1,nsurveys) // when does survey take place
   //!!TRACE (surveyTimes)
   // The fbar range and plus group information */  
@@ -108,7 +112,6 @@ DATA_SECTION
   int maxAge
   !! maxAge = ageRange(2);
   //!!TRACE(maxAge)
-  
 
   // 
   // The following blocks read the configuration files for the different sub-models
@@ -426,6 +429,7 @@ PROCEDURE_SECTION
   //
   int locFleet,locYear,locAge;
   dvector obsVec(1,5);
+	int minSurveyAge, maxSurveyAge;
   double locObs;
   dvariable locZ;
   dvariable locVar;
@@ -449,9 +453,8 @@ PROCEDURE_SECTION
       locVar = exp(2.0 * v(locFleet, locYear, locAge));
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
     } else { // an observation of biomass
-    
       pred(i) = 0; // not sure i need to but best to be safe
-      for(int a=minAge; a<=maxAge; ++a) {
+      for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) {
         locZ     = exp(f(locYear,a)) + exp(m(locYear,a));
         pred(i) += exp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }

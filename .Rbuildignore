@@ -5,3 +5,5 @@ man-roxygen
 .git
 .gitignore
 
+^.*\.Rproj$
+^\.Rproj\.user$

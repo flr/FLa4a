@@ -1,24 +1,30 @@
-/*
-* Copyright (c) 2012-2014 European Union
-* European Commission Joint Research Centre G.04.
-*
-* Authors: Anders Nielsen <an@aqua.dtu.dk>
-* 	       Colin Millar Colin Millar <millarc@marlab.ac.uk>
-*
-* Licensed under the EUPL, Version 1.1 or later (the "Licence");
-* 
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and limitations
-* under the Licence.
-*/
-
+//  --------------------------------------------------------------------------
+// Copyright (c) 2008,2009,2010,2011,2012, Anders Nielsen <an@aqua.dtu.dk> 
+// and Colin Millar. All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//   * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//   * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//   * Neither the name of the assessment tool a4a nor the
+//     names of its contributors may be used to endorse or promote products
+//     derived from this software without specific prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+// ARE DISCLAIMED. IN NO EVENT SHALL ANDERS NIELSEN OR COLIN MILLAR BE LIABLE 
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
+// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+// DAMAGE.
+//  --------------------------------------------------------------------------
 
 GLOBALS_SECTION 
   #include <time.h>
@@ -26,7 +32,7 @@ GLOBALS_SECTION
   #include <df1b2fun.h>
   #include <string>
   using namespace std;
-  #include "nLogNormal.h"
+  //#include "nLogNormal.h"
   //ofstream clogf("program.log");
   //#define TRACE(object) clogf<<"line "<<__LINE__<<", file "<<__FILE__<<", "\
   //                           <<#object" =\n"<<object<<endl<<endl;
@@ -66,6 +72,10 @@ DATA_SECTION
   // The number of surveys and when they take place */  
   init_int nsurveys // number of surveys
   //!!TRACE (nsurveys)
+  init_vector surveyMinAge(1,nsurveys) // min age of surveys
+  //!!TRACE (surveyMinAge)
+  init_vector surveyMaxAge(1,nsurveys) // max age of surveys
+  //!!TRACE (surveyMaxAge)
   init_vector surveyTimes(1,nsurveys) // when does survey take place
   //!!TRACE (surveyTimes)
   // The fbar range and plus group information */  
@@ -102,7 +112,6 @@ DATA_SECTION
   int maxAge
   !! maxAge = ageRange(2);
   //!!TRACE(maxAge)
-  
 
   // 
   // The following blocks read the configuration files for the different sub-models
@@ -192,7 +201,7 @@ DATA_SECTION
   init_number srCV
   //!!TRACE(srCV) 
   int SRaphase
-  !! if(srCV>0){SRaphase = 3;}else{SRaphase = -1;}
+  !! if(srCV>0){SRaphase = 2;}else{SRaphase = -1;}
   //!! TRACE(SRaphase)
   int SRbphase // swith of b if using geomean model
   !! if(srCV < 0 | Rmodel == 3){SRbphase = -1;}else{SRbphase = 2;}
@@ -231,10 +240,10 @@ PARAMETER_SECTION
 // *********************************
 
   // the paramters of the fixed effects
-  init_vector fpar(1,noFpar,2)
-  init_vector qpar(1,noQpar,1)
+  init_vector fpar(1,noFpar,3)
+  init_vector qpar(1,noQpar,2)
   init_vector vpar(1,noVpar,1)
-  init_vector ny1par(1,noNy1par,1)
+  init_vector ny1par(1,noNy1par,4)
   init_vector rpar(1,noRpar,1) 
   init_vector rapar(1,noRapar,SRaphase)
   init_vector rbpar(1,noRbpar,SRbphase)
@@ -420,6 +429,7 @@ PROCEDURE_SECTION
   //
   int locFleet,locYear,locAge;
   dvector obsVec(1,5);
+	int minSurveyAge, maxSurveyAge;
   double locObs;
   dvariable locZ;
   dvariable locVar;
@@ -442,16 +452,14 @@ PROCEDURE_SECTION
       }
       locVar = exp(2.0 * v(locFleet, locYear, locAge));
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
-      
     } else { // an observation of biomass
-    
       pred(i) = 0; // not sure i need to but best to be safe
-      for(int a=minAge; a<=maxAge; ++a) {
+      for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) {
         locZ     = exp(f(locYear,a)) + exp(m(locYear,a));
         pred(i) += exp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
       locVar = exp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
-      nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
+      nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...    
           
     }
   }
@@ -485,28 +493,28 @@ PROCEDURE_SECTION
     if (Rmodel == 1) { // beverton holt
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 2) { // ricker
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1)) - exp(rb(y)) * ssb(y-1);
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-1) + sqrt(exp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - exp(2.0*rb(y)), 2.0) + 0.0025));
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 4) { // geomean
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y);
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
@@ -515,7 +523,7 @@ PROCEDURE_SECTION
         h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
         v = exp(rb(y));
         predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
-        varLogR = srCV;
+        varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
@@ -559,8 +567,8 @@ RUNTIME_SECTION
 //
 // *********************************
 
-convergence_criteria 1E-1,1E-2,1E-4
-//maximum_function_evaluations 10,20,1000
+convergence_criteria 1E-1,1E-2,1E-3,1E-12
+maximum_function_evaluations 10,20,30,10000
 
 // *********************************
 //
