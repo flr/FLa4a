@@ -17,7 +17,7 @@ setMethod("predict", signature(object = "a4aFitSA"),
 #' @aliases predict,SCAPars-method
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
-browser()
+
   sm <- stkmodel(object)
 	qm <- qmodel(object)
 	vm <- vmodel(object)
