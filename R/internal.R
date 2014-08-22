@@ -150,7 +150,7 @@ list2df <- function(fleet, list.obs, list.var, center.log) {
 # build a full data frame first (we will use this for the variance model so it is not a waste)
 make.df <- function(fleet, stock, indices) {
 	thing <- if (fleet == 1) stock else indices[[fleet - 1]]
-	expand.grid(age = if (is.na(range(thing)["min"])) NA else range(thing)["min"]:range(thing)["max"], 
+	expand.grid(age = if (is(thing, 'FLIndexBiomass') ) NA else range(thing)["min"]:range(thing)["max"], 
 				year = range(thing)["minyear"]:range(thing)["maxyear"])[2:1]
 }
 

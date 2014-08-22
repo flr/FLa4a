@@ -151,7 +151,7 @@ max(idx3.rat)-min(idx3.rat) < err
 #====================================================================
 # biomass index
 #====================================================================
-bioidx <- FLIndex(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
+bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
 index(bioidx) <- stock(ple4)*0.001
 index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
 range(bioidx)[c("startf","endf")] <- c(0,0)
