@@ -17,7 +17,8 @@ setMethod("predict", signature(object = "a4aFitSA"),
 #' @aliases predict,SCAPars-method
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
-	sm <- stkmodel(object)
+
+  sm <- stkmodel(object)
 	qm <- qmodel(object)
 	vm <- vmodel(object)
 	# need to update centering to include stock centering

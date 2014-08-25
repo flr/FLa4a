@@ -200,7 +200,6 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 
   time.used <- matrix(NA, nrow = 4, ncol = nrow(grid))
   ifit <- if (fit == "sim") "assessment" else fit
-
   niters <- nrow(grid)
   for (i in seq(niters)) {
     #istock <- stock[,, grid$unit[i], grid$area[i], , grid$iter[i]]
@@ -228,7 +227,6 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 	} else {
 	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center)
 	}    
-
     if (i == 1) {
       tmpSumm <- outi@fitSumm
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
@@ -367,7 +365,6 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                 niters = 1000, center = TRUE)
 {
 
-
   # first check permissions of executable
   exeok <- check.executable()
   if (!exeok) stop("a4a executable has wrong permissions.")
@@ -480,7 +477,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   temp.full.df <- expand.grid(lapply(full.df[3:1],function(x) sort(unique(x))),  KEEP.OUT.ATTRS = FALSE)[3:1]
   for (i in seq_along(indices)) {
     # if biomass survey skip this step
-    if (is.na(range(indices[[i]])["min"])) next
+    if (is(indices[[i]], 'FLIndexBiomass')) next
     .ages <- temp.full.df$age [temp.full.df$fleet == levels(full.df$fleet)[i+1]]
     .range <- range(subset(full.df, fleet == levels(full.df$fleet)[i+1])$age)
     .ages[.ages < .range[1]] <- .range[1]
@@ -641,10 +638,20 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # change NA to -1 for admb
   df.data$age <- with(df.data, replace(age, is.na(age), -1))
 
+  # build survey's max and min age vectors
+  # If age is not set (NA) it will take the min and max from catch.n
+  srvRange <- do.call('rbind',lapply(indices, range))
+  srvMinAge <- srvRange[,'min']
+  srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
+  srvMaxAge <- srvRange[,'max']
+  srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
+
   cat("# Data for the a4a model",
     "\n# Full age range\n", range(full.df$age),
     "\n# Full year range\n", range(full.df$year),
     "\n# Number of surveys\n", length(unique(full.df$fleet)) - 1,
+    "\n# Survey min ages\n", paste(srvMinAge, collapse = " "),
+    "\n# Survey max ages\n", paste(srvMaxAge, collapse = " "),
     "\n# Survey time as a fraction into the year (one for each survey)\n", paste(surveytime, collapse = " "), 
     "\n# fbar range\n", paste(fbar, collapse = " "),
     "\n# Last age group considered plus group 0=no 1=yes\n", plusgroup,
@@ -908,7 +915,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     logq <- lapply(1:length(indices), function(i) { 
                                         x <- drop(out$Q[,,i])
                                         names(dimnames(x)) <- c("age","year")
-                                        if (is.na(range(indices[[i]])["min"])) {
+                                        if (is(indices[[i]], 'FLIndexBiomass')) {
                                           x <- with(dimnames(index(indices[[i]])), x[1, year,drop = FALSE])
                                           dimnames(x)[[1]] <- "all"
                                         } else {

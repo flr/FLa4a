@@ -6,6 +6,7 @@
 #' @param model a \code{a4aGr} object
 #' @param halfwidth the halfwidths of the length classes. A single numeric or numeric vector the size of the number of the number length classes. Not used if object is an \code{FLStockLen} as the \code{halfwidth} slot is used.
 #' @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
+#' @param max_age the maximum age in the returned \code{FLQuant}. All ages above this are set to \code{max_age}. Only used if object is an \code{FLQuant}.
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
@@ -37,21 +38,24 @@
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 setMethod("l2a", c("FLQuant", "a4aGr"),
-	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object))) {
+	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), max_age=NA) {
 	# constants
-	#cat("Converting lengths to ages ...\n")
 	dnms <- dimnames(object)
 	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
 	len <- as.numeric(dnms[[1]]) + halfwidth 
-	mit <- niters(model)
-	qit <- length(dnms[[6]]) 
-	if(mit>1 & qit>1 & mit!=qit) stop("Can not operate with diferent iterations in each object.")
+	mit <- niters(model) # iters in the growth model
+	qit <- length(dnms[[6]])  # iters in the FLQuant
+	if(mit>1 & qit>1 & mit!=qit) stop("Iterations in model and object must be either 1 or X.")
 	age <- floor(predict(model, len=len))
 	# aggregates all lengths above linf
 	age <- apply(age, 2, function(x){
 		x[which.max(x[!is.infinite(x)]):length(x)] <- max(x[!is.infinite(x)], na.rm=T)
 		x
 	})
+    # Truncate age range to save time and memory
+    if (!(is.na(max_age))){
+        age[age > max_age] <- max_age
+    }
 	ages <- seq(min(age, na.rm=TRUE),max(age, na.rm=TRUE))
 	# FUN to use
     if(stat=="sum"){
@@ -61,24 +65,27 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
         FUN <- colMeans
     }
     res <- array(NA, dim=c(length(ages), dim(object)[-c(1,6)], max(qit,mit)))
-    if (mit >= qit){
-        length_array <- array(rep(c(object), dim(age)[2]), dim=c(dim(object)[1:5], mit)) # propagate obj from 1 iter to n iters
+    if (mit > qit){
+        # propagate obj from 1 iter to n iters (same as growth model)
+        length_array <- array(rep(c(object), dim(age)[2]), dim=c(dim(object)[1:5], mit)) 
         lak_array <- aperm(array(rep(c(age), times=prod(dim(object)[2:5])), dim=c(dim(object)[1], dim(age)[2],dim(object)[2:5])),c(1,3,4,5,6,2))
     }
     if (mit < qit){
         length_array <- array(c(object), dim=dim(object)) # make object with no dimnames
         lak_array <- aperm(array(rep(c(age), times=prod(dim(object)[2:6])), dim=c(dim(object)[1], dim(object)[6],dim(object)[2:5])),c(1,3,4,5,6,2))
     }
+    if (mit==qit){
+        length_array <- array(c(object), dim=dim(object)) # make object with no dimnames
+        lak_array <- aperm(array(rep(c(age), times=prod(dim(object)[2:5])), dim=c(dim(object)[1], dim(age)[2],dim(object)[2:5])),c(1,3,4,5,6,2))
+    }
     s <- array(NA, dim=c(dim(object)[1:5], max(qit,mit)))
     unique_ages <- unique(c(age))
-    #for(i in seq(length(unique_ages))) {
     for(i in unique_ages) {
         s[,,,,,] <- NA 
         idx <- lak_array == i
         s[idx] <- length_array[idx]
         res[i-min(ages)+1,,,,,] <- do.call(FUN,list(s,na.rm=TRUE))
     }
-	
     # fill NAs with 0
     res[is.na(res)] <- 0
     out <-  FLQuant(res, dimnames=c(list(age=ages), dimnames(object)[-c(1, 6)]), units=units(object))
@@ -90,36 +97,36 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 #' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
-    # Make the stock piece by piece to avoid memory problems
-    #cat("Processing sum slots\n")
-    catch.n <- l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", ...)
+    # Use the catch.n slot to build the resulting FLStock
+    catch.n <- l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
     stk <- FLStock(catch.n=catch.n)
-    qsize <- prod(dim(catch.n))
-    # check which slots need slicing
+    # Abundance slots - sum these up
     sum_slots_names <- c("discards.n","landings.n","stock.n")
-	# if there's no discards landings=catches
-	sum_slots_names <- sum_slots_names[c(rep(sum(is.na(discards.n(object)))!=qsize,2),sum(is.na(stock.n(object)))!=qsize)]
-	if(!is.empty(sum_slots_names)){
-		for(slot_counter in sum_slots_names){
-		    slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", ...)
-		    gc()
-		}
-	}
-
-    #cat("Processing mean slots\n")
-    #mean_slots_names <- c("catch.wt","discards.wt","landings.wt","stock.wt","m","mat","harvest.spwn","m.spwn")
-    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
-    for(slot_counter in mean_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", ...)
-        gc()
+    for(slot_counter in sum_slots_names){
+        # Only slice if there are some values in there
+        if(all(!is.na(slot(object,slot_counter)))){
+            #print(slot_counter)
+            slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+        }
     }
-
-    #cat("Processing weighted mean slots\n")
+    # Weight slots - weighted means
     weighted_means_slots_names <- c("catch","discards","landings","stock")
     for(slot_counter in weighted_means_slots_names){
-        total_slice <- l2a(slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep="")), model, halfwidth=halfwidth(object), stat="sum", ...)
-        slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
-        gc()
+        total_quant <- slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep=""))
+        # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
+        if(all(!is.na(total_quant))){
+            print(slot_counter)
+            total_slice <- l2a(total_quant, model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+            slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
+            # Replace any NAs with zeros
+            slot(stk,paste(slot_counter,".wt",sep=""))[is.na(slot(stk,paste(slot_counter,".wt",sep="")))] <- 0
+        }
+    }
+
+    # Other slots - mean
+    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
+    for(slot_counter in mean_slots_names){
+        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...)
     }
 
     # Check for ages < 0; report problem and trim
@@ -128,18 +135,14 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
         print("Trimming age range to a minimum of 0")
         stk <- trim(stk, age=0:range(stk)["max"])
     }
-
-    #cat("Washing up\n")
+    # washing up
 	stk@name <- object@name
 	stk@desc <- object@desc
 	units(harvest(stk)) <- units(object@harvest)
-
-    # Calc landings, discards, catch and stock
     landings(stk) <- computeLandings(stk)
     discards(stk) <- computeDiscards(stk)
     catch(stk) <- computeCatch(stk)
     stock(stk) <- computeStock(stk)
-
 	# set the plus group on the first non continuous age
     if(!is.na(plusgroup)){
         stk <- setPlusGroup(stk, plusgroup, na.rm=T)

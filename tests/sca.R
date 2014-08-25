@@ -299,4 +299,106 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
+#====================================================================
+# run a4aSCA with biomass index
+#====================================================================
+bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
+index(bioidx) <- stock(ple4)*0.001
+index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
+range(bioidx)[c("startf","endf")] <- c(0,0)
+
+# fitting the model
+fit0 <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
+
+#--------------------------------------------------------------------
+# iters
+#--------------------------------------------------------------------
+
+idx2 <- propagate(bioidx, nits)
+stk2 <- propagate(ple4, nits)
+
+# Nx1
+fit <- a4aSCA(stk2, FLIndices(bioidx), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# 1xN
+fit <- a4aSCA(ple4, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# NxN
+fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+#====================================================================
+# run a4aSCA with biomass index in specific ages
+#====================================================================
+bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
+index(bioidx) <- stock(ple4)*0.001
+index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
+range(bioidx)[c("min","max","startf","endf")] <- c(2,5,0,0)
+
+# fitting the model
+fit1 <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
+
+# should be different from fit0
+identical(fit1,fit0)
+
+# set fit1 as fit0 to avoid changing all the code
+fit0 <- fit1
+
+#--------------------------------------------------------------------
+# iters
+#--------------------------------------------------------------------
+
+idx2 <- propagate(bioidx, nits)
+stk2 <- propagate(ple4, nits)
+
+# Nx1
+fit <- a4aSCA(stk2, FLIndices(bioidx), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# 1xN
+fit <- a4aSCA(ple4, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+# NxN
+fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~1))
+dim(fitSumm(fit))[2]==nits
+identical(catch.n(fit)[,,,,,1], catch.n(fit0))
+identical(stock.n(fit)[,,,,,1], stock.n(fit0))
+identical(harvest(fit)[,,,,,1], harvest(fit0))
+identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
+identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
+identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
 
