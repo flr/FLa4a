@@ -12,6 +12,10 @@ nits <- 2
 #====================================================================
 fit0 <-  sca(ple4, FLIndices(ple4.index))
 
+# check that indices have attr biomass
+"FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
+"range" %in%  names(attributes(index(fit0)[[1]]))
+
 #--------------------------------------------------------------------
 # iters
 #--------------------------------------------------------------------
@@ -53,6 +57,9 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 # run a4aSCA
 #====================================================================
 fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+# check that indices have attr biomass
+"FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
+"range" %in%  names(attributes(index(fit0)[[1]]))
 
 #--------------------------------------------------------------------
 # iters
@@ -257,10 +264,12 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 #====================================================================
 # run sca with FLQuantDistr
 #====================================================================
+data(ple4)
+data(ple4.index)
 catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
 index.var(ple4.index) <- (0.2/index(ple4.index))^2
 
-fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 
 #--------------------------------------------------------------------
 # iters
@@ -268,9 +277,15 @@ fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
 
 idx2 <- propagate(ple4.index, nits)
 stk2 <- propagate(ple4, nits)
+# is propagate working 
+is(catch.n(stk2), "FLQuantDistr")
+identical(c(catch.n(stk2)[,,,,,1]), c(catch.n(stk2)[,,,,,2]))
+identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(stk2)[,,,,,2])))
+identical(c(catch.n(stk2)[,,,,,1]), c(catch.n(ple4)))
+identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(ple4))))
 
 # Nx1
-fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~1))
+fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -280,7 +295,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # 1xN
-fit <- sca(ple4, FLIndices(idx2), qmodel=list(~1))
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -290,7 +305,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # NxN
-fit <- sca(stk2, FLIndices(idx2), qmodel=list(~1))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -299,9 +314,14 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
+# reset data
+data(ple4)
+data(ple4.index)
+
 #====================================================================
 # run a4aSCA with biomass index
 #====================================================================
+data(ple4)
 bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
 index(bioidx) <- stock(ple4)*0.001
 index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))

@@ -1,0 +1,11 @@
+FLa4a News
+
+CHANGES IN FLa4a 0.110.0:
+
+	NEW FEATURES:
+		class a4aStkParams includes a "wt" slot to carry on stock weights
+		method a4aSCA uses an age range for biomass indices that is set in the range slot of the index
+		method a4aSCA tags the index FLQuant using attr with info about the range and if it is a biomass index
+		method simulate takes into account the range of the biomass index	
+	BUG FIXES:
+		nothing major for now

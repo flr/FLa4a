@@ -140,5 +140,8 @@ setMethod("vFrml", "SCAPars", function(object) object@vmodel@model)
 #' @aliases m,SCAPars-method
 setMethod("m", signature(object="SCAPars"), function(object) m(stkmodel(object)))
 
+#' @rdname SCAPars-class
+#' @aliases wt,SCAPars-method
+setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object)))
 
 

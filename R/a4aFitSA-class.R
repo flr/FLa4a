@@ -150,6 +150,10 @@ setMethod("pars", "a4aFitSA", function(object) object@pars)
 #' @aliases m,a4aFitSA-method
 setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
 
+#' @rdname a4aFitSA-class
+#' @aliases wt,a4aFitSA-method
+setMethod("wt", signature(object="a4aFitSA"), function(object) wt(pars(object)))
+
 #====================================================================
 # plural class for a4aFitSA (used for model averaging)
 #====================================================================

@@ -29,6 +29,7 @@ setClass("a4aStkParams",
       centering = "numeric",
       distr     = "character",
       m         = "FLQuant",
+      wt         = "FLQuant",
       units     = "character"
     ),
   prototype = 
@@ -44,6 +45,7 @@ setClass("a4aStkParams",
       centering = 0,
       distr     = "lnorm",
       m         = FLQuant(),
+      wt         = FLQuant(),
       units     = "NA"
     )
 )
@@ -71,6 +73,10 @@ setMethod("a4aStkParams", signature(object="missing"),
 #' @rdname a4aGr-class
 #' @aliases m,a4aStkParams-method
 setMethod("m", signature(object="a4aStkParams"), function(object) object @ m)
+
+#' @rdname a4aGr-class
+#' @aliases wt,a4aStkParams-method
+setMethod("wt", signature(object="a4aStkParams"), function(object) object @ wt)
 
 #' @rdname a4aStkParams-class
 #' @aliases fMod fMod-methods fMod,a4aStkParams-method

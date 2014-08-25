@@ -232,7 +232,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
     }
     out@fitSumm[,i] <- outi@fitSumm
-      
+
     if (fit == "MP") {
       # copy results
       out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
@@ -281,9 +281,10 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
         tmpvcov <- outi@pars@stkmodel@vcov
         out@pars@stkmodel@vcov      <- array(0, c(dim(tmpvcov), niters), c(dimnames(tmpvcov), list(iters = 1:niters)))
         out@pars@stkmodel@m         <- propagate(outi@pars@stkmodel@m, niters)
+        out@pars@stkmodel@wt        <- propagate(outi@pars@stkmodel@wt, niters)
         out@pars@stkmodel@units     <- units(catch.n(stock))
         # qmodel
-        out@pars@qmodel               <- outi@pars@qmodel
+        out@pars@qmodel             <- outi@pars@qmodel
         for (j in seq(length(indices))) {
           out@pars@qmodel[[j]]@params <- propagate(outi@pars@qmodel[[j]]@params, niters)
           tmpvcov <- outi@pars@qmodel[[j]]@vcov
@@ -326,7 +327,12 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   }
    
   units(out@harvest) <- "f"  
-   
+
+	# tag biomass indices with attribute
+	for(i in 1:length(indices)){ 
+		attr(out@index[[i]], "FLIndexBiomass") <- is(indices[[i]], "FLIndexBiomass")
+		attr(out@index[[i]], "range") <- range(indices[[i]])
+	}
   # add in combined timings
   out@clock <- outi@clock # to get names
   out@clock[] <- rowSums(time.used)
@@ -798,16 +804,17 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # post processing split
   my.time.used[3] <- Sys.time()
 
-#================== EXPERIMENTAL ================#
-#  if (fit == "MCMC") {
-#    filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
-#    nopar <- readBin(filen, what = integer(), n = 1)
-#    out <- readBin(filen, what = numeric(), n = nopar * niters * 10)  ## TODO check this line
-#    close(filen)
-#    out <- matrix(out, byrow = TRUE, ncol = nopar)
-#    colnames(out) <- unlist(pnames)    
-#  } else if (fit %in% c("MP","assessment","Ext")) {
-#================== /EXPERIMENTAL ===============#
+	#================== EXPERIMENTAL ================#
+	#  if (fit == "MCMC") {
+	#    filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
+	#    nopar <- readBin(filen, what = integer(), n = 1)
+	#    out <- readBin(filen, what = numeric(), n = nopar * niters * 10)# TODO check this line
+	#    close(filen)
+	#    out <- matrix(out, byrow = TRUE, ncol = nopar)
+	#    colnames(out) <- unlist(pnames)    
+	#  } else if (fit %in% c("MP","assessment","Ext")) {
+	#================== /EXPERIMENTAL ===============#
+
   if (fit %in% c("MP","assessment")) {
 
     # read admb output from file
@@ -834,8 +841,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	  		dimnames(out$Q) <- list(ages, years, names(indices))
 	} else {
 		if (!file.exists(paste0(wkdir, '/a4a.cor'))) {
-			# this is all a bit spaghetti coding to rever enfgineer Colin's code
-			# the idea is to return an valid object with the correct dimensions
+			# this is all a bit spaghetti coding to rever engineering Colin's code
+			# the idea is to return a valid object with the correct dimensions
 			# with NA for N and F but with the parameters estimated by ADMB 
 			# although if cor is not present means that it didn't converge ...
 			warning("Hessian was not positive definite.")
@@ -913,15 +920,18 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     names(dimnames(hvst)) <- c("age","year")
     
     logq <- lapply(1:length(indices), function(i) { 
-                                        x <- drop(out$Q[,,i])
-                                        names(dimnames(x)) <- c("age","year")
-                                        if (is(indices[[i]], 'FLIndexBiomass')) {
-                                          x <- with(dimnames(index(indices[[i]])), x[1, year,drop = FALSE])
-                                          dimnames(x)[[1]] <- "all"
-                                        } else {
-                                          x <- with(dimnames(index(indices[[i]])), x[age, year])
-                                        }
-                                        FLQuant(x, dimnames=dimnames(index(indices[[i]])))}) 
+		x <- drop(out$Q[,,i])
+		names(dimnames(x)) <- c("age","year")
+		if (is(indices[[i]], 'FLIndexBiomass')){
+			x <- with(dimnames(index(indices[[i]])), x[1, year,drop = FALSE])
+			dimnames(x)[[1]] <- "all"
+			x <- FLQuant(x, dimnames=dimnames(index(indices[[i]])))
+		} else {
+			x <- with(dimnames(index(indices[[i]])), x[age, year])
+			x <- FLQuant(x, dimnames=dimnames(index(indices[[i]])))
+		}
+		x
+    }) 
     names(logq) <- ind.names
  
     # First the a4aFit bits
@@ -936,14 +946,21 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     
     a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
     index <- lapply(1:length(indices), function(i) {
-                      dmns <- dimnames(logq[[i]]) 
-                      if (dmns$age[1] == "all") {
-                        #exp(logq[[i]] - center.log[1] + center.log[i+1]) * apply(stock.n(a4aout)[, dmns[[2]]] * exp(-Z[, dmns[[2]]]*surveytime) * stock.wt(stock)[, dmns[[2]]],2:6, sum, na.rm=T)
-                        exp(logq[[i]] - center.log[1] + center.log[i+1]) * apply(stock.n(a4aout)[, dmns[[2]]] * stock.wt(stock)[, dmns[[2]]],2:6, sum, na.rm=T)
-                      } else {
-                        #stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])
-                        stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])*exp(-Z[dmns[[1]], dmns[[2]]]*surveytime)
-                      }})
+    	dmns <- dimnames(logq[[i]])
+    	if (is(indices[[i]], 'FLIndexBiomass')) {
+			dmns[[1]] <- srvMinAge[i]:srvMaxAge[i]
+    		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1]) 
+    		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]] 
+    		bb <- apply(nn*stock.wt(stock)[dmns[[1]], dmns[[2]]], 2:6, sum, na.rm=T)
+    		ii <- qq*bb
+    	} else {
+    		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
+    		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
+    		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime)
+    		ii <- qq*nn*zz
+    	}
+    	ii
+    })
     names(index) <- ind.names
 
     a4aout@index <- FLQuants(index)
@@ -977,6 +994,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
       a4aout@pars@stkmodel@n1Mod     <- n1model 
       a4aout@pars@stkmodel@srMod     <- srmodel
       a4aout@pars@stkmodel@m         <- m(stock)
+      a4aout@pars@stkmodel@wt        <- stock.wt(stock)
       
       pars <- out$par.est
                                         
@@ -1041,31 +1059,31 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     }
   }	
  
-#================== EXPERIMENTAL ================#
-#      if (fit == "Ext") {
-#  
-#        # just while code is developing
-#        a4aout <- a4aFitExt(a4aout)
-#        a4aout@Sigma <- out$cov
-#        a4aout@L <- chol(out$cov)
-#        # consider adding L to submodels in a4aFitSA class...
-#        pars <- unlist(out$par.est)
-#        names(pars) <- unlist(pnames)
-#        which <- names(pars) %in% colnames(out$cov)
-#        a4aout@baseLvlPars <- pars[which]
-#        a4aout@designMatrix <- list(Xf = Xf, Xq = Xq, Xn1 = Xny1, Xv = Xv, Xsra = Xsra, Xsrb = Xsrb, Xr = Xr)
+	#================== EXPERIMENTAL ================#
+	#      if (fit == "Ext") {
+	#  
+	#        # just while code is developing
+	#        a4aout <- a4aFitExt(a4aout)
+	#        a4aout@Sigma <- out$cov
+	#        a4aout@L <- chol(out$cov)
+	#        # consider adding L to submodels in a4aFitSA class...
+	#        pars <- unlist(out$par.est)
+	#        names(pars) <- unlist(pnames)
+	#        which <- names(pars) %in% colnames(out$cov)
+	#        a4aout@baseLvlPars <- pars[which]
+	#        a4aout@designMatrix <- list(Xf = Xf, Xq = Xq, Xn1 = Xny1, Xv = Xv, Xsra = Xsra, Xsrb = Xsrb, Xr = Xr)
 
-#        # info about where to split?        
-#      }
-#    }
-#  }	
-#  } #else if (fit == "MCMC") {
-#  
-#    # no MCMC class stuff yet... could use FLQuantDistr?
-#    a4aout <- a4aFitMCMC()
-#    a4aout@pars <- out    
-#  }
-#================== /EXPERIMENTAL ================#
+	#        # info about where to split?        
+	#      }
+	#    }
+	#  }	
+	#  } #else if (fit == "MCMC") {
+	#  
+	#    # no MCMC class stuff yet... could use FLQuantDistr?
+	#    a4aout <- a4aFitMCMC()
+	#    a4aout@pars <- out    
+	#  }
+	#================== /EXPERIMENTAL ================#
 
   # end time
   my.time.used[4] <- Sys.time() 

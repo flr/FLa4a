@@ -14,7 +14,6 @@ setGeneric("simulate", useAsDefault = simulate)
 #' @aliases simulate,a4aFitSA-method
 setMethod("simulate", signature(object = "a4aFitSA"),
   function(object, nsim = 1, seed = NULL, stock=NULL) {
-
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, seed = seed)
 
@@ -31,6 +30,8 @@ setMethod("simulate", signature(object = "a4aFitSA"),
   
     # build stock
     Zs <- harvest(out) + m(out)
+	stkn <- out @ stock.n
+
     for (a in 2:dms $ age) {
       out @ stock.n[a,-1] <- out @ stock.n[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
     }
@@ -47,32 +48,39 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     # work out indices
     out @ index <- preds $ qmodel
     for (i in seq(out @ index)) {
-      idx <- index(out)[[i]]
-      dnms <- dimnames(idx)	
-      iages <- dnms$age
-      iyears <- dnms$year
-	    when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
-	    # is it a biomass idx ?
-	    bioidx <- FALSE
-	    if(is(idx, 'FLIndexBiomass')) bioidx <- TRUE 
-      # if biomass index use ages in range or all ages have to be accounted
-      # WARNING: spagheti code
-	    if(bioidx){
-  		  if(missing(stock)){
-  		    warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
-  		    out @ index[[i]][] <- object@index[[i]][]
-  		    } else {
-  			  stk <- object@stock.n*exp(-Zs * when)
-  			  stk <- mcf(list(e1=stk, e2=stock.wt(stock)))
-  			  stk$e2[] <- stk$e2[,,,,,1]
-  			  stk <- quantSums(do.call("*", stk))[,iyears]
-  	      out @ index[[i]] <- stk * out @ index[[i]]
-  		    }
+    	idx <- index(out)[[i]]
+    	dnms <- dimnames(idx)	
+    	iages <- dnms$age
+    	iyears <- dnms$year
+		when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
+		# is it a biomass idx ?
+		bioidx <- FALSE
+		if(attr(index(object)[[i]], "FLIndexBiomass")) bioidx <- TRUE 
+     	# if biomass index use ages in range or all ages have to be accounted
+     	# WARNING: spagheti code
+	 	if(bioidx){
+#		if(missing(stock)){
+#		    warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
+#		    out @ index[[i]][] <- object@index[[i]][]
+#	    } else {
+			rng <- attr(index(object)[[i]], "range")
+			if(is.na(rng["min"])) iages <- dimnames(stkn)[[1]] else iages <- rng["min"]:rng["max"]
+			stk <- stkn[iages]*exp(-Zs[iages] * when)
+			stk <- mcf(list(e1=stk, e2=wt(out)[iages]))
+			stk$e2[] <- stk$e2[,,,,,1]
+			stk <- quantSums(do.call("*", stk))[,iyears]
+			out @ index[[i]] <- stk * out @ index[[i]]
+			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
+			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
+
+#	    }
 	    # or else it's a age based index
-	    } else {
-	      stk <- (object @ stock.n * exp(-Zs * when))[iages, iyears]
-        out @ index[[i]] <- stk * out @ index[[i]]
-      }
+		} else {
+			stk <- (stkn * exp(-Zs * when))[iages, iyears]
+			out @ index[[i]] <- stk * out @ index[[i]]
+			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
+			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
+		}
     }
     out
 })

@@ -17,7 +17,7 @@ setMethod("predict", signature(object = "a4aFitSA"),
 #' @aliases predict,SCAPars-method
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
-browser()
+
   sm <- stkmodel(object)
 	qm <- qmodel(object)
 	vm <- vmodel(object)
@@ -122,7 +122,6 @@ setMethod("predict", signature(object = "a4aStkParams"),
 	      		unit = "unique", season = "all", area = "unique",
 	      		iter = seq(niter))))
 	  }
-
       FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
 })
 
@@ -149,4 +148,8 @@ setMethod("predict", signature(object = "submodel"),
       fit <- exp(c(X %*% b) + object @ centering)
       FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), dimnames = list(age = ages, year = years, unit = "unique", season = "all", area = "unique", iter = seq(niter))))
 })
+
+
+
+
 
