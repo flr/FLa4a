@@ -942,7 +942,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                         exp(logq[[i]] - center.log[1] + center.log[i+1]) * apply(stock.n(a4aout)[, dmns[[2]]] * stock.wt(stock)[, dmns[[2]]],2:6, sum, na.rm=T)
                       } else {
                         #stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])
-                        stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])*exp(-Z[dmns[[1]], dmns[[2]]]*surveytime)
+                        stock.n(a4aout)[dmns[[1]], dmns[[2]]] * exp(logq[[i]]  - center.log[1] + center.log[i+1])*exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
                       }})
     names(index) <- ind.names
 
