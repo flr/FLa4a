@@ -104,8 +104,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     sum_slots_names <- c("discards.n","landings.n","stock.n")
     for(slot_counter in sum_slots_names){
         # Only slice if there are some values in there
-        if(all(!is.na(slot(object,slot_counter)))){
-            #print(slot_counter)
+        if(!all(is.na(slot(object,slot_counter)))){
             slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
         }
     }
@@ -114,8 +113,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     for(slot_counter in weighted_means_slots_names){
         total_quant <- slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep=""))
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
-        if(all(!is.na(total_quant))){
-            print(slot_counter)
+        if(!all(is.na(total_quant))){
             total_slice <- l2a(total_quant, model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
             slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
             # Replace any NAs with zeros
@@ -126,7 +124,9 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     # Other slots - mean
     mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
     for(slot_counter in mean_slots_names){
-        slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...)
+        if(!all(is.na(slot(object,slot_counter)))){
+            slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...)
+        }
     }
 
     # Check for ages < 0; report problem and trim
@@ -156,24 +156,31 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Slots are treated differently
     # Sum: index, index.var, catch.n
-    # Weighted sum: catch.wt, index.q
+    # Weighted sum: catch.wt, index.q - weighted by catch.n
     # Ignored: sel.pattern
 	args <- list(...)
 
-    catch.n <- l2a(catch.n(object), model, stat="sum", ...)
-    idx <- FLIndex(catch.n=catch.n)
+    # Start with index - most likely to not be empty
+    index <- l2a(index(object), model, stat="sum", ...)
+    idx <- FLIndex(index=index)
 
-    sum_slots_names <- c("index","index.var")
+
+    sum_slots_names <- c("catch.n","index.var")
     for(slot_counter in sum_slots_names){
-        slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
-        gc()
+        # Only slice if there are some values in there
+        if(all(!is.na(slot(object,slot_counter)))){
+            slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
+        }
     }
 
     weighted_means_slots_names <- c("catch.wt","index.q")
     for(slot_counter in weighted_means_slots_names){
-        total_slice <- l2a(slot(object,slot_counter) * slot(object,"catch.n"), model, stat="sum", ...)
-        slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
-        gc()
+        total_quant <- slot(object,slot_counter) * slot(object,"catch.n")
+        # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
+        if(all(!is.na(total_quant))){
+            total_slice <- l2a(, model, stat="sum", ...)
+            slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
+        }
     }
 
     # Check for ages < 0; report problem and trim
