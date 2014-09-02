@@ -11,7 +11,7 @@ range(bioidx)[c("startf","endf")] <- c(0,0)
 
 # creating idx 2
 stkn <- stock.n(ple4)*exp(-z(ple4))*0.5
-bioidx2 <- FLIndex(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
+bioidx2 <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
 index(bioidx2) <- quantSums(stkn*stock.wt(ple4))*0.001
 index(bioidx2) <- index(bioidx2)*exp(rnorm(index(bioidx2), sd=0.1))
 range(bioidx2)[c("startf","endf")] <- c(0,1)

@@ -933,8 +933,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		x
     }) 
     names(logq) <- ind.names
- 
-    # First the a4aFit bits
+    
+		# First the a4aFit bits
     a4aout@name    <- stock@name
     a4aout@desc    <- stock@desc
     a4aout@range   <- stock@range
@@ -956,7 +956,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     	} else {
     		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
     		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
-    		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime)
+    		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
     		ii <- qq*nn*zz
     	}
     	ii
@@ -1021,7 +1021,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
         lapply(seq_along(indices), 
           function(i)
           {
-             which <- grepl(fleet.names[i+1], pnames[[2]], fixed=TRUE)
+             which <- sapply(strsplit(pnames[[2]], split=":"), "[[", 2) %in% fleet.names[i+1]
+             #which <- grepl(fleet.names[i+1], pnames[[2]], fixed=TRUE)
              submodel(Mod = qmodel[[i]],
                       params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
                       vcov = out$cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
@@ -1042,7 +1043,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
         lapply(seq_along(fleet.names), 
           function(i)
           {
-             which <- grepl(fleet.names[i], pnames[[3]], fixed=TRUE)
+             which <- sapply(strsplit(pnames[[3]], split=":"), "[[", 2) %in% fleet.names[i]
              submodel(Mod = vmodel[[i]],
                       params = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
                       vcov = out$cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
