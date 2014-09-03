@@ -1,5 +1,14 @@
 FLa4a News
 
+CHANGES IN FLa4a 0.120.0:
+
+	NEW FEATURES:
+		simulate includes the argument "empirical" to be passed to mvrnorm
+	BUG FIXES:
+		bug on indexing surveytime fixed
+		bug on name matching between parameters and indices names fixed
+
+
 CHANGES IN FLa4a 0.110.0:
 
 	NEW FEATURES:
@@ -8,4 +17,4 @@ CHANGES IN FLa4a 0.110.0:
 		method a4aSCA tags the index FLQuant using attr with info about the range and if it is a biomass index
 		method simulate takes into account the range of the biomass index	
 	BUG FIXES:
-		nothing major for now
+		

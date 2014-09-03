@@ -44,7 +44,7 @@
 
   \item{fit}{Character with type of fit, 'MP' or
   'assessment', the first doesn't require the hessian to be
-  computed, while the former does.}
+  computed, while the latter does.}
 
   \item{niters}{number of iterations to be simulated}
 

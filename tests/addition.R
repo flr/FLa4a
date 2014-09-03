@@ -123,7 +123,7 @@ identical(c(catch.n(stk0)), c(catch.n(fit)[,,,,,rep(1,nits)]))
 identical(c(harvest(stk0)), c(harvest(fit)[,,,,,rep(1,nits)]))
 
 # ref sim for comparison
-fits <- simulate(fit, nits, 1234, ple4)
+fits <- simulate(fit, nits, 1234)
 
 # 1 x N
 stk0 <- ple4 + fits
@@ -194,7 +194,7 @@ identical(c(catch.n(stk0)), c(catch.n(fit)[,,,,,rep(1,nits)]))
 identical(c(harvest(stk0)), c(harvest(fit)[,,,,,rep(1,nits)]))
 
 # ref sim for comparison
-fits <- simulate(fit, nits, 1234, ple4)
+fits <- simulate(fit, nits, 1234)
 
 # 1 x N
 stk0 <- ple4 + fits

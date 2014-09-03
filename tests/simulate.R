@@ -14,7 +14,7 @@ err <- 0.05
 #--------------------------------------------------------------------
 # 1
 #--------------------------------------------------------------------
-fit <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
 
 # check it runs
 obj <- simulate(fit)
@@ -80,34 +80,57 @@ max(idx.rat)-min(idx.rat) < err
 # is the vcov matrix ok
 vce <- c(cov(t(params(qmodel(pars(obj))[[1]]))))
 vc <- vcov(qmodel(pars(obj))[[1]])[,,1,drop=TRUE]
-i <- c(abs(cov2cor(vc))>0.05)
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
 vrat <- vce[i]/c(vc)[i]
 max(vrat)-min(vrat) < 2*err
 
 vce <- c(cov(t(params(vmodel(pars(obj))[[1]]))))
 vc <- vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE]
-i <- c(abs(cov2cor(vc))>0.05)
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
+vrat <- vce[i]/c(vc)[i]
+max(vrat)-min(vrat) < 3*err
+
+vce <- c(cov(t(params(vmodel(pars(obj))[[2]]))))
+vc <- vcov(vmodel(pars(obj))[[2]])[,,1,drop=TRUE]
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
 vrat <- vce[i]/c(vc)[i]
 max(vrat)-min(vrat) < 2*err
-
-#vce <- c(cov(t(params(vmodel(pars(obj))[[2]]))))
-#vc <- vcov(vmodel(pars(obj))[[2]])[,,1,drop=TRUE]
-#i <- c(abs(cov2cor(vc))>0.05)
-#vrat <- vce[i]/c(vc)[i]
-#max(vrat)-min(vrat) < 2*err
 
 vce <- c(cov(t(params(stkmodel(pars(obj))))))
 vc <- vcov(stkmodel(pars(obj)))[,,1,drop=TRUE]
-i <- c(abs(cov2cor(vc))>0.05)
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
 vrat <- vce[i]/c(vc)[i]
-# this is a large covariance matrix (115x115) which is not
-# easy to get from simulations ... I guess
+max(vrat)-min(vrat) < 4*err
+
+# what about variance 
+vce <- c(diag(cov(t(params(qmodel(pars(obj))[[1]])))))
+vc <- diag(vcov(qmodel(pars(obj))[[1]])[,,1,drop=TRUE])
+vrat <- vce/c(vc)
 max(vrat)-min(vrat) < 2*err
+
+vce <- c(diag(cov(t(params(vmodel(pars(obj))[[1]])))))
+vc <- diag(vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE])
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < 2*err
+
+vce <- c(diag(cov(t(params(vmodel(pars(obj))[[2]])))))
+vc <- diag(vcov(vmodel(pars(obj))[[2]])[,,1,drop=TRUE])
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < 2*err
+
+vce <- c(diag(cov(t(params(stkmodel(pars(obj)))))))
+vc <- diag(vcov(stkmodel(pars(obj)))[,,1,drop=TRUE])
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < 4*err
 
 #--------------------------------------------------------------------
 # several
 #--------------------------------------------------------------------
-fit <-  a4aSCA(ple4, ple4.indices, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3)))
+fit <-  a4aSCA(ple4, ple4.indices, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3)), vmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=4), ~s(age, k=3)))
 
 # check
 obj <- simulate(fit)
@@ -163,37 +186,25 @@ fit <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
 # check
 #--------------------------------------------------------------------
 
-# these must be TRUE because without the stock.wt it simply replaces the index
-obj <- simulate(fit)
-all.equal(index(obj), index(fit))
-obj <- simulate(fit, nits)
-dim(index(obj)[[1]])[6] == nits 
-all.equal(c(index(obj)[[1]][,,,,,1]), c(index(obj)[[1]][,,,,,nits]))
-all.equal(index(obj)[[1]][,,,,,1], index(fit)[[1]])
-
-# this one must be FALSE or else is not simulating
-obj <- simulate(fit, stock=ple4)
-identical(index(obj), index(fit))
-
 # now the classes
-obj <- simulate(fit, stock=ple4)
+obj <- simulate(fit)
 is(obj, "a4aFitSA")
 validObject(obj)
 
-obj <- simulate(fit, nits, stock=ple4)
+obj <- simulate(fit, nits)
 is(obj, "a4aFitSA")
 validObject(obj)
 dim(catch.n(obj))[6] == nits
 
 # can the seed be controled ?
 set.seed(1234)
-obj0 <- simulate(fit, nits, stock=ple4)
+obj0 <- simulate(fit, nits)
 set.seed(1234)
-obj1 <- simulate(fit, nits, stock=ple4)
+obj1 <- simulate(fit, nits)
 all.equal(obj0, obj1)
 
 # are the simulated values unbiased
-obj <- simulate(fit, 1000, stock=ple4)
+obj <- simulate(fit, 1000)
 stk.fit <- stock.n(fit)
 stk.sim <- stock.n(obj)
 stk.rat <- iterMedians(stk.sim)/stk.fit
@@ -208,14 +219,6 @@ max(stk.rat)-min(stk.rat) < err
 max(f.rat)-min(f.rat) < err
 max(idx.rat)-min(idx.rat) < err
 
-# check SCAPars 
-#obj <- simulate(pars(fit))
-# this must be FALSE
-#identical(pars(fit)@qmodel[[1]]@params, obj@qmodel[[1]]@params)
-# this must be similar
-#obj <- simulate(pars(fit), 10000)
-#all.equal(pars(fit)@qmodel[[1]]@params, mean(obj@qmodel[[1]]@params), tolerance=10e-3)
-
 #====================================================================
 # biomass and abundance indices
 #====================================================================
@@ -227,34 +230,23 @@ fit <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)), f
 # check
 #--------------------------------------------------------------------
 
-# these must be TRUE because without the stock.wt it simply replaces the index
-obj <- simulate(fit)
-all.equal(index(obj)[[1]], index(fit)[[1]])
-obj <- simulate(fit, nits)
-dim(index(obj)[[1]])[6] == nits 
-all.equal(index(obj)[[1]][,,,,,1], index(fit)[[1]])
-
-# this one must be FALSE or else is not simulating
-obj <- simulate(fit, stock=ple4)
-identical(index(obj)[[1]], index(fit)[[1]])
-
 # now the classes
-obj <- simulate(fit, stock=ple4)
+obj <- simulate(fit)
 is(obj, "a4aFitSA")
 validObject(obj)
 
-obj <- simulate(fit, nits, stock=ple4)
+obj <- simulate(fit, nits)
 is(obj, "a4aFitSA")
 validObject(obj)
 dim(catch.n(obj))[6] == nits
 
 # can the seed be controled ?
-obj0 <- simulate(fit, nits, 1234, stock=ple4)
-obj1 <- simulate(fit, nits, 1234, stock=ple4)
+obj0 <- simulate(fit, nits, 1234)
+obj1 <- simulate(fit, nits, 1234)
 all.equal(obj0, obj1)
 
 # are the simulated values unbiased
-obj <- simulate(fit, 1000, stock=ple4)
+obj <- simulate(fit, 1000)
 stk.fit <- stock.n(fit)
 stk.sim <- stock.n(obj)
 stk.rat <- iterMedians(stk.sim)/stk.fit
@@ -270,9 +262,50 @@ idx2.rat <- iterMedians(idx2.sim)/idx2.fit
 
 max(stk.rat)-min(stk.rat) < err
 max(f.rat)-min(f.rat) < err
-# these ones sometimes fail, I guess the model is quite bad
 max(idx.rat)-min(idx.rat) < err
 max(idx2.rat)-min(idx2.rat) < err
+
+
+
+
+
+# is the vcov matrix ok
+vce <- c(cov(t(params(qmodel(pars(obj))[[2]]))))
+vc <- vcov(qmodel(pars(obj))[[2]])[,,1,drop=TRUE]
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
+vrat <- vce[i]/c(vc)[i]
+max(vrat)-min(vrat) < 3*err
+
+vce <- c(cov(t(params(vmodel(pars(obj))[[1]]))))
+vc <- vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE]
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
+vrat <- vce[i]/c(vc)[i]
+max(vrat)-min(vrat) < 4*err
+
+vce <- c(cov(t(params(stkmodel(pars(obj))))))
+vc <- vcov(stkmodel(pars(obj)))[,,1,drop=TRUE]
+# check only those that have correlations stronger than 50%
+i <- c(abs(cov2cor(vc))>0.5)
+vrat <- vce[i]/c(vc)[i]
+max(vrat)-min(vrat) < 8*err
+
+# what about variance 
+vce <- c(diag(cov(t(params(qmodel(pars(obj))[[2]])))))
+vc <- diag(vcov(qmodel(pars(obj))[[2]])[,,1,drop=TRUE])
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < 3*err
+
+vce <- c(diag(cov(t(params(vmodel(pars(obj))[[1]])))))
+vc <- diag(vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE])
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < 4*err
+
+vce <- c(diag(cov(t(params(stkmodel(pars(obj)))))))
+vc <- diag(vcov(stkmodel(pars(obj)))[,,1,drop=TRUE])
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < 6*err
 
 #====================================================================
 # more than one iter in vcov, coming from assessments with iters
@@ -359,29 +392,8 @@ idx.fit <- index(fit)[[1]]
 idx.sim <- index(obj)[[1]]
 idx.rat <- iterMedians(idx.sim)/iterMedians(idx.fit)
 
-max(stk.rat)-min(stk.rat) < err
-max(f.rat)-min(f.rat) < err
-max(idx.rat)-min(idx.rat) < err
+max(stk.rat)-min(stk.rat) < 3*err
+max(f.rat)-min(f.rat) < 3*err
+max(idx.rat)-min(idx.rat) < 3*err
 
-#fit0 <-  a4aSCA(ple4, FLIndices(ple4.index))
-
-
-#set.seed(1)
-#qmod0c1 <- simulate(iter(qmod0a,1))
-#qmod0c2 <- simulate(iter(qmod0a,2))
-#set.seed(1)
-#qmod0c <- simulate(qmod0a, 2)
-#iter(qmod0c,1)@params
-#qmod0c1@params
-#iter(qmod0c,2)@params
-#qmod0c2@params
-
-
-#set.seed(1)
-#qmod0c1 <- simulate(iter(qmod0a,1))
-#qmod0c2 <- simulate(iter(qmod0a,1))
-
-
-## check vcov is the same as we get from pars
-## check dims of vcov 1 or n
 

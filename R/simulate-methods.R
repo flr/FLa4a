@@ -13,9 +13,9 @@ setGeneric("simulate", useAsDefault = simulate)
 #' @rdname simulate-methods
 #' @aliases simulate,a4aFitSA-method
 setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, seed = NULL, stock=NULL) {
+  function(object, nsim = 1, seed = NULL, empirical=FALSE) {
     out <- object
-    out @ pars <- simulate(pars(object), nsim = nsim, seed = seed)
+    out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
 
     # now get catch.n, stock.n, harvest and index
     preds <- predict(out)
@@ -27,28 +27,30 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     # plusgroup?
     dms <- dims(object)
     plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
-  
-    # build stock
-    Zs <- harvest(out) + m(out)
-	stkn <- out @ stock.n
 
+	# fill stock.n (waste space save time)
+	stkn <- stock.n(out)
+    Zs <- harvest(out) + m(out)
     for (a in 2:dms $ age) {
-      out @ stock.n[a,-1] <- out @ stock.n[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
+      stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
     }
     # if plus group
     if (plusgrp) {
       for (y in 1:(dms $ year-1)) 
-        out @ stock.n[a,y+1,] <- out @ stock.n[a,y+1,] + out @ stock.n[a, y,] * exp( - Zs[a, y,] )
+        stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
     } 
+
+	out@stock.n <- stkn
  
     # calculate catch
     zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
-    out @ catch.n <- zfrac * out @ stock.n
+    out @ catch.n <- zfrac * stkn
 
     # work out indices
-    out @ index <- preds $ qmodel
-    for (i in seq(out @ index)) {
-    	idx <- index(out)[[i]]
+    out @ index <- idxs <- preds $ qmodel
+
+    for (i in seq(idxs)) {
+    	idx <- idxs[[i]]
     	dnms <- dimnames(idx)	
     	iages <- dnms$age
     	iyears <- dnms$year
@@ -88,21 +90,21 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 #' @rdname simulate-methods
 #' @aliases simulate,SCAPars-method
 setMethod("simulate", signature(object = "SCAPars"),
-  function(object, nsim = 1, seed=NULL) {    
+  function(object, nsim = 1, seed=NULL, empirical=TRUE) {    
     out <- object
-    out @ stkmodel <- simulate(object @ stkmodel, nsim = nsim, seed = seed)
-    out @ qmodel <- simulate(object @ qmodel, nsim = nsim, seed = seed)
-    out @ vmodel <- simulate(object @ vmodel, nsim = nsim, seed = seed)
+    out @ stkmodel <- simulate(object @ stkmodel, nsim = nsim, seed = seed, empirical=empirical)
+    out @ qmodel <- simulate(object @ qmodel, nsim = nsim, seed = seed, empirical=empirical)
+    out @ vmodel <- simulate(object @ vmodel, nsim = nsim, seed = seed, empirical=empirical)
     out
   })
 
 #' @rdname simulate-methods
 #' @aliases simulate,a4aStkParams-method
 setMethod("simulate", signature(object = "a4aStkParams"),
-  function(object, nsim = 1, seed=NULL) {    
+  function(object, nsim = 1, seed=NULL, empirical=TRUE) {    
 
     # sanity checks
-
+browser()
 	# iters and objects
     pitr <- dims(object@params)$iter
 	vitr <- dim(object@vcov)[3]
@@ -128,13 +130,24 @@ setMethod("simulate", signature(object = "a4aStkParams"),
     # get parameter variance matrices
     V <- vcov(object)
 
+#	# code to deal with bug in mvrnorm when empirical = T
+#	if(empirical & nsim < length(b)){
+#		nsim0 <- nsim
+#		nsim <- length(b)
+#	}
+
 	# simulate
     if(is.null(seed)){
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]]))}) 
+	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
     } else {
 		set.seed(seed)
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]]))}) 
+	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
     }
+
+#	if(empirical & nsim0 < length(b)){
+#		nsim <- nsim0
+#		parsim <- parsim[1:nsim,]
+#	}
 
 	# add to object and return
 	object@params@.Data[] <- c(parsim)
@@ -146,15 +159,15 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 #' @rdname simulate-methods
 #' @aliases simulate,submodels-method
 setMethod("simulate", signature(object = "submodels"),
-  function(object, nsim = 1, seed=NULL) {
-    out <- lapply(object, simulate, nsim = nsim, seed=seed)
+  function(object, nsim = 1, seed=NULL, empirical=TRUE) {
+    out <- lapply(object, simulate, nsim = nsim, seed=seed, empirical=empirical)
     submodels(out)
   })
 
 #' @rdname simulate-methods
 #' @aliases simulate,submodel-method
 setMethod("simulate", signature(object = "submodel"),
-  function(object, nsim = 1, seed=NULL) {
+  function(object, nsim = 1, seed=NULL, empirical=TRUE) {
 
     # sanity checks
 
@@ -183,13 +196,24 @@ setMethod("simulate", signature(object = "submodel"),
     # get parameter variance matrices
     V <- vcov(object)
 
+#	# code to deal with bug in mvrnorm when empirical = T
+#	if(empirical & nsim < length(b)){
+#		nsim0 <- nsim
+#		nsim <- length(b)
+#	}
+
 	# simulate
     if(is.null(seed)){
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]]))}) 
+	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
     } else {
 		set.seed(seed)
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]]))}) 
+	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
     }
+
+#	if(empirical & nsim0 < length(b)){
+#		nsim <- nsim0
+#		parsim <- parsim[1:nsim,]
+#	}
 
 	# add to object and return
 	object@params@.Data[] <- c(parsim)

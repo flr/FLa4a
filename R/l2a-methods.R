@@ -178,7 +178,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
         total_quant <- slot(object,slot_counter) * slot(object,"catch.n")
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
         if(all(!is.na(total_quant))){
-            total_slice <- l2a(, model, stat="sum", ...)
+            total_slice <- l2a(total_quant, model, stat="sum", ...)
             slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
         }
     }
