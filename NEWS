@@ -1,9 +1,18 @@
 FLa4a News
 
+CHANGES IN FLa4a 0.130.0:
+
+	NEW FEATURES:
+		tests on simulate revised and extended
+	BUG FIXES:
+		mvrnorm bugfix for empirical = T and n < length(mu) fixed by an internal function "mvrEmpT" which is called by simulate. 
+
 CHANGES IN FLa4a 0.120.0:
 
 	NEW FEATURES:
 		simulate includes the argument "empirical" to be passed to mvrnorm
+		l2a checks t0 that generate negative ages
+		tests on l2a and predict revised and extended
 	BUG FIXES:
 		bug on indexing surveytime fixed
 		bug on name matching between parameters and indices names fixed

@@ -13,7 +13,7 @@ setGeneric("simulate", useAsDefault = simulate)
 #' @rdname simulate-methods
 #' @aliases simulate,a4aFitSA-method
 setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, seed = NULL, empirical=FALSE) {
+  function(object, nsim = 1, seed = NULL, empirical=TRUE) {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
 
@@ -103,55 +103,50 @@ setMethod("simulate", signature(object = "SCAPars"),
 setMethod("simulate", signature(object = "a4aStkParams"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {    
 
-    # sanity checks
-browser()
-	# iters and objects
-    pitr <- dims(object@params)$iter
-	vitr <- dim(object@vcov)[3]
-
-	if(nsim > 1 | pitr > 1 | vitr > 1){
-		mitr <- max(c(nsim, pitr, vitr))
-		iter <- seq(mitr)
-		# need to check if all are 1 or n
-		if(pitr==1){
-			object@params <- propagate(object@params, mitr) 
-		}
-		if(vitr==1){
-			object@vcov <- object@vcov[,,rep(1,mitr), drop=FALSE] 
-			dimnames(object@vcov)$iters <- iter
-		}
-	} else {
-		iter <- 1
-	}
-
     # get parameter estimates
     b <- coef(object)
     
     # get parameter variance matrices
     V <- vcov(object)
 
-#	# code to deal with bug in mvrnorm when empirical = T
-#	if(empirical & nsim < length(b)){
-#		nsim0 <- nsim
-#		nsim <- length(b)
-#	}
+	# iters and objects
+    pitr <- dims(b)$iter
+	vitr <- dim(V)[3]
+	mitr <- max(c(nsim, pitr, vitr))
+	it <- seq(mitr)
 
-	# simulate
-    if(is.null(seed)){
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
-    } else {
-		set.seed(seed)
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
-    }
+    # sanity checks - must be 1 or n
+	if(!((nsim==1 | nsim==mitr) & (pitr==1 | pitr==mitr) & (vitr==1 | vitr==mitr)))
+		stop("The number of iters and simulations must be 1 or n.")
 
-#	if(empirical & nsim0 < length(b)){
-#		nsim <- nsim0
-#		parsim <- parsim[1:nsim,]
-#	}
+	# if there are iters in pars or vcov simulation must be done by iter
+	if(pitr!=1 | vitr != 1){
+		# expand objects is needed
+		if(pitr==mitr & vitr==1){
+			V <- V[,,rep(1,mitr), drop=FALSE] 
+			dimnames(V)$iters <- it
+		} else if(pitr==1 & vitr==mitr){
+			b <- propagate(b, mitr) 
+		}
+		# run simulations along iters
+	    if(is.null(seed)){
+		    parsim <- sapply(seq_along(it), function(i){ 
+		    	mvrEmpT(1, c(b[,it[i]]), V[,,it[i]], empirical=empirical)
+		    }) 
+	    } else {
+			set.seed(seed)
+		    parsim <- sapply(seq_along(it), function(i){ 
+		    	mvrEmpT(1, c(b[,it[i]]), V[,,it[i]], empirical=empirical)
+		    }) 
+ 	   }
+	} else {
+		if(!is.null(seed)) set.seed(seed)
+		parsim <- mvrEmpT(mitr, c(b), V[,,1,drop=T], empirical=empirical)
+	}
 
 	# add to object and return
-	object@params@.Data[] <- c(parsim)
-	if(vitr==1) object@vcov <- object@vcov[,,1, drop=FALSE]
+	if(mitr > pitr) object@params <- propagate(object@params, mitr)
+	object@params[] <- parsim
 	return(object)
 
 })
@@ -168,56 +163,50 @@ setMethod("simulate", signature(object = "submodels"),
 #' @aliases simulate,submodel-method
 setMethod("simulate", signature(object = "submodel"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {
-
-    # sanity checks
-
-	# iters and objects
-    pitr <- dims(object@params)$iter
-	vitr <- dim(object@vcov)[3]
-
-	if(nsim > 1 | pitr > 1 | vitr > 1){
-		mitr <- max(c(nsim, pitr, vitr))
-		iter <- seq(mitr)
-		# need to check if all are 1 or n
-		if(pitr==1){
-			object@params <- propagate(object@params, mitr) 
-		}
-		if(vitr==1){
-			object@vcov <- object@vcov[,,rep(1,mitr), drop=FALSE] 
-			dimnames(object@vcov)$iters <- iter
-		}
-	} else {
-		iter <- 1
-	}
-
     # get parameter estimates
     b <- coef(object)
     
     # get parameter variance matrices
     V <- vcov(object)
 
-#	# code to deal with bug in mvrnorm when empirical = T
-#	if(empirical & nsim < length(b)){
-#		nsim0 <- nsim
-#		nsim <- length(b)
-#	}
+	# iters and objects
+    pitr <- dims(b)$iter
+	vitr <- dim(V)[3]
+	mitr <- max(c(nsim, pitr, vitr))
+	it <- seq(mitr)
 
-	# simulate
-    if(is.null(seed)){
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
-    } else {
-		set.seed(seed)
-	    parsim <- sapply(seq_along(iter), function(i){ t(mvrnorm(1, c(b[,iter[i]]), V[,,iter[i]], empirical=empirical))}) 
-    }
+    # sanity checks - must be 1 or n
+	if(!((nsim==1 | nsim==mitr) & (pitr==1 | pitr==mitr) & (vitr==1 | vitr==mitr)))
+		stop("The number of iters and simulations must be 1 or n.")
 
-#	if(empirical & nsim0 < length(b)){
-#		nsim <- nsim0
-#		parsim <- parsim[1:nsim,]
-#	}
+	# if there are iters in pars or vcov simulation must be done by iter
+	if(pitr!=1 | vitr != 1){
+		# expand objects is needed
+		if(pitr==mitr & vitr==1){
+			V <- V[,,rep(1,mitr), drop=FALSE] 
+			dimnames(V)$iters <- it
+		} else if(pitr==1 & vitr==mitr){
+			b <- propagate(b, mitr) 
+		}
+		# run simulations along iters
+	    if(is.null(seed)){
+		    parsim <- sapply(seq_along(it), function(i){ 
+		    	mvrEmpT(1, c(b[,it[i]]), V[,,it[i]], empirical=empirical)
+		    }) 
+	    } else {
+			set.seed(seed)
+		    parsim <- sapply(seq_along(it), function(i){ 
+		    	mvrEmpT(1, c(b[,it[i]]), V[,,it[i]], empirical=empirical)
+		    }) 
+ 	   }
+	} else {
+		if(!is.null(seed)) set.seed(seed)
+		parsim <- mvrEmpT(mitr, c(b), V[,,1,drop=T], empirical=empirical)
+	}
 
 	# add to object and return
-	object@params@.Data[] <- c(parsim)
-	if(vitr==1) object@vcov <- object@vcov[,,1, drop=FALSE]
+	if(mitr > pitr) object@params <- propagate(object@params, mitr)
+	object@params[] <- parsim
 	return(object)
 })
 

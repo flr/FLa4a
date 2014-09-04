@@ -5,8 +5,40 @@ library(FLa4a)
 data(ple4)
 data(ple4.index)
 data(ple4.indices)
-nits <- 10
+nits <- 1000
 err <- 0.05
+
+#====================================================================
+# check stkmodel
+#====================================================================
+fit <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+
+# replicate with set.seed
+stkm <- stkmodel(pars(fit))
+obj <- simulate(stkm, seed=1234)
+identical(dim(obj@params), dim(stkm@params))
+identical(dim(obj@vcov), dim(stkm@vcov))
+
+# empirical is different
+obj1 <- simulate(stkm, empirical=FALSE, seed=1234)
+!identical(obj1, obj)
+
+# but seed sould replicate
+obj1 <- simulate(stkm, seed=1234)
+identical(obj1, obj)
+
+# vcov should be the same ...
+obj <- simulate(stkm, nits, seed=1234)
+dim(obj@params)["iter"] == nits
+identical(dim(obj@vcov), dim(stkm@vcov))
+rat <- cov(t(obj@params))/stkm@vcov[,,1,drop=T]
+max(rat) - min(rat) < err/10
+
+# while here it shouldn't ...
+obj <- simulate(stkm, nits, empirical = FALSE)
+rat <- cov(t(obj@params))/stkm@vcov[,,1,drop=T]
+max(rat) - min(rat) > err*4
+
 #====================================================================
 # abundance indices
 #====================================================================
@@ -62,7 +94,7 @@ obj1 <- simulate(fit, nits, 1234)
 all.equal(obj0, obj1)
 
 # are the simulated values unbiased
-obj <- simulate(fit, 1000)
+obj <- simulate(fit, nits, seed=1234)
 stk.fit <- stock.n(fit)
 stk.sim <- stock.n(obj)
 stk.rat <- iterMedians(stk.sim)/stk.fit
@@ -80,52 +112,23 @@ max(idx.rat)-min(idx.rat) < err
 # is the vcov matrix ok
 vce <- c(cov(t(params(qmodel(pars(obj))[[1]]))))
 vc <- vcov(qmodel(pars(obj))[[1]])[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 2*err
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < err/10
 
 vce <- c(cov(t(params(vmodel(pars(obj))[[1]]))))
 vc <- vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 3*err
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < err/10
 
 vce <- c(cov(t(params(vmodel(pars(obj))[[2]]))))
 vc <- vcov(vmodel(pars(obj))[[2]])[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 2*err
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < err/10
 
 vce <- c(cov(t(params(stkmodel(pars(obj))))))
 vc <- vcov(stkmodel(pars(obj)))[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 4*err
-
-# what about variance 
-vce <- c(diag(cov(t(params(qmodel(pars(obj))[[1]])))))
-vc <- diag(vcov(qmodel(pars(obj))[[1]])[,,1,drop=TRUE])
 vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 2*err
-
-vce <- c(diag(cov(t(params(vmodel(pars(obj))[[1]])))))
-vc <- diag(vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE])
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 2*err
-
-vce <- c(diag(cov(t(params(vmodel(pars(obj))[[2]])))))
-vc <- diag(vcov(vmodel(pars(obj))[[2]])[,,1,drop=TRUE])
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 2*err
-
-vce <- c(diag(cov(t(params(stkmodel(pars(obj)))))))
-vc <- diag(vcov(stkmodel(pars(obj)))[,,1,drop=TRUE])
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 4*err
+max(vrat)-min(vrat) < err/10
 
 #--------------------------------------------------------------------
 # several
@@ -265,53 +268,28 @@ max(f.rat)-min(f.rat) < err
 max(idx.rat)-min(idx.rat) < err
 max(idx2.rat)-min(idx2.rat) < err
 
-
-
-
-
 # is the vcov matrix ok
 vce <- c(cov(t(params(qmodel(pars(obj))[[2]]))))
 vc <- vcov(qmodel(pars(obj))[[2]])[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 3*err
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < err
 
 vce <- c(cov(t(params(vmodel(pars(obj))[[1]]))))
 vc <- vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 4*err
+vrat <- vce/c(vc)
+max(vrat)-min(vrat) < err
 
 vce <- c(cov(t(params(stkmodel(pars(obj))))))
 vc <- vcov(stkmodel(pars(obj)))[,,1,drop=TRUE]
-# check only those that have correlations stronger than 50%
-i <- c(abs(cov2cor(vc))>0.5)
-vrat <- vce[i]/c(vc)[i]
-max(vrat)-min(vrat) < 8*err
-
-# what about variance 
-vce <- c(diag(cov(t(params(qmodel(pars(obj))[[2]])))))
-vc <- diag(vcov(qmodel(pars(obj))[[2]])[,,1,drop=TRUE])
 vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 3*err
-
-vce <- c(diag(cov(t(params(vmodel(pars(obj))[[1]])))))
-vc <- diag(vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE])
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 4*err
-
-vce <- c(diag(cov(t(params(stkmodel(pars(obj)))))))
-vc <- diag(vcov(stkmodel(pars(obj)))[,,1,drop=TRUE])
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < 6*err
+max(vrat)-min(vrat) < err
 
 #====================================================================
 # more than one iter in vcov, coming from assessments with iters
 #====================================================================
 
 fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+nits <- 3
 
 stk2 <- ple4
 idx2 <- ple4.index
@@ -392,8 +370,8 @@ idx.fit <- index(fit)[[1]]
 idx.sim <- index(obj)[[1]]
 idx.rat <- iterMedians(idx.sim)/iterMedians(idx.fit)
 
-max(stk.rat)-min(stk.rat) < 3*err
-max(f.rat)-min(f.rat) < 3*err
-max(idx.rat)-min(idx.rat) < 3*err
+max(stk.rat)-min(stk.rat) < 4*err
+max(f.rat)-min(f.rat) < 4*err
+max(idx.rat)-min(idx.rat) < 4*err
 
 

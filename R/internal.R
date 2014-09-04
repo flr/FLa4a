@@ -163,7 +163,24 @@ write.t.sparse <- function(x, file, ...) {
 }  
 
   
+# simulate mvnorm with empirical T (fixes bug in mvrnorm)
 
+mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical=TRUE){
+	if(empirical){
+		if(n>length(mu)){
+			mm <- mvrnorm(n, mu, Sigma, tol=tol, empirical=T)
+		} else {
+			mm <- mvrnorm(length(mu)+1, mu, Sigma, tol=tol, empirical=T)
+			mm <- mm[1:n,]	
+		}
+	} else {
+			mm <- mvrnorm(n, mu, Sigma, tol=tol, empirical=FALSE)
+	}
+	
+	# output with right dims for FLPar
+	if(is(mm, "matrix")) t(mm) else (t(t(mm)))
+
+}
 
 
 
