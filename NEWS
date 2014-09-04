@@ -4,6 +4,7 @@ CHANGES IN FLa4a 0.130.0:
 
 	NEW FEATURES:
 		tests on simulate revised and extended
+		tests on WCSAM revised
 	BUG FIXES:
 		mvrnorm bugfix for empirical = T and n < length(mu) fixed by an internal function "mvrEmpT" which is called by simulate. 
 
