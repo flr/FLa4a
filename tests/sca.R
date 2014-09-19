@@ -295,7 +295,20 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
+#--------------------------------------------------------------------
+# zeros in var (must fail with error message)
+#--------------------------------------------------------------------
+
+var(catch.n(ple4))[4,10] <- 0
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+var(catch.n(ple4))[4,10] <- 0.1
+
+index.var(ple4.index)[4,10] <- 0
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+
+#--------------------------------------------------------------------
 # reset data
+#--------------------------------------------------------------------
 data(ple4)
 data(ple4.index)
 
@@ -401,5 +414,20 @@ identical(harvest(fit)[,,,,,1], harvest(fit0))
 identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
+
+#====================================================================
+# bug in indices naming 
+#====================================================================
+data(ple4)
+data(ple4.index)
+biofull <- 0.001*stock(ple4)
+biofull <- FLIndexBiomass(index=biofull)
+range(biofull)[c("startf","endf")] <- c(0,0)
+
+fit0 <- sca(ple4, FLIndices(ple4.index, biofull), qmodel=list(~s(age, k=4), ~1))
+fit1 <- sca(ple4, FLIndices(biofull, ple4.index), qmodel=list(~1, ~s(age, k=4)))
+
+identical(stock.n(fit0), stock.n(fit1))
+identical(harvest(fit0), harvest(fit1))
 
 

@@ -408,6 +408,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   
   # first some checks
   if (any(is.infinite(log(catch.n(stock))))) stop("only non-zero catches allowed.")
+  if (any(is.infinite(log(var(catch.n(stock)))))) stop("only non-zero catch variances allowed.")
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))  stop("only non-zero survey indices allowed.")
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))  stop("only non-zero survey index variances allowed.")
 

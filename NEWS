@@ -1,5 +1,12 @@
 FLa4a News
 
+CHANGES IN FLa4a 0.140.x:
+
+	NEW FEATURES:
+		variance covariance matrix now comes from ADMB cov binary instead of inverting the hessian
+	BUG FIXES:
+		a4aInternal was accepting zero variances, now fixed 
+
 CHANGES IN FLa4a 0.130.0:
 
 	NEW FEATURES:
