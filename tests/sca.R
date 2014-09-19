@@ -300,11 +300,13 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 #--------------------------------------------------------------------
 
 var(catch.n(ple4))[4,10] <- 0
-fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  try(sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4))))
+is(fit0, "try-error")
 var(catch.n(ple4))[4,10] <- 0.1
 
 index.var(ple4.index)[4,10] <- 0
-fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  try(sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4))))
+is(fit0, "try-error")
 
 #--------------------------------------------------------------------
 # reset data
