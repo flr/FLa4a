@@ -880,10 +880,14 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 			# I think it is because the solve method that ADMB uses is not
 			# as good as the R one.... small numerical errors are
 			# resulting in non-positive definite vcov mats for subsets of parameters.
-			hess <- getADMBHessian(wkdir)$hes
-			out$cov <- solve(hess, tol=1e-50)
-			out$prec <- hess
-			out$nopar <- ncol(hess)
+#			hess <- getADMBHessian(wkdir)$hes
+#			out$cov <- solve(hess, tol=1e-50)
+#			out$prec <- hess
+#			out$nopar <- ncol(hess)
+
+			out$cov <- getADMBCovariance(wkdir)$cov
+			out$nopar <- ncol(out$cov)
+
 	    	# read derived model quantities
 	    	ages <- sort(unique(full.df$age))
 	    	years <- sort(unique(full.df$year))
@@ -1000,7 +1004,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                                         
       active <- sapply(out$par.std, length) > 0
 
-      dimnames(out$cov) <- dimnames(out$prec) <- list(unlist(pnames), unlist(pnames))
+      #dimnames(out$cov) <- dimnames(out$prec) <- list(unlist(pnames), unlist(pnames))
+      dimnames(out$cov) <- list(unlist(pnames), unlist(pnames))
+
       stkactive <- active
       stkactive[2:3] <- FALSE
       a4aout@pars@stkmodel@params <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
