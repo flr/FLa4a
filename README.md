@@ -27,7 +27,6 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 [![Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
 
 ## Releases
-- [Latest release](https://github.com/flr/FLa4a/releases/tag/v2.5.20130716)
 - [All releases](https://github.com/flr/FLCore/releases/)
 
 ## License

@@ -1,3 +1,4 @@
+.travis.yml
 code-experimental
 man-experimental
 tests
