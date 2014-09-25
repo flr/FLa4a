@@ -39,4 +39,3 @@ You are welcome to:
 
 - Submit suggestions and bug-reports at: <https://github.com/flr/FLa4a/issues>
 - Send a pull request on: <https://github.com/flr/FLa4a/>
-- Compose a friendly e-mail to: <ernesto.jardim AT jrc.ec.europa.eu>
