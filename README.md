@@ -2,7 +2,6 @@
 - Version: 0.140.1
 - Date: 2014-07-03
 - Author: Colin P. Millar and Ernesto Jardim
-- Maintainer: Iago Mosqueira <iago.mosqueira AT jrc.ec.europa.eu>
 - Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>
 - Repository: <https://github.com/flr/FLa4a/>
 - Bug reports: <https://github.com/flr/FLa4a/issues>
