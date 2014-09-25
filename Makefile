@@ -27,7 +27,6 @@ roxygen: $(R_FILES)
 		-e "document(roclets='rd')"
 
 update:
-	sed -i 's/Version: \([0-9]\.[0-9]*\.\)\([^ ]*\)/Version: \1$(GITVERS)/' DESCRIPTION
 	sed -i 's/Date: *\([^ ]*\)/Date: $(GITDATE)/' DESCRIPTION
 
 build:
