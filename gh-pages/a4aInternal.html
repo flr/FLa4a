@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>a4aInternal. FLa4a 0.140.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>stock assessment model advanced method</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>a4aInternal(stock, indices, fmodel&nbsp;=&nbsp;~s(age, k&nbsp;=&nbsp;3) + factor(year), qmodel&nbsp;=&nbsp;lapply(seq(length(indices)), function(i) ~1), srmodel&nbsp;=&nbsp;~factor(year), n1model&nbsp;=&nbsp;~factor(age), vmodel&nbsp;=&nbsp;lapply(seq(length(indices) + 1), function(i) ~1), covar&nbsp;=&nbsp;missing, wkdir&nbsp;=&nbsp;missing, verbose&nbsp;=&nbsp;FALSE, fit&nbsp;=&nbsp;"assessment", niters&nbsp;=&nbsp;1000, center&nbsp;=&nbsp;TRUE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>fmodel</dt>
+      <dd>a formula object depicting the model for
+  log fishing mortality at age</dd>
+      <dt>qmodel</dt>
+      <dd>a list of formula objects depicting the
+  models for log survey catchability at age</dd>
+      <dt>srmodel</dt>
+      <dd>a formula object depicting the model for
+  log recruitment</dd>
+      <dt>n1model</dt>
+      <dd>a formula object depicting the model for
+  the first year of catch data</dd>
+      <dt>vmodel</dt>
+      <dd>a list of formula objects depicting the
+  models for log survey and log fishing mortality variance</dd>
+      <dt>stock</dt>
+      <dd>an FLStock object containing catch and stock
+  information</dd>
+      <dt>indices</dt>
+      <dd>an FLIndices object containing survey
+  indices</dd>
+      <dt>covar</dt>
+      <dd>a list with covariates</dd>
+      <dt>wkdir</dt>
+      <dd>used to set a working directory for the admb
+  optimiser.  If wkdir is set all admb files are saved to
+  this folder otherwise they are deleted.</dd>
+      <dt>verbose</dt>
+      <dd>if true admb fitting information is
+  printed to the screen</dd>
+      <dt>fit</dt>
+      <dd>Character with type of fit, 'MP' or
+  'assessment', the first doesn't require the hessian to be
+  computed, while the latter does.</dd>
+      <dt>niters</dt>
+      <dd>number of iterations to be simulated</dd>
+      <dt>center</dt>
+      <dd><code>logical</code> should data be centered
+  before estimating or not</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>an <code>a4aFit</code> object if fit is "MP" or an
+  <code>a4aFitSA</code> if fit is "assessment"</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>The advanced user interface to the a4a fitting routine.</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>a4aInternal</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

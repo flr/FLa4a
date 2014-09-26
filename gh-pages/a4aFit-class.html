@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>a4aFit-class. FLa4a 0.140.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>S4 class <code>a4aFit</code></h1>
+
+<div class="row">
+  <div class="span8">
+        
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>The <code>a4aFit</code> class was built to store the a4a stock
+  assessment fits.</p>
+  
+    </div>
+
+    <div class="Slots">
+      <h2>Slots</h2>
+      
+      <p><dl>
+<dt>call</dt><dd>The function call</dd>
+<dt>clock</dt><dd>Information on call duration</dd>
+<dt>fitSumm</dt><dd>Fit summary</dd>
+<dt>stock.n</dt><dd>Estimates of stock numbers-at-age</dd>
+<dt>harvest</dt><dd>Estimates of fishing mortality at age</dd>
+<dt>catch.n</dt><dd>Estimates of catch numbers-at-age</dd>
+<dt>index</dt><dd>Estimates of survey or CPUE indices-at-age</dd>
+</dl></p>
+  
+      <p></p>
+  
+    </div>
+
+    <div class="Accessors">
+      <h2>Accessors</h2>
+      
+      <p>All slots in the class have accessor and replacement
+  methods defined that allow retrieving and substituting
+  individual slots.</p>
+  
+      <p>The values passed for replacement need to be of the class
+  of that slot. A numeric vector can also be used when
+  replacing FLQuant slots, and the vector will be used to
+  substitute the values in the slot, but not its other
+  attributes.</p>
+  
+    </div>
+
+    <div class="Constructor">
+      <h2>Constructor</h2>
+      
+      <p>A construction method exists for this class that can take
+  named arguments for any of its slots. All slots are then
+  created to match the requirements of the class validity.
+  If an unnamed <code>FLQuant</code> object is provided, this is
+  used for sizing but not stored in any slot.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>data(ple4)
+data(ple4.index)
+obj &lt;- sca(stock=ple4, indices=FLIndices(ple4.index))
+</div>
+<strong class='message'>Note: The following observations are treated as being missing at random:
+	    fleet year age
+	 BTS-Isis 1997   1
+	 BTS-Isis 1997   2
+      Predictions will be made for missing observations.</strong>
+<div class='input'>obj
+</div>
+<div class='output'>a4a model fit for: Plaice in IV 
+
+Call:
+.local(stock = stock, indices = indices, fmodel = ..1, qmodel = ..2, 
+    srmodel = ..3, n1model = ..4, vmodel = ..5, fit = ..6)
+
+Time used:
+ Pre-processing     Running a4a Post-processing           Total 
+     1.17269874      1.57313323      0.06939125      2.81522322 
+</div>
+<div class='input'>clock(obj)
+</div>
+<div class='output'> Pre-processing     Running a4a Post-processing           Total 
+     1.17269874      1.57313323      0.06939125      2.81522322 
+</div>
+<div class='input'>fitSumm(obj)
+</div>
+<div class='output'>         iters
+                    1
+  nopar    2.0000e+02
+  nlogl   -6.5263e+01
+  maxgrad  2.7852e-06
+  nobs     7.1000e+02
+</div>
+<div class='input'>flq &lt;- stock.n(obj)
+is(flq)
+</div>
+<div class='output'>[1] &quot;FLQuant&quot;   &quot;FLArray&quot;   &quot;array&quot;     &quot;structure&quot; &quot;vector&quot;   
+</div>
+<div class='input'>flq &lt;- catch.n(obj)
+is(flq)
+</div>
+<div class='output'>[1] &quot;FLQuant&quot;   &quot;FLArray&quot;   &quot;array&quot;     &quot;structure&quot; &quot;vector&quot;   
+</div>
+<div class='input'>flq &lt;- harvest(obj)
+is(flq)
+</div>
+<div class='output'>[1] &quot;FLQuant&quot;   &quot;FLArray&quot;   &quot;array&quot;     &quot;structure&quot; &quot;vector&quot;   
+</div>
+<div class='input'>flq &lt;- index(obj)
+is(flq)
+</div>
+<div class='output'>[1] &quot;FLQuants&quot; &quot;FLlst&quot;    &quot;list&quot;     &quot;vector&quot;  
+</div>
+<div class='input'>logLik(obj)
+</div>
+<div class='output'>&#39;log Lik.&#39; 65.263 (df=200)
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>a4aFit</li><li>a4aFit,missing-method</li><li>a4aFit-class</li><li>a4aFit-methods</li><li>catch.n</li><li>catch.n,a4aFit-method</li><li>clock</li><li>clock,a4aFit-method</li><li>fitSumm</li><li>fitSumm,a4aFit-method</li><li>fitSumm-methods</li><li>harvest</li><li>harvest,a4aFit-method</li><li>index</li><li>index,a4aFit-method</li><li>logLik</li><li>logLik,a4aFit-method</li><li>show,a4aFit-method</li><li>stock.n</li><li>stock.n,a4aFit-method</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>M. FLa4a 0.140.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>natural mortality</h1>
+
+<div class="row">
+  <div class="span8">
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>object</dt>
+      <dd>a <code>a4aM</code> object</dd>
+      <dt>grMod</dt>
+      <dd>a <code>a4aGr</code> object to get the K from</dd>
+      <dt>...</dt>
+      <dd>placeholder for covariates of the models. The
+  names must match formula's variables (not parameters),
+  with the exception of the <code>a4aGr</code> individual growth
+  model. To use a growth model it must be called
+  <code>grMod</code> and be of class <code>a4aGr</code>, in which case
+  the parameters will be matched. The main objective if to
+  be able to use <code>K</code> from von Bertalanffy models in
+  M.</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a <code>FLQuant</code> object</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Method to compute natural mortality</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>The method uses the range slot to define the quant and
+  year dimensions of the resulting <code>M</code> <code>FLQuant</code>.
+  The name fo the quant dimension is taken as the name of a
+  variable that is present in the <code>shape</code> formula but
+  is not present in the shape parameters (the <code>params</code>
+  slot of the <code>shape</code> model). If more than one such
+  than variable exists then there is a problem with the
+  <code>shape</code> model definition.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>age &lt;- 0:15
+k &lt;- 0.4
+shp &lt;- eval(as.list(~exp(-age-0.5))[[2]], envir=list(age=age))
+lvl &lt;- eval(as.list(~1.5*k)[[2]], envir=list(k=k))
+M &lt;- shp*lvl/mean(shp)
+mod1 &lt;- FLModelSim(model=~exp(-age-0.5))
+mod2 &lt;- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+m1 &lt;- a4aM(shape=mod1, level=mod2)
+rngmbar(m1)&lt;-c(0,15)
+rngquant(m1) &lt;- c(0,15)
+m(m1)
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+, , unit = unique, season = all, area = unique
+
+    year
+age  0         
+  0  6.0684e+00
+  1  2.2324e+00
+  2  8.2126e-01
+  3  3.0213e-01
+  4  1.1115e-01
+  5  4.0888e-02
+  6  1.5042e-02
+  7  5.5336e-03
+  8  2.0357e-03
+  9  7.4889e-04
+  10 2.7550e-04
+  11 1.0135e-04
+  12 3.7285e-05
+  13 1.3716e-05
+  14 5.0460e-06
+  15 1.8563e-06
+
+units:  NA 
+</div>
+<div class='input'>all.equal(M, c(m(m1)))
+</div>
+<div class='output'>[1] TRUE
+</div>
+<div class='input'># another example m
+rngmbar(m1) &lt;- c(2,4)
+rngquant(m1) &lt;- c(2,10)
+m(m1)
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+, , unit = unique, season = all, area = unique
+
+    year
+age  0         
+  2  1.19743372
+  3  0.44051125
+  4  0.16205503
+  5  0.05961671
+  6  0.02193176
+  7  0.00806824
+  8  0.00296814
+  9  0.00109192
+  10 0.00040169
+
+units:  NA 
+</div>
+<div class='input'># with iters
+mod2 &lt;- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c(&quot;k&quot;,&quot;t&quot;), iter=1:2))), vcov=array(c(0.004, 0.00,0.00, 0.001), dim=c(2,2,2)))
+m2 &lt;- a4aM(shape=mod1, level=mod2)
+rngquant(m2) &lt;- c(0,10)
+m(m2)
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+iters:  2 
+
+, , unit = unique, season = all, area = unique
+
+    year
+age  0                   
+  0  2.25600198(3.36e-01)
+  1  0.82993675(1.24e-01)
+  2  0.30531667(4.55e-02)
+  3  0.11231972(1.67e-02)
+  4  0.04132012(6.15e-03)
+  5  0.01520082(2.26e-03)
+  6  0.00559207(8.33e-04)
+  7  0.00205721(3.06e-04)
+  8  0.00075680(1.13e-04)
+  9  0.00027841(4.15e-05)
+  10 0.00010242(1.53e-05)
+
+units:  NA 
+</div>
+<div class='input'>m3 &lt;- a4aM(shape=mod1, level=mvrnorm(100, mod2))
+rngquant(m3) &lt;- c(0,15)
+m(m3)
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+iters:  100 
+
+, , unit = unique, season = all, area = unique
+
+    year
+age  0                   
+  0  2.2397e+00(1.85e-01)
+  1  8.2395e-01(6.81e-02)
+  2  3.0311e-01(2.50e-02)
+  3  1.1151e-01(9.21e-03)
+  4  4.1022e-02(3.39e-03)
+  5  1.5091e-02(1.25e-03)
+  6  5.5517e-03(4.59e-04)
+  7  2.0424e-03(1.69e-04)
+  8  7.5134e-04(6.21e-05)
+  9  2.7640e-04(2.28e-05)
+  10 1.0168e-04(8.40e-06)
+  11 3.7407e-05(3.09e-06)
+  12 1.3761e-05(1.14e-06)
+  13 5.0625e-06(4.18e-07)
+  14 1.8624e-06(1.54e-07)
+  15 6.8513e-07(5.66e-08)
+
+units:  NA 
+</div>
+<div class='input'>mod1 &lt;- FLModelSim(model=~exp(-age-0.5))
+mod3 &lt;- FLModelSim(model=~1+b*v, params=FLPar(b=0.05))
+mObj &lt;- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3, range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
+m(mObj, v=1:4)
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+iters:  100 
+
+, , unit = unique, season = all, area = unique
+
+    year
+age  2000                 2001                 2002                
+  0  2.3869e+00(2.63e-01) 2.5005e+00(2.75e-01) 2.6142e+00(2.88e-01)
+  1  8.7808e-01(9.66e-02) 9.1990e-01(1.01e-01) 9.6171e-01(1.06e-01)
+  2  3.2303e-01(3.56e-02) 3.3841e-01(3.72e-02) 3.5379e-01(3.89e-02)
+  3  1.1884e-01(1.31e-02) 1.2449e-01(1.37e-02) 1.3015e-01(1.43e-02)
+  4  4.3717e-02(4.81e-03) 4.5799e-02(5.04e-03) 4.7881e-02(5.27e-03)
+  5  1.6083e-02(1.77e-03) 1.6849e-02(1.85e-03) 1.7614e-02(1.94e-03)
+  6  5.9165e-03(6.51e-04) 6.1982e-03(6.82e-04) 6.4800e-03(7.13e-04)
+  7  2.1766e-03(2.40e-04) 2.2802e-03(2.51e-04) 2.3838e-03(2.62e-04)
+  8  8.0071e-04(8.81e-05) 8.3884e-04(9.23e-05) 8.7697e-04(9.65e-05)
+  9  2.9456e-04(3.24e-05) 3.0859e-04(3.40e-05) 3.2262e-04(3.55e-05)
+  10 1.0836e-04(1.19e-05) 1.1352e-04(1.25e-05) 1.1868e-04(1.31e-05)
+  11 3.9865e-05(4.39e-06) 4.1763e-05(4.60e-06) 4.3662e-05(4.81e-06)
+  12 1.4666e-05(1.61e-06) 1.5364e-05(1.69e-06) 1.6062e-05(1.77e-06)
+  13 5.3951e-06(5.94e-07) 5.6520e-06(6.22e-07) 5.9090e-06(6.50e-07)
+  14 1.9848e-06(2.18e-07) 2.0793e-06(2.29e-07) 2.1738e-06(2.39e-07)
+  15 7.3015e-07(8.04e-08) 7.6492e-07(8.42e-08) 7.9969e-07(8.80e-08)
+    year
+age  2003                
+  0  2.7279e+00(3.00e-01)
+  1  1.0035e+00(1.10e-01)
+  2  3.6918e-01(4.06e-02)
+  3  1.3581e-01(1.49e-02)
+  4  4.9963e-02(5.50e-03)
+  5  1.8380e-02(2.02e-03)
+  6  6.7617e-03(7.44e-04)
+  7  2.4875e-03(2.74e-04)
+  8  9.1510e-04(1.01e-04)
+  9  3.3665e-04(3.70e-05)
+  10 1.2384e-04(1.36e-05)
+  11 4.5560e-05(5.01e-06)
+  12 1.6761e-05(1.84e-06)
+  13 6.1659e-06(6.79e-07)
+  14 2.2683e-06(2.50e-07)
+  15 8.3446e-07(9.18e-08)
+
+units:  NA 
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>M</li><li>m,a4aM-method</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
