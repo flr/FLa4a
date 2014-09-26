@@ -21,7 +21,7 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 
 ## Documentation
 - [Help pages](http://flr-project.org/FLa4a)
-- Technical Document
+- [Draft Technical Document](https://github.com/a4a/tech-doc/blob/master/a4aAssessmentMethodology.pdf?raw=true)
 
 ## Build Status
 [![Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
