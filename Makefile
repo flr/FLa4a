@@ -18,8 +18,8 @@ README.md: DESCRIPTION
 gh-pages: $(HELP_FILES) README.md
 	R --vanilla --silent -e "library(staticdocs);" \
   -e "build_site('../$(PKGNAME)/', site_path='gh-pages', launch=FALSE)"; \
-	rm Rplots.pdf  
-	git subtree push --prefix gh-pages origin gh-pages
+	rm -rf Rplots.pdf  
+	git subtree add --prefix gh-pages origin gh-pages
 	# git push origin `git subtree split --prefix gh-pages master`:gh-pages --force
 
 roxygen: $(R_FILES)
