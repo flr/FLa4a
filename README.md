@@ -15,7 +15,7 @@ To install this package, start R and enter:
 
 followed by
 
-	install.packages("FLa4a", repos="http:///flr-project.org/R")
+	install.packages("FLa4a", repos="http://flr-project.org/R")
 
 or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases/latest)
 
