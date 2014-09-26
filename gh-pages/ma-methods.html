@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>ma. FLa4a 0.140.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Model averaging (experimental)</h1>
+
+<div class="row">
+  <div class="span8">
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>object</dt>
+      <dd>a <code>a4aFits</code> object with the fits to be
+  averaged across</dd>
+      <dt>stock</dt>
+      <dd>a <code>stock</code> object with the original data
+  used for fitting</dd>
+      <dt>fun</dt>
+      <dd>a <code>function</code> that will be used to extract
+  the values for weighting, for now it must be "AIC", "BIC"
+  or "LogLik"</dd>
+      <dt>nsim</dt>
+      <dd>a <code>numeric</code> with the number os
+  simulations to be drawn</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a <code>FLStock</code> object with iterations defined by
+  <code>nsim</code></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Method to average across a set of models. This is still
+  experimental. Use with care.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>data(ple4)
+data(ple4.indices)
+f1 &lt;- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3)), fit = &quot;assessment&quot;)
+</div>
+<strong class='message'>Note: The following observations are treated as being missing at random:
+	       fleet year age
+	    BTS-Isis 1997   1
+	    BTS-Isis 1997   2
+	 BTS-Tridens 1997   1
+	 BTS-Tridens 1997   2
+	         SNS 1997   1
+	         SNS 1997   2
+	         SNS 2003   1
+	         SNS 2003   2
+	         SNS 2003   3
+      Predictions will be made for missing observations.</strong>
+<div class='input'>f2 &lt;- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=list(~ s(age, k = 4)+year, ~ s(age, k = 4), ~ s(age, k = 3)), fit = &quot;assessment&quot;)
+</div>
+<strong class='message'>Note: The following observations are treated as being missing at random:
+	       fleet year age
+	    BTS-Isis 1997   1
+	    BTS-Isis 1997   2
+	 BTS-Tridens 1997   1
+	 BTS-Tridens 1997   2
+	         SNS 1997   1
+	         SNS 1997   2
+	         SNS 2003   1
+	         SNS 2003   2
+	         SNS 2003   3
+      Predictions will be made for missing observations.</strong>
+<div class='input'>stock.sim &lt;- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, AIC, nsim = 100)
+</div>
+<strong class='message'>model weights are 
+	   weight..perc.
+	f1        28.151
+	f2        71.849</strong>
+<div class='input'>stks &lt;- FLStocks(f1=ple4+f1, f2=ple4+f2, ma=stock.sim)
+flqs &lt;- lapply(stks, ssb)
+flqs &lt;- lapply(flqs, iterMedians)
+xyplot(data~year, groups=qname, data=flqs, type=&quot;l&quot;)
+plot(stks)
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>ma</li><li>ma,a4aFitSAs-method</li><li>ma-methods</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

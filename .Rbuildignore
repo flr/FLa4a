@@ -1,7 +1,10 @@
+.travis.yml
 code-experimental
 man-experimental
 tests
+gh-pages/
 man-roxygen
+Makefile
 .git
 .gitignore
 

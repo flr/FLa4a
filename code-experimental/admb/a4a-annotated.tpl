@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2012-2014 European Union
-* European Commission Joint Research Centre G.04.
+* European Commission Joint Research Centre G.03.
 *
 * Authors: Anders Nielsen <an@aqua.dtu.dk>
 * 	       Colin Millar Colin Millar <millarc@marlab.ac.uk>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>a4amethods. FLa4a 0.140.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Assorted methods needed by FLa4a</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>is.empty(object)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>object</dt>
+      <dd>Argument to the various methods</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Assorted methods needed by FLa4a</p>
+  
+    </div>
+
+    <div class="dims">
+      <h2>dims</h2>
+      
+      <p>Extracts the dims of the parameters.</p>
+  
+    </div>
+
+    <div class="is.empty">
+      <h2>is.empty</h2>
+      
+      <p>Method <code>is.empty</code> checks if object is empty. Takes
+  any object returns a logical, <code>TRUE</code> if object is of
+  length 0.</p>
+  
+    </div>
+
+    <div class="pars2dim">
+      <h2>pars2dim</h2>
+      
+      <p>Checks that the name of the second dimension in params is
+  "iter". For internal use, not very interesting for users.
+  It takes a <code>FLPar</code> object and returns a
+  <code>logical</code></p>
+  
+    </div>
+
+    <div class="getYidx">
+      <h2>getYidx</h2>
+      
+      <p>Gets the FLQuant's numeric id for a vector of "years".
+  For internal use, not very interesting for users. It
+  takes a <code>FLQuant</code> and a <code>vector</code> of years and
+  returns a <code>numeric vector</code> that can be used to
+  subset the <code>FLQuant</code>.</p>
+  
+    </div>
+
+    <div class="niters">
+      <h2>niters</h2>
+      
+      <p>Compute number of iterations. Takes an object of any
+  <code>FLR</code> class and returns a <code>numeric</code>.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>is.empty(list())
+</div>
+<div class='output'>[1] TRUE
+</div>
+<div class='input'>is.empty(list(a=2))
+</div>
+<div class='output'>[1] FALSE
+</div>
+<div class='input'>pars2dim(FLPar())
+</div>
+<div class='output'>[1] TRUE
+</div>
+<div class='input'>pars2dim(FLPar(array(dim=c(1,1,1))))
+</div>
+<div class='output'>[1] FALSE
+</div>
+<div class='input'>data(ple4)
+flq &lt;- catch(ple4)
+getYidx(flq, 2000:2004)
+</div>
+<div class='output'>[1] 44 45 46 47 48
+</div>
+<div class='input'>flq[, getYidx(flq, 2000:2004)]
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+, , unit = unique, season = all, area = unique
+
+     year
+age   2000   2001   2002   2003   2004  
+  all 126142 182578 125884 145390 117702
+
+units:  t 
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>getYidx</li><li>getYidx,FLQuant-method</li><li>getYidx-methods</li><li>is.empty</li><li>dims,a4aStkParams-method</li><li>niters</li><li>niters,FLModelSim-method</li><li>niters-methods</li><li>pars2dim,FLPar-method</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

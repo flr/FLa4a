@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mvnorm. FLa4a 0.140.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>natural mortality</h1>
+
+<div class="row">
+  <div class="span8">
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>n</dt>
+      <dd>the number of simulations to be generated</dd>
+      <dt>mu</dt>
+      <dd>a <code>a4aM</code> object</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a <code>a4aM</code> object with n iterations</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Method to simulate multivariate normal parameters for a
+  <code>a4aM</code> object.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>mod1 &lt;- FLModelSim(model=~exp(-age-0.5))
+mod2 &lt;- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c(&quot;k&quot;,&quot;t&quot;), iter=1:2))), vcov=array(c(0.004, 0.00,0.00, 0.001), dim=c(2,2,2)))
+mod3 &lt;- FLModelSim(model=~1+b*v, params=FLPar(b=0.05))
+mObj &lt;- a4aM(shape=mod1, level=mod2, trend=mod3, range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
+mObj &lt;- mvrnorm(100, mObj)
+m(mObj, v=c(1,1,1,1))
+</div>
+<div class='output'>An object of class &quot;FLQuant&quot;
+iters:  100 
+
+, , unit = unique, season = all, area = unique
+
+    year
+age  2000                 2001                 2002                
+  0  2.3811e+00(2.33e-01) 2.3811e+00(2.33e-01) 2.3811e+00(2.33e-01)
+  1  8.7595e-01(8.59e-02) 8.7595e-01(8.59e-02) 8.7595e-01(8.59e-02)
+  2  3.2225e-01(3.16e-02) 3.2225e-01(3.16e-02) 3.2225e-01(3.16e-02)
+  3  1.1855e-01(1.16e-02) 1.1855e-01(1.16e-02) 1.1855e-01(1.16e-02)
+  4  4.3611e-02(4.27e-03) 4.3611e-02(4.27e-03) 4.3611e-02(4.27e-03)
+  5  1.6044e-02(1.57e-03) 1.6044e-02(1.57e-03) 1.6044e-02(1.57e-03)
+  6  5.9021e-03(5.79e-04) 5.9021e-03(5.79e-04) 5.9021e-03(5.79e-04)
+  7  2.1713e-03(2.13e-04) 2.1713e-03(2.13e-04) 2.1713e-03(2.13e-04)
+  8  7.9877e-04(7.83e-05) 7.9877e-04(7.83e-05) 7.9877e-04(7.83e-05)
+  9  2.9385e-04(2.88e-05) 2.9385e-04(2.88e-05) 2.9385e-04(2.88e-05)
+  10 1.0810e-04(1.06e-05) 1.0810e-04(1.06e-05) 1.0810e-04(1.06e-05)
+  11 3.9768e-05(3.90e-06) 3.9768e-05(3.90e-06) 3.9768e-05(3.90e-06)
+  12 1.4630e-05(1.43e-06) 1.4630e-05(1.43e-06) 1.4630e-05(1.43e-06)
+  13 5.3821e-06(5.28e-07) 5.3821e-06(5.28e-07) 5.3821e-06(5.28e-07)
+  14 1.9799e-06(1.94e-07) 1.9799e-06(1.94e-07) 1.9799e-06(1.94e-07)
+  15 7.2838e-07(7.14e-08) 7.2838e-07(7.14e-08) 7.2838e-07(7.14e-08)
+    year
+age  2003                
+  0  2.3811e+00(2.33e-01)
+  1  8.7595e-01(8.59e-02)
+  2  3.2225e-01(3.16e-02)
+  3  1.1855e-01(1.16e-02)
+  4  4.3611e-02(4.27e-03)
+  5  1.6044e-02(1.57e-03)
+  6  5.9021e-03(5.79e-04)
+  7  2.1713e-03(2.13e-04)
+  8  7.9877e-04(7.83e-05)
+  9  2.9385e-04(2.88e-05)
+  10 1.0810e-04(1.06e-05)
+  11 3.9768e-05(3.90e-06)
+  12 1.4630e-05(1.43e-06)
+  13 5.3821e-06(5.28e-07)
+  14 1.9799e-06(1.94e-07)
+  15 7.2838e-07(7.14e-08)
+
+units:  NA 
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>mvnorm</li><li>mvrnorm,numeric,a4aM,missing,missing,missing,missing-method</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
