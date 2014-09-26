@@ -71,15 +71,6 @@ all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
 all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
 
 #--------------------------------------------------------------------
-# further checks
-#--------------------------------------------------------------------
-qmod <- qmodel(pars(fit))[[1]]
-rngyear(qmod) <- NA
-rngage(qmod) <- NA
-obj <- predict(qmod)
-all.equal(dimnames(obj), dimnames(FLQuant(quant="age")))
-
-#--------------------------------------------------------------------
 # N
 #--------------------------------------------------------------------
 fit <- a4aSCA(stk, FLIndices(bioidx), qmodel=list(~1))
@@ -259,5 +250,48 @@ all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
 all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
 all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
 
+#====================================================================
+# biomass index for specific ages
+#====================================================================
+
+agerng <- 2:4
+bioidx <- 0.001*quantSums(stock.n(ple4)[agerng]*stock.wt(ple4)[agerng])
+bioidx <- FLIndexBiomass(index=bioidx)
+range(bioidx)[c("startf","endf")] <- c(0,0)
+range(bioidx)[c("min","max")] <- c(2,4)
+
+# fitting the model
+fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1), fit="assessment")
+flqs <- predict(fit)
+
+#--------------------------------------------------------------------
+# check
+#--------------------------------------------------------------------
+sfrac <- mean(range(bioidx)[c("startf", "endf")])
+Z <- (m(ple4) + harvest(fit))*sfrac
+lst <- dimnames(fit@index[[1]])
+lst$x <- quantSums(stock.n(fit)[agerng]*exp(-Z[agerng])*stock.wt(ple4)[agerng])
+stkn <- do.call("trim", lst)
+qhat <- index(fit)[[1]]/stkn
+all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
+all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
+all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
+all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
+
+#--------------------------------------------------------------------
+# N
+#--------------------------------------------------------------------
+fit <- sca(stk, FLIndices(bioidx), qmodel=list(~1), fit="assessment")
+flqs <- predict(fit)
+sum(unlist(lapply(flqs, is, "FLQuants")))==3
+Z <- (m(ple4) + harvest(fit))*sfrac
+lst <- dimnames(fit@index[[1]])
+lst$x <- quantSums(stock.n(fit)[agerng]*exp(-Z[agerng])*stock.wt(ple4)[agerng])
+stkn <- do.call("trim", lst)
+qhat <- index(fit)[[1]]/stkn
+all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
+all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
+all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
+all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
 
 

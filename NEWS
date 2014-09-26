@@ -1,5 +1,14 @@
 FLa4a NEWS
 
+CHANGES IN FLa4a 0.150.x:
+
+	NEW FEATURES:
+		predict methods revised, not possible to predict stkpars of submodels
+		tests updated
+	BUG FIXES:
+		predict of age specific biomass index now returns quant="all" and not the age range 
+		default qmodel with sca was failing when index had less then 4 ages, now it sets ~1 if one age, ~age if 2 or 3 ages, ~s(age, k=??) for more then 3 ages
+		
 CHANGES IN FLa4a 0.140.x:
 
 	NEW FEATURES:

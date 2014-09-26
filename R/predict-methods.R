@@ -10,7 +10,12 @@
 #' @template Example-predict
 setMethod("predict", signature(object = "a4aFitSA"),
   function(object) {
-    predict(pars(object))
+  	obj <- pars(object)
+	# need to tag biomass indices
+  	for(i in seq_along(index(object))) 
+  		attr(obj@vmodel[[i+1]], "FLIndexBiomass") <- attr(obj@qmodel[[i]], "FLIndexBiomass") <- attr(index(object)[[i]], "FLIndexBiomass")
+	
+  	predict(obj)
   })
 
 #' @rdname predict-methods
@@ -18,16 +23,16 @@ setMethod("predict", signature(object = "a4aFitSA"),
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
 
-  sm <- stkmodel(object)
+  	sm <- stkmodel(object)
 	qm <- qmodel(object)
 	vm <- vmodel(object)
 	# need to update centering to include stock centering
 	for(i in 1:length(qm)) qm[[i]]@centering <- qm[[i]]@centering-sm@centering
 	# run predict 
     lst <- list(
-      stkmodel = predict(sm),
-      qmodel   = predict(qm),
-      vmodel   = predict(vm)
+      stkmodel = predict.stkpars(sm),
+      qmodel   = predict.submods(qm),
+      vmodel   = predict.submods(vm)
     )
 	# rec is being estimated from the srmodel so the n1model doesn't
 	# have a recruitment estimate, need to update from rec predictions
@@ -35,10 +40,7 @@ setMethod("predict", signature(object = "SCAPars"),
 	lst
 })
 
-#' @rdname predict-methods
-#' @aliases predict,a4aStkParams-method
-setMethod("predict", signature(object = "a4aStkParams"),
-  function(object) {
+predict.stkpars <- function(object) {
       ages <- range(object)["min"]:range(object)["max"]
       years <- range(object)["minyear"]:range(object)["maxyear"]
       cnames <- rownames(coef(object))
@@ -123,33 +125,20 @@ setMethod("predict", signature(object = "a4aStkParams"),
 	      		iter = seq(niter))))
 	  }
       FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
-})
+}
 
-#' @rdname predict-methods
-#' @aliases predict,submodels-method
-setMethod("predict", signature(object = "submodels"),
-  function(object, ...) {
-      lapply(object, predict)
-  })
-
-
-#' @rdname predict-methods
-#' @aliases predict,submodel-method
-setMethod("predict", signature(object = "submodel"),
-  function(object, ...) {
-      ages <- try(range(object)["min"]:range(object)["max"], silent=TRUE)
-      if(is(ages, "try-error")) ages <- "all"
-      years <- try(range(object)["minyear"]:range(object)["maxyear"], silent=TRUE)
-      if(is(years, "try-error")) years <- 1
-      df <- expand.grid(age = ages, year = years)
-      X <- getX(object @ Mod, df)
-      b <- coef(object)
-      niter <- dim(b)[2]
-      fit <- exp(c(X %*% b) + object @ centering)
-      FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), dimnames = list(age = ages, year = years, unit = "unique", season = "all", area = "unique", iter = seq(niter))))
-})
-
-
-
-
+predict.submods <- function(object, ...) {
+	lst <- lapply(object, function(x){
+		if(isTRUE(attr(x, "FLIndexBiomass"))) ages <- "all" else ages <- range(x)["min"]:range(x)["max"]
+		years <- try(range(x)["minyear"]:range(x)["maxyear"], silent=TRUE)
+		if(is(years, "try-error")) years <- 1
+		df <- expand.grid(age = ages, year = years)
+		X <- getX(x @ Mod, df)
+		b <- coef(x)
+		niter <- dim(b)[2]
+		fit <- exp(c(X %*% b) + x @ centering)
+		FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), dimnames = list(age = ages, year = years, unit = "unique", season = "all", area = "unique", iter = seq(niter))))
+	})
+	lst
+}
 

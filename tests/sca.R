@@ -53,6 +53,22 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
+#--------------------------------------------------------------------
+# check qmodel defaults
+#--------------------------------------------------------------------
+fit <- sca(ple4, FLIndices(ple4.index[1]), fit="assessment")
+all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~1"))
+fit <- sca(ple4, FLIndices(ple4.index[1:2]), fit="assessment")
+all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~age"))
+fit <- sca(ple4, FLIndices(ple4.index[1:3]), fit="assessment")
+all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~age"))
+fit <- sca(ple4, FLIndices(ple4.index[1:4]), fit="assessment")
+all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=3)"))
+fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
+all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=5)"))
+
+
+
 #====================================================================
 # run a4aSCA
 #====================================================================

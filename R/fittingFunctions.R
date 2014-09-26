@@ -82,9 +82,10 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
   if(missing(qmodel)){
 	  inddms <- lapply(indices, dims)
 	  ka <- sapply(inddms, "[[", "age")
-	  ka <- pmin(pmax(2, floor(.7 * ka)), 7)
-
-	  qmodel <- lapply(ka, function(i) if (i == 2) ~ age else formula(paste("~ s(age, k = ", ka, ")")))
+	  qmodel <- lapply(ka, function(i){
+	  	# one age ~1 2 ages ~ age 3 or more s(age)
+	  	if (i == 1) ~ 1 else if (i <= 3) ~ age else formula(paste("~ s(age, k = ", pmax(3, pmin(floor(.7 * ka), 7)), ")"))
+	  })
   }
 
   if (stkdms$age > 10) {
