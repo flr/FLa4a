@@ -267,6 +267,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	args$ylab="numbers"
 	args$xlab=""
 	args$scales=list(y="free")
+	args$auto.key=list(lines=TRUE, points=FALSE, columns=2)
 #	args$panel=function(x,y,...){
 #		panel.abline(h=0, col.line="gray80")
 #		panel.xyplot(x,y,...)

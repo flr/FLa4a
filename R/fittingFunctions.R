@@ -474,11 +474,13 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # set weights for missing values to zero
   full.df$weights[is.na(full.df$obs)] <- 0
   # inform that missing values will be treated as missing at random
-  if (any(is.na(full.df$obs))) 
-    message("Note: The following observations are treated as being missing at random:\n\t", 
-             paste(capture.output(print(subset(full.df,is.na(obs))[c("fleet","year","age")], row.names = FALSE)), collapse = "\n\t"),
-          "\n      Predictions will be made for missing observations." )
-  
+  if(verbose){
+	  if (any(is.na(full.df$obs))) 
+		message("Note: The following observations are treated as being missing at random:\n\t", 
+		         paste(capture.output(print(subset(full.df,is.na(obs))[c("fleet","year","age")], row.names = FALSE)), collapse = "\n\t"),
+		      "\n      Predictions will be made for missing observations." )
+  }
+    
   # fill out data frame for all eventualities ... except ages .... 
   # or a quick one that would not mess array dims and things later is to fix ages in data frame but keep rows...
   # it would actually be easiest to present all auxilliary data and covariates as a data.frame and the observations as a matrix...
@@ -526,7 +528,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   Xf <- getX(fmodel, subset(full.df, fleet == "catch"))
   # F model offsets
   # ...
-  
+
   # Q model matrix  
   fleet.names <- c("catch", names(indices))
   Xqlist <- lapply(seq_along(indices), function(i) getX(qmodel[[i]], subset(full.df, fleet == fleet.names[i+1])))
@@ -859,6 +861,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 			out$nopar <- NA
 			out$nlogl <- NA
 			out$maxgrad <- NA
+			out$cgcv <- NA
 			flqNA <- stock.n(stock)
 			flqNA[] <- NA 
 			out$N <- t(flqNA[drop=T])
@@ -969,11 +972,13 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     })
     names(index) <- ind.names
 
+	# GCV (Wood, 2006, pag. 132)
     a4aout@index <- FLQuants(index)
-
-    tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data)))
+	flev <- diag(Xf %*% solve(t(Xf) %*% Xf) %*% t(Xf))
+	cgcv <- prod(dim(a4aout@catch.n)) * sum(c(log(catch.n(stock)/a4aout@catch.n))^2)/sum(1-flev)^2
+	tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv))
                              #logDetHess = logDetHess,           
-    a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
+    a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv")))                                  
                               
     
     #if (fit %in% c("assessment", "debug", "Ext")) {
