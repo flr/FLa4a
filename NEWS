@@ -1,5 +1,12 @@
 FLa4a NEWS
 
+CHANGES IN FLa4a 0.300.x:
+
+	NEW FEATURES:
+		Models can have up to 500 characters instead of the default 60. The previous limitation was creating problems, for example, when fitting models for individual ages, which were longer than 60 characters. 
+	BUG FIXES:
+		
+
 CHANGES IN FLa4a 0.200.x:
 
 	NEW FEATURES:
