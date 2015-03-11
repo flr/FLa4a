@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A simple and robust statistical catch at age model
-Version: 0.300.0
+Version: 0.300.1
 Date: 2014-07-03
 Author: Colin P. Millar and Ernesto Jardim
 Maintainer: Colin Millar <colinpmillar@googlemail.com> and Ernesto Jardim <ernesto.jardim@jrc.ec.europa.eu>
@@ -12,7 +12,6 @@ Depends:
 	methods,
     FLCore (>= 2.5.20140624),
     mgcv,
-    splines,
     triangle,
     copula
 Imports:
