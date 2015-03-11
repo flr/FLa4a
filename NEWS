@@ -3,7 +3,7 @@ FLa4a NEWS
 CHANGES IN FLa4a 0.200.x:
 
 	NEW FEATURES:
-		added a generalized cross valiation score to the fitSumm information 
+		added a generalized cross validation score to the fitSumm information 
 		message about predictions turned off by default
 	BUG FIXES:
 		plot(fit, indices) legend added 
