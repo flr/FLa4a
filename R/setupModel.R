@@ -13,7 +13,6 @@
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
 
 setMethod("getX", "formula", function(object, df, newdf = df) {
-
     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
     model <- object
@@ -116,7 +115,7 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
     if (!any(gams)) {
       X <- model.matrix(model, df)
     } else {
-      model <- eval(parse(text = paste("fake.obs ~", deparse(model[[length(model)]]))))
+      model <- eval(parse(text = paste("fake.obs ~", deparse(model[[length(model)]], width.cutoff = 500L))))
       #X <- model.matrix.gam(gam(model, data = cbind(fake.obs = 1, df)))
       G <- gam(model, data = cbind(fake.obs = 1, df), fit = FALSE)
       X <- G $ X

@@ -23,10 +23,11 @@
 # returns the location on the file system of the ADMB executable
 a4a.dir <- function () 
 {
-  if (os.type("mac")) {
-    fnm <- system.file(paste("bin/mac/", os.32or64bit(), "bit", sep = ""), package = "FLa4a")
-  }
-  else if (os.type("linux")) {
+#  if (os.type("mac")) {
+#    fnm <- system.file(paste("bin/mac/", os.32or64bit(), "bit", sep = ""), package = "FLa4a")
+#  }
+#  else if (os.type("linux")) {
+  if (os.type("linux")) {
     fnm <- system.file("bin/linux", package = "FLa4a")
   }
   else if (os.type("windows")) {
@@ -45,21 +46,23 @@ a4a.dir <- function ()
 
 
 # returns TRUE if correct operating system is passed as an argument
-os.type <- function (type = c("linux", "mac", "windows", "else")) 
+#os.type <- function (type = c("linux", "mac", "windows", "else")) 
+os.type <- function (type = c("linux", "windows", "else")) 
 {
   type = match.arg(type)
   if (type == "windows") {
     return(.Platform$OS.type == "windows")
   }
-  else if (type == "mac") {
-   result = (file.info("/Library")$isdir && file.info("/Applications")$isdir)
-    if (is.na(result)) {
-      result = FALSE
-    }
-    return(result)
-  }
+#  else if (type == "mac") {
+#   result = (file.info("/Library")$isdir && file.info("/Applications")$isdir)
+#    if (is.na(result)) {
+#      result = FALSE
+#    }
+#    return(result)
+#  }
   else if (type == "linux") {
-    return((.Platform$OS.type == "unix") && !os.type("mac"))
+#    return((.Platform$OS.type == "unix") && !os.type("mac"))
+    return(.Platform$OS.type == "unix")
   }
   else if (type == "else") {
     return(TRUE)

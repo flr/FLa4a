@@ -1,5 +1,5 @@
 # FLa4a
-- Version: 0.200.1
+- Version: 0.300.2
 - Date: 2015-06-09
 - Author: Colin P. Millar and Ernesto Jardim
 - Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>
@@ -11,7 +11,7 @@ FLa4a implements the Assesment For All (A4A) initiative stock assessment model, 
 
 To install this package, start R and enter:
 
-	install.packages(c("copula", "mgcv", "splines", "triangle"))
+	install.packages(c("copula", "mgcv", "triangle"))
 
 followed by
 
