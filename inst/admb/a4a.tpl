@@ -96,6 +96,7 @@ DATA_SECTION
   init_matrix aux(1,noaux,1,7) //  year  age     m       m.spwn  harvest.spwn    mat * stkwt  stkwt
   //!!TRACE(aux)
 
+  int idx
 
   //
   // useful summaries
@@ -299,12 +300,28 @@ PRELIMINARY_CALCS_SECTION
   //fpar=log(0.1)*max(designF);
   //qpar=log(1E-5)*max(designF);
 
+  //
+  // auxilliary data
+  //
+  idx = 0;
+  for (int y=minYear; y<=maxYear; ++y) {
+    for (int a=minAge; a<=maxAge; ++a) {
+      idx = idx + 1;
+      m(y,a) = aux(idx,3);
+      mspwn(y,a) = aux(idx,4);
+      fspwn(y,a) = aux(idx,5);
+      matWt(y,a) = aux(idx,6);
+      stkWt(y,a) = aux(idx,7);
+    }
+  }
+
+
+
 // *********************************
 //
 PROCEDURE_SECTION
 //
 // *********************************
-
   time_t currentTime;
   time(& currentTime);
   if(difftime(currentTime,StartTime)>3600){ // Terminate after 60 minutes 
@@ -320,23 +337,6 @@ PROCEDURE_SECTION
     ad_exit(1);
   } 
   nll=0.0;
-
-  //
-  // auxilliary data
-  //
-  int idx = 0;
-  for (int y=minYear; y<=maxYear; ++y) {
-    for (int a=minAge; a<=maxAge; ++a) {
-      idx = idx + 1;
-      m(y,a) = aux(idx,3);
-      mspwn(y,a) = aux(idx,4);
-      fspwn(y,a) = aux(idx,5);
-      matWt(y,a) = aux(idx,6);
-      stkWt(y,a) = aux(idx,7);
-    }
-  }
-
-
   //
   // Fishing mortality model
   //
