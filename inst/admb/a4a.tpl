@@ -468,16 +468,17 @@ PROCEDURE_SECTION
   //
   // stock recruit model
   //
-  if(SRaphase > 0) { // then include a SRR model 
-  
+  if(SRaphase > 0) 
+  { // then include a SRR model 
     //
     // recruitment model
     //
     expandedRa = designRa*rapar; //+ radev;
     expandedRb = designRb*rbpar;
     idx = 0;
-    for (int y = minYear; y <= maxYear; ++y) {
-      idx = idx+1;
+    for (int y = minYear; y <= maxYear; ++y) 
+    {
+      idx++;
       ra(y) = expandedRa(idx); // a and b are correlated though...
       rb(y) = expandedRb(idx);
     }
@@ -486,47 +487,50 @@ PROCEDURE_SECTION
     // weighted likelihood
     //
     dvariable predLogR; 
-    dvariable varLogR;
+    // dvariable varLogR = log(pow(srCV,2)+1);
+    double varLogR = log(pow(srCV,2)+1); // This is constant wrt model, could be declared global...
     dvariable h;
     dvariable v;
 
-    if (Rmodel == 1) { // beverton holt
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+    switch (Rmodel)
+    {
+      case 1: // beverton holt
+        for(int y=minYear+1; y<=maxYear; ++y)
+        {
+          predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+        break;
+      case 2: // ricker
+        for(int y=minYear+1; y<=maxYear; ++y)
+        {
+          predLogR = ra(y) + log(ssb(y-1)) - exp(rb(y)) * ssb(y-1);
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+      case 3:  // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
+        for(int y=minYear+1; y<=maxYear; ++y)
+        {
+          predLogR = ra(y) + log(ssb(y-1) + sqrt(exp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - exp(2.0*rb(y)), 2.0) + 0.0025));
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+      case 4: // geomean
+        for(int y=minYear+1; y<=maxYear; ++y){
+          predLogR = ra(y);
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+      case 5: // bevholt with steepness: ra is a transform of h; rb is a transform of v
+        for(int y=minYear+1; y<=maxYear; ++y){
+          h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
+          v = exp(rb(y));
+          predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
       }
-    }
-    if (Rmodel == 2) { // ricker
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - exp(rb(y)) * ssb(y-1);
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
-    if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1) + sqrt(exp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - exp(2.0*rb(y)), 2.0) + 0.0025));
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
-    if (Rmodel == 4) { // geomean
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y);
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
-    if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
-      for(int y=minYear+1; y<=maxYear; ++y){
-        h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
-        v = exp(rb(y));
-        predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
   }
 
 
@@ -568,7 +572,8 @@ RUNTIME_SECTION
 // *********************************
 
 convergence_criteria 1E-1,1E-2,1E-3,1E-12
-maximum_function_evaluations 10,20,30,10000
+// maximum_function_evaluations 10,20,30,10000
+maximum_function_evaluations 100,200,10000
 
 // *********************************
 //
