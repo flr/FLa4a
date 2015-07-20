@@ -7,3 +7,12 @@ os:
 language: R
   
 sudo: required
+
+r_binary_packages:
+ - copula
+ - triangle
+ - mgcv
+
+r_github_packages:
+ - flr/FLCore
+
