@@ -242,8 +242,10 @@ PARAMETER_SECTION
 
   // the paramters of the fixed effects
   init_vector fpar(1,noFpar,3)
-  init_vector qpar(1,noQpar,2)
-  init_vector vpar(1,noVpar,1)
+  // init_vector qpar(1,noQpar,1)
+  init_bounded_vector qpar(1,noQpar,-10,10,1)
+  // init_vector vpar(1,noVpar,2)
+  init_bounded_vector vpar(1,noVpar,-10,10,2)
   init_vector ny1par(1,noNy1par,4)
   init_vector rpar(1,noRpar,1) 
   init_vector rapar(1,noRapar,SRaphase)
@@ -401,9 +403,9 @@ PROCEDURE_SECTION
   n.colfill(minAge,r);
   for(int a=minAge+1; a<=maxAge; ++a){
     for(int y=minYear+1; y<=maxYear; ++y){
-      n(y,a)=n(y-1,a-1)-exp(f(y-1,a-1))-exp(m(y-1,a-1));
+      n(y,a)=n(y-1,a-1)-mfexp(f(y-1,a-1))-mfexp(m(y-1,a-1));
       if((a==maxAge) && (isPlusGrp > 0.5)){
-        n(y,a)=log(exp(n(y,a))+exp(n(y-1,a)-exp(f(y-1,a))-exp(m(y-1,a))));
+        n(y,a)=log(mfexp(n(y,a))+mfexp(n(y-1,a)-mfexp(f(y-1,a))-mfexp(m(y-1,a))));
       }
     }
   }
@@ -411,11 +413,13 @@ PROCEDURE_SECTION
   //
   // fbar and ssb
   //
-  for(int y=minYear; y<=maxYear; ++y){
-    ssb(y) = sum(elem_prod(exp(n(y)),matWt(y))); // need to decay this by m.spwn and f.spwn
+  for(int y=minYear; y<=maxYear; ++y)
+  {
+    ssb(y) = sum(elem_prod(mfexp(n(y)),matWt(y))); // need to decay this by m.spwn and f.spwn
     fbar(y) = 0.0;
-    for(int a=fbarRange(1); a<=fbarRange(2); ++a){
-      fbar(y) += exp(f(y,a));
+    for(int a=fbarRange(1); a<=fbarRange(2); ++a)
+    {
+      fbar(y) += mfexp(f(y,a));
     }
     fbar(y) /= fbarRange(2)-fbarRange(1)+1;
   }  
@@ -433,7 +437,8 @@ PROCEDURE_SECTION
   double locObs;
   dvariable locZ;
   dvariable locVar;
-  for (int i=1; i<=noobs; ++i) {
+  for (int i=1; i<=noobs; ++i) 
+  {
     obsVec   = obs(i);
     locFleet = obsVec(1);
     locYear  = obsVec(2);
@@ -442,25 +447,30 @@ PROCEDURE_SECTION
 
     // here we split - if locAge == -1 then we have a biomass index and use add to a different likelihood component.
 
-    if (locAge >= 0) { // standard observation
-    
-      locZ     = exp(f(locYear,locAge)) + exp(m(locYear,locAge));
-      if (locFleet==1) { //    catches predicted 
-        pred(i) = f(locYear,locAge)-log(locZ)+log(1.0-exp(-locZ))+n(locYear,locAge);
-      } else {          //    survey predicted 
+    if (locAge >= 0) 
+    { // standard observation
+      locZ     = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
+      if (locFleet==1) 
+      { //    catches predicted 
+        pred(i) = f(locYear,locAge)-log(locZ)+log(1.0-mfexp(-locZ))+n(locYear,locAge);
+      } 
+      else 
+      {          //    survey predicted 
         pred(i) = q(locFleet-1,locYear,locAge) - locZ * surveyTimes(locFleet-1) + n(locYear,locAge); 
       }
-      locVar = exp(2.0 * v(locFleet, locYear, locAge));
+      locVar = mfexp(2.0 * v(locFleet, locYear, locAge));
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
-    } else { // an observation of biomass
+    } 
+    else 
+    { // an observation of biomass
       pred(i) = 0; // not sure i need to but best to be safe
-      for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) {
-        locZ     = exp(f(locYear,a)) + exp(m(locYear,a));
-        pred(i) += exp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
+      for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) 
+      {
+        locZ     = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
+        pred(i) += mfexp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * mfexp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
-      locVar = exp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
+      locVar = mfexp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
       nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...    
-          
     }
   }
 
@@ -468,16 +478,17 @@ PROCEDURE_SECTION
   //
   // stock recruit model
   //
-  if(SRaphase > 0) { // then include a SRR model 
-  
+  if(SRaphase > 0) 
+  { // then include a SRR model 
     //
     // recruitment model
     //
     expandedRa = designRa*rapar; //+ radev;
     expandedRb = designRb*rbpar;
     idx = 0;
-    for (int y = minYear; y <= maxYear; ++y) {
-      idx = idx+1;
+    for (int y = minYear; y <= maxYear; ++y) 
+    {
+      idx++;
       ra(y) = expandedRa(idx); // a and b are correlated though...
       rb(y) = expandedRb(idx);
     }
@@ -486,47 +497,50 @@ PROCEDURE_SECTION
     // weighted likelihood
     //
     dvariable predLogR; 
-    dvariable varLogR;
+    // dvariable varLogR = log(pow(srCV,2)+1);
+    double varLogR = log(pow(srCV,2)+1); // This is constant wrt model, could be declared global...
     dvariable h;
     dvariable v;
 
-    if (Rmodel == 1) { // beverton holt
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+    switch (Rmodel)
+    {
+      case 1: // beverton holt
+        for(int y=minYear+1; y<=maxYear; ++y)
+        {
+          predLogR = ra(y) + log(ssb(y-1)) - log(mfexp(rb(y)) + ssb(y-1));
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+        break;
+      case 2: // ricker
+        for(int y=minYear+1; y<=maxYear; ++y)
+        {
+          predLogR = ra(y) + log(ssb(y-1)) - mfexp(rb(y)) * ssb(y-1);
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+      case 3:  // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
+        for(int y=minYear+1; y<=maxYear; ++y)
+        {
+          predLogR = ra(y) + log(ssb(y-1) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - mfexp(2.0*rb(y)), 2.0) + 0.0025));
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+      case 4: // geomean
+        for(int y=minYear+1; y<=maxYear; ++y){
+          predLogR = ra(y);
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
+      case 5: // bevholt with steepness: ra is a transform of h; rb is a transform of v
+        for(int y=minYear+1; y<=maxYear; ++y){
+          h = mfexp(ra(y)) / (1 + mfexp(ra(y))) * 0.8 + 0.2;
+          v = mfexp(rb(y));
+          predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
+          // varLogR = log(pow(srCV,2)+1);
+          nll += nldnorm(r(y), predLogR, varLogR);    
+        }
       }
-    }
-    if (Rmodel == 2) { // ricker
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - exp(rb(y)) * ssb(y-1);
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
-    if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1) + sqrt(exp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - exp(2.0*rb(y)), 2.0) + 0.0025));
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
-    if (Rmodel == 4) { // geomean
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y);
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
-    if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
-      for(int y=minYear+1; y<=maxYear; ++y){
-        h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
-        v = exp(rb(y));
-        predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
-        varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
-      }
-    }
   }
 
 
@@ -568,7 +582,8 @@ RUNTIME_SECTION
 // *********************************
 
 convergence_criteria 1E-1,1E-2,1E-3,1E-12
-maximum_function_evaluations 10,20,30,10000
+// maximum_function_evaluations 10,20,30,10000
+maximum_function_evaluations 100,200,10000
 
 // *********************************
 //
