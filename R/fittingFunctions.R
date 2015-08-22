@@ -1,5 +1,6 @@
 #' @title a4a
 #' @name a4a
+#' @param ... Additional argument list that might not ever be used.
 #' @docType methods
 #' @rdname a4a
 #' @description This was the old stock assessment framework user's interface. It was replaced by \code{sca} or the advanced version \code{a4aSCA}.    
@@ -52,10 +53,9 @@ collapseSeasons <- function (stock) {
 #' @description User interface to the statistical catch-at-age method of the a4a stock assessment framework.   
 #' @param stock a \code{FLStock} object
 #' @param indices a \code{FLIndices} object
-#' @param fmodel a formula object depicting the model for log fishing mortality at age
-#' @param qmodel a list of formula objects depicting the models for log survey catchability at age
-#' @param srmodel a formula object depicting the model for log recruitment
 #' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
+#' @param object an object from which to create an a4aFit object
+#' @param ... Additional argument list that might not ever be used.
 #' @return a \code{a4aFit} or \code{a4aFitSA} object with the fit results. 
 #' @aliases sca sca-methods sca,FLStock,FLIndices-method sca,FLStock,FLIndex-method
 #' @template Example-sca
@@ -125,16 +125,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #'
 #' @param stock an FLStock object containing catch and stock information
 #' @param indices an FLIndices object containing survey indices 
-#' @param fmodel a formula object depicting the model for log fishing mortality at age
-#' @param qmodel a list of formula objects depicting the models for log survey catchability at age
-#' @param srmodel a formula object depicting the model for log recruitment
-#' @param n1model a formula object depicting the model for the population in the first year of the time series
-#' @param vmodel a list of formula objects depicting the model for the variance of fishing mortality and the indices
-#' @param covar a list with covariates 
-#' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
-#' @param verbose if true admb fitting information is printed to the screen
-#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
-#' @param center Logical defining if the data should be centered before fitting
+#' @param ... Additional argument list that might not ever be used.
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aSCA a4aSCA-methods a4aSCA,FLStock,FLIndices-method
 #' @template Example-a4aSCA
@@ -477,7 +468,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   if(verbose){
 	  if (any(is.na(full.df$obs))) 
 		message("Note: The following observations are treated as being missing at random:\n\t", 
-		         paste(capture.output(print(subset(full.df,is.na(obs))[c("fleet","year","age")], row.names = FALSE)), collapse = "\n\t"),
+		         paste(capture.output(print(full.df[is.na(full.df$obs),c("fleet","year","age")], row.names = FALSE)), collapse = "\n\t"),
 		      "\n      Predictions will be made for missing observations." )
   }
     
@@ -489,7 +480,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     # if biomass survey skip this step
     if (is(indices[[i]], 'FLIndexBiomass')) next
     .ages <- temp.full.df$age [temp.full.df$fleet == levels(full.df$fleet)[i+1]]
-    .range <- range(subset(full.df, fleet == levels(full.df$fleet)[i+1])$age)
+    .range <- range(full.df$age[full.df$fleet == levels(full.df$fleet)[i+1]])
     .ages[.ages < .range[1]] <- .range[1]
     .ages[.ages > .range[2]] <- .range[2] 
     temp.full.df$age [temp.full.df$fleet == levels(full.df$fleet)[i+1]] <- .ages 
@@ -512,7 +503,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   full.df[is.na(full.df)] <- 0 
 
   # order df
-  full.df <- full.df[with(full.df, order(fleet, year, age)), ]
+  full.df <- full.df[order(full.df$fleet, full.df$year, full.df$age), ]
   rownames(full.df) <- NULL
   full.df <- full.df[c(3,1,2,4:ncol(full.df))]
    
@@ -525,13 +516,13 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # ------------------------------------------------------------------------
 
   # F model matrix
-  Xf <- getX(fmodel, subset(full.df, fleet == "catch"))
+  Xf <- getX(fmodel, full.df[full.df$fleet == "catch",])
   # F model offsets
   # ...
 
   # Q model matrix  
   fleet.names <- c("catch", names(indices))
-  Xqlist <- lapply(seq_along(indices), function(i) getX(qmodel[[i]], subset(full.df, fleet == fleet.names[i+1])))
+  Xqlist <- lapply(seq_along(indices), function(i) getX(qmodel[[i]], full.df[full.df$fleet == fleet.names[i+1],]))
   Xq <- as.matrix(do.call(bdiag, Xqlist))  
   # if model is one formula:
   #Xq <- getX(qmodel, subset(full.df, fleet != "catch"))
@@ -539,7 +530,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # ...
   
   # var model matrix
-  Xvlist <- lapply(1:length(fleet.names), function(i) getX(vmodel[[i]], subset(full.df, fleet == fleet.names[i])))
+  Xvlist <- lapply(1:length(fleet.names), function(i) getX(vmodel[[i]], full.df[full.df$fleet == fleet.names[i],]))
   Xv <- as.matrix(do.call(bdiag, Xvlist))  
   # if model is one formula:  
   #Xv <- getX(vmodel, full.df)
@@ -547,7 +538,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # ...
     
   # initial age structure model matrix
-  Xny1 <- getX(n1model, subset(full.df, year == min(year) & age > min(age) & fleet == "catch"))
+  Xny1 <- getX(n1model, full.df[full.df$year == min(full.df$year) & 
+                                full.df$age  >  min(full.df$age)  & 
+                                full.df$fleet == "catch",])
   # var model offsets
   # ...  
     
@@ -591,15 +584,16 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     message("Note: Trailing formula elements in the srmodel have been removed")
     #srr$amodel <- eval(parse(text = paste("~", as.character(srr$amodel)[length(srr$amodel)], "+", paste(facs[!a4as], collapse = " + ")) ))
   }
-  Xsra <- getX(srr$a, subset(full.df, fleet == "catch" & age == dims(stock)$min))  
-  Xsrb <- getX(srr$b, subset(full.df, fleet == "catch" & age == dims(stock)$min))  
+  Xsra <- getX(srr$a, full.df[full.df$fleet == "catch" & full.df$age == dims(stock)$min,])  
+  Xsrb <- getX(srr$b, full.df[full.df$fleet == "catch" & full.df$age == dims(stock)$min,])  
  
   # can we do a quick check for identifiability of the srr model? ...
   if (ncol(Xsra) + ncol(Xsrb) > dims(stock)$year) stop("Stock recruitment model is over parameterised, please reduce the number parameters")
 
   # internal r model matrix
   if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year) 
-  Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
+  Xr <- getX(rmodel, full.df[full.df$age == min(full.df$age) & 
+                             full.df$fleet == "catch",])
 
   # ------------------------------------------------------------------------
   #

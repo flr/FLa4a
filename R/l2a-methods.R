@@ -4,10 +4,11 @@
 #' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model a \code{a4aGr} object
-#' @param halfwidth the halfwidths of the length classes. A single numeric or numeric vector the size of the number of the number length classes. Not used if object is an \code{FLStockLen} as the \code{halfwidth} slot is used.
-#' @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
-#' @param max_age the maximum age in the returned \code{FLQuant}. All ages above this are set to \code{max_age}. Only used if object is an \code{FLQuant}.
-#' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
+## @param halfwidth the halfwidths of the length classes. A single numeric or numeric vector the size of the number of the number length classes. Not used if object is an \code{FLStockLen} as the \code{halfwidth} slot is used.
+## @param stat the aggregation statistic, must be \"mean\" or \"sum\". Only used if object is an \code{FLQuant}.
+## @param max_age the maximum age in the returned \code{FLQuant}. All ages above this are set to \code{max_age}. Only used if object is an \code{FLQuant}.
+## @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
+#' @param ... Additional argument list that might not ever be used.
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
 #' # red fish
@@ -15,7 +16,10 @@
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
+#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), 
+#'                grInvMod=~t0-1/k*log(1-len/linf), 
+#'                params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), 
+#'                vcov=mm, distr="norm")
 #' data(rfLen)
 #' cth <- catch.n(rfLen.stk) 
 #' # both with iter=1

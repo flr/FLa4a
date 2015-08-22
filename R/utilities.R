@@ -87,7 +87,7 @@ getADMBHessian <- function(wkdir) {
 ## This function reads in all of the information contained in the
 ## admodel.hes file. Some of this is needed for relaxing the covariance
 ## matrix, and others just need to be recorded and rewritten to file so ADMB
-## "sees" what it’s expecting.
+## "sees" what it's expecting.
   filename <- file(paste0(wkdir,"/admodel.hes"), "rb")
   on.exit(close(filename))
   num.pars <- readBin(filename, "integer", 1)
@@ -202,12 +202,10 @@ setMethod("ra", c("FLStock","FLIndices"), function(stock, indices, n, ...){
 })
 
 
-#' @title plot of fitted catch numbers-at-age
-#' @name plot
-#' @docType methods
-#' @rdname plotc
-#' @aliases plot,a4aFit,FLStock-method
-#' @description Method to plot fitted versus observed catch numbers-at-age
+#' Plot of fitted catch numbers-at-age
+#'
+#' Method to plot fitted versus observed catch numbers-at-age
+#'
 #' @param x a \code{a4aFit} object with the fitted values
 #' @param y a \code{FLStock} object with the observed values
 #' @param ... Additional argument list that might not ever be used.
@@ -239,12 +237,9 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	do.call("xyplot", args)
 })
 
-#' @title plot of fitted indices-at-age
-#' @name plot
-#' @docType methods
-#' @rdname ploti
-#' @aliases plot,a4aFit,FLIndices-method
-#' @description Method to plot fitted versus observed indices-at-age
+#' Plot of fitted indices-at-age
+#'
+#' Method to plot fitted versus observed indices-at-age
 #'
 #' @param x a \code{a4aFit} object with the fitted values
 #' @param y a \code{FLIndices} object with the observed values

@@ -51,6 +51,9 @@ setClass("a4aStkParams",
 )
 
 #' @rdname a4aStkParams-class
+#' @param object todo
+#' @param value todo
+#' @param ... Additional argument list that might not ever be used.
 #' @aliases a4aStkParams a4aStkParams-methods a4aStkParams,missing-method
 #' @template Accessors
 #' @template Constructors

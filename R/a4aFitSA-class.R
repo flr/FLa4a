@@ -84,6 +84,8 @@ setMethod("submodels", signature(object = "a4aFitSA"),
  })
 
 #' @rdname a4aFitSA-class
+#' @param object todo
+#' @param ... Additional argument list that might not ever be used.
 #' @aliases a4aFitSA a4aFitSA-method
 setGeneric("a4aFitSA", function(object, ...) standardGeneric("a4aFitSA"))
 

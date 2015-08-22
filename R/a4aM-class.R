@@ -42,6 +42,9 @@ setClass("a4aM",
 )
 
 #' @rdname a4aM-class
+#' @param object todo
+#' @param value todo
+#' @param ... Additional argument list that might not ever be used.
 #' @aliases a4aM a4aM-methods a4aM,missing-method
 #' @template Accessors
 #' @template Constructors
@@ -121,8 +124,7 @@ setReplaceMethod("trend", "a4aM", function(object, value){
 #' @param object a \code{a4aM} object
 #' @param value a \code{vector} with max and min age range to replace the object info. 
 #' @return a \code{vector} object when extracting or a \code{a4aM} object when replacing
-#' @aliases rngmbar rngmbar-methods rngmbar,a4aM-method
-#' @aliases rngmbar<- rngmbar<--methods rngmbar<-,a4aM-method
+#' @aliases rngmbar rngmbar-methods rngmbar,a4aM-method rngmbar<- rngmbar<--methods rngmbar<-,a4aM-method
 
 setGeneric("rngmbar", function(object, ...) standardGeneric("rngmbar"))
 setMethod("rngmbar", "a4aM", function(object){

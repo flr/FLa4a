@@ -5,6 +5,7 @@
 #' @title predict methods for SCA
 #' @description Predict methods for a4a stock assessment fits.
 #' @name predict
+#' @param object an object to predict from
 #' @rdname predict-methods
 #' @aliases predict,a4aFitSA-method
 #' @template Example-predict
@@ -23,7 +24,7 @@ setMethod("predict", signature(object = "a4aFitSA"),
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
 
-  	sm <- stkmodel(object)
+  sm <- stkmodel(object)
 	qm <- qmodel(object)
 	vm <- vmodel(object)
 	# need to update centering to include stock centering

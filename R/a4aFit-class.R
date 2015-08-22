@@ -55,6 +55,8 @@ setClass("a4aFit",
 )
 
 #' @rdname a4aFit-class
+#' @param object an object from which to create an a4aFit object
+#' @param ... Additional argument list that might not ever be used.
 #' @aliases a4aFit a4aFit-methods
 setGeneric("a4aFit", function(object, ...) standardGeneric("a4aFit"))
 

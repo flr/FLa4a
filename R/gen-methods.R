@@ -14,8 +14,7 @@
 #' @param C an FLQuant with iterations or missing
 #' @param F an FLQuant with iterations or missing
 #'
-#' @param ... Additional argument list that might not ever
-#'  be used.
+#' @param ... Additional argument list that might not ever be used.
 #'
 #' @return an FLStock
 #' 

@@ -9,6 +9,10 @@
 setClass("a4aFitResiduals", contain="FLQuants")
 
 #' @rdname a4aFitResiduals-class
+#' @param object todo
+#' @param stock todo
+#' @param indices todo
+#' @param ... Additional argument list that might not ever be used.
 #' @aliases a4aFitResiduals a4aFitResiduals-methods residuals,a4aFit-method
 #' @template runsca
 #' @examples
@@ -40,6 +44,7 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 #' @aliases stdlogres stdlogres-methods stdlogres,FLQuant,FLQuant-method
 #' @param obs a \code{FLQuant} object with the observations
 #' @param fit a \code{FLQuant} object with the fitted value
+#' @param ... Additional argument list that might not ever be used.
 #' @return a \code{FLQuant} with stardardized log residuals
 #' @template runsca
 #' @examples
@@ -53,14 +58,12 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	as(res, "FLQuant")
 }) 
 
-#' @title plot of standardized log residuals 
-#' @name plot
-#' @docType methods
-#' @rdname plot-methods
-#' @aliases plot,a4aFitResiduals,missing-method
-#' @description Method to plot scatterplot of standardized residuals
+#' Plot of standardized log residuals 
+#'
+#' Method to plot scatterplot of standardized residuals
 #'
 #' @param x a \code{a4aFitResiduals} object with the standardized residuals
+#' @param y todo
 #' @param ... Additional argument list that might not ever be used.
 #' @return a \code{plot} with stardardized log residuals
 #' @template runsca
@@ -119,6 +122,7 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 #' @aliases bubbles,a4aFitResiduals,missing-method
 #' @description Method to plot bubbles of standardized residuals
 #' @param x a \code{a4aFitResiduals} object with the standardized residuals
+#' @param data todo
 #' @param ... Additional argument list that might not ever be used.
 #' @return a \code{bubbles} plot with stardardized log residuals
 #' @template runsca

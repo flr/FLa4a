@@ -4,6 +4,8 @@
 
 #' @title coefficients extract and replacement
 #' @name coef
+#' @param object todo
+#' @param ... Additional argument list that might not ever be used.
 #' @docType methods
 #' @rdname coef-methods
 #' @description Methods to extract and replace the model coefficients

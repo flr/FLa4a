@@ -4,9 +4,8 @@
 #' @description uses the user specified formula to build a model matrix
 #'
 #'
-#' @param formula a formula object
-#' @param df the data.frame to build the model matrix against
-#' @param df the data.frame to create the model matrix for.
+#' @param object a formula
+#' @param ... Additional argument list that might not ever be used.
 #' @return a matrix.
 #' @note \code{getX} is intended to be used internally
 #' @aliases getX getX-methods getX,formula-method
@@ -168,12 +167,14 @@ getCov <- function(n, model, tau)
   if (model == "iid") {
     Cov <- as(Diagonal(n) * tau, "CsparseMatrix")
 
-  } else if (model %in% c("rw1", "rw2")) {
-    Q <- Qfunc(n, type = model) / tau
-    # make positive definate
-    Q[] <- c(Q) + rowSums(apply( eigen(Q)$vectors, 2, function(x) outer(x, x)))
-    Q <- as(Q, "CsparseMatrix")
-    Cov <- solve(Q)
+  } else {
+    stop("Only iid covariance coded so far.")
+  ## if (model %in% c("rw1", "rw2")) {
+  ##  Q <- Qfunc(n, type = model) / tau
+  ##  # make positive definate
+  ##  Q[] <- c(Q) + rowSums(apply( eigen(Q)$vectors, 2, function(x) outer(x, x)))
+  ##  Q <- as(Q, "CsparseMatrix")
+  ##  Cov <- solve(Q)
   }
 
   Cov

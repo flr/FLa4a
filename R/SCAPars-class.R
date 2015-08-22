@@ -28,6 +28,8 @@ setClass("SCAPars",
 #' @rdname SCAPars-class
 #' @template Accessors
 #' @template Constructors
+#' @param object an object from which to create an SCAPars object
+#' @param ... Additional argument list that might not ever be used.
 #' @aliases SCAPars SCAPars-methods SCAPars,missing-method
 setGeneric("SCAPars", function(object, ...) standardGeneric("SCAPars"))
 setMethod("SCAPars", signature(object="missing"),
