@@ -8,12 +8,12 @@ a4a <- function(...){
   warning('The a4a function has been renamed: please use the function a4aSCA in place of a4a.')
 }
 
-#' @title collapse seasons
+#' @title Collapse seasons
 #' @name collapseSeasons
 #' @docType methods
 #' @rdname collapseSeasons
 #' @description Method to collapse seasons of \code{FLStock} objects. M and catch-at-age are summed while mean weights at age, maturity at age and mortalities before spawning are averaged.   
-#' @param stock a FLStock object
+#' @param stock an FLStock object
 #' @return a FLStock object
 #' @aliases collapseSeasons
 collapseSeasons <- function (stock) {
@@ -45,18 +45,18 @@ collapseSeasons <- function (stock) {
   out
 }
 
-#' @title statistical catch-at-age method
+#' @title Statistical catch-at-age method
 #' @name sca
 #' @docType methods
 #' @rdname sca
 #' @description User interface to the statistical catch-at-age method of the a4a stock assessment framework.   
-#' @param stock a \code{FLStock} object
-#' @param indices a \code{FLIndices} object
+#' @param stock an \code{FLStock} object
+#' @param indices an \code{FLIndices} object
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a formula object depicting the model for log recruitment
-#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
-#' @return a \code{a4aFit} or \code{a4aFitSA} object with the fit results. 
+#' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
+#' @return an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
 #' @aliases sca sca-methods sca,FLStock,FLIndices-method sca,FLStock,FLIndex-method
 #' @template Example-sca
 setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
@@ -117,7 +117,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #	}
 #})
 
-#' @title statistical catch-at-age advanced method
+#' @title Statistical catch-at-age advanced method
 #' @name a4aSCA
 #' @docType methods
 #' @rdname a4aSCA
@@ -131,11 +131,11 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @param n1model a formula object depicting the model for the population in the first year of the time series
 #' @param vmodel a list of formula objects depicting the model for the variance of fishing mortality and the indices
 #' @param covar a list with covariates 
-#' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
-#' @param verbose if true admb fitting information is printed to the screen
-#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
-#' @param center Logical defining if the data should be centered before fitting
-#' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
+#' @param wkdir used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted
+#' @param verbose if true, admb fitting information is printed to the screen
+#' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
+#' @param center logical defining if the data should be centered before fitting
+#' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases a4aSCA a4aSCA-methods a4aSCA,FLStock,FLIndices-method
 #' @template Example-a4aSCA
 
@@ -342,7 +342,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   out
 })
 
-#' @title stock assessment model advanced method
+#' @title Stock assessment model advanced method
 #' @name a4aInternal
 #' @docType methods
 #' @rdname a4aInternal
@@ -358,9 +358,9 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 #' @param covar a list with covariates 
 #' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
 #' @param verbose if true admb fitting information is printed to the screen
-#' @param fit Character with type of fit, 'MP' or 'assessment', the first doesn't require the hessian to be computed, while the former does.
+#' @param fit character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.
 #' @param niters number of iterations to be simulated
-#' @param center \code{logical} should data be centered before estimating or not
+#' @param center \code{logical} specifying whether data is centered before estimating or not
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
 a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), 
@@ -1116,7 +1116,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   return(a4aout)  
 }
 
-#' @title breakpoints 
+#' @title Breakpoints
 #' @name breakpts
 #' @rdname breakpts
 #' @description Method to set breakpoints in submodels
