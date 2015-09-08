@@ -2,7 +2,6 @@
 
 os:
   - linux
-  - osx
 
 language: R
   
@@ -15,4 +14,3 @@ r_binary_packages:
 
 r_github_packages:
  - flr/FLCore
-
