@@ -46,7 +46,13 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 #' data(ple4)
 #' data(ple4.index)
 #' obj <- sca(ple4, FLIndices(ple4.index))
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+#'
 #' stdlogres(catch.n(ple4), catch.n(obj))
+#' ...which is the same as
+#' flqs$catch.n
+#' ...check:
+#' stdlogres(catch.n(ple4),catch.n(obj))-flqs$catch.n
 
 setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
@@ -114,7 +120,6 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 #' qqmath(flqs)
 
 setGeneric("qqmath", function(x, data, ...) standardGeneric("qqmath"))
-
 setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
 	qqmath(~data|factor(age)*qname, data=as.data.frame(x), ylab="standardized residuals", xlab="", prepanel=prepanel.qqmathline, panel = function(x, ...){panel.qqmathline(x, col="gray50"); panel.qqmath(x, ...)}, col=1, pch=19, cex=0.2, par.settings=list(strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="quantile-quantile plot of log residuals of catch and abundance indices", ...)
 })
@@ -136,9 +141,7 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 #' bubbles(flqs)
 
 setMethod("bubbles", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
-
 	bubbles(age~year|qname, data=x, par.settings=list(strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="log residuals of catch and abundance indices", ...)
-
 })
 
 
