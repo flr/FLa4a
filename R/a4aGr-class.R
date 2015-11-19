@@ -16,17 +16,11 @@ valida4aGr <- function(object){
 #' @template ClassDescription
 #' @section Slot: 
 #' \describe{
-#'
-#'	\item{\code{grMod}}{the formula of the growth model, \emph{e.g.} von bertallanffy}
-#'
-#'	\item{\code{grInvMod}}{the formula of the inverse of the growth model having length as the independent variable}
-#'
-#'	\item{\code{params}}{a FLPar object with the parameters of the model. Must match the equations in the models}
-#'
+#'	\item{\code{grMod}}{the formula for the growth model, \emph{e.g.} von Bertallanffy}
+#'	\item{\code{grInvMod}}{the formula for the inverse of the growth model, having length as the independent variable}
+#'	\item{\code{params}}{an FLPar object with the parameters of the model; must match the equations in the models}
 #'	\item{\code{vcov}}{an array with the variance covariance matrix of the parameters}
-#'
-#'	\item{\code{distr}}{a character with the parameters statistical distribution, it must match a known distribution for R, \emph{e.g.} "norm" for gaussian, so that \code{rnorm} can be called}
-#'
+#'	\item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian), so that \code{rnorm} can be called}
 #' }
 #' @aliases a4aGr-class
 
@@ -139,11 +133,20 @@ setReplaceMethod("vcov", signature(object = "a4aGr", value = "numeric"), functio
 
 #' @name niters for a4aGr
 #' @rdname niters
-#' @title number of iterations
-#' @description method to extract from \code{a4aGr} objects the number of iterations.
+#' @title Number of iterations
+#' @description Method to extract from \code{a4aGr} objects the number of iterations.
 #' @param object a \code{a4aGr} object
-#' @return a \code{numeric} object
+#' @return an \code{numeric} object
 #' @aliases niters,a4aGr-method
+#' @examples
+#' mm <- matrix(NA, ncol=3, nrow=3)
+#' diag(mm) <- c(50, 0.001,0.001)
+#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
+#' # Generate 100 sample sets
+#'   vbObj <- mvrnorm(100,vbObj)
+#' niters(vbObj)
+
 setMethod("niters", "a4aGr", function(object){
 	dim(params(object))[2]
 })
