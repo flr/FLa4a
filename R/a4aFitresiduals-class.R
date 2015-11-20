@@ -49,7 +49,7 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #'
 #' stdlogres(catch.n(ple4), catch.n(obj))
-#' ...which is the same as
+#' ...which is the same as the following (because residuals() uses stdlogres):
 #' flqs$catch.n
 #' ...check:
 #' stdlogres(catch.n(ple4),catch.n(obj))-flqs$catch.n
