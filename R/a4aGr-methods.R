@@ -45,7 +45,7 @@ setMethod("mvrnorm", signature("numeric", "a4aGr"), function(n=1, mu) {
 #' @title mvrtriangle 
 #' @name mvrtriangle for a4aGr 
 #' @rdname mvrtriangle-a4aGr
-#' @description Method to generate multivariate parameters with triangular marginals and elliptical copulas for \code{a4aGr} objects.
+#' @description Method to generate multivariate parameters with elliptical copulas and triangular marginals for \code{a4aGr} objects.
 #' @param n the number of iterations
 #' @param mu an \code{a4aGr} object
 #' @return an \code{a4aGr} object with n iterations
@@ -71,7 +71,7 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 #' @title mvrcop 
 #' @name mvrcop for a4aGr
 #' @rdname mvrcop-a4aGr
-#' @description Method to generate model parameters using self-defined copulas and margins for \code{a4aGr} objects.
+#' @description Method to generate multivariate parameters with user-defined copulas and marginals for \code{a4aGr} objects.
 #' @param n the number of iterations
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
@@ -83,6 +83,8 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
 #' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
 #' pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=0.086), list(a=0, b=0.005, c=0.001))
+#' #In the following, the third, fourth and fifth arguments refer to the copula,
+#' #  while the final two arguments refer to the marginal distributions:
 #' vbObj <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
 #' splom(data.frame(t(params(vbObj)@@.Data)), pch=".")
 
