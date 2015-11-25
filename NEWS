@@ -1,5 +1,17 @@
 FLa4a NEWS
 
+CHANGES IN FLa4a 0.500.x:
+
+	NEW FEATURES:
+		plots for residuals, fitted and observed changed to a gray theme and visuals updated.
+		plot for residuals uses latticeExtra if present to plot the names of the fleets in the left side strip.
+		plot for residuals includes aggregated catch in weight. 
+		fitSumm includes a flag on convergence, 0 for true and 1 for false, to be inline with optim, although 1 doesn't mean the iters were finished just that it didn't converge. Tests updated.
+		a4aSCA method now has the option to center only part of the fleets using a numeric vector (subsetting by position). It tries to get around the scaling issues by giving opportunity to scale only parts of the data. Scaling indices sometimes (allways ?) makes the qs less scaled with fs. Tests updated.
+
+	BUG FIXES:
+		plot for fitted and observed includes legend to id fit and obs
+		
 CHANGES IN FLa4a 0.300.x:
 
 	NEW FEATURES:

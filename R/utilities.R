@@ -144,23 +144,19 @@ setMethod("dims", "a4aStkParams", function(obj) {
 setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	args <- list()
 	args$data <- as.data.frame(FLQuants(fit=catch.n(x), obs=as(catch.n(y), "FLQuant")))
+	args$data$qname <- factor(args$data$qname, levels=c("obs", "fit"))
 	args$x <- data~age|factor(year)
 	args$type=c("l")
 	args$groups <- quote(qname)
 	args$ylab="numbers"
-	args$xlab=""
+	args$xlab="age"
 	args$scales=list(y="free")
-#	args$panel=function(x,y,...){
-#		panel.abline(h=0, col.line="gray80")
-#		panel.xyplot(x,y,...)
-#		}
-#	args$par.settings=list(
-#		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
-#		superpose.line=list(col=1, lty=1, lwd=2), 
-#		strip.background=list(col="gray90"), 
-#		strip.border=list(col="gray90"), 
-#		box.rectangle=list(col="gray90"))
-#	args$main="log residuals of catch and abundance indices"
+	args$auto.key <- list(points=FALSE, lines=TRUE, columns=2)
+	args$par.settings=list(
+		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
+		strip.background=list(col="gray90"), 
+		strip.border=list(col="black"))
+	args$main="fitted and observed catch-at-age"
 	do.call("xyplot", args)
 })
 
@@ -186,30 +182,25 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	dfx$src="fit"
 	dfy$src="obs"
 	df0 <- rbind(dfx, dfy)
-	args$x <- data~age|factor(year)*qname
+	df0$src <- factor(df0$src, levels=c("obs", "fit"))
+	args$x <- data~age|factor(year)
 	args$type=c("l")
 	args$groups <- quote(src)
 	args$ylab="numbers"
 	args$xlab=""
 	args$scales=list(y="free")
 	args$auto.key=list(lines=TRUE, points=FALSE, columns=2)
-#	args$panel=function(x,y,...){
-#		panel.abline(h=0, col.line="gray80")
-#		panel.xyplot(x,y,...)
-#		}
-#	args$par.settings=list(
-#		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
-#		superpose.line=list(col=1, lty=1, lwd=2), 
-#		strip.background=list(col="gray90"), 
-#		strip.border=list(col="gray90"), 
-#		box.rectangle=list(col="gray90"))
-#	args$main="log residuals of catch and abundance indices"
-
+	args$par.settings=list(
+		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
+		strip.background=list(col="gray90"), 
+		strip.border=list(col="black"))
+	args$main="fitted and observed index-at-age"
 	if(length(index(x))>1){
 		for(i in names(y)){
 			x11()
 			args$data <- subset(df0, qname==i)
 			args$layout <- c(0,length(unique(args$data$year)))
+			args$main <- paste(i, " fitted and observed index-at-age", sep=":")
 			print(do.call("xyplot", args))
 		}
 	} else {

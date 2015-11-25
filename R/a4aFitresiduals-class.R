@@ -17,7 +17,7 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 	args <- list(...)
 	# object holder
 	lst <- list()
-	length(lst) <- length(indices) + 1	
+	length(lst) <- length(indices) + 2	
 	# catch
 	lst[[1]] <- stdlogres(catch.n(stock), catch.n(object))
 	# indices
@@ -25,8 +25,9 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 	for(i in 1:length(indices)){
 		lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]])
 	}
+	lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
 	# out
-	names(lst) <- c("catch.n", names(indices))
+	names(lst) <- c("catch.n", names(indices), "catch")
 	new("a4aFitResiduals", FLQuants(lst))
   }
 )
@@ -86,10 +87,10 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
 		superpose.line=list(col=1, lty=1, lwd=2), 
 		strip.background=list(col="gray90"), 
-		strip.border=list(col="gray90"), 
+		strip.border=list(col="black"), 
 		box.rectangle=list(col="gray90"))
-	args$main="log residuals of catch and abundance indices"
-	do.call("xyplot", args)
+	args$main="log residuals of catch and abundance indices by age"
+	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("xyplot", args)) else do.call("xyplot", args)
 })
 
 #' @title qqplot of standardized log residuals 
