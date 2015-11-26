@@ -474,7 +474,7 @@ identical(fitSumm(fit0)["nlogl"], fitSumm(fit2)["nlogl"])
 identical(fitSumm(fit1)["nlogl"], fitSumm(fit2)["nlogl"])
 
 #====================================================================
-# MCMC class
+# MCMC class and fit
 #====================================================================
 
 mcmcobj <- new("SCAMCMC")
@@ -488,6 +488,37 @@ is(obj, "a4aFitSA")
 obj <- a4aFitMCMC(obj)
 is(obj, "a4aFitMCMC")
 is(slot(obj, "mcmc"), "SCAMCMC")
+obj <- a4aFitMCMC(obj, mcmc=SCAMCMC())
+is(obj, "a4aFitMCMC")
+is(slot(obj, "mcmc"), "SCAMCMC")
+
+mc <- SCAMCMC()
+fit0 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit00 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+identical(dimnames(catch.n(fit0))[-6], dimnames(catch.n(fit00))[-6])
+identical(dimnames(stock.n(fit0))[-6], dimnames(stock.n(fit00))[-6])
+identical(dim(catch.n(fit0))[6], getN(mc))
+identical(dim(catch.n(fit00))[6], getN(mc))
+sum(!is.na(fit0@pars@stkmodel@vcov))==0
+sum(!is.na(fit00@pars@stkmodel@vcov))==0
+sum(unlist(lapply(lapply(lapply(fit0@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit00@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit0@pars@qmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit00@pars@qmodel, vcov), is.na), "!")))==0
+
+mc <- SCAMCMC(mcmc=as.integer(10000), mcsave=as.integer(200), mcu=TRUE)
+fit1 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", wkdir="mcmcalt2", mcmc=mc)
+identical(dimnames(catch.n(fit1))[-6], dimnames(catch.n(fit11))[-6])
+identical(dimnames(stock.n(fit1))[-6], dimnames(stock.n(fit11))[-6])
+identical(dim(catch.n(fit1))[6], getN(mc))
+identical(dim(catch.n(fit11))[6], getN(mc))
+sum(!is.na(fit1@pars@stkmodel@vcov))==0
+sum(!is.na(fit11@pars@stkmodel@vcov))==0
+sum(unlist(lapply(lapply(lapply(fit1@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit11@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit1@pars@qmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
 
 
 

@@ -141,7 +141,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 
 setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
 
-setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE) {
+setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
   fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
   # set up default for vmodel
@@ -170,7 +170,9 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   if(length(unique(dms$iter[dms$iter>1]))>1) 
   	stop("incosistent number of iterations in stock and indices")
   it <- max(dms$iter)
-
+  if(fit=="MCMC" & it>1) stop("You can not run MCMC with iters on your data objects")
+  if(fit=="MCMC" & it==1) it <- getN(mcmc) 
+  
   # set up objects
   # stk
   dms <- dimnames(stock.n(stock))
@@ -201,10 +203,11 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 
   time.used <- matrix(NA, nrow = 4, ncol = nrow(grid))
   ifit <- if (fit == "sim") "assessment" else fit
+  # note this niters are not the same as it. niters will come from data objects with iters to loop and 
+  # fit the model several times, while it is used to build the output objects, which in the case of MCMC
+  # also need FLQuants with iterations.
   niters <- nrow(grid)
   for (i in seq(niters)) {
-    #istock <- stock[,, grid$unit[i], grid$area[i], , grid$iter[i]]
-    #istock <- stock[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(stock)$iter)]
     istock <- stock[,, grid$unit[i], grid$area[i]]
 	istock <- iter(istock, min(grid$iter[i], dims(stock)$iter))
 
@@ -219,14 +222,14 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
     # check: do we need indices to have matching units, areas?
     if (!missing(covar) & !missing(wkdir)) {
       icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center)
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
     } else if(!missing(covar) & missing(wkdir)){
       icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center)
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
     } else if(missing(covar) & !missing(wkdir)){
-	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center)
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
 	} else {
-	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center)
+	  outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
 	}    
     if (i == 1) {
       tmpSumm <- outi@fitSumm
@@ -245,23 +248,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
       }
     }
     
-#    if (fit == "sim") {
-
-#      # copy results with noise
-#      istock <- istock + outi # this automatically adds noise
-#      out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(istock)
-#      out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(istock)
-#      out@catch.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(istock)
-#      # add indices
-#      for (j in 1:length(iindices)) {
-#        out@index[[j]][,, grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
-#      }
-
-#    }
-
-#    if (fit %in% c("assessment", "Ext")) {
-    if (fit %in% c("assessment", "MCMC")) {
-
+    if (fit == "assessment") {
       # store everything in a a4aFitSA object
       out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
       out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
@@ -319,9 +306,29 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 
     }
     
-#    if (fit == "Ext") {
-#		warning("Not implemented yet!")
-#	}    
+    if (fit == "MCMC"){
+      out <- a4aFitMCMC(out, mcmc=mcmc)
+      # store everything 
+      out@harvest[,, grid$unit[i], grid$area[i], , ] <- harvest(outi)
+      out@stock.n[,, grid$unit[i], grid$area[i], , ] <- stock.n(outi)
+      out@catch.n[,, grid$unit[i], grid$area[i], , ] <- catch.n(outi)
+      # add indices
+      for (j in 1:length(iindices)) {
+        out@index[[j]][,, grid$unit[i], grid$area[i], , ] <- index(outi)[[j]]
+      }
+
+      # fill up models
+      out@pars@stkmodel   <- outi@pars@stkmodel
+	  # CHECK: NOT SURE WE NEED PROPAGATE HERE
+      out@pars@stkmodel@m         <- propagate(outi@pars@stkmodel@m, it)
+      out@pars@stkmodel@wt        <- propagate(outi@pars@stkmodel@wt, it)
+      out@pars@stkmodel@units     <- units(catch.n(stock))
+      # qmodel
+      out@pars@qmodel             <- outi@pars@qmodel
+      # vmodel
+      out@pars@vmodel               <- outi@pars@vmodel
+
+    }  
     
     # keep timing info
     time.used[,i] <- outi@clock
@@ -438,6 +445,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
   # extract auxilliary survey info - always assume oldest age is true age TODO TODO TODO !! 
   surveytime <- unname(sapply(indices, function(x) mean(c(dims(x)$startf, dims(x)$endf))))
+  names(surveytime) <- names(indices)
   if (any(is.na(surveytime))) stop("You need to define startf and endf for each index!!")
 
   # ------------------------------------------------------------------------
@@ -1060,38 +1068,47 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		mcmcout <- matrix(mcmcout, byrow = TRUE, ncol = nopar)
 		colnames(mcmcout) <- unlist(pnames)    
 
-		N <- read.table(paste0(wkdir, "/NMCMCreport.csv"), sep=" ", header=FALSE)
-
-		F <- read.table(paste0(wkdir, "/FMCMCreport.csv"), sep=" ", header=FALSE)
-
+		N <- read.table(paste0(wkdir, "/NMCMCreport.csv"), sep=" ", header=FALSE)[-1]
+		F <- read.table(paste0(wkdir, "/FMCMCreport.csv"), sep=" ", header=FALSE)[-1]
+		QQ <- read.table(paste0(wkdir, "/QMCMCreport.csv"), sep=" ", header=FALSE)[-1]
 		idq <- expand.grid(y=years, s=fleet.names[-1], i=1:nit)
-		QQ <- read.table(paste0(wkdir, "/QMCMCreport.csv"), sep=" ", header=FALSE)
-
+		V <- read.table(paste0(wkdir, "/VMCMCreport.csv"), sep=" ", header=FALSE)[-1]
 		idv <- expand.grid(y=years, s=fleet.names, i=1:nit)
-		V <- read.table(paste0(wkdir, "/VMCMCreport.csv"), sep=" ", header=FALSE)
 
 		# fill parameters
 		a4aout@pars@stkmodel@params <- a4aout@pars@stkmodel@params[,rep(1,nit)]
 		a4aout@pars@stkmodel@params[] <- t(mcmcout[,dimnames(a4aout@pars@stkmodel@params)[[1]]])
+		a4aout@pars@stkmodel@vcov[] <- NA
 
+		# fill derived quantities 
+		a4aout@stock.n <- a4aout@stock.n[,,,,,rep(1,nit)]
+		a4aout@stock.n[] <- c(t(N * exp(center.log[1])))
+
+		a4aout@harvest <- a4aout@harvest[,,,,,rep(1,nit)]
+		a4aout@harvest[] <- c(t(F))
+
+		Z <- a4aout@harvest + m(stock)  
+		a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
+
+		# fill catchability and variance model
 		for(i in fleet.names){
 			a4aout@pars@vmodel[[i]]@params <- a4aout@pars@vmodel[[i]]@params[,rep(1,nit)]
 			a4aout@pars@vmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@params)[[1]]])
+			a4aout@pars@vmodel[[i]]@vcov[] <- NA
 
 			if(i!="catch"){
 				a4aout@pars@qmodel[[i]]@params <- a4aout@pars@qmodel[[i]]@params[,rep(1,nit)]
 				a4aout@pars@qmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@params)[[1]]])
+				a4aout@pars@qmodel[[i]]@vcov[] <- NA
+				dmns <- dimnames(a4aout@index[[i]])
+				a4aout@index[[i]] <- a4aout@index[[i]][,,,,,rep(1, nit)]
+				a4aout@index[[i]][] <- t(QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),ages %in% dmns[[1]]])
+				a4aout@index[[i]] <- exp(a4aout@index[[i]] - center.log["catch"] + center.log[i])
+				nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]] 
+				zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
+				a4aout@index[[i]] <- a4aout@index[[i]]*nn*zz
 			}
 		}
-		
-		# fill derived quantities 
-		a4aout@stock.n <- a4aout@stock.n[,,,,,rep(1,nit)]
-		a4aout@stock.n[] <- c(t(N[-1]))
-
-		a4aout@harvest <- a4aout@harvest[,,,,,rep(1,nit)]
-		a4aout@harvest[] <- c(t(F[-1]))
-browser()		
-		
 	}
 #  }	
  
