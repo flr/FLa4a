@@ -16,6 +16,9 @@ fit0 <-  sca(ple4, FLIndices(ple4.index))
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
+# check convergence info
+is.na(fitSumm(fit0)["convergence",])
+
 #--------------------------------------------------------------------
 # iters
 #--------------------------------------------------------------------
@@ -67,8 +70,6 @@ all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=3)"))
 fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
 all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=5)"))
 
-
-
 #====================================================================
 # run a4aSCA
 #====================================================================
@@ -76,6 +77,9 @@ fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 # check that indices have attr biomass
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
 "range" %in%  names(attributes(index(fit0)[[1]]))
+
+# check convergence info
+fitSumm(fit0)["convergence",]==0
 
 #--------------------------------------------------------------------
 # iters
@@ -191,6 +195,8 @@ sum(pars(fit0)@vmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit0)@vmodel[[2]]@vcov, na.rm=T)==0
 
 fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
+# check convergence info
+fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
 sum(catch.n(fit), na.rm=T)==0
 sum(index(fit)[[1]], na.rm=T)==0
@@ -447,5 +453,43 @@ fit1 <- sca(ple4, FLIndices(biofull, ple4.index), qmodel=list(~1, ~s(age, k=4)))
 
 identical(stock.n(fit0), stock.n(fit1))
 identical(harvest(fit0), harvest(fit1))
+
+#====================================================================
+# center argument
+#====================================================================
+data(ple4)
+data(ple4.indices)
+fit0 <- a4aSCA(ple4, ple4.indices)
+fit1 <- a4aSCA(ple4, ple4.indices, center=FALSE)
+fit2 <- a4aSCA(ple4, ple4.indices, center=1)
+
+# maxgrad is different
+!identical(fitSumm(fit0)["maxgrad"], fitSumm(fit1)["maxgrad"])
+!identical(fitSumm(fit0)["maxgrad"], fitSumm(fit2)["maxgrad"])
+!identical(fitSumm(fit1)["maxgrad"], fitSumm(fit2)["maxgrad"])
+
+# likelihood is equal
+identical(fitSumm(fit0)["nlogl"], fitSumm(fit1)["nlogl"])
+identical(fitSumm(fit0)["nlogl"], fitSumm(fit2)["nlogl"])
+identical(fitSumm(fit1)["nlogl"], fitSumm(fit2)["nlogl"])
+
+#====================================================================
+# MCMC class
+#====================================================================
+
+mcmcobj <- new("SCAMCMC")
+identical(getADMBCallArgs(mcmcobj), " -mcmc 10000 -mcsave 100")
+
+obj <- a4aFitMCMC()
+is(obj, "a4aFitMCMC")
+is(slot(obj, "mcmc"), "SCAMCMC")
+obj <- a4aFitSA(obj)
+is(obj, "a4aFitSA")
+obj <- a4aFitMCMC(obj)
+is(obj, "a4aFitMCMC")
+is(slot(obj, "mcmc"), "SCAMCMC")
+
+
+
 
 

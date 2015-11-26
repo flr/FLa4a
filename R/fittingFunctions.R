@@ -142,7 +142,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
 
 setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE) {
-  fit <- match.arg(fit, c("MP", "assessment"))
+  fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
   # set up default for vmodel
   if (missing(vmodel)) {
@@ -192,7 +192,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   })
   out@index <- FLQuants(ini)
 
-  if (fit == "assessment") {
+  if (fit %in% c("assessment", "MCMC")) {
     out@pars@stkmodel@fMod <- fmodel
     out@pars@stkmodel@n1Mod <- n1model
     out@pars@stkmodel@srMod <- srmodel
@@ -260,7 +260,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
 #    }
 
 #    if (fit %in% c("assessment", "Ext")) {
-    if (fit=="assessment") {
+    if (fit %in% c("assessment", "MCMC")) {
 
       # store everything in a a4aFitSA object
       out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
@@ -369,12 +369,15 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                 n1model = ~ factor(age), 
                 vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
                 covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", 
-                niters = 1000, center = TRUE)
+                niters = 1000, center = TRUE, mcmc=missing)
 {
 
   # first check permissions of executable
   exeok <- check.executable()
   if (!exeok) stop("a4a executable has wrong permissions.")
+
+  # if fit MCMC mcmc object must exist
+  if(fit=="MCMC" & missing(mcmc)) stop("To run MCMC you need to set the mcmc argument, using the method SCAMCMC.") 
 
   # start timer
   my.time.used <- numeric(4)
@@ -395,11 +398,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   }
   for (i in seq_along(indices)) name(indices[[i]]) <- snames[i]
   names(indices) <- snames
- 
 
-  # what kind of run is this: 'setup' just writes data files - usefull when developing code
-  #fit <- match.arg(fit, c("MP", "assessment", "debug", "setup", "MCMC", "Ext")) # MCMC is experimental
-  fit <- match.arg(fit, c("MP", "assessment", "setup"))
+  # what kind of run is this
+  fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
   # ------------------------------------------------------------------------
   #
@@ -422,8 +423,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                      lapply(indices, function(x) quant2mat(index.var(x)) ))                
                      
   # calculate appropriate centering for observations on log scale
+  # a bit spaguetti ... if center is a numeric vector only those elements will be centered
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
-  if (!center) center.log[] <- 0
+  if(is.numeric(center)) center.log[-center][] <- 0 else if(!isTRUE(center)) center.log[] <- 0 
 
   # convert to dataframe. NOTE: list2df also logs the observations and centers
   df.data <- do.call(rbind, lapply(1:length(list.obs), list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
@@ -533,16 +535,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   fleet.names <- c("catch", names(indices))
   Xqlist <- lapply(seq_along(indices), function(i) getX(qmodel[[i]], subset(full.df, fleet == fleet.names[i+1])))
   Xq <- as.matrix(do.call(bdiag, Xqlist))  
-  # if model is one formula:
-  #Xq <- getX(qmodel, subset(full.df, fleet != "catch"))
   # Q model offsets
   # ...
   
   # var model matrix
   Xvlist <- lapply(1:length(fleet.names), function(i) getX(vmodel[[i]], subset(full.df, fleet == fleet.names[i])))
   Xv <- as.matrix(do.call(bdiag, Xvlist))  
-  # if model is one formula:  
-  #Xv <- getX(vmodel, full.df)
   # var model offsets
   # ...
     
@@ -774,8 +772,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
  
   # arguments
   args <- character(0)
-  #TODO do we want to allow the use of this?
-  # if (fit == "MCMC") args <- c(args, paste0("-mcmc ", niters * 10," -mcsave 10"))
+  # MCMC
+  if (fit == "MCMC") args <- getADMBCallArgs(mcmc)
   # if running an MSE no need to work out hessian
   if (fit == "MP") args <- c(args, "-est")
   args <- paste(args, collapse = " ")
@@ -787,12 +785,14 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     } else {
       echoc <- system(paste0("cd ", shQuote(wkdir), ";a4a ", args, " > logfile.txt"))
     }
+	if(fit=="MCMC") system(paste0("cd ", shQuote(wkdir), ";a4a -mceval"))
   } else if (os.type("windows")) {
     if (verbose) {
       echoc <- shell(paste0("cd /D", shQuote(wkdir), " & a4a", args))
     } else {
       echoc <- shell(paste0("cd /D", shQuote(wkdir), " & a4a ", args, " > logfile.txt"))
     }
+	if(fit=="MCMC") shell(paste0("cd /D", shQuote(wkdir), " & a4a -mceval"))
   } else if (os.type("mac")) {
     stop("The FLa4a package is not developed for Macs yet...  Sorry!")
   }
@@ -808,18 +808,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   # post processing split
   my.time.used[3] <- Sys.time()
 
-	#================== EXPERIMENTAL ================#
-	#  if (fit == "MCMC") {
-	#    filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
-	#    nopar <- readBin(filen, what = integer(), n = 1)
-	#    out <- readBin(filen, what = numeric(), n = nopar * niters * 10)# TODO check this line
-	#    close(filen)
-	#    out <- matrix(out, byrow = TRUE, ncol = nopar)
-	#    colnames(out) <- unlist(pnames)    
-	#  } else if (fit %in% c("MP","assessment","Ext")) {
-	#================== /EXPERIMENTAL ===============#
-
-  if (fit %in% c("MP","assessment")) {
+  if (fit %in% c("MP","assessment", "MCMC")) {
 
     # read admb output from file
     out <- list()
@@ -833,6 +822,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 	if(fit=="MP"){
 	    	# read derived model quantities
+			convergence <- NA
 	    	ages <- sort(unique(full.df$age))
 	    	years <- sort(unique(full.df$year))
 	    	out$N <- as.matrix(read.table(paste0(wkdir, '/n.out'), header = FALSE))
@@ -845,11 +835,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	  		dimnames(out$Q) <- list(ages, years, names(indices))
 	} else {
 		if (!file.exists(paste0(wkdir, '/a4a.cor'))) {
-			# this is all a bit spaghetti coding to rever engineering Colin's code
+			# this is all a bit spaghetti coding to reverse engineering Colin's code
 			# the idea is to return a valid object with the correct dimensions
 			# with NA for N and F but with the parameters estimated by ADMB 
 			# although if cor is not present means that it didn't converge ...
 			warning("Hessian was not positive definite.")
+			convergence <- 1
 	    	ages <- sort(unique(full.df$age))
 	    	years <- sort(unique(full.df$year))
 	    	rr <- sum(!(out$par.est$rapar>0))==length(out$par.est$rapar)
@@ -868,7 +859,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		    out$F <- t(flqNA[drop=T])
 		    out$Q <- array(NA, dim=c(length(ages), length(years), length(indices)), dimnames=list(ages, years, names(indices)))
 		} else {
-      
+			convergence <- 0
 			# read .cor file
 			lin <- readLines(paste0(wkdir, '/a4a.cor'))
 			npar <- length(lin) - 2
@@ -915,189 +906,200 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   #
   # ------------------------------------------------------------------------
 
-  	#if (fit %in% c("MP", "assessment", "debug", "Ext")) {
-  if (fit %in% c("MP", "assessment")) {
+  # a4aFit
+  # ---------------
+
+  a4aout <- a4aFit()
+  ind.names <- names(indices)
+
+  stk.n <- t(out$N)
+  names(dimnames(stk.n)) <- c("age","year")
+
+  hvst <- t(out$F)
+  names(dimnames(hvst)) <- c("age","year")
+   
+  logq <- lapply(1:length(indices), function(i) { 
+	x <- drop(out$Q[,,i])
+	names(dimnames(x)) <- c("age","year")
+	if (is(indices[[i]], 'FLIndexBiomass')){
+		x <- with(dimnames(index(indices[[i]])), x[1, year,drop = FALSE])
+		dimnames(x)[[1]] <- "all"
+		x <- FLQuant(x, dimnames=dimnames(index(indices[[i]])))
+	} else {
+		x <- with(dimnames(index(indices[[i]])), x[age, year])
+		x <- FLQuant(x, dimnames=dimnames(index(indices[[i]])))
+	}
+	x
+  }) 
+  names(logq) <- ind.names
   
-    a4aout <- a4aFit()
- 
-    ind.names <- names(indices)
-
-    stk.n <- t(out$N)
-    names(dimnames(stk.n)) <- c("age","year")
-
-    hvst <- t(out$F)
-    names(dimnames(hvst)) <- c("age","year")
+  a4aout@name    <- stock@name
+  a4aout@desc    <- stock@desc
+  a4aout@range   <- stock@range
+  a4aout@call    <- match.call()
+  a4aout@stock.n <- FLQuant(stk.n) * exp(center.log[1])
+  a4aout@harvest <- FLQuant(hvst, units = "f")
     
-    logq <- lapply(1:length(indices), function(i) { 
-		x <- drop(out$Q[,,i])
-		names(dimnames(x)) <- c("age","year")
-		if (is(indices[[i]], 'FLIndexBiomass')){
-			x <- with(dimnames(index(indices[[i]])), x[1, year,drop = FALSE])
-			dimnames(x)[[1]] <- "all"
-			x <- FLQuant(x, dimnames=dimnames(index(indices[[i]])))
-		} else {
-			x <- with(dimnames(index(indices[[i]])), x[age, year])
-			x <- FLQuant(x, dimnames=dimnames(index(indices[[i]])))
+  Z <- a4aout@harvest + m(stock)  
+   
+  a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
+  index <- lapply(1:length(indices), function(i) {
+   	dmns <- dimnames(logq[[i]])
+   	if (is(indices[[i]], 'FLIndexBiomass')) {
+		dmns[[1]] <- srvMinAge[i]:srvMaxAge[i]
+   		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1]) 
+   		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]] 
+   		bb <- apply(nn*stock.wt(stock)[dmns[[1]], dmns[[2]]], 2:6, sum, na.rm=T)
+   		ii <- qq*bb
+   	} else {
+   		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
+   		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
+   		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
+   		ii <- qq*nn*zz
+   	}
+   	ii
+  })
+  names(index) <- ind.names
+  a4aout@index <- FLQuants(index)
+
+  # GCV (Wood, 2006, pag. 132)
+  flev <- diag(Xf %*% solve(t(Xf) %*% Xf) %*% t(Xf))
+  cgcv <- prod(dim(a4aout@catch.n)) * sum(c(log(catch.n(stock)/a4aout@catch.n))^2)/sum(1-flev)^2
+  tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv, convergence, NA))
+  a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv", "convergence", "accrate")))                                  
+
+	# a4aFitSA
+	# ---------------
+
+	if (fit %in% c("assessment", "MCMC")) {
+
+		# coerce into a4aFitSA
+		a4aout <- a4aFitSA(a4aout)
+		
+		# fill pars
+		a4aout@pars <- new("SCAPars")
+
+		# fill up stkmodel
+		#----------------------
+		a4aout@pars@stkmodel@name      <- a4aout@name
+		a4aout@pars@stkmodel@desc      <- a4aout@desc
+		a4aout@pars@stkmodel@range     <- a4aout@range
+		a4aout@pars@stkmodel@centering <- center.log[1]
+		a4aout@pars@stkmodel@ fMod     <- fmodel
+		a4aout@pars@stkmodel@n1Mod     <- n1model 
+		a4aout@pars@stkmodel@srMod     <- srmodel
+		a4aout@pars@stkmodel@m         <- m(stock)
+		a4aout@pars@stkmodel@wt        <- stock.wt(stock)
+		pars <- out$par.est
+		active <- sapply(out$par.std, length) > 0
+		dimnames(out$cov) <- list(unlist(pnames), unlist(pnames))
+		stkactive <- active
+		stkactive[2:3] <- FALSE
+		a4aout@pars@stkmodel@params <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
+		units(a4aout@pars@stkmodel@params) <- "NA"
+		a4aout@pars@stkmodel@distr <- "norm"
+		whichcol <-  grep(paste("(^",c("f","n1","r","sra","srb"),"Mod:)",collapse="|",sep=""), unlist(pnames))
+		# we can use the inverse of a subset of the precision matrix
+		# if we want the vcov matrix conditional on the
+		# other (qmodel etc.) parameter estimates.
+		##a4aout@pars@stkmodel@vcov <- solve(out$prec[whichcol, whichcol])
+		# or just the full vcov matrix, unconditional on the other things...
+		a4aout@pars@stkmodel@vcov <- out$cov[whichcol, whichcol]
+
+		# fill up qmodel
+		#----------------------
+		qmodels <- lapply(seq_along(indices), function(i){
+			which <- sapply(strsplit(pnames[[2]], split=":"), "[[", 2) %in% fleet.names[i+1]
+			#which <- grepl(fleet.names[i+1], pnames[[2]], fixed=TRUE)
+			submodel(Mod = qmodel[[i]],
+				params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
+				vcov = out$cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
+				distr = "norm",
+				centering = center.log[i+1],
+				name = fleet.names[i+1],
+				desc = indices[[i]]@desc,
+				range = indices[[i]]@range)
+		})
+		  
+		names(qmodels) <- fleet.names[-1]
+		a4aout@pars@qmodel <- submodels(qmodels)
+		        
+		# fill up vmodel
+		#----------------------
+		vmodels <- lapply(seq_along(fleet.names), function(i){
+			which <- sapply(strsplit(pnames[[3]], split=":"), "[[", 2) %in% fleet.names[i]
+			submodel(Mod = vmodel[[i]],
+				params = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
+				vcov = out$cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
+				distr = "norm",
+				centering = 0,
+				name = fleet.names[i],
+				desc = "",
+				range = if (i==1) stock@range else indices[[i-1]]@range)
+		})
+		  
+		names(vmodels) <- fleet.names
+		a4aout@pars@vmodel <- submodels(vmodels)        
+	}
+	
+	# a4aFitMCMC
+	# ---------------
+
+	if (fit == "MCMC") {
+
+		# coerce into a4aFitMCMC
+		a4aout <- a4aFitMCMC(a4aout, mcmc=mcmc)
+		# get number of iters (CHECK WITH NITERS  which are not being used )
+		nit <- getN(mcmc)
+
+		# read files
+		filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
+		nopar <- readBin(filen, what = integer(), n = 1)
+		mcmcout <- readBin(filen, what = numeric(), n = nopar * nit)# TODO check this line
+		close(filen)
+		mcmcout <- matrix(mcmcout, byrow = TRUE, ncol = nopar)
+		colnames(mcmcout) <- unlist(pnames)    
+
+		N <- read.table(paste0(wkdir, "/NMCMCreport.csv"), sep=" ", header=FALSE)
+
+		F <- read.table(paste0(wkdir, "/FMCMCreport.csv"), sep=" ", header=FALSE)
+
+		idq <- expand.grid(y=years, s=fleet.names[-1], i=1:nit)
+		QQ <- read.table(paste0(wkdir, "/QMCMCreport.csv"), sep=" ", header=FALSE)
+
+		idv <- expand.grid(y=years, s=fleet.names, i=1:nit)
+		V <- read.table(paste0(wkdir, "/VMCMCreport.csv"), sep=" ", header=FALSE)
+
+		# fill parameters
+		a4aout@pars@stkmodel@params <- a4aout@pars@stkmodel@params[,rep(1,nit)]
+		a4aout@pars@stkmodel@params[] <- t(mcmcout[,dimnames(a4aout@pars@stkmodel@params)[[1]]])
+
+		for(i in fleet.names){
+			a4aout@pars@vmodel[[i]]@params <- a4aout@pars@vmodel[[i]]@params[,rep(1,nit)]
+			a4aout@pars@vmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@params)[[1]]])
+
+			if(i!="catch"){
+				a4aout@pars@qmodel[[i]]@params <- a4aout@pars@qmodel[[i]]@params[,rep(1,nit)]
+				a4aout@pars@qmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@params)[[1]]])
+			}
 		}
-		x
-    }) 
-    names(logq) <- ind.names
-    
-		# First the a4aFit bits
-    a4aout@name    <- stock@name
-    a4aout@desc    <- stock@desc
-    a4aout@range   <- stock@range
-    a4aout@call    <- match.call()
-    a4aout@stock.n <- FLQuant(stk.n) * exp(center.log[1])
-    a4aout@harvest <- FLQuant(hvst, units = "f")
-    
-    Z <- a4aout@harvest + m(stock)  # TODO what if surveys are bigger... require that stock is bigger but with NA catches!
-    
-    a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
-    index <- lapply(1:length(indices), function(i) {
-    	dmns <- dimnames(logq[[i]])
-    	if (is(indices[[i]], 'FLIndexBiomass')) {
-			dmns[[1]] <- srvMinAge[i]:srvMaxAge[i]
-    		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1]) 
-    		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]] 
-    		bb <- apply(nn*stock.wt(stock)[dmns[[1]], dmns[[2]]], 2:6, sum, na.rm=T)
-    		ii <- qq*bb
-    	} else {
-    		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
-    		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
-    		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
-    		ii <- qq*nn*zz
-    	}
-    	ii
-    })
-    names(index) <- ind.names
+		
+		# fill derived quantities 
+		a4aout@stock.n <- a4aout@stock.n[,,,,,rep(1,nit)]
+		a4aout@stock.n[] <- c(t(N[-1]))
 
-	# GCV (Wood, 2006, pag. 132)
-    a4aout@index <- FLQuants(index)
-	flev <- diag(Xf %*% solve(t(Xf) %*% Xf) %*% t(Xf))
-	cgcv <- prod(dim(a4aout@catch.n)) * sum(c(log(catch.n(stock)/a4aout@catch.n))^2)/sum(1-flev)^2
-	tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv))
-                             #logDetHess = logDetHess,           
-    a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv")))                                  
-                              
-    
-    #if (fit %in% c("assessment", "debug", "Ext")) {
-    if (fit =="assessment") {
-
-      # fill up an a4aFitSA object
-      a4aout <- a4aFitSA(a4aout)
-    
-      # now the a4aFitSA bits
-      #tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data)))
-                             #logDetHess = logDetHess, 
-                             
-      #a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs")))                                  
-                                   
-      a4aout@pars <- new("SCAPars")
-  
-      #
-      # fill up stkmodel
-      a4aout@pars@stkmodel@name      <- a4aout@name
-      a4aout@pars@stkmodel@desc      <- a4aout@desc
-      a4aout@pars@stkmodel@range     <- a4aout@range
-      a4aout@pars@stkmodel@centering <- center.log[1]
-      a4aout@pars@stkmodel@ fMod     <- fmodel
-      a4aout@pars@stkmodel@n1Mod     <- n1model 
-      a4aout@pars@stkmodel@srMod     <- srmodel
-      a4aout@pars@stkmodel@m         <- m(stock)
-      a4aout@pars@stkmodel@wt        <- stock.wt(stock)
-      
-      pars <- out$par.est
-                                        
-      active <- sapply(out$par.std, length) > 0
-
-      #dimnames(out$cov) <- dimnames(out$prec) <- list(unlist(pnames), unlist(pnames))
-      dimnames(out$cov) <- list(unlist(pnames), unlist(pnames))
-
-      stkactive <- active
-      stkactive[2:3] <- FALSE
-      a4aout@pars@stkmodel@params <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
-      units(a4aout@pars@stkmodel@params) <- "NA"
-
-      a4aout@pars@stkmodel@distr <- "norm"
-      whichcol <-  grep(paste("(^",c("f","n1","r","sra","srb"),"Mod:)",collapse="|",sep=""), unlist(pnames))
-      # we can use the inverse of a subset of the precision matrix
-      # if we want the vcov matrix conditional on the
-      # other (qmodel etc.) parameter estimates.
-      ##a4aout@pars@stkmodel@vcov <- solve(out$prec[whichcol, whichcol])
-      # or just the full vcov matrix, unconditional on the other things...
-      a4aout@pars@stkmodel@vcov <- out$cov[whichcol, whichcol]
-
-      #
-      # fill up qmodel
-      qmodels <- 
-        lapply(seq_along(indices), 
-          function(i)
-          {
-             which <- sapply(strsplit(pnames[[2]], split=":"), "[[", 2) %in% fleet.names[i+1]
-             #which <- grepl(fleet.names[i+1], pnames[[2]], fixed=TRUE)
-             submodel(Mod = qmodel[[i]],
-                      params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
-                      vcov = out$cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
-                      distr = "norm",
-                      centering = center.log[i+1],
-                      name = fleet.names[i+1],
-                      desc = indices[[i]]@desc,
-                      range = indices[[i]]@range)
-          })
-      
-      names(qmodels) <- fleet.names[-1]
-      a4aout@pars@qmodel <- submodels(qmodels)
-      #names(a4aout@pars@qmodel) <- fleet.names[-1]
-            
-      #
-      # fill up vmodel
-      vmodels <- 
-        lapply(seq_along(fleet.names), 
-          function(i)
-          {
-             which <- sapply(strsplit(pnames[[3]], split=":"), "[[", 2) %in% fleet.names[i]
-             submodel(Mod = vmodel[[i]],
-                      params = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
-                      vcov = out$cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
-                      distr = "norm",
-                      centering = 0,
-                      name = fleet.names[i],
-                      desc = "",
-                      range = if (i==1) stock@range else indices[[i-1]]@range)
-          })
-      
-      names(vmodels) <- fleet.names
-      a4aout@pars@vmodel <- submodels(vmodels)        
-      #names(a4aout@pars@vmodel) <- fleet.names
-    }
-  }	
+		a4aout@harvest <- a4aout@harvest[,,,,,rep(1,nit)]
+		a4aout@harvest[] <- c(t(F[-1]))
+browser()		
+		
+	}
+#  }	
  
-	#================== EXPERIMENTAL ================#
-	#      if (fit == "Ext") {
-	#  
-	#        # just while code is developing
-	#        a4aout <- a4aFitExt(a4aout)
-	#        a4aout@Sigma <- out$cov
-	#        a4aout@L <- chol(out$cov)
-	#        # consider adding L to submodels in a4aFitSA class...
-	#        pars <- unlist(out$par.est)
-	#        names(pars) <- unlist(pnames)
-	#        which <- names(pars) %in% colnames(out$cov)
-	#        a4aout@baseLvlPars <- pars[which]
-	#        a4aout@designMatrix <- list(Xf = Xf, Xq = Xq, Xn1 = Xny1, Xv = Xv, Xsra = Xsra, Xsrb = Xsrb, Xr = Xr)
+  
+  
+  
+  #}
 
-	#        # info about where to split?        
-	#      }
-	#    }
-	#  }	
-	#  } #else if (fit == "MCMC") {
-	#  
-	#    # no MCMC class stuff yet... could use FLQuantDistr?
-	#    a4aout <- a4aFitMCMC()
-	#    a4aout@pars <- out    
-	#  }
-	#================== /EXPERIMENTAL ================#
 
   # end time
   my.time.used[4] <- Sys.time() 
