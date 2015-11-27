@@ -6,7 +6,7 @@
 #' @name coef
 #' @docType methods
 #' @rdname coef-methods
-#' @description Methods to extract and replace the model coefficients
+#' @description Methods to extract and replace the model coefficients.
 
 setGeneric("coef", function(object, ...) standardGeneric("coef"))
 
