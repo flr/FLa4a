@@ -23,31 +23,31 @@
 #' @aliases SCAMCMC-class
 setClass("SCAMCMC",
         representation(
-			mcmc	= "integer",
-			mcsave	= "integer",
-			mcscale	= "integer",
-			mcmult	= "integer",
-			mcrb	= "integer",
+			mcmc	= "numeric",
+			mcsave	= "numeric",
+			mcscale	= "numeric",
+			mcmult	= "numeric",
+			mcrb	= "numeric",
 			mcprobe	= "numeric",
 			mcdiag	= "logical",
 			mcnoscale	= "logical",
 			mcu	= "logical",
 			hybrid	= "logical",
-			hynstep = "integer",
+			hynstep = "numeric",
 			hyeps	= "numeric"
 		),
         prototype = prototype(
-			mcmc	= as.integer(10000),
-			mcsave	= as.integer(100),
-			mcscale	= as.integer(NA),
-			mcmult	= as.integer(NA),
-			mcrb	= as.integer(NA),
+			mcmc	= 10000,
+			mcsave	= 100,
+			mcscale	= NaN,
+			mcmult	= NaN,
+			mcrb	= NaN,
 			mcprobe	= NaN,
 			mcdiag	= FALSE,
 			mcnoscale	= FALSE,
 			mcu	= FALSE,
 			hybrid	= FALSE,
-			hynstep = as.integer(NA),
+			hynstep = NaN,
 			hyeps	= NaN
         )
 #        validity

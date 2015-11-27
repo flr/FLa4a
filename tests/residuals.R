@@ -24,7 +24,7 @@ idxs$b2 <- bioidx2
 # fitting the model
 fit <- sca(ple4, idxs, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1))
 res <- residuals(fit, ple4, idxs)
-length(res) == 6
+length(res) == 7
 
 # flquantdistr
 catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
@@ -32,7 +32,7 @@ index.var(ple4.index) <- (0.2/index(ple4.index))^2
 
 fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
 res <- residuals(fit, ple4, FLIndices(ple4.index))
-length(res) == 2
+length(res) == 3
 
 
 
