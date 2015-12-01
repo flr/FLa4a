@@ -1,5 +1,14 @@
 FLa4a NEWS
 
+CHANGES IN FLa4a 0.600.x:
+
+	NEW FEATURES:
+		MCMC fits
+		a4a tpl copy method
+		coda coercing
+		
+	BUG FIXES:
+
 CHANGES IN FLa4a 0.500.x:
 
 	NEW FEATURES:

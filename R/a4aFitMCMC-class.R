@@ -84,6 +84,24 @@ setMethod("a4aFitMCMC", signature(object="a4aFitSA"),
 )
 
 #====================================================================
+# coerce to coda object
+#====================================================================
+setGeneric("as.mcmc", function(x, ...) standardGeneric("as.mcmc"))
+
+#' @rdname a4aFitMCMC-class
+#' @aliases as.mcmc,a4aFitMCMC-method
+setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {
+		object <- x
+		df0 <- t(object@pars@stkmodel@params[drop=T])
+		lst <- lapply(object@pars@qmodel, par2mat)
+		df1 <- do.call("cbind", lst)		
+		lst <- lapply(object@pars@vmodel, par2mat)
+		df2 <- do.call("cbind", lst)		
+		df0 <- cbind(df0, df1, df2)
+		mcmc(df0)
+})
+
+#====================================================================
 # The methods below should be inherited from a4aFitSA
 #====================================================================
 
