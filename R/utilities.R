@@ -197,7 +197,6 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	args$main="fitted and observed index-at-age"
 	if(length(index(x))>1){
 		for(i in names(y)){
-			x11()
 			args$data <- subset(df0, qname==i)
 			args$layout <- c(0,length(unique(args$data$year)))
 			args$main <- paste(i, " fitted and observed index-at-age", sep=":")

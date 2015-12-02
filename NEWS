@@ -11,6 +11,7 @@ CHANGES IN FLa4a 0.500.x:
 
 	BUG FIXES:
 		plot for fitted and observed includes legend to id fit and obs
+        plot for fitted and indices no longer calls x11 if more than one index, users must use multiplot device
 		
 CHANGES IN FLa4a 0.300.x:
 
