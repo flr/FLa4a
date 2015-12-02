@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 0.500.0
+Version: 0.600.1
 Date: 2015-11-01
 Author: Colin P. Millar and Ernesto Jardim
 Maintainer: Colin Millar <colinpmillar@googlemail.com> and Ernesto Jardim <ernesto.jardim@jrc.ec.europa.eu>
@@ -13,7 +13,8 @@ Depends:
     FLCore (>= 2.5.20140624),
     mgcv,
     triangle,
-    copula
+    copula,
+    coda
 Imports:
     lattice,
     Matrix
@@ -29,7 +30,9 @@ Collate:
     'submodel-class.R'
     'submodels-class.R'
     'SCAPars-class.R'
+    'SCAMCMC-class.R'
     'a4aFitSA-class.R'
+    'a4aFitMCMC-class.R'
     'coef-methods.R'
     'vcov-methods.R'
     'predict-methods.R'

@@ -234,6 +234,12 @@ DATA_SECTION
   //!! TRACE(covRaP)
 
 
+  // MCMC report
+  !!CLASS ofstream NMCMCreport("NMCMCreport.csv",ios::trunc);
+  !!CLASS ofstream FMCMCreport("FMCMCreport.csv",ios::trunc);
+  !!CLASS ofstream QMCMCreport("QMCMCreport.csv",ios::trunc);
+  !!CLASS ofstream VMCMCreport("VMCMCreport.csv",ios::trunc);
+
 // *********************************
 //
 PARAMETER_SECTION
@@ -281,10 +287,27 @@ PARAMETER_SECTION
   vector  pred(1,noobs)
 
   vector ssb(minYear,maxYear)
-  vector fbar(minYear,maxYear)
+  sdreport_number ssbmaxYear
 
-  sdreport_vector stateofstock(1,2)
+//  vector fbar(minYear,maxYear)
 
+//  sdreport_vector stateofstock(1,2)
+//  sdreport_number r_last
+//  sdreport_vector fpar_vec(1,noFpar)
+
+
+// *********************************
+//
+INITIALIZATION_SECTION
+//
+// *********************************
+fpar 0;
+qpar 0;
+vpar 0;
+ny1par 0;
+rpar 0;
+rapar 0;
+rbpar 0;
 
 // *********************************
 //
@@ -337,6 +360,7 @@ PROCEDURE_SECTION
     ad_exit(1);
   } 
   nll=0.0;
+
   //
   // Fishing mortality model
   //
@@ -401,9 +425,9 @@ PROCEDURE_SECTION
   n.colfill(minAge,r);
   for(int a=minAge+1; a<=maxAge; ++a){
     for(int y=minYear+1; y<=maxYear; ++y){
-      n(y,a)=n(y-1,a-1)-exp(f(y-1,a-1))-exp(m(y-1,a-1));
+      n(y,a)=n(y-1,a-1)-mfexp(f(y-1,a-1))-mfexp(m(y-1,a-1));
       if((a==maxAge) && (isPlusGrp > 0.5)){
-        n(y,a)=log(exp(n(y,a))+exp(n(y-1,a)-exp(f(y-1,a))-exp(m(y-1,a))));
+        n(y,a)=log(mfexp(n(y,a))+mfexp(n(y-1,a)-mfexp(f(y-1,a))-mfexp(m(y-1,a))));
       }
     }
   }
@@ -412,17 +436,17 @@ PROCEDURE_SECTION
   // fbar and ssb
   //
   for(int y=minYear; y<=maxYear; ++y){
-    ssb(y) = sum(elem_prod(exp(n(y)),matWt(y))); // need to decay this by m.spwn and f.spwn
-    fbar(y) = 0.0;
-    for(int a=fbarRange(1); a<=fbarRange(2); ++a){
-      fbar(y) += exp(f(y,a));
-    }
-    fbar(y) /= fbarRange(2)-fbarRange(1)+1;
+    ssb(y) = sum(elem_prod(mfexp(n(y)),matWt(y))); // need to decay this by m.spwn and f.spwn
+//    fbar(y) = 0.0;
+//    for(int a=fbarRange(1); a<=fbarRange(2); ++a){
+//      fbar(y) += mfexp(f(y,a));
+//    }
+//    fbar(y) /= fbarRange(2)-fbarRange(1)+1;
   }  
 
-  stateofstock(1) = ssb(maxYear);
-  stateofstock(2) = fbar(maxYear);
-  
+  ssbmaxYear = ssb(maxYear);
+//  stateofstock(1) = ssb(maxYear);
+//  stateofstock(2) = fbar(maxYear);
 
   //
   // The main likelihood
@@ -444,21 +468,21 @@ PROCEDURE_SECTION
 
     if (locAge >= 0) { // standard observation
     
-      locZ     = exp(f(locYear,locAge)) + exp(m(locYear,locAge));
+      locZ     = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
       if (locFleet==1) { //    catches predicted 
-        pred(i) = f(locYear,locAge)-log(locZ)+log(1.0-exp(-locZ))+n(locYear,locAge);
+        pred(i) = f(locYear,locAge)-log(locZ)+log(1.0-mfexp(-locZ))+n(locYear,locAge);
       } else {          //    survey predicted 
         pred(i) = q(locFleet-1,locYear,locAge) - locZ * surveyTimes(locFleet-1) + n(locYear,locAge); 
       }
-      locVar = exp(2.0 * v(locFleet, locYear, locAge));
+      locVar = mfexp(2.0 * v(locFleet, locYear, locAge));
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
     } else { // an observation of biomass
       pred(i) = 0; // not sure i need to but best to be safe
       for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) {
-        locZ     = exp(f(locYear,a)) + exp(m(locYear,a));
-        pred(i) += exp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
+        locZ     = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
+        pred(i) += mfexp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * mfexp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
-      locVar = exp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
+      locVar = mfexp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
       nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...    
           
     }
@@ -492,21 +516,21 @@ PROCEDURE_SECTION
 
     if (Rmodel == 1) { // beverton holt
       for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - log(exp(rb(y)) + ssb(y-1));
+        predLogR = ra(y) + log(ssb(y-1)) - log(mfexp(rb(y)) + ssb(y-1));
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 2) { // ricker
       for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - exp(rb(y)) * ssb(y-1);
+        predLogR = ra(y) + log(ssb(y-1)) - mfexp(rb(y)) * ssb(y-1);
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
       for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1) + sqrt(exp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - exp(2.0*rb(y)), 2.0) + 0.0025));
+        predLogR = ra(y) + log(ssb(y-1) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - mfexp(2.0*rb(y)), 2.0) + 0.0025));
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
@@ -520,8 +544,8 @@ PROCEDURE_SECTION
     }
     if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
       for(int y=minYear+1; y<=maxYear; ++y){
-        h = exp(ra(y)) / (1 + exp(ra(y))) * 0.8 + 0.2;
-        v = exp(rb(y));
+        h = mfexp(ra(y)) / (1 + mfexp(ra(y))) * 0.8 + 0.2;
+        v = mfexp(rb(y));
         predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
@@ -561,6 +585,17 @@ PROCEDURE_SECTION
   //  res.close();
   // }
 
+  //
+  // MCMC report
+  //
+  if (mceval_phase()) {
+    NMCMCreport << mfexp(n) << endl;
+    FMCMCreport << mfexp(f) << endl;
+    QMCMCreport << q << endl;
+    VMCMCreport << v << endl;
+  }
+
+
 // *********************************
 //
 RUNTIME_SECTION
@@ -577,10 +612,10 @@ REPORT_SECTION
 // *********************************
 
   ofstream nout("n.out");
-  nout<<exp(n)<<endl;
+  nout<<mfexp(n)<<endl;
   nout.close();
   ofstream fout("f.out");
-  fout<<exp(f)<<endl;
+  fout<<mfexp(f)<<endl;
   fout.close();
   ofstream qout("q.out");
   qout<<q<<endl;

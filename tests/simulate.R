@@ -105,9 +105,13 @@ idx.fit <- index(fit)[[1]]
 idx.sim <- index(obj)[[1]]
 idx.rat <- iterMedians(idx.sim)/idx.fit
 
-max(stk.rat)-min(stk.rat) < err
-max(f.rat)-min(f.rat) < err
-max(idx.rat)-min(idx.rat) < err
+#max(stk.rat)-min(stk.rat) < err
+#max(f.rat)-min(f.rat) < err
+#max(idx.rat)-min(idx.rat) < err
+
+mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
 
 # is the vcov matrix ok
 vce <- c(cov(t(params(qmodel(pars(obj))[[1]]))))
@@ -168,11 +172,11 @@ idx3.fit <- index(fit)[[3]]
 idx3.sim <- index(obj)[[3]]
 idx3.rat <- iterMedians(idx3.sim)/idx3.fit
 
-max(stk.rat)-min(stk.rat) < err
-max(f.rat)-min(f.rat) < err
-max(idx.rat)-min(idx.rat) < err
-max(idx2.rat)-min(idx2.rat) < err
-max(idx3.rat)-min(idx3.rat) < err
+mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
+mean(idx2.rat) > 1 - err & mean(idx2.rat) < 1 + err
+mean(idx3.rat) > 1 - err & mean(idx3.rat) < 1 + err
 
 #====================================================================
 # biomass index
@@ -218,9 +222,9 @@ idx.fit <- index(fit)[[1]]
 idx.sim <- index(obj)[[1]]
 idx.rat <- iterMedians(idx.sim)/idx.fit
 
-max(stk.rat)-min(stk.rat) < err
-max(f.rat)-min(f.rat) < err
-max(idx.rat)-min(idx.rat) < err
+mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
 
 #====================================================================
 # biomass and abundance indices
@@ -263,10 +267,10 @@ idx2.fit <- index(fit)[[2]]
 idx2.sim <- index(obj)[[2]]
 idx2.rat <- iterMedians(idx2.sim)/idx2.fit
 
-max(stk.rat)-min(stk.rat) < err
-max(f.rat)-min(f.rat) < err
-max(idx.rat)-min(idx.rat) < err
-max(idx2.rat)-min(idx2.rat) < err
+mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
+mean(idx2.rat) > 1 - err & mean(idx2.rat) < 1 + err
 
 # is the vcov matrix ok
 vce <- c(cov(t(params(qmodel(pars(obj))[[2]]))))
@@ -370,8 +374,7 @@ idx.fit <- index(fit)[[1]]
 idx.sim <- index(obj)[[1]]
 idx.rat <- iterMedians(idx.sim)/iterMedians(idx.fit)
 
-max(stk.rat)-min(stk.rat) < 4*err
-max(f.rat)-min(f.rat) < 4*err
-max(idx.rat)-min(idx.rat) < 4*err
-
+mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
 

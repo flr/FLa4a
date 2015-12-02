@@ -209,4 +209,13 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	}
 })
 
+#====================================================================
+# get tpl
+#====================================================================
+
+getTPL <- function(dir){
+	to <- paste0(dir,"/a4a.tpl", sep="")
+	from <- system.file("admb/a4a.tpl", package = "FLa4a")
+	file.copy(from, to)
+}
 

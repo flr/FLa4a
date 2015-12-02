@@ -16,6 +16,9 @@ fit0 <-  sca(ple4, FLIndices(ple4.index))
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
+# check convergence info
+is.na(fitSumm(fit0)["convergence",])
+
 #--------------------------------------------------------------------
 # iters
 #--------------------------------------------------------------------
@@ -67,8 +70,6 @@ all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=3)"))
 fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
 all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=5)"))
 
-
-
 #====================================================================
 # run a4aSCA
 #====================================================================
@@ -76,6 +77,9 @@ fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 # check that indices have attr biomass
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
 "range" %in%  names(attributes(index(fit0)[[1]]))
+
+# check convergence info
+fitSumm(fit0)["convergence",]==0
 
 #--------------------------------------------------------------------
 # iters
@@ -191,6 +195,8 @@ sum(pars(fit0)@vmodel[[1]]@vcov, na.rm=T)==0
 sum(pars(fit0)@vmodel[[2]]@vcov, na.rm=T)==0
 
 fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
+# check convergence info
+fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
 sum(catch.n(fit), na.rm=T)==0
 sum(index(fit)[[1]], na.rm=T)==0
@@ -390,10 +396,10 @@ range(bioidx)[c("min","max","startf","endf")] <- c(2,5,0,0)
 # fitting the model
 fit1 <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
 
-# should be different from fit0
-identical(fit1,fit0)
+# fit1 should be different from fit0
+!identical(fit1,fit0)
 
-# set fit1 as fit0 to avoid changing all the code
+# set fit0 as fit1 to avoid changing all the code
 fit0 <- fit1
 
 #--------------------------------------------------------------------
@@ -447,5 +453,77 @@ fit1 <- sca(ple4, FLIndices(biofull, ple4.index), qmodel=list(~1, ~s(age, k=4)))
 
 identical(stock.n(fit0), stock.n(fit1))
 identical(harvest(fit0), harvest(fit1))
+
+#====================================================================
+# center argument
+#====================================================================
+data(ple4)
+data(ple4.indices)
+fit0 <- a4aSCA(ple4, ple4.indices)
+fit1 <- a4aSCA(ple4, ple4.indices, center=FALSE)
+fit2 <- a4aSCA(ple4, ple4.indices, center=1)
+
+# maxgrad is different
+!identical(fitSumm(fit0)["maxgrad",], fitSumm(fit1)["maxgrad",])
+!identical(fitSumm(fit0)["maxgrad",], fitSumm(fit2)["maxgrad",])
+!identical(fitSumm(fit1)["maxgrad",], fitSumm(fit2)["maxgrad",])
+
+# likelihood is equal
+identical(fitSumm(fit0)["nlogl",], fitSumm(fit1)["nlogl",])
+identical(fitSumm(fit0)["nlogl",], fitSumm(fit2)["nlogl",])
+identical(fitSumm(fit1)["nlogl",], fitSumm(fit2)["nlogl",])
+
+#====================================================================
+# MCMC class and fit
+#====================================================================
+
+data(ple4)
+data(ple4.indices)
+
+mcmcobj <- new("SCAMCMC")
+identical(getADMBCallArgs(mcmcobj), " -mcmc 10000 -mcsave 100")
+
+obj <- a4aFitMCMC()
+is(obj, "a4aFitMCMC")
+is(slot(obj, "mcmc"), "SCAMCMC")
+obj <- a4aFitSA(obj)
+is(obj, "a4aFitSA")
+obj <- a4aFitMCMC(obj)
+is(obj, "a4aFitMCMC")
+is(slot(obj, "mcmc"), "SCAMCMC")
+obj <- a4aFitMCMC(obj, mcmc=SCAMCMC())
+is(obj, "a4aFitMCMC")
+is(slot(obj, "mcmc"), "SCAMCMC")
+
+mc <- SCAMCMC()
+fit0 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit00 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+identical(dimnames(catch.n(fit0))[-6], dimnames(catch.n(fit00))[-6])
+identical(dimnames(stock.n(fit0))[-6], dimnames(stock.n(fit00))[-6])
+dim(catch.n(fit0))[6]==getN(mc)
+dim(catch.n(fit00))[6]==getN(mc)
+sum(!is.na(fit0@pars@stkmodel@vcov))==0
+sum(!is.na(fit00@pars@stkmodel@vcov))==0
+sum(unlist(lapply(lapply(lapply(fit0@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit00@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit0@pars@qmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit00@pars@qmodel, vcov), is.na), "!")))==0
+
+mc <- SCAMCMC(mcmc=as.integer(10000), mcsave=as.integer(200), mcu=TRUE)
+fit1 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", wkdir="mcmcalt2", mcmc=mc)
+identical(dimnames(catch.n(fit1))[-6], dimnames(catch.n(fit11))[-6])
+identical(dimnames(stock.n(fit1))[-6], dimnames(stock.n(fit11))[-6])
+dim(catch.n(fit1))[6]==getN(mc)
+dim(catch.n(fit11))[6]==getN(mc)
+sum(!is.na(fit1@pars@stkmodel@vcov))==0
+sum(!is.na(fit11@pars@stkmodel@vcov))==0
+sum(unlist(lapply(lapply(lapply(fit1@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit11@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit1@pars@qmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
+
+
+
 
 
