@@ -57,6 +57,7 @@ setReplaceMethod("rngage", signature("FLComp","numeric"), function(object, value
 #' @return a \code{vector} object when extracting, or an \code{FLComp} object when replacing
 #' @aliases rnglen rnglen-methods rnglen,FLComp-method rnglen<- rnglen<--methods rnglen<-,FLComp,numeric-method
 #' @examples
+#' data(rfLen)
 #' rnglen(rfTrawl.idx)
 
 setGeneric("rnglen", function(object, ...) standardGeneric("rnglen"))
@@ -80,6 +81,7 @@ setReplaceMethod("rnglen", signature("FLComp","numeric"), function(object, value
 #' @aliases rngquant rngquant-methods rngquant,FLComp-method rngquant<- rngquant<--methods rngquant<-,FLComp,numeric-method
 #' @examples
 #' data(ple4.index)
+#' data(rfLen)
 #' rngquant(ple4.index)
 #' rngquant(rfTrawl.idx)
 
@@ -140,6 +142,7 @@ setMethod("vecage", "FLComp", function(object){
 #' @return a \code{vector} object
 #' @aliases veclen veclen-methods veclen,FLComp-method
 #' @examples
+#' data(rfLen)
 #' veclen(rfTrawl.idx)
 
 setGeneric("veclen", function(object, ...) standardGeneric("veclen"))
@@ -157,6 +160,7 @@ setMethod("veclen", "FLComp", function(object){
 #' @aliases vecquant vecquant-methods vecquant,FLComp-method
 #' @examples
 #' data(ple4.index)
+#' data(rfLen)
 #' vecquant(ple4.index)
 #' vecquant(rfTrawl.idx)
 
