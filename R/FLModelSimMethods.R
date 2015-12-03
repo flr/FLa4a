@@ -17,11 +17,13 @@
 #'   set.seed(1)
 #'   vbSim <- mvrnorm(10000, vb)
 #'   mm <- predict(vbSim, t=0:20+0.5)
-#' #...from a multivariate triangular distribution with default ranges...
+#' #...from a multivariate triangular distribution with default ranges (0.01 and
+#' #   0.99 quantiles for min and max using a normal distribution with mean from
+#' #   params and sigma from vcov, and with the apex located at params)...
 #'   set.seed(1)
 #'   vbSim1 <- mvrtriangle(10000, vb)
 #'   mm1 <- predict(vbSim1, t=0:20+0.5)
-#' #...and from a multivariate triangular distribution with specified ranges
+#' #...and from a multivariate triangular distribution with specified ranges (note if "c" is missing, it will take the average of "a" and "b")
 #'   set.seed(1)
 #'   pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 #'   vbSim2 <- mvrtriangle(10000, vb, paramMargins=pars)

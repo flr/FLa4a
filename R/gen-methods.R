@@ -6,22 +6,17 @@
 ###############################################################################
 
 #' Methods to generate FLStock objects
-#'
 #' @description This method computes the \code{FLStock} slots consistently with the information provided by the \code{FLQuant}. It requires two of the triplet R/C/F to compute the third consistent with Baranov and survival's equations.
-#'
 #' @param object an FLStock
 #' @param R an FLQuant with iterations or missing
 #' @param C an FLQuant with iterations or missing
 #' @param F an FLQuant with iterations or missing
-#'
-#' @param ... Additional argument list that might not ever
-#'  be used.
-#'
+#' @param ... additional argument list that might not ever be used.
 #' @return an FLStock
-#' 
 #' @docType methods
 #' @rdname genFLStock-methods
 #' @aliases genFLStock genFLStock-methods
+
 setGeneric("genFLStock", function(object, R, C, F, ...) standardGeneric("genFLStock"))
 
 #' @rdname genFLStock-methods
@@ -90,11 +85,15 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
 
 #' @name getAcor
 #' @rdname getAcor-methods
-#' @title compute log correlation matrix
-#' @description method to compute the log correlation matrix
+#' @title compute log-correlation matrix
+#' @description Method to compute the log-correlation matrix for the first dimension (\code{quant}) of the \code{FLQuant} object.
 #' @param object an \code{FLQuant} object
-#' @return a \code{FLQuant} object with the age correlation matrix
+#' @return an \code{FLQuant} object with a quant log-correlation matrix
 #' @aliases getAcor getAcor-methods getAcor,FLQuant-method
+#' @examples
+#' data(ple4)
+#' getAcor(harvest(ple4))
+
 setGeneric("getAcor", function(object, ...) standardGeneric("getAcor"))
 
 setMethod("getAcor", c("FLQuant"), function(object, tf=log, ...) {
@@ -104,23 +103,19 @@ setMethod("getAcor", c("FLQuant"), function(object, tf=log, ...) {
 })
 
 #' @title Methods to generate FLQuant objects
-#'
-#' @description This method uses the age correlation matrix of the \code{FLQuant} and generates a new \code{FLQuant} using a lognormal multivariate distribution
-#'
+#' @description This method uses the quant log-correlation matrix of the \code{FLQuant} object and generates a new \code{FLQuant} using a lognormal multivariate distribution.
 #' @param object an FLQuant
 #' @param cv the coefficient of variation
-#' @param method the ethod used to compute the correlation matrix, for now only "ac" - autocorrelation
-#' @param niter number of iterations to be generated
-#'
+#' @param method the method used to compute the correlation matrix; for now only "ac" (autocorrelation) is implemented
+#' @param niter the number of iterations to be generated
 #' @return an FLQuant
-#' 
 #' @docType methods
 #' @rdname genFLQuant-methods
 #' @aliases genFLQuant genFLQuant-methods
-#'
 #' @examples
 #' data(ple4)
 #' sim.F <- genFLQuant(harvest(ple4))
+
 setGeneric("genFLQuant", function(object, ...) standardGeneric("genFLQuant"))
 
 #' @rdname genFLQuant-methods
@@ -140,19 +135,16 @@ setMethod("genFLQuant", c("FLQuant"), function(object, cv = 0.2, method = "ac", 
 })
 
 #' Methods to generate FLIndex objects
-#'
-#' @description This method generates a \code{FLIndex} by generating the index using \code{genFLQuant} methods.
-#'
-#' @param object an FLIndex
+#' @description This method produces an \code{FLIndex} object by using the \code{genFLQuant} method.
+#' @param object an \code{FLIndex} object
 #' @param cv the coefficient of variation
-#' @param niter number of iterations to be generated
-#' @param ... Additional argument list that might not ever be used.
-#'
+#' @param niter the number of iterations to be generated
+#' @param ... additional argument list that might not ever be used.
 #' @return an FLIndex
-#' 
 #' @docType methods
 #' @rdname genFLIndex-methods
 #' @aliases genFLIndex genFLIndex-methods
+
 setGeneric("genFLIndex", function(object, ...) standardGeneric("genFLIndex"))
 
 #' @rdname genFLIndex-methods
@@ -168,8 +160,6 @@ setMethod("genFLIndex", c("FLQuant"), function(object, cv = 0.2, niter = 250) {
         flq <- FLQuant(c(t(flq)), dimnames = dimnames(mu))
         flq <- exp(mu + flq)
       }
-
-      
       return(flq)
 })
 
