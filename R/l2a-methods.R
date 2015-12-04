@@ -16,6 +16,7 @@
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
+#' # Southern hake
 #' # Variance-covariance matrix for parameters
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(2310, 0.13, 0.84)
@@ -23,29 +24,35 @@
 #' # Make the von Bertalanffy growth model
 #' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
 #'               params=FLPar(linf=130, k=0.164, t0=-0.092, units=c("cm","ano-1","ano")),
-#'                vcov=mm, distr="norm")
+#'                vcov=mm)
+#' # Make a triangle copula for simulating process error
+#' tri_pars <- list(linf = list(a=104.5, b=155.5, c=130), 
+#'                  k = list(a=0.132, b=0.196, c=0.164), 
+#'                  t0 = list(a=-0.184, b=0, c=-0.092))
+#' # Simulate 10 iterations from it
+#' vbObj_tri <- mvrtriangle(10, vbObj, paramMargins=tri_pars)
 #' data(southernHakeLen)
 #' # Extract the catch numbers at length from stock object
 #' cth <- catch.n(shake_len) 
 #' # Slice the data using the unsimulated growth object 
 #' # so the stock and the growth object have 1 iteration
 #' cthA1 <- l2a(cth, vbObj)
-#' # Simulate the growth object to have multiple iterations, stock still has 1 iteration
-#' cthA2 <- l2a(cth, mvrnorm(10, vbObj))
+#' # Slice with 1 iteration in stock and multiple in growth object
+#' cthA2 <- l2a(cth, vbObj_tri)
 #' # Result is age based catch with multiple iterations
 #' # mod: iter=1, data: iter=n
 #' cthA3 <- l2a(propagate(cth,10), vbObj)
 #' # both with iter=n
-#' cthA4 <- l2a(propagate(cth,10), mvrnorm(10, vbObj))
+#' cthA4 <- l2a(propagate(cth,10), vbObj_tri)
 #' # converting a stock object
 #' shake_age <- l2a(shake_len, vbObj)
-#' shake_age <- l2a(shake_len, mvrnorm(10, vbObj))
+#' shake_age <- l2a(shake_len, vbObj_tri)
 #' shake_age <- l2a(propagate(shake_len, 10), vbObj)
+#' shake_age <- l2a(propagate(shake_len, 10), vbObj_tri)
 #' # converting a index object
 #' index_pt_age <- l2a(index_pt_len, vbObj)
 #' index_pt_age <- l2a(index_pt_len, mvrnorm(10, vbObj))
 #' index_pt_age <- l2a(propagate(index_pt_len, 10), vbObj)
-
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 setMethod("l2a", c("FLQuant", "a4aGr"),
