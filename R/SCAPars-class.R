@@ -6,11 +6,11 @@
 #' @section Slot: 
 #' \describe{
 #'
-#'	\item{\code{stkmodel}}{Parameters related with the stock dynamics}
+#'	\item{\code{stkmodel}}{parameters related to stock dynamics}
 #'
-#'	\item{\code{qmodel}}{Paramaters related with catchability of the tunning fleets}
+#'	\item{\code{qmodel}}{paramaters related to catchability of tunning fleets}
 #'
-#'	\item{\code{vmodel}}{Paramaters related with the variance model}
+#'	\item{\code{vmodel}}{paramaters related to the variance model}
 #'
 #' }
 #' @aliases SCAPars-class
