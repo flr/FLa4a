@@ -1,4 +1,10 @@
-#' @title Method to convert age to length 
+#' @title Method to convert length-based data to age-based
+#' @details
+#' A deterministic slicing method converts the length-based data to age-based data, using the supplied growth model (the \code{a4aGr} object).
+#' Each length-based observation is allocated to a corresponding age, based on the growth model, and aggregated accordingly (either the sum or the mean).
+#' There should be 1 or n iterations in both the object being sliced and the growth model.
+#' This means that although the slicing method is deterministic, the length-based data is sliced by each iteration of the growth parameters, thereby propagating the uncertainty in the biological growth parameters (representing process uncertainty) through to the age-based data.
+#' 
 #' @name l2a 
 #' @rdname l2a 
 #' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
@@ -10,30 +16,35 @@
 #' @param plusgroup the plusgroup of the stock. Only used if the object is a \code{FLStockLen}.
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
-#' # red fish
-#' # M=0.05; Linf=58.5, k=0.086
+#' # Variance-covariance matrix for parameters
 #' mm <- matrix(NA, ncol=3, nrow=3)
-#' diag(mm) <- c(50, 0.001,0.001)
-#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
-#' data(rfLen)
-#' cth <- catch.n(rfLen.stk) 
-#' # both with iter=1
+#' diag(mm) <- c(2310, 0.13, 0.84)
+#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(-7.22,-6.28,0.08)
+#' # Make the von Bertalanffy growth model
+#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
+#'               params=FLPar(linf=130, k=0.164, t0=-0.092, units=c("cm","ano-1","ano")),
+#'                vcov=mm, distr="norm")
+#' data(southernHakeLen)
+#' # Extract the catch numbers at length from stock object
+#' cth <- catch.n(shake_len) 
+#' # Slice the data using the unsimulated growth object 
+#' # so the stock and the growth object have 1 iteration
 #' cthA1 <- l2a(cth, vbObj)
-#' # both with iter=n
-#' cthA2 <- l2a(propagate(cth,10), mvrnorm(10, vbObj))
-#' # mod: iter=n, data: iter=1
-#' cthA3 <- l2a(cth, mvrnorm(10, vbObj))
+#' # Simulate the growth object to have multiple iterations, stock still has 1 iteration
+#' cthA2 <- l2a(cth, mvrnorm(10, vbObj))
+#' # Result is age based catch with multiple iterations
 #' # mod: iter=1, data: iter=n
-#' cthA4 <- l2a(propagate(cth,10), vbObj)
+#' cthA3 <- l2a(propagate(cth,10), vbObj)
+#' # both with iter=n
+#' cthA4 <- l2a(propagate(cth,10), mvrnorm(10, vbObj))
 #' # converting a stock object
-#' rfAge.stk <- l2a(rfLen.stk, vbObj)
-#' rfAge.stk <- l2a(rfLen.stk, mvrnorm(10, vbObj))
-#' rfAge.stk <- l2a(propagate(rfLen.stk, 10), vbObj)
+#' shake_age <- l2a(shake_len, vbObj)
+#' shake_age <- l2a(shake_len, mvrnorm(10, vbObj))
+#' shake_age <- l2a(propagate(shake_len, 10), vbObj)
 #' # converting a index object
-#' rfAge.idx <- l2a(rfTrawl.idx, vbObj)
-#' rfAge.idx <- l2a(rfTrawl.idx, mvrnorm(10, vbObj))
-#' rfAge.idx <- l2a(propagate(rfTrawl.idx, 10), vbObj)
+#' index_pt_age <- l2a(index_pt_len, vbObj)
+#' index_pt_age <- l2a(index_pt_len, mvrnorm(10, vbObj))
+#' index_pt_age <- l2a(propagate(index_pt_len, 10), vbObj)
 
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
