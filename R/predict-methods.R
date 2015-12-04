@@ -2,12 +2,19 @@
 #    predict methods
 #==================================================================== 
 
-#' @title predict methods for SCA
+#' @title Predict methods for SCA
 #' @description Predict methods for a4a stock assessment fits.
 #' @name predict
 #' @rdname predict-methods
 #' @aliases predict,a4aFitSA-method
-#' @template Example-predict
+#' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' fmodel <- ~factor(age) + factor(year)
+#' qmodel <- list(~factor(age))
+#' fit1 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
+#' flqs <- predict(fit1)
+
 setMethod("predict", signature(object = "a4aFitSA"),
   function(object) {
   	obj <- pars(object)
