@@ -14,7 +14,6 @@ setMethod("predict", signature(object = "a4aFitSA"),
 	# need to tag biomass indices
   	for(i in seq_along(index(object))) 
   		attr(obj@vmodel[[i+1]], "FLIndexBiomass") <- attr(obj@qmodel[[i]], "FLIndexBiomass") <- attr(index(object)[[i]], "FLIndexBiomass")
-	
   	predict(obj)
   })
 
@@ -23,7 +22,7 @@ setMethod("predict", signature(object = "a4aFitSA"),
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
 
-  	sm <- stkmodel(object)
+	sm <- stkmodel(object)
 	qm <- qmodel(object)
 	vm <- vmodel(object)
 	# need to update centering to include stock centering

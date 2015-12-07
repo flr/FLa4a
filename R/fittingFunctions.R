@@ -61,7 +61,7 @@ collapseSeasons <- function (stock) {
 #' @template Example-sca
 setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
 
-setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP")
+setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing)
 {
   stkdms <- dims(stock)
   if(stkdms$quant != "age"){
@@ -947,7 +947,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	index <- lapply(1:length(indices), function(i) {
 	 	dmns <- dimnames(logq[[i]])
 	 	if (is(indices[[i]], 'FLIndexBiomass')) {
-		dmns[[1]] <- srvMinAge[i]:srvMaxAge[i]
+		dmns[[1]] <- ac(srvMinAge[i]:srvMaxAge[i])
 	 		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1]) 
 	 		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]] 
 	 		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
@@ -1072,15 +1072,16 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		idv <- expand.grid(y=years, s=fleet.names, i=1:nit)
 
 		# fill parameters
-		a4aout@pars@stkmodel@params <- a4aout@pars@stkmodel@params[,rep(1,nit)]
+		a4aout@pars@stkmodel@params <- propagate(a4aout@pars@stkmodel@params, nit)
 		a4aout@pars@stkmodel@params[] <- t(mcmcout[,dimnames(a4aout@pars@stkmodel@params)[[1]]])
+		dimnames(a4aout@pars@stkmodel@params)[[2]] <- 1:nit
 		a4aout@pars@stkmodel@vcov[] <- NA
 
 		# fill derived quantities 
-		a4aout@stock.n <- a4aout@stock.n[,,,,,rep(1,nit)]
+		a4aout@stock.n <- propagate(a4aout@stock.n, nit)
 		a4aout@stock.n[] <- c(t(N * exp(center.log[1])))
 
-		a4aout@harvest <- a4aout@harvest[,,,,,rep(1,nit)]
+		a4aout@harvest <- propagate(a4aout@harvest, nit)
 		a4aout@harvest[] <- c(t(F))
 
 		Z <- a4aout@harvest + m(stock)  
@@ -1088,16 +1089,16 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 		# fill catchability and variance model
 		for(i in fleet.names){
-			a4aout@pars@vmodel[[i]]@params <- a4aout@pars@vmodel[[i]]@params[,rep(1,nit)]
+			a4aout@pars@vmodel[[i]]@params <- propagate(a4aout@pars@vmodel[[i]]@params, nit)
 			a4aout@pars@vmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@params)[[1]]])
 			a4aout@pars@vmodel[[i]]@vcov[] <- NA
 
 			if(i!="catch"){
-				a4aout@pars@qmodel[[i]]@params <- a4aout@pars@qmodel[[i]]@params[,rep(1,nit)]
+				a4aout@pars@qmodel[[i]]@params <- propagate(a4aout@pars@qmodel[[i]]@params, nit)
 				a4aout@pars@qmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@params)[[1]]])
 				a4aout@pars@qmodel[[i]]@vcov[] <- NA
 				dmns <- dimnames(a4aout@index[[i]])
-				a4aout@index[[i]] <- a4aout@index[[i]][,,,,,rep(1, nit)]
+				a4aout@index[[i]] <- propagate(a4aout@index[[i]], nit)
 			 	if (is(indices[[i]], 'FLIndexBiomass')) {
 					a4aout@index[[i]][] <- t(QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),1, drop=FALSE])
 					dmns[[1]] <- srvMinAge[i]:srvMaxAge[i]
