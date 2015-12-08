@@ -4,8 +4,9 @@
 #' @rdname assorted-methods
 #' @aliases is.empty
 #' @section is.empty:
-#' Method \code{is.empty} checks if object is empty. Takes any object returns a logical, \code{TRUE} if object is of length 0.
+#' Method \code{is.empty} checks if an object is empty. It takes any object and returns a logical, \code{TRUE}, if the object is of length 0.
 #' @examples
+#' #Example use of is.empty:
 #' is.empty(list())
 #' is.empty(list(a=2))
 
@@ -16,8 +17,9 @@ is.empty <- function(object) {
 #' @rdname assorted-methods
 #' @aliases pars2dim,FLPar-method
 #' @section pars2dim:
-#' Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLPar} object and returns a \code{logical}
+#' Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
 #' @examples
+#' #Example use of pars2dim:
 #' pars2dim(FLPar())
 #' pars2dim(FLPar(array(dim=c(1,1,1))))
 setMethod("pars2dim", "FLPar", function(object) {
@@ -30,8 +32,9 @@ setMethod("pars2dim", "FLPar", function(object) {
 #' @rdname assorted-methods
 #' @aliases getYidx getYidx-methods getYidx,FLQuant-method
 #' @section getYidx:
-#' Gets the FLQuant's numeric id for a vector of "years". For internal use, not very interesting for users. It takes a \code{FLQuant} and a \code{vector} of years and returns a \code{numeric vector} that can be used to subset the \code{FLQuant}.
+#' Gets an FLQuant's numeric id for a vector of "years". For internal use and not very interesting for users. It takes an \code{FLQuant} object and \code{vector} of years and returns a \code{numeric vector} that can be used to subset the \code{FLQuant}.
 #' @examples
+#' #Example use of getYidx:
 #' data(ple4)
 #' flq <- catch(ple4)
 #' getYidx(flq, 2000:2004)
@@ -57,6 +60,16 @@ setMethod("getYidx", "FLQuant", function(object, year) {
 #' @aliases niters niters-methods niters,FLModelSim-method
 #' @section niters:
 #' Compute number of iterations. Takes an object of any \code{FLR} class and returns a \code{numeric}.
+#' @examples
+#' #Example use of niters:
+#' mm <- matrix(NA, ncol=3, nrow=3)
+#' diag(mm) <- c(50, 0.001,0.001)
+#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' # Generate 100 sample sets
+#'   vbObj <- mvrnorm(100,vbObj)
+#' niters(vbObj)
+
 setGeneric("niters", function(object, ...) standardGeneric("niters"))
 setMethod("niters", "FLModelSim", function(object){
 	dim(params(object))[2]
@@ -76,12 +89,12 @@ setMethod("niters", "FLModelSim", function(object){
 #' data(ple4.indices)
 #' # choose a working directory
 #' wkdir <- tempfile()
-#' # do an 'assessment' fit wth default settings (not recomended!) and keep results in wkdir
-#' fit <- a4aSCA(stock = ple4, indices = ple4.indices, wkdir = wkdir, fit = "assessment")
+#' # do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
+#' fit <- a4aSCA(stock=ple4,indices=ple4.indices,wkdir=wkdir,fit="assessment")
 #' hessInfo <- getADMBHessian(wkdir)
 #' str(hessInfo)
 #' # calculate covariance matrix
-#' Sigma <- solve(hessInfo $ hes)
+#' Sigma <- solve(hessInfo$hes)
 
 getADMBHessian <- function(wkdir) {
 ## This function reads in all of the information contained in the
@@ -117,29 +130,33 @@ getADMBCovariance <- function(wkdir) {
   list(num.pars = num.pars, cov = cov, hybrid_bounded_flag = hybrid_bounded_flag, scale = scale)
 }
 
-
 #' @rdname assorted-methods
 #' @aliases dims,a4aStkParams-method
 #' @section dims:
 #' Extracts the dims of the parameters.
+#' @examples
+#' #Example use of dims:
+#' dims(FLPar())
+
 setMethod("dims", "a4aStkParams", function(obj) {
   dim(obj@params)
 })
-
 
 #' @title plot of fitted catch numbers-at-age
 #' @name plotc
 #' @docType methods
 #' @rdname plotc
 #' @aliases plot,a4aFit,FLStock-method
-#' @description Method to plot fitted versus observed catch numbers-at-age
-#' @param x a \code{a4aFit} object with the fitted values
-#' @param y a \code{FLStock} object with the observed values
-#' @param ... Additional argument list that might not ever be used.
-#' @return a \code{plot} with fitted and observed catch number-at-age
-#' @template runsca
+#' @description Method to plot fitted versus observed catch numbers-at-age.
+#' @param x an \code{a4aFit} object with the fitted values
+#' @param y an \code{FLStock} object with the observed values
+#' @param ... additional argument list that might never be used
+#' @return a \code{plot} with fitted and observed catch numbers-at-age
 #' @examples
-#' plot(fit, ple4)
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
+#' plot(obj, ple4)
 
 setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	args <- list()
@@ -169,15 +186,17 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 #' @docType methods
 #' @rdname ploti
 #' @aliases plot,a4aFit,FLIndices-method
-#' @description Method to plot fitted versus observed indices-at-age
+#' @description Method to plot fitted versus observed indices-at-age.
 #'
-#' @param x a \code{a4aFit} object with the fitted values
-#' @param y a \code{FLIndices} object with the observed values
-#' @param ... Additional argument list that might not ever be used.
+#' @param x an \code{a4aFit} object with the fitted values
+#' @param y an \code{FLIndices} object with the observed values
+#' @param ... additional argument list that might never be used
 #' @return a \code{plot} with fitted and observed indices-at-age
-#' @template runsca
 #' @examples
-#' plot(fit, ple4.indices)
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
+#' plot(obj, FLIndices(ple4.index))
 
 setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	args <- list()
