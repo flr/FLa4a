@@ -436,7 +436,7 @@ PROCEDURE_SECTION
   // fbar and ssb
   //
   for(int y=minYear; y<=maxYear; ++y){
-    ssb(y) = sum(elem_prod(mfexp(n(y)),matWt(y))); // need to decay this by m.spwn and f.spwn
+	ssb(y) = sum(elem_prod(mfexp(n(y)-mfexp(element_prod(f(y), fspwn(y)))-mfexp(element_prod(m(y), mspwn(y)))), matWt(y))); // need to decay this by m.spwn and f.spwn
 //    fbar(y) = 0.0;
 //    for(int a=fbarRange(1); a<=fbarRange(2); ++a){
 //      fbar(y) += mfexp(f(y,a));
@@ -515,22 +515,22 @@ PROCEDURE_SECTION
     dvariable v;
 
     if (Rmodel == 1) { // beverton holt
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - log(mfexp(rb(y)) + ssb(y-1));
+      for(int y=minYear+minAge; y<=maxYear; ++y){
+        predLogR = ra(y) + log(ssb(y-minAge)) - log(mfexp(rb(y)) + ssb(y-minAge));
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 2) { // ricker
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1)) - mfexp(rb(y)) * ssb(y-1);
+      for(int y=minYear+minAge; y<=maxYear; ++y){
+        predLogR = ra(y) + log(ssb(y-minAge)) - mfexp(rb(y)) * ssb(y-minAge);
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
-      for(int y=minYear+1; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-1) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-1) - mfexp(2.0*rb(y)), 2.0) + 0.0025));
+      for(int y=minYear+minAge; y<=maxYear; ++y){
+        predLogR = ra(y) + log(ssb(y-minAge) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-minAge) - mfexp(2.0*rb(y)), 2.0) + 0.0025));
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
@@ -543,10 +543,10 @@ PROCEDURE_SECTION
       }
     }
     if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
-      for(int y=minYear+1; y<=maxYear; ++y){
+      for(int y=minYear+minAge; y<=maxYear; ++y){
         h = mfexp(ra(y)) / (1 + mfexp(ra(y))) * 0.8 + 0.2;
         v = mfexp(rb(y));
-        predLogR =  log(6 * h * v * ssb(y-1)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-1)) ); // spr0 is provided by user
+        predLogR =  log(6 * h * v * ssb(y-minAge)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-minAge)) ); // spr0 is provided by user
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }
