@@ -17,10 +17,10 @@
 a \code{matrix} object with lengths or ages
 }
 \description{
-Predicts age or lengths using a growth class
+Predicts ages or lengths using a growth class
 }
 \examples{
-vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")))
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")))
 predict(vbObj, len=1:50+0.5)
 predict(vbObj, t=1:20+0.5)
 }

@@ -79,23 +79,26 @@ attributes.
 A construction method exists for this class that can take named arguments for
 any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
-for sizing but not stored in any slot.
+for sizing, but not for populating any slot.
 }
 \examples{
 data(ple4)
 data(ple4.index)
+
 obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
 obj
+
+slotNames(obj)
 clock(obj)
 fitSumm(obj)
+
 flq <- stock.n(obj)
-is(flq)
-flq <- catch.n(obj)
-is(flq)
-flq <- harvest(obj)
 is(flq)
 flq <- index(obj)
 is(flq)
+
 logLik(obj)
+AIC(obj)
+BIC(obj)
 }
 

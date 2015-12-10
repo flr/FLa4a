@@ -12,9 +12,16 @@ vecmbar(object, ...)
 \item{object}{a \code{a4aM} object}
 }
 \value{
-a \code{vector} object
+an \code{vector} object
 }
 \description{
-method to extract from \code{a4aM} objects the vector of ages for the mean M.
+Method to extract from \code{a4aM} objects the vector of ages for the mean M.
+}
+\examples{
+mod1 <- FLModelSim(model=~exp(-age-0.5))
+mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+m1 <- a4aM(shape=mod1, level=mod2)
+rngmbar(m1)<-c(1,5)
+vecmbar(m1)
 }
 

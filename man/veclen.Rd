@@ -9,12 +9,16 @@
 veclen(object, ...)
 }
 \arguments{
-\item{object}{a \code{FLComp} object}
+\item{object}{an \code{FLComp} object}
 }
 \value{
 a \code{vector} object
 }
 \description{
-method to extract from \code{FLComp} objects the vector of lengths.
+Method to extract from \code{FLComp} objects the vector of lengths.
+}
+\examples{
+data(rfLen)
+veclen(rfTrawl.idx)
 }
 

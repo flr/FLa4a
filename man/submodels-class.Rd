@@ -20,13 +20,13 @@ submodels(object, ...)
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.
 }
 \note{
-This class is similar to other 'plural' calsses in \code{FLR}. It's a list constraint by having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
+This class is similar to other 'plural' calsses in \code{FLR}. It is a list constrained to having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
 }
 \section{Constructor}{
 
 A construction method exists for this class that can take named arguments for
 any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
-for sizing but not stored in any slot.
+for sizing, but not for populating any slot.
 }
 

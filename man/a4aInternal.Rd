@@ -10,7 +10,7 @@ a4aInternal(stock, indices, fmodel = ~s(age, k = 3) + factor(year),
   srmodel = ~factor(year), n1model = ~factor(age),
   vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
   covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment",
-  niters = 1000, center = TRUE)
+  center = TRUE, mcmc = missing)
 }
 \arguments{
 \item{stock}{an FLStock object containing catch and stock information}
@@ -35,9 +35,9 @@ a4aInternal(stock, indices, fmodel = ~s(age, k = 3) + factor(year),
 
 \item{fit}{character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.}
 
-\item{niters}{number of iterations to be simulated}
-
 \item{center}{\code{logical} specifying whether data is centered before estimating or not}
+
+\item{mcmc}{\code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"

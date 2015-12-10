@@ -17,4 +17,10 @@ a \code{vector} object
 \description{
 method to extract from \code{FLComp} objects the vector of lengths.
 }
+\examples{
+data(ple4.index)
+data(rfLen)
+vecquant(ple4.index)
+vecquant(rfTrawl.idx)
+}
 

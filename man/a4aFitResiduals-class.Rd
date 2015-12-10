@@ -11,11 +11,12 @@
 \S4method{residuals}{a4aFit}(object, stock, indices, ...)
 }
 \description{
-The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default these should be log residuals of catches and indices.
+The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default, these should be log residuals of catches and indices.
 }
 \examples{
 data(ple4)
 data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
+flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 }
 

@@ -29,17 +29,17 @@ Assorted methods needed by FLa4a
 }
 \section{is.empty}{
 
-Method \code{is.empty} checks if object is empty. Takes any object returns a logical, \code{TRUE} if object is of length 0.
+Method \code{is.empty} checks if an object is empty. It takes any object and returns a logical, \code{TRUE}, if the object is of length 0.
 }
 
 \section{pars2dim}{
 
-Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLPar} object and returns a \code{logical}
+Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
 }
 
 \section{getYidx}{
 
-Gets the FLQuant's numeric id for a vector of "years". For internal use, not very interesting for users. It takes a \code{FLQuant} and a \code{vector} of years and returns a \code{numeric vector} that can be used to subset the \code{FLQuant}.
+Gets an FLQuant's numeric id for a vector of "years". For internal use and not very interesting for users. It takes an \code{FLQuant} object and \code{vector} of years and returns a \code{numeric vector} that can be used to subset the \code{FLQuant}.
 }
 
 \section{niters}{
@@ -52,13 +52,26 @@ Compute number of iterations. Takes an object of any \code{FLR} class and return
 Extracts the dims of the parameters.
 }
 \examples{
+#Example use of is.empty:
 is.empty(list())
 is.empty(list(a=2))
+#Example use of pars2dim:
 pars2dim(FLPar())
 pars2dim(FLPar(array(dim=c(1,1,1))))
+#Example use of getYidx:
 data(ple4)
 flq <- catch(ple4)
 getYidx(flq, 2000:2004)
 flq[, getYidx(flq, 2000:2004)]
+#Example use of niters:
+mm <- matrix(NA, ncol=3, nrow=3)
+diag(mm) <- c(50, 0.001,0.001)
+mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+# Generate 100 sample sets
+  vbObj <- mvrnorm(100,vbObj)
+niters(vbObj)
+#Example use of dims:
+dims(FLPar())
 }
 

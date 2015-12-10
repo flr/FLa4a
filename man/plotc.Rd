@@ -9,21 +9,22 @@
 \S4method{plot}{a4aFit,FLStock}(x, y, ...)
 }
 \arguments{
-\item{x}{a \code{a4aFit} object with the fitted values}
+\item{x}{an \code{a4aFit} object with the fitted values}
 
-\item{y}{a \code{FLStock} object with the observed values}
+\item{y}{an \code{FLStock} object with the observed values}
 
-\item{...}{Additional argument list that might not ever be used.}
+\item{...}{additional argument list that might never be used}
 }
 \value{
-a \code{plot} with fitted and observed catch number-at-age
+a \code{plot} with fitted and observed catch numbers-at-age
 }
 \description{
-Method to plot fitted versus observed catch numbers-at-age
+Method to plot fitted versus observed catch numbers-at-age.
 }
 \examples{
 data(ple4)
 data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
+plot(obj, ple4)
 }
 

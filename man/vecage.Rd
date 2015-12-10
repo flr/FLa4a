@@ -9,12 +9,18 @@
 vecage(object, ...)
 }
 \arguments{
-\item{object}{a \code{FLComp} object}
+\item{object}{an \code{FLComp} object}
 }
 \value{
 a \code{vector} object
 }
 \description{
-method to extract from \code{FLComp} objects the vector of ages
+Method to extract from \code{FLComp} objects the vector of ages.
+}
+\examples{
+data(ple4)
+data(ple4.index)
+vecage(ple4)
+vecage(ple4.index)
 }
 

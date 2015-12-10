@@ -4,7 +4,7 @@
 \name{hakeGSA7.idx}
 \alias{hakeGSA7.idx}
 \title{hakeGSA7.idx}
-\format{an \code{FLIndices}.}
+\format{an \code{FLIndices} object}
 \source{
 GFCM - STECF - MEDITS
 }
@@ -12,7 +12,7 @@ GFCM - STECF - MEDITS
 hakeGSA7.idx
 }
 \description{
-Survey index for Gulf of Lions Hake stock.
+Survey index for the Gulf of Lions Hake stock.
 }
 \author{
 Chato Osio

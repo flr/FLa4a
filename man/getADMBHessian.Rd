@@ -27,11 +27,11 @@ data(ple4)
 data(ple4.indices)
 # choose a working directory
 wkdir <- tempfile()
-# do an 'assessment' fit wth default settings (not recomended!) and keep results in wkdir
-fit <- a4aSCA(stock = ple4, indices = ple4.indices, wkdir = wkdir, fit = "assessment")
+# do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
+fit <- a4aSCA(stock=ple4,indices=ple4.indices,wkdir=wkdir,fit="assessment")
 hessInfo <- getADMBHessian(wkdir)
 str(hessInfo)
 # calculate covariance matrix
-Sigma <- solve(hessInfo $ hes)
+Sigma <- solve(hessInfo$hes)
 }
 

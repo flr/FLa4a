@@ -12,14 +12,20 @@
 rngquant(object, ...)
 }
 \arguments{
-\item{object}{a \code{FLComp} object}
+\item{object}{an \code{FLComp} object}
 
-\item{value}{a \code{vector} with max and min quant range to replace the object info.}
+\item{value}{a \code{vector} with max and min quant range to replace the object info}
 }
 \value{
-a \code{vector} object when extracting or a \code{FLComp} object when replacing
+a \code{vector} object when extracting, or an \code{FLComp} object when replacing
 }
 \description{
-Methods to extract from \code{FLComp} objects the quant range or replace its value.
+Methods to extract from \code{FLComp} objects the quant range, or to replace its value.
+}
+\examples{
+data(ple4.index)
+data(rfLen)
+rngquant(ple4.index)
+rngquant(rfTrawl.idx)
 }
 

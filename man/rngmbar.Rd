@@ -9,14 +9,21 @@
 rngmbar(object, ...)
 }
 \arguments{
-\item{object}{a \code{a4aM} object}
+\item{object}{an \code{a4aM} object}
 
-\item{value}{a \code{vector} with max and min age range to replace the object info.}
+\item{value}{a \code{vector} with max and min age range to replace the object info}
 }
 \value{
-a \code{vector} object when extracting or a \code{a4aM} object when replacing
+a \code{vector} object when extracting or an \code{a4aM} object when replacing
 }
 \description{
-Methods to extract from \code{a4aM} objects the M bar range or replace its value.
+Methods to extract from \code{a4aM} objects the M bar age range, or replace its value.
+}
+\examples{
+mod1 <- FLModelSim(model=~exp(-age-0.5))
+mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+m1 <- a4aM(shape=mod1, level=mod2)
+rngmbar(m1)<-c(1,5)
+rngmbar(m1)
 }
 

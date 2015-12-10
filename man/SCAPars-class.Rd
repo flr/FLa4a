@@ -113,11 +113,11 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
 
 \describe{
 
-	\item{\code{stkmodel}}{Parameters related with the stock dynamics}
+	\item{\code{stkmodel}}{parameters related to stock dynamics}
 
-	\item{\code{qmodel}}{Paramaters related with catchability of the tunning fleets}
+	\item{\code{qmodel}}{paramaters related to catchability of tunning fleets}
 
-	\item{\code{vmodel}}{Paramaters related with the variance model}
+	\item{\code{vmodel}}{paramaters related to the variance model}
 
 }
 }
@@ -138,6 +138,6 @@ attributes.
 A construction method exists for this class that can take named arguments for
 any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
-for sizing but not stored in any slot.
+for sizing, but not for populating any slot.
 }
 

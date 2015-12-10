@@ -4,7 +4,7 @@
 \alias{getAcor}
 \alias{getAcor,FLQuant-method}
 \alias{getAcor-methods}
-\title{compute log correlation matrix}
+\title{compute log-correlation matrix}
 \usage{
 getAcor(object, ...)
 }
@@ -12,9 +12,13 @@ getAcor(object, ...)
 \item{object}{an \code{FLQuant} object}
 }
 \value{
-a \code{FLQuant} object with the age correlation matrix
+an \code{FLQuant} object with a quant log-correlation matrix
 }
 \description{
-method to compute the log correlation matrix
+Method to compute the log-correlation matrix for the first dimension (\code{quant}) of the \code{FLQuant} object.
+}
+\examples{
+data(ple4)
+getAcor(harvest(ple4))
 }
 

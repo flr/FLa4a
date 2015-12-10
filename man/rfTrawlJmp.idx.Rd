@@ -4,7 +4,7 @@
 \name{rfTrawlJmp.idx}
 \alias{rfTrawlJmp.idx}
 \title{rfTrawlJmp.idx}
-\format{an \code{FLIndex}.}
+\format{an \code{FLIndex} object}
 \usage{
 rfTrawlJmp.idx
 }

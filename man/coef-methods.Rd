@@ -38,6 +38,6 @@ coef(object, ...)
 \S4method{coef}{submodel,numeric}(object, ...) <- value
 }
 \description{
-Methods to extract and replace the model coefficients
+Methods to extract and replace the model coefficients.
 }
 

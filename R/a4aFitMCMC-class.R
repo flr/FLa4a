@@ -15,12 +15,12 @@
 #' @aliases a4aFitMCMC-class
 #' @template Example-a4aFitSA
 setClass("a4aFitMCMC",
-        representation(
-                "a4aFitSA",
-                mcmc    = "SCAMCMC"
-                ),
-        prototype = prototype(
-                mcmc    = new('SCAMCMC'))
+  representation(
+    "a4aFitSA",
+    mcmc    = "SCAMCMC"
+  ),
+  prototype = prototype(
+    mcmc    = new('SCAMCMC'))
 )
 
 #' @rdname a4aFitMCMC-class

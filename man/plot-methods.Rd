@@ -4,24 +4,26 @@
 \name{plot}
 \alias{plot}
 \alias{plot,a4aFitResiduals,missing-method}
-\title{plot of standardized log residuals}
+\title{Plot of standardized log residuals}
 \usage{
 \S4method{plot}{a4aFitResiduals,missing}(x, y = missing, ...)
 }
 \arguments{
-\item{x}{a \code{a4aFitResiduals} object with the standardized residuals}
+\item{x}{an \code{a4aFitResiduals} object with the standardized residuals}
 
-\item{...}{Additional argument list that might not ever be used.}
+\item{...}{additional argument list that might never be used}
 }
 \value{
 a \code{plot} with stardardized log residuals
 }
 \description{
-Method to plot scatterplot of standardized residuals
+Method to produce scatterplots of standardized residuals
 }
 \examples{
 data(ple4)
 data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
+flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+plot(flqs)
 }
 

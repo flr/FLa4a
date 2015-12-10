@@ -9,16 +9,16 @@
 ma(object, ...)
 }
 \arguments{
-\item{object}{a \code{a4aFits} object with the fits to be averaged across}
+\item{object}{an \code{a4aFits} object with the fits to be averaged across}
 
 \item{stock}{a \code{stock} object with the original data used for fitting}
 
-\item{fun}{a \code{function} that will be used to extract the values for weighting, for now it must be "AIC", "BIC" or "LogLik"}
+\item{fun}{a \code{function} that will be used to extract the values for weighting; for now it must be "AIC", "BIC" or "LogLik"}
 
-\item{nsim}{a \code{numeric} with the number os simulations to be drawn}
+\item{nsim}{a \code{numeric} with the number of simulations to be drawn}
 }
 \value{
-a \code{FLStock} object with iterations defined by \code{nsim}
+an \code{FLStock} object with iterations defined by \code{nsim}
 }
 \description{
 Method to average across a set of models. This is still experimental. Use with care.

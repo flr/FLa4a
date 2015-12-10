@@ -10,19 +10,26 @@
 stdlogres(obs, fit, ...)
 }
 \arguments{
-\item{obs}{a \code{FLQuant} object with the observations}
+\item{obs}{an \code{FLQuant} object with the observations}
 
-\item{fit}{a \code{FLQuant} object with the fitted value}
+\item{fit}{an \code{FLQuant} object with the fitted value}
 }
 \value{
-a \code{FLQuant} with stardardized log residuals
+an \code{FLQuant} with stardardized log residuals
 }
 \description{
-Method o compute the standardized residuals in the log scale for the a4a stock assessment framework. Meaning indices and catch-at-age residuals.
+Method to compute the standardized residuals on the log scale for index- and catch-at-age residuals in the a4a stock assessment framework.
 }
 \examples{
 data(ple4)
 data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
+flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+
+stdlogres(catch.n(ple4), catch.n(obj))
+# which is the same as the following (because residuals() uses stdlogres):
+flqs$catch.n
+# check:
+stdlogres(catch.n(ple4),catch.n(obj)) - flqs$catch.n
 }
 

@@ -4,7 +4,7 @@
 \name{hakeGSA7}
 \alias{hakeGSA7}
 \title{hakeGSA7}
-\format{an \code{FLStock}.}
+\format{an \code{FLStock} object}
 \source{
 GFCM - STECF
 }
@@ -12,7 +12,7 @@ GFCM - STECF
 hakeGSA7
 }
 \description{
-Catch number, stocks weights etc for Gulf of Lions Hake (1998 - 2011).
+Catch number, stocks weights, etc. for Gulf of Lions Hake (1998 - 2011).
 }
 \author{
 Chato Osio

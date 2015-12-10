@@ -4,12 +4,12 @@
 \name{rfTrawlTrd.idx}
 \alias{rfTrawlTrd.idx}
 \title{rfTrawlTrd.idx}
-\format{an \code{FLIndex}.}
+\format{an \code{FLIndex} object}
 \usage{
 rfTrawlTrd.idx
 }
 \description{
-Trawl survey index for red fish, with a jump in catchability.
+Trawl survey index for red fish, with a trend in catchability.
 }
 \author{
 Daniel Howell

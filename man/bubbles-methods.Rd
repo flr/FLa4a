@@ -4,24 +4,26 @@
 \name{bubbles}
 \alias{bubbles}
 \alias{bubbles,a4aFitResiduals,missing-method}
-\title{bubbles plot of standardized log residuals}
+\title{Bubbles plot of standardized log residuals}
 \usage{
 \S4method{bubbles}{a4aFitResiduals,missing}(x, data = missing, ...)
 }
 \arguments{
-\item{x}{a \code{a4aFitResiduals} object with the standardized residuals}
+\item{x}{an \code{a4aFitResiduals} object with the standardized residuals}
 
-\item{...}{Additional argument list that might not ever be used.}
+\item{...}{additional argument list that might never be used}
 }
 \value{
 a \code{bubbles} plot with stardardized log residuals
 }
 \description{
-Method to plot bubbles of standardized residuals
+Method to produce bubble plots of standardized residuals
 }
 \examples{
 data(ple4)
 data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
+flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+bubbles(flqs)
 }
 

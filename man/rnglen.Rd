@@ -12,14 +12,18 @@
 rnglen(object, ...)
 }
 \arguments{
-\item{object}{a \code{FLComp} object}
+\item{object}{an \code{FLComp} object}
 
-\item{value}{a \code{vector} with max and min length range to replace the object info.}
+\item{value}{a \code{vector} with max and min length range to replace the object info}
 }
 \value{
-a \code{vector} object when extracting or a \code{FLComp} object when replacing
+a \code{vector} object when extracting, or an \code{FLComp} object when replacing
 }
 \description{
-Methods to extract from \code{FLComp} objects the length range or replace its value.
+Methods to extract from \code{FLComp} objects the length range, or to replace its value.
+}
+\examples{
+data(rfLen)
+rnglen(rfTrawl.idx)
 }
 

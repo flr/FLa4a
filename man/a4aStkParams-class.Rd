@@ -70,14 +70,14 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
 
 \describe{
 	\item{\code{fMod}}{F submodel \code{formula}}
-	\item{\code{n1Mod}}{First year N \code{formula}}
-	\item{\code{srMod}}{Stock-recruitment submodel \code{formula}}
+	\item{\code{n1Mod}}{first year N \code{formula}}
+	\item{\code{srMod}}{stock-recruitment submodel \code{formula}}
 	\item{\code{params}}{\code{FLPar} with parameters}
 	\item{\code{vcov}}{\code{array} with variance-covariance}
-	\item{\code{centering}}{Centering values \code{numeric}}
-	\item{\code{distr}}{Statistical distribution \code{character}}
-	\item{\code{m}}{Natural mortality \code{FLQuant}}
-	\item{\code{units}}{Data units \code{character}}
+	\item{\code{centering}}{centering values \code{numeric}}
+	\item{\code{distr}}{statistical distribution \code{character}}
+	\item{\code{m}}{natural mortality \code{FLQuant}}
+	\item{\code{units}}{data units \code{character}}
 }
 }
 
@@ -97,6 +97,6 @@ attributes.
 A construction method exists for this class that can take named arguments for
 any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
-for sizing but not stored in any slot.
+for sizing, but not for populating any slot.
 }
 

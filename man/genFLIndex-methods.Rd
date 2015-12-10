@@ -12,18 +12,18 @@ genFLIndex(object, ...)
 \S4method{genFLIndex}{FLQuant}(object, cv = 0.2, niter = 250)
 }
 \arguments{
-\item{object}{an FLIndex}
+\item{object}{an \code{FLIndex} object}
 
-\item{...}{Additional argument list that might not ever be used.}
+\item{...}{additional argument list that might not ever be used.}
 
 \item{cv}{the coefficient of variation}
 
-\item{niter}{number of iterations to be generated}
+\item{niter}{the number of iterations to be generated}
 }
 \value{
 an FLIndex
 }
 \description{
-This method generates a \code{FLIndex} by generating the index using \code{genFLQuant} methods.
+This method produces an \code{FLIndex} object by using the \code{genFLQuant} method.
 }
 

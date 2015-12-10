@@ -26,8 +26,7 @@ genFLStock(object, R, C, F, ...)
 
 \item{F}{an FLQuant with iterations or missing}
 
-\item{...}{Additional argument list that might not ever
- be used.}
+\item{...}{additional argument list that might not ever be used.}
 }
 \value{
 an FLStock

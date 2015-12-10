@@ -9,7 +9,7 @@
 pars2dim(object)
 }
 \description{
-Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLModelSim} object and returns a \code{logical}
+Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLModelSim} object and returns a \code{logical}.
 }
 \examples{
 pars2dim(FLModelSim())

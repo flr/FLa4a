@@ -4,7 +4,7 @@
 \name{rfLen.stk}
 \alias{rfLen.stk}
 \title{rfLen.stk}
-\format{an \code{FLStock}.}
+\format{an \code{FLStock} object}
 \usage{
 rfLen.stk
 }

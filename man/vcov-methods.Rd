@@ -12,7 +12,7 @@
 \alias{vcov<-,a4aStkParams,numeric-method}
 \alias{vcov<-,submodel,numeric-method}
 \alias{vcov<-,submodels,numeric-method}
-\title{variance-covariance matrix}
+\title{Variance-covariance matrix}
 \usage{
 \S4method{vcov}{a4aFitSA}(object)
 
@@ -33,6 +33,6 @@
 \S4method{vcov}{submodel,numeric}(object, ...) <- value
 }
 \description{
-Methods to extract and replace the variance-covariance matrix
+Methods to extract and replace the variance-covariance matrix.
 }
 

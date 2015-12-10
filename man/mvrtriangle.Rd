@@ -3,7 +3,7 @@
 \name{mvrtriangle}
 \alias{mvrtriangle}
 \alias{mvrtriangle,numeric,FLModelSim-method}
-\title{Simulation with a copula model and triangle distributions}
+\title{Simulation with a copula model and triangular distributions}
 \usage{
 mvrtriangle(n, object, ...)
 }
@@ -15,30 +15,39 @@ mvrtriangle(n, object, ...)
 \item{...}{arguments to be passed to the rMvdc and copula methods}
 }
 \value{
-a \code{FLModelSim} object with n groups of parameters
+an \code{FLModelSim} object with n sets of parameters
 }
 \description{
-Simulates the model parameters using elliptic copulas and triangle margins.
+Simulates model parameters using elliptical copulas and triangular marginals.
 }
 \examples{
+# Set up the FLModelSim object
 mm <- matrix(NA, ncol=3, nrow=3)
 diag(mm) <- c(100, 0.001,0.001)
 mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
-vb <- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
+vb <- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+
+# Simulate from a multivariate normal distribution...
+  set.seed(1)
+  vbSim <- mvrnorm(10000, vb)
+  mm <- predict(vbSim, t=0:20+0.5)
+#...from a multivariate triangular distribution with default ranges (0.01 and
+#   0.99 quantiles for min and max using a normal distribution with mean from
+#   params and sigma from vcov, and with the apex located at params)...
+  set.seed(1)
+  vbSim1 <- mvrtriangle(10000, vb)
+  mm1 <- predict(vbSim1, t=0:20+0.5)
+#...and from a multivariate triangular distribution with specified ranges (note if "c" is missing, it will take the average of "a" and "b")
+  set.seed(1)
+  pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
+  vbSim2 <- mvrtriangle(10000, vb, paramMargins=pars)
+  mm2 <- predict(vbSim2, t=0:20+0.5)
+
+# Plot the results
 par(mfrow=c(3,1))
-set.seed(1)
-vbSim <- mvrnorm(10000, vb)
-mm <- predict(vbSim, t=0:20+0.5)
 boxplot(t(mm), main="normal")
-set.seed(1)
-vbSim1 <- mvrtriangle(10000, vb)
-mm1 <- predict(vbSim1, t=0:20+0.5)
-boxplot(t(mm1), main="triangle")
-set.seed(1)
-pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
-vbSim2 <- mvrtriangle(10000, vb, paramMargins=pars)
-mm2 <- predict(vbSim2, t=0:20+0.5)
-boxplot(t(mm2), main="triangle2")
+boxplot(t(mm1), main="triangular")
+boxplot(t(mm2), main="triangular2")
 splom(data.frame(t(params(vbSim)@.Data)), pch=".")
 splom(data.frame(t(params(vbSim1)@.Data)), pch=".")
 splom(data.frame(t(params(vbSim2)@.Data)), pch=".")

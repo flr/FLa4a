@@ -9,19 +9,21 @@
 qqmath(x, data, ...)
 }
 \arguments{
-\item{x}{a \code{a4aFitResiduals} object with the standardized residuals}
+\item{x}{an \code{a4aFitResiduals} object with the standardized residuals}
 
-\item{...}{Additional argument list that might not ever be used.}
+\item{...}{additional argument list that might never be used}
 }
 \value{
 a \code{qqplot} with stardardized log residuals
 }
 \description{
-Method to plot qqplots of standardized residuals
+Method to produce qqplots of standardized residuals
 }
 \examples{
 data(ple4)
 data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
+flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+qqmath(flqs)
 }
 

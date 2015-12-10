@@ -50,7 +50,7 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
 
 \describe{
 	\item{\code{shape}}{the shape of M by age}
-	\item{\code{level}}{the mean level of M in a range of ages, which will be used to scale the \code{shape}}
+	\item{\code{level}}{the mean level of M over a range of ages, which will be used to scale the \code{shape}}
 	\item{\code{trend}}{the yearly trend in M}
 }
 }
@@ -71,7 +71,7 @@ attributes.
 A construction method exists for this class that can take named arguments for
 any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
-for sizing but not stored in any slot.
+for sizing, but not for populating any slot.
 }
 \examples{
 mod1 <- FLModelSim(model=~exp(-age-0.5))

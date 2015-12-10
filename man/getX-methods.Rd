@@ -19,7 +19,7 @@ getX(object, ...)
 a matrix.
 }
 \description{
-uses the user specified formula to build a model matrix
+Uses the user-specified formula to build a model matrix.
 }
 \note{
 \code{getX} is intended to be used internally

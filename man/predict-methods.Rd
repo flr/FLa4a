@@ -5,7 +5,7 @@
 \alias{predict}
 \alias{predict,SCAPars-method}
 \alias{predict,a4aFitSA-method}
-\title{predict methods for SCA}
+\title{Predict methods for SCA}
 \usage{
 \S4method{predict}{a4aFitSA}(object)
 

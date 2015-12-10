@@ -13,9 +13,9 @@
 \S4method{+}{FLIndices,a4aFit}(e1, e2)
 }
 \description{
-Update \code{FLStock} and \code{FLIndex} objects with stock assessment results
+Update \code{FLStock} and \code{FLIndex} objects with stock assessment results.
 }
 \details{
-If both objects have the same number of iterations, the \code{FLStock} slots will be replaced by the \code{a4aFit} slots, in case of 1 iter, or \code{a4aFitSA} slots, in case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the \code{a4aFitSA} object, to update the slots of the \code{FLStock} object.
+If both objects have the same number of iterations, the \code{FLStock} slots will be replaced by the \code{a4aFit} slots, in the case of 1 iter, or \code{a4aFitSA} slots, in the case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the \code{a4aFitSA} object to update the slots of the \code{FLStock} object.
 }
 

@@ -30,11 +30,11 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
 
 	\item{\code{params}}{\code{FLPar} with model parameters}
 
-	\item{\code{vcov}}{\code{array} with variance covariance Paramaters related with the variance model}
+	\item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
 
 	\item{\code{centering}}{\code{numeric} value used for centering the data}
 
-	\item{\code{distr}}{a character with the parameters statistical distribution, it must match a known distribution for R, \emph{e.g.} "norm" for gaussian, so that \code{rnorm} can be called}
+	\item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
 }
 }
 
@@ -54,6 +54,6 @@ attributes.
 A construction method exists for this class that can take named arguments for
 any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
-for sizing but not stored in any slot.
+for sizing, but not for populating any slot.
 }
 
