@@ -4,7 +4,7 @@
 #'
 #' @section Slots:
 #' \describe{
-#'    \item{SCAPars}{An object of class \code{SCAPars} with information about model parameters}
+#'    \item{SCAPars}{an object of class \code{SCAPars} with information about model parameters}
 #' }
 #'
 #' @template Accessors
@@ -13,7 +13,28 @@
 #' @name a4aFitSA-class
 #' @rdname a4aFitSA-class
 #' @aliases a4aFitSA-class
-#' @template Example-a4aFitSA
+#' @examples
+#' data(ple4)
+#' data(ple4.index)
+#'
+#' obj <- sca(stock=ple4, indices=FLIndices(ple4.index), fit="assessment")
+#' obj
+#'
+#' slotNames(obj)
+#' clock(obj)
+#' fitSumm(obj)
+#'
+#' flq <- stock.n(obj)
+#' is(flq)
+#' flq <- index(obj)
+#' is(flq)
+#'
+#' logLik(obj)
+#' AIC(obj)
+#' BIC(obj)
+#'
+#' is(pars(obj))
+
 setClass("a4aFitSA",
         representation(
                 "a4aFit",

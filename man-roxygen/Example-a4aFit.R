@@ -1,17 +1,19 @@
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
+#'
 #' obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
 #' obj
+#'
+#' slotNames(obj)
 #' clock(obj)
 #' fitSumm(obj)
+#'
 #' flq <- stock.n(obj)
-#' is(flq)
-#' flq <- catch.n(obj)
-#' is(flq)
-#' flq <- harvest(obj)
 #' is(flq)
 #' flq <- index(obj)
 #' is(flq)
+#'
 #' logLik(obj)
-
+#' AIC(obj)
+#' BIC(obj)

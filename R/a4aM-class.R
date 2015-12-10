@@ -20,7 +20,7 @@ valida4aM <- function(object){
 #' @section Slot: 
 #' \describe{
 #'	\item{\code{shape}}{the shape of M by age}
-#'	\item{\code{level}}{the mean level of M in a range of ages, which will be used to scale the \code{shape}}
+#'	\item{\code{level}}{the mean level of M over a range of ages, which will be used to scale the \code{shape}}
 #'	\item{\code{trend}}{the yearly trend in M}
 #' }
 #' @aliases a4aM-class
@@ -49,6 +49,7 @@ setClass("a4aM",
 #' mod1 <- FLModelSim(model=~exp(-age-0.5))
 #' mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 #' m1 <- a4aM(shape=mod1, level=mod2)
+
 setGeneric("a4aM", function(object, ...) standardGeneric("a4aM"))
 setMethod("a4aM", signature(object="missing"),
   function(...) {
@@ -72,7 +73,6 @@ setMethod("show", "a4aM", function(object){
 	cat(paste("  level: ", deparse(object@level@model), "\n", sep=""))
 	cat(paste("  trend: ", deparse(object@trend@model), "\n", sep=""))
 })
-
 
 #' @rdname a4aM-class
 #' @aliases shape shape-methods shape,a4aM-method
@@ -113,16 +113,21 @@ setReplaceMethod("trend", "a4aM", function(object, value){
 	object
 })
 
-
 #' @name rngmbar
 #' @rdname rngmbar
 #' @title M bar range extract and replacement
-#' @description Methods to extract from \code{a4aM} objects the M bar range or replace its value.
-#' @param object a \code{a4aM} object
-#' @param value a \code{vector} with max and min age range to replace the object info. 
-#' @return a \code{vector} object when extracting or a \code{a4aM} object when replacing
+#' @description Methods to extract from \code{a4aM} objects the M bar age range, or replace its value.
+#' @param object an \code{a4aM} object
+#' @param value a \code{vector} with max and min age range to replace the object info
+#' @return a \code{vector} object when extracting or an \code{a4aM} object when replacing
 #' @aliases rngmbar rngmbar-methods rngmbar,a4aM-method
 #' @aliases rngmbar<- rngmbar<--methods rngmbar<-,a4aM-method
+#' @examples
+#' mod1 <- FLModelSim(model=~exp(-age-0.5))
+#' mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+#' m1 <- a4aM(shape=mod1, level=mod2)
+#' rngmbar(m1)<-c(1,5)
+#' rngmbar(m1)
 
 setGeneric("rngmbar", function(object, ...) standardGeneric("rngmbar"))
 setMethod("rngmbar", "a4aM", function(object){
@@ -138,10 +143,17 @@ setReplaceMethod("rngmbar", "a4aM", function(object, value){
 #' @name vecmbar
 #' @rdname vecmbar
 #' @title M age vector
-#' @description method to extract from \code{a4aM} objects the vector of ages for the mean M.
+#' @description Method to extract from \code{a4aM} objects the vector of ages for the mean M.
 #' @param object a \code{a4aM} object
-#' @return a \code{vector} object
+#' @return an \code{vector} object
 #' @aliases vecmbar vecmbar-methods vecmbar,a4aM-method
+#' @examples
+#' mod1 <- FLModelSim(model=~exp(-age-0.5))
+#' mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+#' m1 <- a4aM(shape=mod1, level=mod2)
+#' rngmbar(m1)<-c(1,5)
+#' vecmbar(m1)
+
 setGeneric("vecmbar", function(object, ...) standardGeneric("vecmbar"))
 setMethod("vecmbar", "a4aM", function(object){
 	rng <- object@range[c("minmbar","maxmbar")]

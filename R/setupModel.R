@@ -1,9 +1,7 @@
 #' @title Get model matrix
 #' @name getX
 #' @rdname getX-methods
-#' @description uses the user specified formula to build a model matrix
-#'
-#'
+#' @description Uses the user-specified formula to build a model matrix.
 #' @param formula a formula object
 #' @param df the data.frame to build the model matrix against
 #' @param df the data.frame to create the model matrix for.
@@ -151,9 +149,7 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
 #' @title Get covariance matrix
 #' @name getCov
 #' @rdname getCov-methods
-#' @description Returns the covariance matrix of the specified Gaussian markov random field model
-#'
-#'
+#' @description Returns the covariance matrix of the specified Gaussian markov random field model.
 #' @param n integer giving the size of the random feild
 #' @param model chatacter giving the name of the GMRF
 #' @param tau numeric giving the multiplier of the structure matrix for the model
