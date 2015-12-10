@@ -2,8 +2,8 @@
 #    vcov  methods
 #==================================================================== 
 
-#' @title variance-covariance matrix
-#' @description Methods to extract and replace the variance-covariance matrix
+#' @title Variance-covariance matrix
+#' @description Methods to extract and replace the variance-covariance matrix.
 #' @name vcov
 #' @rdname vcov-methods
 #' @aliases vcov,a4aFitSA-method

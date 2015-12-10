@@ -12,7 +12,7 @@ vsmods <- function(object){
 #' @name submodels
 #' @rdname submodels-class
 #' @template ClassDescription
-#' @note This class is similar to other 'plural' calsses in \code{FLR}. It's a list constraint by having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
+#' @note This class is similar to other 'plural' calsses in \code{FLR}. It is a list constrained to having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
 #' @aliases submodels-class
 setClass("submodels", contains="FLComps",
 	validity=vsmods

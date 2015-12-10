@@ -2,11 +2,11 @@
 #' @name ma
 #' @rdname ma-methods
 #' @description Method to average across a set of models. This is still experimental. Use with care.
-#' @param object a \code{a4aFits} object with the fits to be averaged across
+#' @param object an \code{a4aFits} object with the fits to be averaged across
 #' @param stock a \code{stock} object with the original data used for fitting
-#' @param fun a \code{function} that will be used to extract the values for weighting, for now it must be "AIC", "BIC" or "LogLik"
-#' @param nsim a \code{numeric} with the number os simulations to be drawn
-#' @return a \code{FLStock} object with iterations defined by \code{nsim}
+#' @param fun a \code{function} that will be used to extract the values for weighting; for now it must be "AIC", "BIC" or "LogLik"
+#' @param nsim a \code{numeric} with the number of simulations to be drawn
+#' @return an \code{FLStock} object with iterations defined by \code{nsim}
 #' @aliases ma ma-methods ma,a4aFitSAs-method
 #' @examples
 #' data(ple4)
@@ -19,11 +19,10 @@
 #' flqs <- lapply(flqs, iterMedians)
 #' xyplot(data~year, groups=qname, data=flqs, type="l")
 #' plot(stks)
+
 setGeneric("ma", function(object, ...) standardGeneric("ma"))
 setMethod("ma", "a4aFitSAs", function(object, stock, FUN = AIC, nsim = 1000){
-
   FUN <- match.fun(FUN)
-
   # calculate weights
   ICs <- -1 * sapply(object, FUN)
   eICs <- exp( 0.5 * (ICs - max(ICs)))

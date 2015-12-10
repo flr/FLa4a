@@ -3,7 +3,7 @@
 os:
   - linux
 
-language: R
+language: r
   
 sudo: required
 

@@ -1,18 +1,20 @@
 #' @title S4 class \code{a4aFitResiduals}
-#'
-#' @description The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default these should be log residuals of catches and indices.
-#'
+#' @description The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default, these should be log residuals of catches and indices.
 #' @docType class
 #' @name a4aFitResiduals-class
 #' @rdname a4aFitResiduals-class
 #' @aliases a4aFitResiduals-class
+
 setClass("a4aFitResiduals", contain="FLQuants")
 
 #' @rdname a4aFitResiduals-class
 #' @aliases a4aFitResiduals a4aFitResiduals-methods residuals,a4aFit-method
-#' @template runsca
 #' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+
 setMethod("residuals", signature(object="a4aFit"), function(object, stock, indices, ...) {
 	args <- list(...)
 	# object holder
@@ -32,19 +34,27 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
   }
 )
 
-
 #' @title Standardized log residuals 
-#' @description Method o compute the standardized residuals in the log scale for the a4a stock assessment framework. Meaning indices and catch-at-age residuals.
+#' @description Method to compute the standardized residuals on the log scale for index- and catch-at-age residuals in the a4a stock assessment framework.
 #' @name stdlogres
 #' @docType methods
 #' @rdname stdlogres-methods
 #' @aliases stdlogres stdlogres-methods stdlogres,FLQuant,FLQuant-method
-#' @param obs a \code{FLQuant} object with the observations
-#' @param fit a \code{FLQuant} object with the fitted value
-#' @return a \code{FLQuant} with stardardized log residuals
-#' @template runsca
+#' @param obs an \code{FLQuant} object with the observations
+#' @param fit an \code{FLQuant} object with the fitted value
+#' @return an \code{FLQuant} with stardardized log residuals
 #' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+#'
 #' stdlogres(catch.n(ple4), catch.n(obj))
+#' ...which is the same as the following (because residuals() uses stdlogres):
+#' flqs$catch.n
+#' ...check:
+#' stdlogres(catch.n(ple4),catch.n(obj))-flqs$catch.n
+
 setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	flq <- log(obs/fit)	
@@ -54,18 +64,19 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	as(res, "FLQuant")
 }) 
 
-#' @title plot of standardized log residuals 
+#' @title Plot of standardized log residuals
 #' @name plot
 #' @docType methods
 #' @rdname plot-methods
 #' @aliases plot,a4aFitResiduals,missing-method
-#' @description Method to plot scatterplot of standardized residuals
-#'
-#' @param x a \code{a4aFitResiduals} object with the standardized residuals
-#' @param ... Additional argument list that might not ever be used.
+#' @description Method to produce scatterplots of standardized residuals
+#' @param x an \code{a4aFitResiduals} object with the standardized residuals
+#' @param ... additional argument list that might never be used
 #' @return a \code{plot} with stardardized log residuals
-#' @template runsca
 #' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' plot(flqs)
 
@@ -93,44 +104,45 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("xyplot", args)) else do.call("xyplot", args)
 })
 
-#' @title qqplot of standardized log residuals 
+#' @title qqplot of standardized log residuals
 #' @name qqmath
 #' @docType methods
 #' @rdname qqmath-methods
 #' @aliases qqmath,a4aFitResiduals,missing-method
-#' @description Method to plot qqplots of standardized residuals
-#' @param x a \code{a4aFitResiduals} object with the standardized residuals
-#' @param ... Additional argument list that might not ever be used.
+#' @description Method to produce qqplots of standardized residuals
+#' @param x an \code{a4aFitResiduals} object with the standardized residuals
+#' @param ... additional argument list that might never be used
 #' @return a \code{qqplot} with stardardized log residuals
-#' @template runsca
 #' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' qqmath(flqs)
-setGeneric("qqmath", function(x, data, ...) standardGeneric("qqmath"))
 
+setGeneric("qqmath", function(x, data, ...) standardGeneric("qqmath"))
 setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
 	qqmath(~data|factor(age)*qname, data=as.data.frame(x), ylab="standardized residuals", xlab="", prepanel=prepanel.qqmathline, panel = function(x, ...){panel.qqmathline(x, col="gray50"); panel.qqmath(x, ...)}, col=1, pch=19, cex=0.2, par.settings=list(strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="quantile-quantile plot of log residuals of catch and abundance indices", ...)
-
 })
 
-#' @title bubbles plot of standardized log residuals 
+#' @title Bubbles plot of standardized log residuals
 #' @name bubbles
 #' @docType methods
 #' @rdname bubbles-methods
 #' @aliases bubbles,a4aFitResiduals,missing-method
-#' @description Method to plot bubbles of standardized residuals
-#' @param x a \code{a4aFitResiduals} object with the standardized residuals
-#' @param ... Additional argument list that might not ever be used.
+#' @description Method to produce bubble plots of standardized residuals
+#' @param x an \code{a4aFitResiduals} object with the standardized residuals
+#' @param ... additional argument list that might never be used
 #' @return a \code{bubbles} plot with stardardized log residuals
-#' @template runsca
 #' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' bubbles(flqs)
 
 setMethod("bubbles", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
-
 	bubbles(age~year|qname, data=x, par.settings=list(strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="log residuals of catch and abundance indices", ...)
-
 })
 
 

@@ -58,7 +58,34 @@ collapseSeasons <- function (stock) {
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
 #' @return an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
 #' @aliases sca sca-methods sca,FLStock,FLIndices-method sca,FLStock,FLIndex-method
-#' @template Example-sca
+#' @examples
+#' data(ple4)
+#' data(ple4.index)
+#'
+#' # fit using the default submodels
+#' fit1 <- sca(ple4, FLIndices(ple4.index))
+#' plot(ple4 + fit1)
+#'
+#' # see default submodels (set through automated procedure)
+#' sca(ple4, FLIndices(ple4.index), fit='assessment')
+#'
+#' # fishing mortality by age and year (separable)
+#' fit2 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year))
+#' plot(ple4 + fit2)
+#' wireframe(data~year*age, data=harvest(fit2), zlab="F")
+#'
+#' # fit2 + catcability as a smoother by age without year trend
+#' fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)))
+#' plot(ple4 + fit3)
+#'
+#' # fit3 + srmodel as a smoother by year
+#' fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)), srmodel=~s(year, k=45))
+#' plot(ple4 + fit4)
+#'
+#' AIC(fit1, fit2, fit3, fit4)
+#' BIC(fit1, fit2, fit3, fit4)
+
+
 setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
 
 setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing)
@@ -137,7 +164,48 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @param center logical defining if the data should be centered before fitting
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases a4aSCA a4aSCA-methods a4aSCA,FLStock,FLIndices-method
-#' @template Example-a4aSCA
+#' @examples
+#' data(ple4)
+#' data(ple4.index)
+#'
+#' # fishing mortality by age and year (separable) AND catchability at age without year trend
+#' fmodel <- ~factor(age) + factor(year)
+#' qmodel <- list(~factor(age))
+#' fit1 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
+#'
+#' # fishing mortality as a smoother by age and year (but still separable) AND catchability at age without year trend
+#' fmodel <- ~ s(age, k=4) + s(year, k=10)
+#' qmodel <- list(~factor(age))
+#' fit2 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
+#'
+#' # fishing mortality as a smoother by age and year (but still separable) AND catchability as a smoother by age without year trend
+#' fmodel <- ~ s(age, k=4) + s(year, k=10)
+#' qmodel <- list(~s(age, k=4))
+#' fit3 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
+#'
+#' # fishing mortality as a smoother by age and year (but still separable) AND catchability as a smoother by age with year trend
+#' fmodel <- ~ s(age, k=4) + s(year, k=10)
+#' qmodel <- list(~s(age, k=4) + year)
+#' fit4 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
+#'
+#' # It's a statistical model
+#' BIC(fit1, fit2, fit3, fit4)
+#'
+#' # fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND catchability as a smoother by age without year trend
+#' fmodel <- ~ te(age, year, k=c(4, 10))
+#' qmodel <- list(~s(age, k=4))
+#' fit5 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
+#'
+#' # fit3 + smoother in recruitment
+#' fmodel <- ~ s(age, k=4) + s(year, k=20)
+#' qmodel <- list(~s(age, k=4))
+#' rmodel <- ~s(year, k=20)
+#' fit6 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
+#'
+#' # fit3 + bevholt
+#' rmodel <- ~ bevholt(CV=0.05)
+#' fit7 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
+
 
 setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
 
