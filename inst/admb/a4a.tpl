@@ -436,7 +436,8 @@ PROCEDURE_SECTION
   // fbar and ssb
   //
   for(int y=minYear; y<=maxYear; ++y){
-	ssb(y) = sum(elem_prod(mfexp(n(y)-mfexp(element_prod(f(y), fspwn(y)))-mfexp(element_prod(m(y), mspwn(y)))), matWt(y))); // need to decay this by m.spwn and f.spwn
+//	ssb(y) = sum(elem_prod(mfexp(n(y)-mfexp(f(y))*fspwn(y)-mfexp(m(y))*mspwn(y)), matWt(y))); 
+	ssb(y) = sum(elem_prod(mfexp(n(y)), matWt(y))); 
 //    fbar(y) = 0.0;
 //    for(int a=fbarRange(1); a<=fbarRange(2); ++a){
 //      fbar(y) += mfexp(f(y,a));
@@ -623,6 +624,9 @@ REPORT_SECTION
   ofstream vout("v.out");
   vout<<v<<endl;
   vout.close();
+  ofstream ssbout("ssb.out");
+  ssbout<<ssb<<endl;
+  ssbout.close();
 
 // *********************************
 //
