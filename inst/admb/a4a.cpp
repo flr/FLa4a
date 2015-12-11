@@ -475,9 +475,6 @@ void model_parameters::report()
   ofstream vout("v.out");
   vout<<v<<endl;
   vout.close();
-  ofstream ssbout("ssb.out");
-  ssbout<<ssb<<endl;
-  ssbout.close();
 }
 
 model_data::~model_data()
