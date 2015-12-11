@@ -18,6 +18,8 @@ Depends:
 Imports:
     lattice,
     Matrix
+Suggests:
+    latticeExtra
 LazyLoad: yes
 LazyData: yes
 Collate:
