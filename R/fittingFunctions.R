@@ -672,8 +672,9 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	# can we do a quick check for identifiability of the srr model? ...
 	if (ncol(Xsra) + ncol(Xsrb) > dims(stock)$year) stop("Stock recruitment model is over parameterised, please reduce the number parameters")
 
-	# internal r model matrix
-	if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year) 
+	# internal r model matrix (this if is doing nothing)
+	#if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year) 
+	rmodel <- ~ factor(year) 
 	Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
 	#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -832,7 +833,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		paste0("sraMod:",colnames(Xsra)), 
 		paste0("srbMod:",colnames(Xsrb)))    
 	
-	if (srr$srrCV < 0) pnames <- pnames[-c(6,7)]   
+	if (srr$srrCV < 0) pnames <- pnames[-c(6,7)]
+	if (srr$ID==4) pnames <- pnames[-7]    
 	   
 	# end here if we just want to write the data and model files
 	if (fit == "setup") return(wkdir)
