@@ -309,7 +309,7 @@ void model_parameters::userfunction(void)
   // fbar and ssb
   //
   for(int y=minYear; y<=maxYear; ++y){
-    ssb(y) = sum(elem_prod(mfexp(n(y)),matWt(y))); // need to decay this by m.spwn and f.spwn
+	ssb(y) = sum(elem_prod(mfexp(n(y)-mfexp(f(y))*fspwn(y)-mfexp(m(y))*mspwn(y)), matWt(y))); 
   }  
   ssbmaxYear = ssb(maxYear);
   //
@@ -391,7 +391,7 @@ void model_parameters::userfunction(void)
       }
     }
     if (Rmodel == 4) { // geomean
-      for(int y=minYear; y<=maxYear; ++y){
+      for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y);
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
@@ -475,6 +475,9 @@ void model_parameters::report()
   ofstream vout("v.out");
   vout<<v<<endl;
   vout.close();
+  ofstream ssbout("ssb.out");
+  ssbout<<ssb<<endl;
+  ssbout.close();
 }
 
 model_data::~model_data()
