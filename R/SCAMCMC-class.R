@@ -51,8 +51,13 @@ setClass("SCAMCMC",
 			hybrid	= FALSE,
 			hynstep = NaN,
 			hyeps	= NaN
-        )
-#        validity
+        ),
+        validity = function(object) {
+			# if hybrid mcsave must be 1
+			if(object@hybrid & object@mcsave!=1)
+				return("to use the hybrid method mcsave must be 1")
+			# Everything is fine
+			return(TRUE)}
 )
 
 #' @rdname SCAMCMC-class

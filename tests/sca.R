@@ -523,7 +523,26 @@ sum(unlist(lapply(lapply(lapply(fit11@pars@vmodel, vcov), is.na), "!")))==0
 sum(unlist(lapply(lapply(lapply(fit1@pars@qmodel, vcov), is.na), "!")))==0
 sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
 
+# must fail, with hybrid mcsave must be 1
+is(try(SCAMCMC(hybrid=TRUE)), "try-error")
+mc <- SCAMCMC(mcmc=100, mcsave=1, hybrid=TRUE)
+fit1 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+identical(dimnames(catch.n(fit1))[-6], dimnames(catch.n(fit11))[-6])
+identical(dimnames(stock.n(fit1))[-6], dimnames(stock.n(fit11))[-6])
+dim(catch.n(fit1))[6]==getN(mc)
+dim(catch.n(fit11))[6]==getN(mc)
+sum(!is.na(fit1@pars@stkmodel@vcov))==0
+sum(!is.na(fit11@pars@stkmodel@vcov))==0
+sum(unlist(lapply(lapply(lapply(fit1@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit11@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit1@pars@qmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
 
-
+# check seed's working
+mc <- SCAMCMC(mcmc=10, mcsave=1, hybrid=TRUE, mcseed=123)
+fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit22 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+identical(fit11@stock.n, fit22@stock.n)
 
 
