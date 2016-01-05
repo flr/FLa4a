@@ -1171,7 +1171,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 				a4aout@index[[i]] <- propagate(a4aout@index[[i]], nit)
 			 	if (is(indices[[i]], 'FLIndexBiomass')) {
 					a4aout@index[[i]][] <- t(QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),1, drop=FALSE])
-					dmns[[1]] <- srvMinAge[i]:srvMaxAge[i]
+					dmns[[1]] <- ac(srvMinAge[i]:srvMaxAge[i])
 					a4aout@index[[i]] <- exp(a4aout@index[[i]] - center.log["catch"] + center.log[i])
 					nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]] 
 					zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
