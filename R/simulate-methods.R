@@ -75,7 +75,7 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 #		    out @ index[[i]][] <- object@index[[i]][]
 #	    } else {
 			rng <- attr(index(object)[[i]], "range")
-			if(is.na(rng["min"])) iages <- dimnames(stkn)[[1]] else iages <- rng["min"]:rng["max"]
+			if(is.na(rng["min"])) iages <- dimnames(stkn)[[1]] else iages <- ac(rng["min"]:rng["max"])
 			stk <- stkn[iages]*exp(-Zs[iages] * when)
 			stk <- mcf(list(e1=stk, e2=wt(out)[iages]))
 			stk$e2[] <- stk$e2[,,,,,1]
