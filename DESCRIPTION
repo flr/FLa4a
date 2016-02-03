@@ -17,6 +17,7 @@ Depends:
     triangle,
     copula,
     coda
+Additional_repositories: http://flr-project.org/R
 Suggests:
     latticeExtra
 LazyLoad: yes
