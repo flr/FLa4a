@@ -34,13 +34,21 @@ a4aDM <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
 	names(indices) <- snames
 
   #
-  grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3,5)], list(iter = 1:max(dimnames(catch(stock))$iter))))
   dms <- dimnames(stock.n(stock))
-  indices <- lapply(indices, function(x){
-    idx <- x[,, grid$unit[i], grid$area[i]]
-		iter(idx, min(grid$iter[i], dims(x)$iter))
-  })
-  indices <- FLIndices(indices)
+  grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3,5)], list(iter = 1:max(dms$iter))))
+  
+  niters <- nrow(grid)
+  res <- vector('list', length=niters)
+
+  # LOOP over niters
+  for (its in seq(niters)) {
+
+    indices <- lapply(indices, function(x){
+      idx <- x[,, grid$unit[its],, grid$area[its]]
+		  iter(idx, min(grid$iter[its], dims(x)$iter))
+    })
+    
+    indices <- FLIndices(indices)
 
 	# what kind of run is this
 	fit <- match.arg(fit, c("MP", "assessment", "MCMC", "setup"))
@@ -55,7 +63,7 @@ a4aDM <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
 	if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))  stop("only non-zero survey index variances allowed.")
 
 	# convert catches and indices to a list of named arrays
-	list.obs <- c(list(catch = FLa4a:::quant2mat(catch.n(stock)@.Data)), lapply(indices, function(x) FLa4a:::quant2mat(index(x)@.Data)))
+  list.obs <- c(list(catch = FLa4a:::quant2mat(catch.n(stock)@.Data)), lapply(indices, function(x) FLa4a:::quant2mat(index(x)@.Data)))
 	                   
 	# convert the variances of catches and indices to a list of named arrays
 	list.var <- c(list(catch = FLa4a:::quant2mat(catch.n(stock)@var)), lapply(indices, function(x) FLa4a:::quant2mat(index.var(x))))                
@@ -299,6 +307,10 @@ Lpin=list(
 	rbpar=rep(0, ncol(Ldat$designRb))
 	)
 
-return(list(Ldat=Ldat, Lpin=Lpin))
+res[[its]] <- list(Ldat=Ldat, Lpin=Lpin)
 
+  }
+  names(res) <- seq(niters)
+
+  return(res)
 }

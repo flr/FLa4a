@@ -276,7 +276,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, 
   # also need FLQuants with iterations.
   niters <- nrow(grid)
   for (i in seq(niters)) {
-    istock <- stock[,, grid$unit[i], grid$area[i]]
+    istock <- stock[,, grid$unit[i],, grid$area[i]]
 	istock <- iter(istock, min(grid$iter[i], dims(stock)$iter))
 
 	# check: do we need indices to have matching units, areas?
