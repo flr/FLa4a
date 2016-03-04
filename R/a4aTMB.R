@@ -310,7 +310,7 @@ Lpin=list(
 res[[its]] <- list(Ldat=Ldat, Lpin=Lpin)
 
   }
-  names(res) <- seq(niters)
+  names(res) <- paste0('it', seq(niters))
 
   return(res)
 }
