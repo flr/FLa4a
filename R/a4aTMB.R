@@ -280,8 +280,8 @@ surveyMinAge=srvMinAge,
 surveyMaxAge=srvMaxAge,
 surveyTimes=surveytime,
 fbarRange=fbar,
-obs=df.data,
-aux=df.aux,
+obs=as.matrix(df.data),
+aux=as.matrix(df.aux),
 designF=Xf,
 designQ=Xq,
 designV=Xv,
@@ -291,7 +291,8 @@ designRa=Xsra,
 designRb=Xsrb,
 srCV=srr$srrCV,
 spr0=ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
-Rmodel=srr$ID
+Rmodel=srr$ID,
+isPlusGrp=plusgroup
 )
 
 Ldat$locFleetVec=Ldat$obs[,1]
