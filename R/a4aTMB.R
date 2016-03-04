@@ -290,7 +290,8 @@ designR=Xr,
 designRa=Xsra,
 designRb=Xsrb,
 srCV=srr$srrCV,
-spr0=srr$SPR0
+spr0=ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
+Rmodel=srr$ID
 )
 
 Ldat$locFleetVec=Ldat$obs[,1]
