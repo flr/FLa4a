@@ -17,6 +17,10 @@ addons:
     packages:
     - libgsl0-dev
 
+repos:
+  CRAN: https://cloud.r-project.org
+  flr: http://flr-project.org/R
+
 cache: packages
 
 notifications:
