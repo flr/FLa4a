@@ -1,17 +1,27 @@
-# Simple .travis.yml for R projects.
+# .travis.yml for R projects.
+#
+# See README.md for instructions, or for more configuration options,
+
+warnings_are_errors: false
 
 os:
   - linux
+  - osx
 
 language: r
-  
-sudo: required
+r:
+  - release
+  - devel
 
-r_binary_packages:
- - copula
- - triangle
- - mgcv
- - latticeExtra
+sudo: false
 
-r_github_packages:
- - flr/FLCore
+cache: packages
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+branches:
+  only:
+    - master
