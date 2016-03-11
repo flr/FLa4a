@@ -14,6 +14,8 @@ r:
 
 sudo: false
 
+apt_packages: libgsl0-dev
+
 cache: packages
 
 notifications:
