@@ -19,6 +19,9 @@ addons:
     packages:
     - libgsl0-dev
 
+r_github_packages:
+  - flr/FLCore
+
 cache: packages
 
 notifications:
