@@ -6,7 +6,6 @@ warnings_are_errors: false
 
 os:
   - linux
-  - osx
 
 language: r
 r:
