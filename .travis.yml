@@ -16,10 +16,9 @@ addons:
   apt:
     packages:
     - libgsl0-dev
-
-repos:
-  CRAN: https://cloud.r-project.org
-  flr: http://flr-project.org/R
+  
+r_github_packages:
+    - flr/FLCore
 
 cache: packages
 
