@@ -19,10 +19,8 @@ environment:
 
   - R_VERSION: devel
 
-  repos:
-    - CRAN: "c('https://cloud.r-project.org', 'http://flr-project.org/R')"
-
 build_script:
+  - travis-tool.sh install_github flr/FLCore
   - travis-tool.sh install_deps
 
 test_script:
