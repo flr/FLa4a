@@ -19,7 +19,6 @@ Imports:
   copula,
   coda
 Additional_repositories: http://flr-project.org/R
-Remotes: flr/FLCore
 Suggests:
     latticeExtra
 LazyLoad: yes

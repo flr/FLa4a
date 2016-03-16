@@ -24,7 +24,8 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 - [Draft Technical Document](https://github.com/a4a/tech-doc/blob/master/a4aAssessmentMethodology.pdf?raw=true)
 
 ## Build Status
-[![Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
+[![Travis Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/flr/FLa4a?branch=master&svg=true)](https://ci.appveyor.com/project/flr/FLa4)
 
 ## Releases
 - [All releases](https://github.com/flr/FLCore/releases/)
