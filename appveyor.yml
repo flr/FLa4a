@@ -5,7 +5,7 @@
 init:
   ps: |
         $ErrorActionPreference = "Stop"
-        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Invoke-WebRequest http://raw.github.com/iagomosqueira/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
 
 install:
@@ -20,8 +20,7 @@ environment:
   - R_VERSION: devel
 
 build_script:
-  - travis-tool.sh install_github flr/FLCore
-  - travis-tool.sh install_deps
+  - travis-tool.sh install_flr_deps
 
 test_script:
   - travis-tool.sh run_tests
