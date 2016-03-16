@@ -20,8 +20,8 @@ environment:
   - R_VERSION: devel
 
   repos:
-    - CRAN: https://cloud.r-project.org
-    - flr: http://flr-project.org/R
+    - CRAN: 'https://cloud.r-project.org'
+    - flr: 'http://flr-project.org/R'
 
 build_script:
   - travis-tool.sh install_deps
