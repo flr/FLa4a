@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>bubbles. FLa4a 0.140.1</title>
+<title>bubbles. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,32 +47,34 @@
         
       </header>
       
-      <h1>bubbles plot of standardized log residuals</h1>
+      <h1>Bubbles plot of standardized log residuals</h1>
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>"bubbles"(x, data&nbsp;=&nbsp;missing, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>x</dt>
-      <dd>a <code>a4aFitResiduals</code> object with the
-  standardized residuals</dd>
+      <dd>an <code>a4aFitResiduals</code> object with the standardized residuals</dd>
       <dt>...</dt>
-      <dd>Additional argument list that might not ever
-  be used.</dd>
+      <dd>additional argument list that might never be used</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>bubbles</code> plot with stardardized log residuals</p>
+
+      <p><dl>
+a <code>bubbles</code> plot with stardardized log residuals
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Method to plot bubbles of standardized residuals</p>
+
+      <p>Method to produce bubble plots of standardized residuals</p>
   
     </div>
     
@@ -68,12 +82,10 @@
     <pre class="examples"><div class='input'>data(ple4)
 data(ple4.index)
 obj &lt;- sca(ple4, FLIndices(ple4.index))
+flqs &lt;- residuals(obj, ple4, FLIndices(idx=ple4.index))
+bubbles(flqs)
 </div>
-<strong class='message'>Note: The following observations are treated as being missing at random:
-	    fleet year age
-	 BTS-Isis 1997   1
-	 BTS-Isis 1997   2
-      Predictions will be made for missing observations.</strong></pre>
+<p><img src='bubbles-methods-2.png' alt='' width='540' height='400' /></p></pre>
   </div>
   <div class="span4">
     <!-- <ul>
@@ -89,7 +101,7 @@ obj &lt;- sca(ple4, FLIndices(ple4.index))
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

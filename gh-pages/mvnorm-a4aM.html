@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mvnorm. FLa4a 0.140.1</title>
+<title>mvnorm. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,37 +51,44 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>"mvrnorm"(n&nbsp;=&nbsp;1, mu)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>n</dt>
-      <dd>the number of simulations to be generated</dd>
+      <dd>the number of iterations to be generated</dd>
       <dt>mu</dt>
-      <dd>a <code>a4aM</code> object</dd>
+      <dd>an <code>a4aM</code> object</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>a4aM</code> object with n iterations</p>
+
+      <p><dl>
+an <code>a4aM</code> object with n iterations
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Method to simulate multivariate normal parameters for a
-  <code>a4aM</code> object.</p>
+
+      <p>Method to simulate multivariate normal parameters for an <code>a4aM</code> object.</p>
   
     </div>
     
     <h2 id="examples">Examples</h2>
     <pre class="examples"><div class='input'>mod1 &lt;- FLModelSim(model=~exp(-age-0.5))
-mod2 &lt;- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c(&quot;k&quot;,&quot;t&quot;), iter=1:2))), vcov=array(c(0.004, 0.00,0.00, 0.001), dim=c(2,2,2)))
+mod2 &lt;- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11),
+ ncol=2, dimnames=list(params=c(&quot;k&quot;,&quot;t&quot;), iter=1:2))),
+ vcov=array(c(0.004,0.,0.,0.001,0.006,0.,0.,0.003), dim=c(2,2,2)))
 mod3 &lt;- FLModelSim(model=~1+b*v, params=FLPar(b=0.05))
-mObj &lt;- a4aM(shape=mod1, level=mod2, trend=mod3, range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
+mObj &lt;- a4aM(shape=mod1, level=mod2, trend=mod3,
+ range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
 mObj &lt;- mvrnorm(100, mObj)
-m(mObj, v=c(1,1,1,1))
+# Generate 100 iterations with no trend over time
+  m(mObj, v=c(1,1,1,1))
 </div>
 <div class='output'>An object of class &quot;FLQuant&quot;
 iters:  100 
@@ -78,42 +97,104 @@ iters:  100
 
     year
 age  2000                 2001                 2002                
-  0  2.3584e+00(1.77e-01) 2.3584e+00(1.77e-01) 2.3584e+00(1.77e-01)
-  1  8.6761e-01(6.50e-02) 8.6761e-01(6.50e-02) 8.6761e-01(6.50e-02)
-  2  3.1918e-01(2.39e-02) 3.1918e-01(2.39e-02) 3.1918e-01(2.39e-02)
-  3  1.1742e-01(8.80e-03) 1.1742e-01(8.80e-03) 1.1742e-01(8.80e-03)
-  4  4.3196e-02(3.24e-03) 4.3196e-02(3.24e-03) 4.3196e-02(3.24e-03)
-  5  1.5891e-02(1.19e-03) 1.5891e-02(1.19e-03) 1.5891e-02(1.19e-03)
-  6  5.8459e-03(4.38e-04) 5.8459e-03(4.38e-04) 5.8459e-03(4.38e-04)
-  7  2.1506e-03(1.61e-04) 2.1506e-03(1.61e-04) 2.1506e-03(1.61e-04)
-  8  7.9116e-04(5.93e-05) 7.9116e-04(5.93e-05) 7.9116e-04(5.93e-05)
-  9  2.9105e-04(2.18e-05) 2.9105e-04(2.18e-05) 2.9105e-04(2.18e-05)
-  10 1.0707e-04(8.03e-06) 1.0707e-04(8.03e-06) 1.0707e-04(8.03e-06)
-  11 3.9390e-05(2.95e-06) 3.9390e-05(2.95e-06) 3.9390e-05(2.95e-06)
-  12 1.4491e-05(1.09e-06) 1.4491e-05(1.09e-06) 1.4491e-05(1.09e-06)
-  13 5.3308e-06(4.00e-07) 5.3308e-06(4.00e-07) 5.3308e-06(4.00e-07)
-  14 1.9611e-06(1.47e-07) 1.9611e-06(1.47e-07) 1.9611e-06(1.47e-07)
-  15 7.2144e-07(5.41e-08) 7.2144e-07(5.41e-08) 7.2144e-07(5.41e-08)
+  0  2.3741e+00(2.37e-01) 2.3741e+00(2.37e-01) 2.3741e+00(2.37e-01)
+  1  8.7337e-01(8.71e-02) 8.7337e-01(8.71e-02) 8.7337e-01(8.71e-02)
+  2  3.2129e-01(3.21e-02) 3.2129e-01(3.21e-02) 3.2129e-01(3.21e-02)
+  3  1.1820e-01(1.18e-02) 1.1820e-01(1.18e-02) 1.1820e-01(1.18e-02)
+  4  4.3483e-02(4.34e-03) 4.3483e-02(4.34e-03) 4.3483e-02(4.34e-03)
+  5  1.5996e-02(1.60e-03) 1.5996e-02(1.60e-03) 1.5996e-02(1.60e-03)
+  6  5.8847e-03(5.87e-04) 5.8847e-03(5.87e-04) 5.8847e-03(5.87e-04)
+  7  2.1649e-03(2.16e-04) 2.1649e-03(2.16e-04) 2.1649e-03(2.16e-04)
+  8  7.9641e-04(7.95e-05) 7.9641e-04(7.95e-05) 7.9641e-04(7.95e-05)
+  9  2.9298e-04(2.92e-05) 2.9298e-04(2.92e-05) 2.9298e-04(2.92e-05)
+  10 1.0778e-04(1.08e-05) 1.0778e-04(1.08e-05) 1.0778e-04(1.08e-05)
+  11 3.9651e-05(3.96e-06) 3.9651e-05(3.96e-06) 3.9651e-05(3.96e-06)
+  12 1.4587e-05(1.46e-06) 1.4587e-05(1.46e-06) 1.4587e-05(1.46e-06)
+  13 5.3662e-06(5.35e-07) 5.3662e-06(5.35e-07) 5.3662e-06(5.35e-07)
+  14 1.9741e-06(1.97e-07) 1.9741e-06(1.97e-07) 1.9741e-06(1.97e-07)
+  15 7.2623e-07(7.25e-08) 7.2623e-07(7.25e-08) 7.2623e-07(7.25e-08)
     year
 age  2003                
-  0  2.3584e+00(1.77e-01)
-  1  8.6761e-01(6.50e-02)
-  2  3.1918e-01(2.39e-02)
-  3  1.1742e-01(8.80e-03)
-  4  4.3196e-02(3.24e-03)
-  5  1.5891e-02(1.19e-03)
-  6  5.8459e-03(4.38e-04)
-  7  2.1506e-03(1.61e-04)
-  8  7.9116e-04(5.93e-05)
-  9  2.9105e-04(2.18e-05)
-  10 1.0707e-04(8.03e-06)
-  11 3.9390e-05(2.95e-06)
-  12 1.4491e-05(1.09e-06)
-  13 5.3308e-06(4.00e-07)
-  14 1.9611e-06(1.47e-07)
-  15 7.2144e-07(5.41e-08)
+  0  2.3741e+00(2.37e-01)
+  1  8.7337e-01(8.71e-02)
+  2  3.2129e-01(3.21e-02)
+  3  1.1820e-01(1.18e-02)
+  4  4.3483e-02(4.34e-03)
+  5  1.5996e-02(1.60e-03)
+  6  5.8847e-03(5.87e-04)
+  7  2.1649e-03(2.16e-04)
+  8  7.9641e-04(7.95e-05)
+  9  2.9298e-04(2.92e-05)
+  10 1.0778e-04(1.08e-05)
+  11 3.9651e-05(3.96e-06)
+  12 1.4587e-05(1.46e-06)
+  13 5.3662e-06(5.35e-07)
+  14 1.9741e-06(1.97e-07)
+  15 7.2623e-07(7.25e-08)
 
 units:  NA 
+</div>
+<div class='input'># Generate replicates based on iteration-specific multivariate distributions
+# (as defined by params() and vcov())
+  params(mod2)
+</div>
+<div class='output'>An object of class &quot;FLPar&quot;
+iters:  2 
+
+params
+            k             t 
+ 0.45(0.0741) 10.50(0.7413) 
+units:  NA NA 
+</div>
+<div class='input'>  vcov(mod2)
+</div>
+<div class='output'>, , 1
+
+      [,1]  [,2]
+[1,] 0.004 0.000
+[2,] 0.000 0.001
+
+, , 2
+
+      [,1]  [,2]
+[1,] 0.006 0.000
+[2,] 0.000 0.003
+
+</div>
+<div class='input'>  m1&lt;-mvrnorm(mod2)
+  c(params(m1))
+</div>
+<div class='output'>[1]  0.3863386 10.0009506  0.4242918 10.9154854
+</div>
+<div class='input'># Generate replicates based on a single multivariate distribution (here the
+# median of params() and vcov() is used)
+  mvrnorm(2,mod2)
+</div>
+<div class='output'>An object of class &quot;FLModelSim&quot;
+Slot &quot;model&quot;:
+~k^0.66 * t^0.57
+&lt;environment: 0x839bc18&gt;
+
+Slot &quot;params&quot;:
+An object of class &quot;FLPar&quot;
+iters:  2 
+
+params
+              k               t 
+ 0.4372(0.0217) 10.4743(0.0290) 
+units:  NA NA 
+
+Slot &quot;vcov&quot;:
+numeric(0)
+
+Slot &quot;distr&quot;:
+[1] &quot;norm&quot;
+
+</div>
+<div class='input'>  m2&lt;-mvrnorm(2,mod2)
+  c(params(m2))
+</div>
+<div class='output'>[1]  0.5050933 10.5564963  0.5040340 10.5678968
 </div></pre>
   </div>
   <div class="span4">
@@ -130,7 +211,7 @@ units:  NA
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

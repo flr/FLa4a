@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>l2a. FLa4a 0.140.1</title>
+<title>l2a. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,71 +47,81 @@
         
       </header>
       
-      <h1>Method to convert age to length</h1>
+      <h1>Method to convert length-based data to age-based</h1>
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>l2a(object, model, ...)</div>
+<div>"l2a"(object, model, plusgroup&nbsp;=&nbsp;NA, ...)</div>
+<div>"l2a"(object, model, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>object</dt>
-      <dd>an <code>FLQuant</code>, or <code>FLStockLen</code>
-  object.</dd>
+      <dd>an <code>FLQuant</code>, or <code>FLStockLen</code> object.</dd>
       <dt>model</dt>
-      <dd>a <code>a4aGr</code> object</dd>
-      <dt>stat</dt>
-      <dd>the aggregation statistic, must be \"mean\"
-  or \"sum\". Only used if object is an <code>FLQuant</code>.</dd>
+      <dd>an <code>a4aGr</code> object</dd>
       <dt>plusgroup</dt>
-      <dd>the plusgroup of the stock. Only used if
-  the object is a <code>FLStockLen</code>.</dd>
+      <dd>the plusgroup of the stock; only used if the object is an <code>FLStockLen</code>.</dd>
+      <dt>halfwidth</dt>
+      <dd>the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an <code>FLStockLen</code></dd>
+      <dt>stat</dt>
+      <dd>the aggregation statistic, which must be <code>mean</code> or <code>sum</code>; only used if object is an <code>FLQuant</code>.</dd>
+      <dt>max_age</dt>
+      <dd>the maximum age in the returned <code>FLQuant</code>; all ages above this are set to <code>max_age</code>; only used if object is an <code>FLQuant</code></dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>an age based <code>FLQuant</code>, <code>FLStock</code></p>
+
+      <p><dl>
+an age based <code>FLQuant</code>, <code>FLStock</code>
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Method to convert age to length</p>
+
+      <p>Method to convert length-based data to age-based</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+
+      <p>A deterministic slicing method converts the length-based data to age-based data, using the supplied growth model (the <code>a4aGr</code> object).
+Each length-based observation is allocated to a corresponding age, based on the growth model, and aggregated accordingly (either the sum or the mean).
+There should be 1 or n iterations in both the object being sliced and the growth model.
+This means that although the slicing method is deterministic, the length-based data is sliced by each iteration of the growth parameters, thereby propagating the uncertainty in the biological growth parameters (representing process uncertainty) through to the age-based data.</p>
   
     </div>
     
     <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'># red fish
-# M=0.05; Linf=58.5, k=0.086
+    <pre class="examples"><div class='input'># Southern hake
+# Variance-covariance matrix for parameters
 mm &lt;- matrix(NA, ncol=3, nrow=3)
-diag(mm) &lt;- c(50, 0.001,0.001)
-mm[upper.tri(mm)] &lt;- mm[lower.tri(mm)] &lt;- c(0.1,0.01,0.00004)
-vbObj &lt;- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c(&quot;cm&quot;,&quot;ano-1&quot;,&quot;ano&quot;)), vcov=mm, distr=&quot;norm&quot;)
-data(rfLen)
-cth &lt;- catch.n(rfLen.stk)
-# both with iter=1
+diag(mm) &lt;- c(2310, 0.13, 0.84)
+mm[upper.tri(mm)] &lt;- mm[lower.tri(mm)] &lt;- c(-7.22,-6.28,0.08)
+# Make the von Bertalanffy growth model
+vbObj &lt;- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
+              params=FLPar(linf=130, k=0.164, t0=-0.092, units=c(&quot;cm&quot;,&quot;ano-1&quot;,&quot;ano&quot;)),
+               vcov=mm)
+# Make a triangle copula for simulating process error
+tri_pars &lt;- list(linf = list(a=104.5, b=155.5, c=130),
+                 k = list(a=0.132, b=0.196, c=0.164),
+                 t0 = list(a=-0.184, b=0, c=-0.092))
+# Simulate 10 iterations from it
+vbObj_tri &lt;- mvrtriangle(10, vbObj, paramMargins=tri_pars)
+data(southernHakeLen)
+# Extract the catch numbers at length from stock object
+cth &lt;- catch.n(shake_len)
+# Slice the data using the unsimulated growth object
+# so the stock and the growth object have 1 iteration
 cthA1 &lt;- l2a(cth, vbObj)
-</div>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<div class='input'># both with iter=n
-cthA2 &lt;- l2a(propagate(cth,10), mvrnorm(10, vbObj))
-</div>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<div class='input'># mod: iter=n, data: iter=1
-cthA3 &lt;- l2a(cth, mvrnorm(10, vbObj))
+# Slice with 1 iteration in stock and multiple in growth object
+cthA2 &lt;- l2a(cth, vbObj_tri)
 </div>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
@@ -113,13 +135,31 @@ NaNs produced</strong>
 NaNs produced</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
-<div class='input'># mod: iter=1, data: iter=n
-cthA4 &lt;- l2a(propagate(cth,10), vbObj)
+<div class='input'># Result is age based catch with multiple iterations
+# mod: iter=1, data: iter=n
+cthA3 &lt;- l2a(propagate(cth,10), vbObj)
+# both with iter=n
+cthA4 &lt;- l2a(propagate(cth,10), vbObj_tri)
 </div>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
 <div class='input'># converting a stock object
-rfAge.stk &lt;- l2a(rfLen.stk, vbObj)
+shake_age &lt;- l2a(shake_len, vbObj)
+</div>
+<strong class='warning'>Warning message:
+Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.
+ If this is not what you want, you&#39;ll have to deal with these slots by hand.</strong>
+<div class='input'>shake_age &lt;- l2a(shake_len, vbObj_tri)
 </div>
 <strong class='warning'>Warning message:
 Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.
@@ -140,7 +180,104 @@ NaNs produced</strong>
 NaNs produced</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
-<div class='input'>rfAge.stk &lt;- l2a(rfLen.stk, mvrnorm(10, vbObj))
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<div class='input'>shake_age &lt;- l2a(propagate(shake_len, 10), vbObj)
+</div>
+<strong class='warning'>Warning message:
+Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.
+ If this is not what you want, you&#39;ll have to deal with these slots by hand.</strong>
+<div class='input'>shake_age &lt;- l2a(propagate(shake_len, 10), vbObj_tri)
 </div>
 <strong class='warning'>Warning message:
 Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.
@@ -237,63 +374,6 @@ NaNs produced</strong>
 NaNs produced</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<div class='input'>rfAge.stk &lt;- l2a(propagate(rfLen.stk, 10), vbObj)
-</div>
-<strong class='warning'>Warning message:
-Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.
- If this is not what you want, you&#39;ll have to deal with these slots by hand.</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
 <strong class='warning'>Warning message:
@@ -311,7 +391,8 @@ NaNs produced</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
 <div class='input'># converting a index object
-rfAge.idx &lt;- l2a(rfTrawl.idx, vbObj)
+index_pt_age &lt;- l2a(index_pt_len, vbObj)
+index_pt_age &lt;- l2a(index_pt_len, mvrnorm(10, vbObj))
 </div>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
@@ -319,64 +400,13 @@ NaNs produced</strong>
 NaNs produced</strong>
 <strong class='warning'>Warning message:
 NaNs produced</strong>
-<div class='input'>rfAge.idx &lt;- l2a(rfTrawl.idx, mvrnorm(10, vbObj))
+<strong class='warning'>Warning message:
+NaNs produced</strong>
+<div class='output'>[1] &quot;Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)&quot;
+[1] &quot;Trimming age range to a minimum of 0&quot;
 </div>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<div class='input'>rfAge.idx &lt;- l2a(propagate(rfTrawl.idx, 10), vbObj)
-</div>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong>
-<strong class='warning'>Warning message:
-NaNs produced</strong></pre>
+<div class='input'>index_pt_age &lt;- l2a(propagate(index_pt_len, 10), vbObj)
+</div></pre>
   </div>
   <div class="span4">
     <!-- <ul>
@@ -392,7 +422,7 @@ NaNs produced</strong></pre>
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

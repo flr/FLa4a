@@ -31,7 +31,7 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 - [All releases](https://github.com/flr/FLCore/releases/)
 
 ## License
-Copyright (c) 2012-2014 European Union. European Commission Joint Research Centre G.03. Released under the [EUPL 1.1](http://ec.europa.eu/idabc/eupl).
+Copyright (c) 2012-2016 European Union. European Commission Joint Research Centre G.03. Released under the [EUPL 1.1](http://ec.europa.eu/idabc/eupl).
 
 ## Contact
 You are welcome to:
