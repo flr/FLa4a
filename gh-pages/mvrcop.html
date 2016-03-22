@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mvrcop. FLa4a 0.140.1</title>
+<title>mvrcop. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,30 +51,32 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mvrcop(n, mvdc, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>n</dt>
       <dd>the number of iterations</dd>
-      <dt>object</dt>
-      <dd>the <code>FLModelSim</code> object</dd>
       <dt>...</dt>
-      <dd>arguments to be passed to the rMvdc and copula
-  methods</dd>
+      <dd>arguments to be passed to the rMvdc and copula methods</dd>
+      <dt>object</dt>
+      <dd>an <code>FLModelSim</code> object</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>FLModelSim</code> object with n groups of parameters</p>
+
+      <p><dl>
+an <code>FLModelSim</code> object with n groups of parameters
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Simulates the model parameters using a self defined
-  copula model and margins.</p>
+
+      <p>Simulates model parameters with user-defined copulas and marginals.</p>
   
     </div>
     
@@ -70,12 +84,15 @@
     <pre class="examples"><div class='input'>mm &lt;- matrix(NA, ncol=3, nrow=3)
 diag(mm) &lt;- c(100, 0.001,0.001)
 mm[upper.tri(mm)] &lt;- mm[lower.tri(mm)] &lt;- c(0.1,0.1,0.0003)
-vb &lt;- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c(&quot;cm&quot;,&quot;ano-1&quot;,&quot;ano&quot;)), vcov=mm, distr=&quot;norm&quot;)
+vb &lt;- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c(&quot;cm&quot;,&quot;yr^-1&quot;,&quot;yr&quot;)), vcov=mm, distr=&quot;norm&quot;)
 pars &lt;- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 vbSim &lt;- mvrcop(10000, vb, copula=&quot;archmCopula&quot;, family=&quot;clayton&quot;, param=2, margins=&quot;triangle&quot;, paramMargins=pars)
 boxplot(t(predict(vbSim, t=0:20+0.5)))
-splom(data.frame(t(params(vbSim)@.Data)), pch=&quot;.&quot;)
-</div></pre>
+</div>
+<p><img src='mvrcop-2.png' alt='' width='540' height='400' /></p>
+<div class='input'>splom(data.frame(t(params(vbSim)@.Data)), pch=&quot;.&quot;)
+</div>
+<p><img src='mvrcop-4.png' alt='' width='540' height='400' /></p></pre>
   </div>
   <div class="span4">
     <!-- <ul>
@@ -91,7 +108,7 @@ splom(data.frame(t(params(vbSim)@.Data)), pch=&quot;.&quot;)
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

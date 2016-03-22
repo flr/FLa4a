@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>getAcor. FLa4a 0.140.1</title>
+<title>getAcor. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,10 +47,12 @@
         
       </header>
       
-      <h1>compute log correlation matrix</h1>
+      <h1>compute log-correlation matrix</h1>
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>getAcor(object, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -48,18 +62,48 @@
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>FLQuant</code> object with the age correlation matrix</p>
+
+      <p><dl>
+an <code>FLQuant</code> object with a quant log-correlation matrix
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>method to compute the log correlation matrix</p>
+
+      <p>Method to compute the log-correlation matrix for the first dimension (<code>quant</code>) of the <code>FLQuant</code> object.</p>
   
     </div>
-      </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>data(ple4)
+getAcor(harvest(ple4))
+</div>
+<div class='output'>            1         2         3         4          5         6         7
+1  1.00000000 0.3406242 0.2244260 0.2287743 0.09189027 0.2404206 0.2195695
+2  0.34062421 1.0000000 0.8937023 0.7404885 0.75446841 0.7570091 0.7570275
+3  0.22442604 0.8937023 1.0000000 0.8476852 0.83072881 0.7766917 0.7862153
+4  0.22877427 0.7404885 0.8476852 1.0000000 0.83924049 0.8206510 0.7975876
+5  0.09189027 0.7544684 0.8307288 0.8392405 1.00000000 0.8065810 0.8005318
+6  0.24042058 0.7570091 0.7766917 0.8206510 0.80658096 1.0000000 0.8248057
+7  0.21956945 0.7570275 0.7862153 0.7975876 0.80053179 0.8248057 1.0000000
+8  0.24928084 0.7681883 0.7307057 0.7361278 0.74530602 0.7796651 0.7710364
+9  0.16996772 0.7025374 0.7908913 0.8619476 0.88614960 0.8857843 0.8016627
+10 0.16996772 0.7025374 0.7908913 0.8619476 0.88614960 0.8857843 0.8016627
+           8         9        10
+1  0.2492808 0.1699677 0.1699677
+2  0.7681883 0.7025374 0.7025374
+3  0.7307057 0.7908913 0.7908913
+4  0.7361278 0.8619476 0.8619476
+5  0.7453060 0.8861496 0.8861496
+6  0.7796651 0.8857843 0.8857843
+7  0.7710364 0.8016627 0.8016627
+8  1.0000000 0.8091607 0.8091607
+9  0.8091607 1.0000000 1.0000000
+10 0.8091607 1.0000000 1.0000000
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
       <li>getAcor</li><li>getAcor,FLQuant-method</li><li>getAcor-methods</li>
@@ -74,7 +118,7 @@
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

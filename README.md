@@ -1,5 +1,5 @@
 # FLa4a
-- Version: 0.700.1
+- Version: 0.700.2
 - Date: 2015-12-11
 - Author: Colin P. Millar and Ernesto Jardim
 - Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>
@@ -24,13 +24,14 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 - [Draft Technical Document](https://github.com/a4a/tech-doc/blob/master/a4aAssessmentMethodology.pdf?raw=true)
 
 ## Build Status
-[![Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
+[![Travis Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/flr/FLa4a?branch=master&svg=true)](https://ci.appveyor.com/project/flr/FLa4)
 
 ## Releases
 - [All releases](https://github.com/flr/FLCore/releases/)
 
 ## License
-Copyright (c) 2012-2014 European Union. European Commission Joint Research Centre G.03. Released under the [EUPL 1.1](http://ec.europa.eu/idabc/eupl).
+Copyright (c) 2012-2016 European Union. European Commission Joint Research Centre G.03. Released under the [EUPL 1.1](http://ec.europa.eu/idabc/eupl).
 
 ## Contact
 You are welcome to:

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>getADMBHessian. FLa4a 0.140.1</title>
+<title>getADMBHessian. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -40,7 +52,8 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>getADMBHessian(wkdir)</div></pre>
+    <pre><div>getADMBHessian(wkdir)</div>
+<div>getADMBCovariance(wkdir)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -50,22 +63,23 @@
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a list with the following elements</p>
+
+      <p><dl>
+a list with the following elements
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Reads the hessian file from any ADMB fit.  Used here with
-  the a4a model.</p>
+
+      <p>Reads the hessian file from any ADMB fit.  Used here with the a4a model.</p>
   
     </div>
 
     <div class="Note">
       <h2>Note</h2>
-      
+
       <p><code>getADMBHessian</code> is intended to be used internally</p>
   
     </div>
@@ -76,22 +90,10 @@ data(ple4)
 data(ple4.indices)
 # choose a working directory
 wkdir &lt;- tempfile()
-# do an &#39;assessment&#39; fit wth default settings (not recomended!) and keep results in wkdir
-fit &lt;- a4aSCA(stock = ple4, indices = ple4.indices, wkdir = wkdir, fit = &quot;assessment&quot;)
+# do an &#39;assessment&#39; fit with default settings (not recomended!) and keep results in wkdir
+fit &lt;- a4aSCA(stock=ple4,indices=ple4.indices,wkdir=wkdir,fit=&quot;assessment&quot;)
 </div>
-<strong class='message'>Note: The following observations are treated as being missing at random:
-	       fleet year age
-	    BTS-Isis 1997   1
-	    BTS-Isis 1997   2
-	 BTS-Tridens 1997   1
-	 BTS-Tridens 1997   2
-	         SNS 1997   1
-	         SNS 1997   2
-	         SNS 2003   1
-	         SNS 2003   2
-	         SNS 2003   3
-      Predictions will be made for missing observations.</strong>
-<div class='output'>Model and results are stored in working directory [/tmp/RtmpDWv9EF/file103215fc5e6]
+<div class='output'>Model and results are stored in working directory [/tmp/Rtmp77JCf3/file13912bf09f39]
 </div>
 <div class='input'>hessInfo &lt;- getADMBHessian(wkdir)
 str(hessInfo)
@@ -103,12 +105,12 @@ str(hessInfo)
  $ scale              : num [1:124] 1 1 1 1 1 1 1 1 1 1 ...
 </div>
 <div class='input'># calculate covariance matrix
-Sigma &lt;- solve(hessInfo $ hes)
+Sigma &lt;- solve(hessInfo$hes)
 </div></pre>
   </div>
   <div class="span4">
     <!-- <ul>
-      <li>getADMBHessian</li>
+      <li>getADMBCovariance</li><li>getADMBHessian</li>
     </ul>
     <ul>
       
@@ -120,7 +122,7 @@ Sigma &lt;- solve(hessInfo $ hes)
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

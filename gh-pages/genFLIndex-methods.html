@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>genFLIndex. FLa4a 0.140.1</title>
+<title>genFLIndex. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,32 +51,35 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>genFLIndex(object, ...)</div>
+<div>"genFLIndex"(object, cv&nbsp;=&nbsp;0.2, niter&nbsp;=&nbsp;250)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>object</dt>
-      <dd>an FLIndex</dd>
+      <dd>an <code>FLIndex</code> object</dd>
+      <dt>...</dt>
+      <dd>additional argument list that might not ever be used.</dd>
       <dt>cv</dt>
       <dd>the coefficient of variation</dd>
       <dt>niter</dt>
-      <dd>number of iterations to be generated</dd>
-      <dt>...</dt>
-      <dd>Additional argument list that might not ever
-  be used.</dd>
+      <dd>the number of iterations to be generated</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>an FLIndex</p>
+
+      <p><dl>
+an FLIndex
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>This method generates a <code>FLIndex</code> by generating the
-  index using <code>genFLQuant</code> methods.</p>
+
+      <p>This method produces an <code>FLIndex</code> object by using the <code>genFLQuant</code> method.</p>
   
     </div>
       </div>
@@ -82,7 +97,7 @@
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

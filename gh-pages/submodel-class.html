@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>submodel. FLa4a 0.140.1</title>
+<title>submodel. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,30 +51,37 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>submodel(object, ...)</div>
+<div>"params"(object)</div>
+<div>"model"(object)</div>
+<div>"covar"(object)</div></pre>
         
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Class definition (slots), constructors, accessors,
-  replacement (when relevant) and common methods.</p>
+
+      <p>Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.</p>
   
     </div>
 
     <div class="Slot">
       <h2>Slot</h2>
-      
-      <p><dl>
-<dt><code>Mod</code></dt><dd><code>formula</code> describing the model</dd>
-<dt><code>params</code></dt><dd><code>FLPar</code> with model parameters</dd>
-<dt><code>vcov</code></dt><dd><code>array</code> with variance covariance
-  Paramaters related with the variance model</dd>
-<dt><code>centering</code></dt><dd><code>numeric</code> value used for
-  centering the data</dd>
-<dt><code>distr</code></dt><dd>a character with the parameters
-  statistical distribution, it must match a known
-  distribution for R, <em>e.g.</em> "norm" for gaussian, so
-  that <code>rnorm</code> can be called</dd>
-</dl></p>
+
+      <p></p>
+  
+      <p><dl></p>
+  
+      <p><dt><code>Mod</code></dt><dd><code>formula</code> describing the model</dd></p>
+  
+      <p><dt><code>params</code></dt><dd><code>FLPar</code> with model parameters</dd></p>
+  
+      <p><dt><code>vcov</code></dt><dd><code>array</code> with variance covariance paramaters related to the variance model</dd></p>
+  
+      <p><dt><code>centering</code></dt><dd><code>numeric</code> value used for centering the data</dd></p>
+  
+      <p><dt><code>distr</code></dt><dd>a character with the parameters' statistical distribution; it must match a known distribution for R (<em>e.g.</em> "norm" for gaussian) so that <code>rnorm</code> can be called</dd></p>
+  
+      <p></dl></p>
   
       <p></p>
   
@@ -70,33 +89,34 @@
 
     <div class="Accessors">
       <h2>Accessors</h2>
-      
-      <p>All slots in the class have accessor and replacement
-  methods defined that allow retrieving and substituting
-  individual slots.</p>
+
+      <p></p>
   
-      <p>The values passed for replacement need to be of the class
-  of that slot. A numeric vector can also be used when
-  replacing FLQuant slots, and the vector will be used to
-  substitute the values in the slot, but not its other
-  attributes.</p>
+      <p>All slots in the class have accessor and replacement methods defined that
+allow retrieving and substituting individual slots.</p>
+  
+      <p>The values passed for replacement need to be of the class of that slot.
+A numeric vector can also be used when replacing FLQuant slots, and the
+vector will be used to substitute the values in the slot, but not its other
+attributes.</p>
   
     </div>
 
     <div class="Constructor">
       <h2>Constructor</h2>
-      
-      <p>A construction method exists for this class that can take
-  named arguments for any of its slots. All slots are then
-  created to match the requirements of the class validity.
-  If an unnamed <code>FLQuant</code> object is provided, this is
-  used for sizing but not stored in any slot.</p>
+
+      <p></p>
+  
+      <p>A construction method exists for this class that can take named arguments for
+any of its slots. All slots are then created to match the requirements of the
+class validity. If an unnamed <code>FLQuant</code> object is provided, this is used
+for sizing, but not for populating any slot.</p>
   
     </div>
       </div>
   <div class="span4">
     <!-- <ul>
-      <li>covar</li><li>covar,submodel-method</li><li>model</li><li>model,submodel-method</li><li>pars</li><li>pars,submodel-method</li><li>pars-methods</li><li>submodel</li><li>submodel,missing-method</li><li>submodel-class</li><li>submodel-methods</li>
+      <li>covar,submodel-method</li><li>model,submodel-method</li><li>params,submodel-method</li><li>submodel</li><li>submodel,missing-method</li><li>submodel-class</li><li>submodel-methods</li>
     </ul>
     <ul>
       
@@ -108,7 +128,7 @@
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

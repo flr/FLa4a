@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>SCAMCMC. FLa4a 0.700.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">FLa4a 0.700.2</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>MCMC settings class</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>SCAMCMC(object, ...)</div>
+<div>getADMBCallArgs(object, ...)</div>
+<div>getN(object, ...)</div></pre>
+        
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.</p>
+  
+    </div>
+
+    <div class="Slot">
+      <h2>Slot</h2>
+
+      <p></p>
+  
+      <p><dl></p>
+  
+      <p><dt><code>mcmc N</code></dt><dd>Run N MCMC iterations</dd></p>
+  
+      <p><dt><code>mcsave N</code></dt><dd>Save every N th MCMC iteration</dd></p>
+  
+      <p><dt><code>mcscale N</code></dt><dd>Rescale step size for first N iterations</dd></p>
+  
+      <p><dt><code>mcmult N</code></dt><dd>Rescale the covariance matrix</dd></p>
+  
+      <p><dt><code>mcrb N</code></dt><dd>Reduce high parameter correlations</dd></p>
+  
+      <p><dt><code>mcprobe X</code></dt><dd>Use a fat-tailed proposal distribution</dd></p>
+  
+      <p><dt><code>mcdiag</code></dt><dd>Use a diagonal covariance matrix</dd></p>
+  
+      <p><dt><code>mcnoscale</code></dt><dd>Do not scale the algorithm during</dd></p>
+  
+      <p><dt><code>mcu</code></dt><dd>Use a uniform distribution as proposal distribution</dd></p>
+  
+      <p><dt><code>hybrid</code></dt><dd>Use the hybrid method</dd></p>
+  
+      <p><dt><code>hynstep N</code></dt><dd>Mean number of steps for the leapfrog method</dd></p>
+  
+      <p><dt><code>hyeps X</code></dt><dd>The stepsize for the leapfrog method [X numeric and > 0]</dd></p>
+  
+      <p></dl></p>
+  
+      <p></p>
+  
+    </div>
+
+    <div class="Accessors">
+      <h2>Accessors</h2>
+
+      <p></p>
+  
+      <p>All slots in the class have accessor and replacement methods defined that
+allow retrieving and substituting individual slots.</p>
+  
+      <p>The values passed for replacement need to be of the class of that slot.
+A numeric vector can also be used when replacing FLQuant slots, and the
+vector will be used to substitute the values in the slot, but not its other
+attributes.</p>
+  
+    </div>
+
+    <div class="Constructor">
+      <h2>Constructor</h2>
+
+      <p></p>
+  
+      <p>A construction method exists for this class that can take named arguments for
+any of its slots. All slots are then created to match the requirements of the
+class validity. If an unnamed <code>FLQuant</code> object is provided, this is used
+for sizing, but not for populating any slot.</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>SCAMCMC</li><li>SCAMCMC,missing-method</li><li>SCAMCMC-class</li><li>SCAMCMC-methods</li><li>getADMBCallArgs</li><li>getADMBCallArgs-methods</li><li>getN</li><li>mcmc</li><li>mcmc,SCAMCMC-method</li><li>mcmc-methods</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

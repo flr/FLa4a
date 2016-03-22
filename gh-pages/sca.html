@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>sca. FLa4a 0.140.1</title>
+<title>sca. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,96 +47,101 @@
         
       </header>
       
-      <h1>statistical catch-at-age method</h1>
+      <h1>Statistical catch-at-age method</h1>
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>sca(stock, indices, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>stock</dt>
-      <dd>a <code>FLStock</code> object</dd>
+      <dd>an <code>FLStock</code> object</dd>
       <dt>indices</dt>
-      <dd>a <code>FLIndices</code> object</dd>
+      <dd>an <code>FLIndices</code> object</dd>
       <dt>fmodel</dt>
-      <dd>a formula object depicting the model for
-  log fishing mortality at age</dd>
+      <dd>a formula object depicting the model for log fishing mortality at age</dd>
       <dt>qmodel</dt>
-      <dd>a list of formula objects depicting the
-  models for log survey catchability at age</dd>
+      <dd>a list of formula objects depicting the models for log survey catchability at age</dd>
       <dt>srmodel</dt>
-      <dd>a formula object depicting the model for
-  log recruitment</dd>
+      <dd>a formula object depicting the model for log recruitment</dd>
       <dt>fit</dt>
-      <dd>Character with type of fit, 'MP' or
-  'assessment', the first doesn't require the hessian to be
-  computed, while the former does.</dd>
+      <dd>character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>a4aFit</code> or <code>a4aFitSA</code> object with the fit
-  results.</p>
+
+      <p><dl>
+an <code>a4aFit</code> or <code>a4aFitSA</code> object with the fit results.
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>User interface to the statistical catch-at-age method of
-  the a4a stock assessment framework.</p>
+
+      <p>User interface to the statistical catch-at-age method of the a4a stock assessment framework.</p>
   
     </div>
     
     <h2 id="examples">Examples</h2>
     <pre class="examples"><div class='input'>data(ple4)
 data(ple4.index)
+
+# fit using the default submodels
 fit1 &lt;- sca(ple4, FLIndices(ple4.index))
+plot(ple4 + fit1)
 </div>
-<strong class='message'>Note: The following observations are treated as being missing at random:
-	    fleet year age
-	 BTS-Isis 1997   1
-	 BTS-Isis 1997   2
-      Predictions will be made for missing observations.</strong>
-<div class='input'>plot(ple4 + fit1)
+<p><img src='sca-2.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+# see default submodels (set through automated procedure)
+sca(ple4, FLIndices(ple4.index), fit=&#39;assessment&#39;)
 </div>
-<strong class='warning'>Warning message:
-invalid factor level, NA generated</strong>
-<div class='input'>fit2 &lt;- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year))
+<div class='output'>a4a model fit for: Plaice in IV 
+
+Call:
+.local(stock = stock, indices = indices, fmodel = ..1, qmodel = ..2, 
+    srmodel = ..3, n1model = ..4, vmodel = ..5, fit = ..6)
+
+Time used:
+ Pre-processing     Running a4a Post-processing           Total 
+      0.3349648       3.2114854       0.1091063       3.6555564 
+
+Submodels:
+	 fmodel: ~te(age, year, k = c(5, 26), bs = &quot;tp&quot;)
+	srmodel: ~factor(year)
+	n1model: ~factor(age)
+	 qmodel:
+	   BTS-Isis: ~s(age, k = 5)
+	 vmodel:
+	   catch:    ~s(age, k = 3)
+	   BTS-Isis: ~1
 </div>
-<strong class='message'>Note: The following observations are treated as being missing at random:
-	    fleet year age
-	 BTS-Isis 1997   1
-	 BTS-Isis 1997   2
-      Predictions will be made for missing observations.</strong>
-<div class='input'>plot(ple4 + fit2)
+<div class='input'>
+# fishing mortality by age and year (separable)
+fit2 &lt;- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year))
+plot(ple4 + fit2)
 </div>
-<strong class='warning'>Warning message:
-invalid factor level, NA generated</strong>
-<div class='input'>fit3 &lt;- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)))
+<p><img src='sca-6.png' alt='' width='540' height='400' /></p>
+<div class='input'>wireframe(data~year*age, data=harvest(fit2), zlab=&quot;F&quot;)
 </div>
-<strong class='message'>Note: The following observations are treated as being missing at random:
-	    fleet year age
-	 BTS-Isis 1997   1
-	 BTS-Isis 1997   2
-      Predictions will be made for missing observations.</strong>
-<div class='input'>plot(ple4 + fit3)
+<p><img src='sca-8.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+# fit2 + catcability as a smoother by age without year trend
+fit3 &lt;- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)))
+plot(ple4 + fit3)
 </div>
-<strong class='warning'>Warning message:
-invalid factor level, NA generated</strong>
-<div class='input'>fit4 &lt;- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)), srmodel=~s(year, k=45))
+<p><img src='sca-10.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+# fit3 + srmodel as a smoother by year
+fit4 &lt;- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)), srmodel=~s(year, k=45))
+plot(ple4 + fit4)
 </div>
-<strong class='message'>Note: The following observations are treated as being missing at random:
-	    fleet year age
-	 BTS-Isis 1997   1
-	 BTS-Isis 1997   2
-      Predictions will be made for missing observations.</strong>
-<div class='input'>plot(ple4 + fit4)
-</div>
-<strong class='warning'>Warning message:
-invalid factor level, NA generated</strong>
-<div class='input'>AIC(fit1, fit2, fit3, fit4)
+<p><img src='sca-12.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+AIC(fit1, fit2, fit3, fit4)
 </div>
 <div class='output'>      df      AIC
 fit1 200 269.4740
@@ -155,7 +172,7 @@ fit4 123 1069.8536
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

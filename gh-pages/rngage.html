@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>rngage. FLa4a 0.140.1</title>
+<title>rngage. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,32 +51,47 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>rngage(object, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>object</dt>
-      <dd>a <code>FLComp</code> object</dd>
+      <dd>an <code>FLComp</code> object</dd>
       <dt>value</dt>
-      <dd>a <code>vector</code> with max and min age range
-  to replace the object info.</dd>
+      <dd>a <code>vector</code> with max and min age range to replace the object info</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>vector</code> object when extracting or a <code>FLComp</code>
-  object when replacing</p>
+
+      <p><dl>
+a <code>vector</code> object when extracting, or an <code>FLComp</code> object when replacing
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Methods to extract from <code>FLComp</code> objects the age
-  range or replace its value.</p>
+
+      <p>Methods to extract from <code>FLComp</code> objects the age range, or to replace its value.</p>
   
     </div>
-      </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>data(ple4)
+data(ple4.index)
+rngage(ple4)
+</div>
+<div class='output'>min max 
+  1  10 
+</div>
+<div class='input'>rngage(ple4.index)
+</div>
+<div class='output'>min max 
+  1   8 
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
       <li>rngage</li><li>rngage,FLComp-method</li><li>rngage-methods</li><li>rngage&lt;-</li><li>rngage&lt;-,FLComp,numeric-method</li><li>rngage&lt;--methods</li>
@@ -79,7 +106,7 @@
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

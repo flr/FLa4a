@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>Index. FLa4a 0.140.1</title>
+<title>Index. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Colin P. Millar and Ernesto Jardim">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -37,64 +49,7 @@
       
       <div class="row">
   <div class="span8">
-    <h1>FLa4a</h1>
-
-<ul>
-<li>Version: 0.140.1</li>
-<li>Date: 2014-09-25</li>
-<li>Author: Colin P. Millar and Ernesto Jardim</li>
-<li>Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu></li>
-<li>Repository: <a href="https://github.com/flr/FLa4a/">https://github.com/flr/FLa4a/</a></li>
-<li>Bug reports: <a href="https://github.com/flr/FLa4a/issues">https://github.com/flr/FLa4a/issues</a></li>
-</ul>
-
-<h2>Overview</h2>
-
-<p>FLa4a implements the Assesment For All (A4A) initiative stock assessment model, a simple and robust statistical catch at age model. For further information about rhe A4A initiative, please visit <a href="https://fishreg.jrc.ec.europa.eu/web/a4a">https://fishreg.jrc.ec.europa.eu/web/a4a</a>.</p>
-
-<p>To install this package, start R and enter:</p>
-
-<pre><code>install.packages(c(&quot;copula&quot;, &quot;mgcv&quot;, &quot;splines&quot;, &quot;triangle&quot;))
-</code></pre>
-
-<p>followed by</p>
-
-<pre><code>install.packages(&quot;FLa4a&quot;, repos=&quot;http://flr-project.org/R&quot;)
-</code></pre>
-
-<p>or download from the <a href="https://github.com/flr/FLa4a/releases/latest">FLa4a releases page</a></p>
-
-<h2>Documentation</h2>
-
-<ul>
-<li><a href="http://flr-project.org/FLa4a">Help pages</a></li>
-<li><a href="https://github.com/a4a/tech-doc/blob/master/a4aAssessmentMethodology.pdf?raw=true">Draft Technical Document</a></li>
-</ul>
-
-<h2>Build Status</h2>
-
-<p><a href="https://travis-ci.org/flr/FLa4a"><img src="https://travis-ci.org/flr/FLa4a.svg?branch=master" alt="Build Status"/></a></p>
-
-<h2>Releases</h2>
-
-<ul>
-<li><a href="https://github.com/flr/FLCore/releases/">All releases</a></li>
-</ul>
-
-<h2>License</h2>
-
-<p>Copyright &copy; 2012-2014 European Union. European Commission Joint Research Centre G.03. Released under the <a href="http://ec.europa.eu/idabc/eupl">EUPL 1.1</a>.</p>
-
-<h2>Contact</h2>
-
-<p>You are welcome to:</p>
-
-<ul>
-<li>Submit suggestions and bug-reports at: <a href="https://github.com/flr/FLa4a/issues">https://github.com/flr/FLa4a/issues</a></li>
-<li>Send a pull request on: <a href="https://github.com/flr/FLa4a/">https://github.com/flr/FLa4a/</a></li>
-<li>Compose a friendly e-mail to the maintainer, see <code>packageDescription(&#39;FLa4a&#39;)</code></li>
-</ul>
-
+    
 
     <h2>Help topics</h2>
 
@@ -110,46 +65,46 @@
         <code><a href="a4a.html">a4a</a></code><br />a4a</li>
             
       <li>
-        <code><a href="a4aFit-class.html">a4aFit-class</a></code>(a4aFit, a4aFit,missing-method, a4aFit-methods, catch.n, catch.n,a4aFit-method, clock, clock,a4aFit-method, fitSumm, fitSumm,a4aFit-method, fitSumm-methods, harvest, harvest,a4aFit-method, index, index,a4aFit-method, logLik, logLik,a4aFit-method, show,a4aFit-method, stock.n, stock.n,a4aFit-method)<br />S4 class </li>
+        <code><a href="a4aFit-class.html">a4aFit-class</a></code>(a4aFit, a4aFit,missing-method, a4aFit-methods, catch.n,a4aFit-method, clock, clock,a4aFit-method, fitSumm, fitSumm,a4aFit-method, fitSumm-methods, harvest,a4aFit,ANY-method, harvest,a4aFit-method, index,a4aFit-method, logLik,a4aFit-method, show,a4aFit-method, stock.n,a4aFit-method)<br />S4 class </li>
             
       <li>
-        <code><a href="a4aFitResiduals-class.html">a4aFitResiduals-class</a></code>(a4aFitResiduals, a4aFitResiduals-methods, residuals, residuals,a4aFit-method)<br />S4 class </li>
+        <code><a href="a4aFitMCMC-class.html">a4aFitMCMC-class</a></code>(a4aFitMCMC, a4aFitMCMC,a4aFitSA-method, a4aFitMCMC,missing-method, a4aFitMCMC-method, a4aFitSA,a4aFitMCMC-method, as.mcmc,a4aFitMCMC-method)<br />S4 class </li>
             
       <li>
-        <code><a href="a4aFitSA-class.html">a4aFitSA-class</a></code>(a4aFit,a4aFitSA-method, a4aFitSA, a4aFitSA,a4aFit-method, a4aFitSA,missing-method, a4aFitSA-methods, a4aFitSAs, a4aFitSAs,a4aFitSA-method, a4aFitSAs,list-method, a4aFitSAs,missing-method, a4aFitSAs-class, m,a4aFitSA-method, pars,a4aFitSA-method, show,a4aFitSA-method, submodels,a4aFitSA-method)<br />S4 class </li>
+        <code><a href="a4aFitResiduals-class.html">a4aFitResiduals-class</a></code>(a4aFitResiduals, a4aFitResiduals-methods, residuals,a4aFit-method)<br />S4 class </li>
             
       <li>
-        <code><a href="a4aGr-class.html">a4aGr</a></code>(a4aGr,missing-method, a4aGr-class, a4aGr-methods, distr,a4aGr-method, distr&lt;- for a4aGr, distr&lt;-,a4aGr,character-method, grInvMod, grInvMod,a4aGr-method, grInvMod-methods, grInvMod&lt;-, grInvMod&lt;-,a4aGr,formula-method, grInvMod&lt;--methods, grMod, grMod,a4aGr-method, grMod-methods, grMod&lt;-, grMod&lt;-,a4aGr,formula-method, grMod&lt;--methods, m,a4aStkParams-method, params,a4aGr-method, params&lt;-,a4aGr,FLPar-method, vcov,a4aGr-method, vcov&lt;- for a4aGr, vcov&lt;-,a4aGr,numeric-method)<br />Individual growth class</li>
+        <code><a href="a4aFitSA-class.html">a4aFitSA-class</a></code>(a4aFit,a4aFitSA-method, a4aFitSA, a4aFitSA,a4aFit-method, a4aFitSA,missing-method, a4aFitSA-method, a4aFitSAs, a4aFitSAs,a4aFitSA-method, a4aFitSAs,list-method, a4aFitSAs,missing-method, a4aFitSAs-class, m,a4aFitSA-method, pars, pars,a4aFitSA-method, pars-method, show,a4aFitSA-method, submodels,a4aFitSA-method, wt,a4aFitSA-method)<br />S4 class </li>
             
       <li>
-        <code><a href="a4aInternal.html">a4aInternal</a></code><br />stock assessment model advanced method</li>
+        <code><a href="a4aGr-class.html">a4aGr</a></code>(a4aGr,missing-method, a4aGr-class, a4aGr-methods, distr,a4aGr-method, distr&lt;- for a4aGr, distr&lt;-,a4aGr,character-method, grInvMod, grInvMod,a4aGr-method, grInvMod-methods, grInvMod&lt;-, grInvMod&lt;-,a4aGr,formula-method, grInvMod&lt;--methods, grMod, grMod,a4aGr-method, grMod-methods, grMod&lt;-, grMod&lt;-,a4aGr,formula-method, grMod&lt;--methods, m,a4aStkParams-method, params,a4aGr-method, params&lt;-,a4aGr,FLPar-method, vcov,a4aGr-method, vcov&lt;- for a4aGr, vcov&lt;-,a4aGr,numeric-method, wt,a4aStkParams-method)<br />Individual growth class</li>
+            
+      <li>
+        <code><a href="a4aInternal.html">a4aInternal</a></code><br />Stock assessment model advanced method</li>
             
       <li>
         <code><a href="a4aM-class.html">a4aM</a></code>(a4aM,missing-method, a4aM-class, a4aM-methods, level, level,a4aM-method, level-methods, level&lt;-, level&lt;-,a4aM-method, level&lt;--methods, shape, shape,a4aM-method, shape-methods, shape&lt;-, shape&lt;-,a4aM-method, shape&lt;--methods, show,a4aM-method, trend, trend,a4aM-method, trend-methods, trend&lt;-, trend&lt;-,a4aM-method, trend&lt;--methods)<br />Natural mortality class</li>
             
       <li>
-        <code><a href="assorted-methods.html">a4amethods</a></code>(getYidx, getYidx,FLQuant-method, getYidx-methods, is.empty, dims,a4aStkParams-method, niters, niters,FLModelSim-method, niters-methods, pars2dim,FLPar-method)<br />Assorted methods needed by FLa4a</li>
+        <code><a href="a4aSCA.html">a4aSCA</a></code>(a4aSCA,FLStock,FLIndices-method, a4aSCA-methods)<br />Statistical catch-at-age advanced method</li>
             
       <li>
-        <code><a href="a4aSCA.html">a4aSCA</a></code>(a4aSCA,FLStock,FLIndices-method, a4aSCA-methods)<br />statistical catch-at-age advanced method</li>
+        <code><a href="a4aStkParams-class.html">a4aStkParams</a></code>(a4aStkParams,missing-method, a4aStkParams-class, a4aStkParams-methods, distr, distr,a4aStkParams-method, distr-methods, distr&lt;-, distr&lt;-,a4aStkParams,character-method, distr&lt;--methods, fMod, fMod,a4aStkParams-method, fMod-methods, fMod&lt;-, fMod&lt;-,a4aStkParams,formula-method, fMod&lt;--methods, n1Mod, n1Mod,a4aStkParams-method, n1Mod-methods, n1Mod&lt;-, n1Mod&lt;-,a4aStkParams,formula-method, n1Mod&lt;--methods, params,a4aStkParams-method, params&lt;-,a4aStkParams,FLPar-method, rMod, rMod,a4aStkParams-method, rMod-methods, rMod&lt;-, rMod&lt;-,a4aStkParams,formula-method, rMod&lt;--methods, vcov,a4aStkParams-method, vcov&lt;-, vcov&lt;-,a4aStkParams-method)<br />Stock parameters class</li>
             
       <li>
-        <code><a href="a4aStkParams-class.html">a4aStkParams</a></code>(a4aStkParams,missing-method, a4aStkParams-class, a4aStkParams-methods, distr,a4aStkParams-method, distr-methods, distr&lt;-,a4aStkParams,character-method, distr&lt;--methods, fMod, fMod,a4aStkParams-method, fMod-methods, fMod&lt;-, fMod&lt;-,a4aStkParams,formula-method, fMod&lt;--methods, n1Mod, n1Mod,a4aStkParams-method, n1Mod-methods, n1Mod&lt;-, n1Mod&lt;-,a4aStkParams,formula-method, n1Mod&lt;--methods, params,a4aStkParams-method, params&lt;-,a4aStkParams,FLPar-method, rMod, rMod,a4aStkParams-method, rMod-methods, rMod&lt;-, rMod&lt;-,a4aStkParams,formula-method, rMod&lt;--methods, vcov,a4aStkParams-method, vcov&lt;-,a4aStkParams-method)<br />Stock parameters class</li>
+        <code><a href="addition-methods.html">addition</a></code>(+,FLIndices,a4aFit-method, +,FLStock,a4aFit-method, +,FLStock,a4aFitSA-method)<br />+ methods</li>
             
       <li>
-        <code><a href="addition-methods.html">addition</a></code>(+,FLIndices,a4aFit-method, +,FLStock,a4aFit-method, +,FLStock,a4aFitSA-method)<br />Addition methods</li>
+        <code><a href="breakpts.html">breakpts</a></code>(breakpts,numeric-method, breakpts-methods)<br />Breakpoints</li>
             
       <li>
-        <code><a href="breakpts.html">breakpts</a></code>(breakpts,numeric-method, breakpts-methods)<br />breakpoints</li>
+        <code><a href="bubbles-methods.html">bubbles</a></code>(bubbles,a4aFitResiduals,missing-method)<br />Bubbles plot of standardized log residuals</li>
             
       <li>
-        <code><a href="bubbles-methods.html">bubbles</a></code>(bubbles,a4aFitResiduals,missing-method)<br />bubbles plot of standardized log residuals</li>
+        <code><a href="coef-methods.html">coef</a></code>(coef,SCAPars-method, coef,a4aFitSA-method, coef,a4aStkParams-method, coef,submodel-method, coef,submodels-method, coef&lt;-,SCAPars,numeric-method, coef&lt;-,a4aFitSA,numeric-method, coef&lt;-,a4aStkParams,numeric-method, coef&lt;-,submodel,numeric-method, coef&lt;-,submodels,numeric-method)<br />coefficients extract and replacement</li>
             
       <li>
-        <code><a href="coef-methods.html">coef</a></code>(coef,SCAPars-method, coef,a4aFitSA-method, coef,a4aStkParams-method, coef,submodel-method, coef,submodels-method, coef&lt;-, coef&lt;-,SCAPars,numeric-method, coef&lt;-,a4aFitSA,numeric-method, coef&lt;-,a4aStkParams,numeric-method, coef&lt;-,submodel,numeric-method, coef&lt;-,submodels,numeric-method)<br />coefficients extract and replacement</li>
-            
-      <li>
-        <code><a href="collapseSeasons.html">collapseSeasons</a></code><br />collapse seasons</li>
+        <code><a href="collapseSeasons.html">collapseSeasons</a></code><br />Collapse seasons</li>
             
       <li>
         <code><a href="genFLIndex-methods.html">genFLIndex</a></code>(genFLIndex,FLQuant-method, genFLIndex-methods)<br />Methods to generate FLIndex objects</li>
@@ -161,16 +116,16 @@
         <code><a href="genFLStock-methods.html">genFLStock</a></code>(genFLStock,FLStock,FLQuant,FLQuant,missing-method, genFLStock,FLStock,FLQuant,missing,FLQuant-method, genFLStock,FLStock,missing,FLQuant,FLQuant-method, genFLStock-methods)<br />Methods to generate FLStock objects</li>
             
       <li>
-        <code><a href="getAcor-methods.html">getAcor</a></code>(getAcor,FLQuant-method, getAcor-methods)<br />compute log correlation matrix</li>
+        <code><a href="getAcor-methods.html">getAcor</a></code>(getAcor,FLQuant-method, getAcor-methods)<br />compute log-correlation matrix</li>
             
       <li>
-        <code><a href="getADMBHessian.html">getADMBHessian</a></code><br />Get ADMB Hessian</li>
+        <code><a href="getADMBHessian.html">getADMBHessian</a></code>(getADMBCovariance)<br />Get ADMB Hessian</li>
             
       <li>
         <code><a href="getCov-methods.html">getCov</a></code><br />Get covariance matrix</li>
             
       <li>
-        <code><a href="getK.html">getK</a></code>(getK,a4aGr-method, getK-methods)<br />get K</li>
+        <code><a href="getK.html">getK</a></code>(getK,a4aGr-method, getK-methods)<br />Get K</li>
             
       <li>
         <code><a href="getX-methods.html">getX</a></code>(getX,formula-method, getX-methods)<br />Get model matrix</li>
@@ -182,13 +137,16 @@
         <code><a href="hakeGSA7.idx.html">hakeGSA7.idx</a></code><br />hakeGSA7.idx</li>
             
       <li>
-        <code><a href="l2a.html">l2a</a></code>(l2a,FLIndex,a4aGr-method, l2a,FLQuant,a4aGr-method, l2a,FLStockLen,a4aGr-method, l2a-methods)<br />Method to convert age to length</li>
+        <code><a href="l2a.html">l2a</a></code>(l2a,FLIndex,a4aGr-method, l2a,FLQuant,a4aGr-method, l2a,FLStockLen,a4aGr-method, l2a-methods)<br />Method to convert length-based data to age-based</li>
             
       <li>
         <code><a href="M.html">M</a></code>(m,a4aM-method)<br />natural mortality</li>
             
       <li>
         <code><a href="ma-methods.html">ma</a></code>(ma,a4aFitSAs-method, ma-methods)<br />Model averaging (experimental)</li>
+            
+      <li>
+        <code><a href="assorted-methods.html">methods</a></code>(dims,a4aStkParams-method, getYidx, getYidx,FLQuant-method, getYidx-methods, is.empty, niters, niters,FLModelSim-method, niters-methods, pars2dim,FLPar-method)<br />Assorted methods needed by FLa4a</li>
             
       <li>
         <code><a href="mvnorm-a4aM.html">mvnorm</a></code>(mvrnorm,numeric,a4aM,missing,missing,missing,missing-method)<br />natural mortality</li>
@@ -203,22 +161,28 @@
         <code><a href="mvrnorm-a4aGr.html">mvrnorm for a4aGr</a></code>(mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method, mvrnorm,numeric,a4aGr-method)<br />mvrnorm</li>
             
       <li>
-        <code><a href="mvrtriangle.html">mvrtriangle</a></code>(mvrtriangle,numeric,FLModelSim-method)<br />Simulation with a copula model and triangle distributions</li>
+        <code><a href="mvrtriangle.html">mvrtriangle</a></code>(mvrtriangle,numeric,FLModelSim-method)<br />Simulation with a copula model and triangular distributions</li>
             
       <li>
         <code><a href="mvrtriangle-a4aGr.html">mvrtriangle for a4aGr</a></code>(mvrtriangle,numeric,a4aGr-method)<br />mvrtriangle</li>
             
       <li>
-        <code><a href="niters.html">niters for a4aGr</a></code>(niters,a4aGr-method)<br />number of iterations</li>
+        <code><a href="niters.html">niters for a4aGr</a></code>(niters,a4aGr-method)<br />Number of iterations</li>
             
       <li>
         <code><a href="pars2dim-methods.html">pars2dim</a></code>(pars2dim,FLModelSim-method, pars2dim-methods)<br />Check that the second dimension in params is "iter"</li>
             
       <li>
-        <code><a href="plot-methods.html">plot</a></code>(plot,a4aFitResiduals,missing-method)<br />plot of standardized log residuals</li>
+        <code><a href="plot-methods.html">plot</a></code>(plot,a4aFitResiduals,missing-method)<br />Plot of standardized log residuals</li>
             
       <li>
-        <code><a href="predict-methods.html">predict</a></code>(predict,SCAPars-method, predict,a4aFitSA-method, predict,a4aStkParams-method, predict,submodel-method, predict,submodels-method)<br />predict methods for SCA</li>
+        <code><a href="plotc.html">plotc</a></code>(plot,a4aFit,FLStock-method)<br />plot of fitted catch numbers-at-age</li>
+            
+      <li>
+        <code><a href="ploti.html">ploti</a></code>(plot,a4aFit,FLIndices-method)<br />plot of fitted indices-at-age</li>
+            
+      <li>
+        <code><a href="predict-methods.html">predict</a></code>(predict,SCAPars-method, predict,a4aFitSA-method)<br />Predict methods for SCA</li>
             
       <li>
         <code><a href="predict-a4aGr.html">predict for a4aGr</a></code>(predict,a4aGr-method)<br />predict for </li>
@@ -251,7 +215,7 @@
         <code><a href="rnglen.html">rnglen</a></code>(rnglen,FLComp-method, rnglen-methods, rnglen&lt;-, rnglen&lt;-,FLComp,numeric-method, rnglen&lt;--methods)<br />length range extract and replacement</li>
             
       <li>
-        <code><a href="rngmbar.html">rngmbar</a></code>(rngmbar,a4aM-method, rngmbar-methods, rngmbar&lt;-, rngmbar&lt;-,a4aM-method, rngmbar&lt;--methods)<br />M bar range extract and replacement</li>
+        <code><a href="rngmbar.html">rngmbar</a></code>(rngmbar,a4aM-method, rngmbar-methods)<br />M bar range extract and replacement</li>
             
       <li>
         <code><a href="rngquant.html">rngquant</a></code>(rngquant,FLComp-method, rngquant-methods, rngquant&lt;-, rngquant&lt;-,FLComp,numeric-method, rngquant&lt;--methods)<br />quant range extract and replacement</li>
@@ -260,25 +224,31 @@
         <code><a href="rngyear.html">rngyear</a></code>(rngyear,FLComp-method, rngyear-methods, rngyear&lt;-, rngyear&lt;-,FLComp,numeric-method, rngyear&lt;--methods)<br />year range extract and replacement</li>
             
       <li>
-        <code><a href="sca.html">sca</a></code>(sca,FLStock,FLIndex-method, sca,FLStock,FLIndices-method, sca-methods)<br />statistical catch-at-age method</li>
+        <code><a href="sca.html">sca</a></code>(sca,FLStock,FLIndex-method, sca,FLStock,FLIndices-method, sca-methods)<br />Statistical catch-at-age method</li>
             
       <li>
-        <code><a href="SCAPars-class.html">SCAPars</a></code>(SCAPars,missing-method, SCAPars-class, SCAPars-methods, fCovar, fCovar,SCAPars-method, fCovar-methods, fFrml, fFrml,SCAPars-method, fFrml-methods, fPars, fPars,SCAPars-method, fPars-methods, fmodel, fmodel,SCAPars-method, fmodel-methods, m,SCAPars-method, n1model, n1model,SCAPars-method, n1model-methods, qCovar, qCovar,SCAPars-method, qCovar-methods, qFrml, qFrml,SCAPars-method, qFrml-methods, qPars, qPars,SCAPars-method, qPars-methods, qmodel, qmodel,SCAPars-method, qmodel-methods, srCovar, srCovar,SCAPars-method, srCovar-methods, srFrml, srFrml,SCAPars-method, srFrml-methods, srPars, srPars,SCAPars-method, srPars-methods, srmodel, srmodel,SCAPars-method, srmodel-methods, stkmodel, stkmodel,SCAPars-method, stkmodel-methods, vCovar, vCovar,SCAPars-method, vCovar-methods, vFrml, vFrml,SCAPars-method, vFrml-methods, vPars, vPars,SCAPars-method, vPars-methods, vmodel, vmodel,SCAPars-method, vmodel-methods)<br />Model parameters class</li>
+        <code><a href="SCAMCMC-class.html">SCAMCMC</a></code>(SCAMCMC,missing-method, SCAMCMC-class, SCAMCMC-methods, getADMBCallArgs, getADMBCallArgs-methods, getN, mcmc, mcmc,SCAMCMC-method, mcmc-methods)<br />MCMC settings class</li>
+            
+      <li>
+        <code><a href="SCAPars-class.html">SCAPars</a></code>(SCAPars,missing-method, SCAPars-class, SCAPars-methods, fCovar, fCovar,SCAPars-method, fCovar-methods, fFrml, fFrml,SCAPars-method, fFrml-methods, fPars, fPars,SCAPars-method, fPars-methods, fmodel, fmodel,SCAPars-method, fmodel-methods, m,SCAPars-method, n1model, n1model,SCAPars-method, n1model-methods, qCovar, qCovar,SCAPars-method, qCovar-methods, qFrml, qFrml,SCAPars-method, qFrml-methods, qPars, qPars,SCAPars-method, qPars-methods, qmodel, qmodel,SCAPars-method, qmodel-methods, srCovar, srCovar,SCAPars-method, srCovar-methods, srFrml, srFrml,SCAPars-method, srFrml-methods, srPars, srPars,SCAPars-method, srPars-methods, srmodel, srmodel,SCAPars-method, srmodel-methods, stkmodel, stkmodel,SCAPars-method, stkmodel-methods, vCovar, vCovar,SCAPars-method, vCovar-methods, vFrml, vFrml,SCAPars-method, vFrml-methods, vPars, vPars,SCAPars-method, vPars-methods, vmodel, vmodel,SCAPars-method, vmodel-methods, wt,SCAPars-method)<br />Model parameters class</li>
             
       <li>
         <code><a href="simulate-methods.html">simulate</a></code>(simulate,SCAPars-method, simulate,a4aFitSA-method, simulate,a4aStkParams-method, simulate,submodel-method, simulate,submodels-method, simulate-methods)<br />Simulation methods for SCA</li>
             
       <li>
+        <code><a href="southernHakeLen.html">southernHakeLen</a></code><br />Southern hake length data</li>
+            
+      <li>
         <code><a href="stdlogres-methods.html">stdlogres</a></code>(stdlogres,FLQuant,FLQuant-method, stdlogres-methods)<br />Standardized log residuals</li>
             
       <li>
-        <code><a href="submodel-class.html">submodel</a></code>(covar, covar,submodel-method, model, model,submodel-method, pars, pars,submodel-method, pars-methods, submodel,missing-method, submodel-class, submodel-methods)<br />Submodel class</li>
+        <code><a href="submodel-class.html">submodel</a></code>(covar,submodel-method, model,submodel-method, params,submodel-method, submodel,missing-method, submodel-class, submodel-methods)<br />Submodel class</li>
             
       <li>
         <code><a href="submodels-class.html">submodels</a></code>(submodels,list-method, submodels,missing-method, submodels,submodel-method, submodels-class, submodels-methods)<br />Submodels class</li>
             
       <li>
-        <code><a href="vcov-methods.html">vcov</a></code>(vcov,SCAPars-method, vcov,a4aFitSA-method, vcov,submodel-method, vcov,submodels-method, vcov&lt;-,SCAPars,numeric-method, vcov&lt;-,a4aFitSA,numeric-method, vcov&lt;-,a4aStkParams,numeric-method, vcov&lt;-,submodel,numeric-method, vcov&lt;-,submodels,numeric-method)<br />variance-covariance matrix</li>
+        <code><a href="vcov-methods.html">vcov</a></code>(vcov,SCAPars-method, vcov,a4aFitSA-method, vcov,submodel-method, vcov,submodels-method, vcov&lt;-,SCAPars,numeric-method, vcov&lt;-,a4aFitSA,numeric-method, vcov&lt;-,a4aStkParams,numeric-method, vcov&lt;-,submodel,numeric-method, vcov&lt;-,submodels,numeric-method)<br />Variance-covariance matrix</li>
             
       <li>
         <code><a href="vecage.html">vecage</a></code>(vecage,FLComp-method, vecage-methods)<br />age vector extract</li>
@@ -302,19 +272,21 @@
         
     <h2>Dependencies</h2>
     <ul>
-      <li><strong>Depends</strong>: methods, copula, FLCore, mgcv, splines, triangle</li>
-      <li><strong>Imports</strong>: lattice, Matrix</li>
-      <li><strong>Suggests</strong>: </li>
-      <li><strong>Extends</strong>: </li>
+      <li><strong>Depends</strong>: FLCore, triangle</li>
+      <li><strong>Imports</strong>: methods, lattice, Matrix, mgcv, copula, coda</li>
+      <li><strong>Suggests</strong>: latticeExtra</li>
+      
     </ul>
-     
-    
+    <h2>Authors</h2>
+    <ul>
+    </ul>
+
   </div>
 </div>
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

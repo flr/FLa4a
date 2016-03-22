@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>M. FLa4a 0.140.1</title>
+<title>M. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,49 +51,39 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>"m"(object, grMod&nbsp;=&nbsp;"missing", ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>object</dt>
-      <dd>a <code>a4aM</code> object</dd>
+      <dd>an <code>a4aM</code> object</dd>
       <dt>grMod</dt>
-      <dd>a <code>a4aGr</code> object to get the K from</dd>
+      <dd>an <code>a4aGr</code> object from which the growth parameter K can be extracted</dd>
       <dt>...</dt>
-      <dd>placeholder for covariates of the models. The
-  names must match formula's variables (not parameters),
-  with the exception of the <code>a4aGr</code> individual growth
-  model. To use a growth model it must be called
-  <code>grMod</code> and be of class <code>a4aGr</code>, in which case
-  the parameters will be matched. The main objective if to
-  be able to use <code>K</code> from von Bertalanffy models in
-  M.</dd>
+      <dd>placeholder for covariates of the models. The names must match formula variables (not parameters), with the exception of the <code>a4aGr</code> individual growth model. To use a growth model, it must be called <code>grMod</code> and be of class <code>a4aGr</code>, in which case the parameters will be matched. The main objective is to be able to use <code>K</code> from von Bertalanffy models in M.</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>FLQuant</code> object</p>
+
+      <p><dl>
+an <code>FLQuant</code> object
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Method to compute natural mortality</p>
+
+      <p>Method to compute natural mortality.</p>
   
     </div>
 
     <div class="Details">
       <h2>Details</h2>
-      
-      <p>The method uses the range slot to define the quant and
-  year dimensions of the resulting <code>M</code> <code>FLQuant</code>.
-  The name fo the quant dimension is taken as the name of a
-  variable that is present in the <code>shape</code> formula but
-  is not present in the shape parameters (the <code>params</code>
-  slot of the <code>shape</code> model). If more than one such
-  than variable exists then there is a problem with the
-  <code>shape</code> model definition.</p>
+
+      <p>The method uses the range slot to define the quant and year dimensions of the resulting <code>M</code> <code>FLQuant</code>. The name for the quant dimension is taken as the name of a variable that is present in the <code>shape</code> formula, but not in the <code>params</code> slot of the <code>shape</code> model. If more than one such variable exists, then there is a problem with the <code>shape</code> model definition.</p>
   
     </div>
     
@@ -91,11 +93,14 @@ k &lt;- 0.4
 shp &lt;- eval(as.list(~exp(-age-0.5))[[2]], envir=list(age=age))
 lvl &lt;- eval(as.list(~1.5*k)[[2]], envir=list(k=k))
 M &lt;- shp*lvl/mean(shp)
+# Now set up an equivalent a4aM object
 mod1 &lt;- FLModelSim(model=~exp(-age-0.5))
 mod2 &lt;- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 m1 &lt;- a4aM(shape=mod1, level=mod2)
-rngmbar(m1)&lt;-c(0,15)
-rngquant(m1) &lt;- c(0,15)
+  # set up the age range for the object...
+  rngquant(m1) &lt;- c(0,15)
+  # ...and the age range for mbar
+  rngmbar(m1)&lt;-c(0,15)
 m(m1)
 </div>
 <div class='output'>An object of class &quot;FLQuant&quot;
@@ -122,13 +127,18 @@ age  0
 
 units:  NA 
 </div>
+<div class='input'>mean(m(m1)[ac(0:15)])
+</div>
+<div class='output'>[1] 0.6
+</div>
 <div class='input'>all.equal(M, c(m(m1)))
 </div>
 <div class='output'>[1] TRUE
 </div>
-<div class='input'># another example m
-rngmbar(m1) &lt;- c(2,4)
+<div class='input'>
+# another example m
 rngquant(m1) &lt;- c(2,10)
+rngmbar(m1) &lt;- c(2,4)
 m(m1)
 </div>
 <div class='output'>An object of class &quot;FLQuant&quot;
@@ -148,8 +158,15 @@ age  0
 
 units:  NA 
 </div>
-<div class='input'># with iters
-mod2 &lt;- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c(&quot;k&quot;,&quot;t&quot;), iter=1:2))), vcov=array(c(0.004, 0.00,0.00, 0.001), dim=c(2,2,2)))
+<div class='input'>mean(m(m1)[ac(2:4)])
+</div>
+<div class='output'>[1] 0.6
+</div>
+<div class='input'>
+# example with specified iters (i.e. not simulated from a statistical distribution)...
+mod2 &lt;- FLModelSim(model=~k^0.66*t^0.57,
+  params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c(&quot;k&quot;,&quot;t&quot;), iter=1:2))),
+  vcov=array(c(0.004,0.,0.,0.001,0.006,0.,0.,0.002), dim=c(2,2,2)))
 m2 &lt;- a4aM(shape=mod1, level=mod2)
 rngquant(m2) &lt;- c(0,10)
 m(m2)
@@ -175,7 +192,8 @@ age  0
 
 units:  NA 
 </div>
-<div class='input'>m3 &lt;- a4aM(shape=mod1, level=mvrnorm(100, mod2))
+<div class='input'># ...and with randomly generated iters (based on the medians for params(mod2) and vcov(mod2))
+m3 &lt;- a4aM(shape=mod1, level=mvrnorm(100, mod2))
 rngquant(m3) &lt;- c(0,15)
 m(m3)
 </div>
@@ -186,28 +204,30 @@ iters:  100
 
     year
 age  0                   
-  0  2.2365e+00(2.38e-01)
-  1  8.2277e-01(8.74e-02)
-  2  3.0268e-01(3.22e-02)
-  3  1.1135e-01(1.18e-02)
-  4  4.0963e-02(4.35e-03)
-  5  1.5070e-02(1.60e-03)
-  6  5.5438e-03(5.89e-04)
-  7  2.0394e-03(2.17e-04)
-  8  7.5027e-04(7.97e-05)
-  9  2.7601e-04(2.93e-05)
-  10 1.0154e-04(1.08e-05)
-  11 3.7354e-05(3.97e-06)
-  12 1.3742e-05(1.46e-06)
-  13 5.0553e-06(5.37e-07)
-  14 1.8597e-06(1.98e-07)
-  15 6.8416e-07(7.27e-08)
+  0  2.3031e+00(1.84e-01)
+  1  8.4727e-01(6.77e-02)
+  2  3.1169e-01(2.49e-02)
+  3  1.1467e-01(9.16e-03)
+  4  4.2183e-02(3.37e-03)
+  5  1.5518e-02(1.24e-03)
+  6  5.7088e-03(4.56e-04)
+  7  2.1002e-03(1.68e-04)
+  8  7.7261e-04(6.17e-05)
+  9  2.8423e-04(2.27e-05)
+  10 1.0456e-04(8.35e-06)
+  11 3.8466e-05(3.07e-06)
+  12 1.4151e-05(1.13e-06)
+  13 5.2058e-06(4.16e-07)
+  14 1.9151e-06(1.53e-07)
+  15 7.0453e-07(5.63e-08)
 
 units:  NA 
 </div>
-<div class='input'>mod1 &lt;- FLModelSim(model=~exp(-age-0.5))
+<div class='input'>
+# example with a trend
 mod3 &lt;- FLModelSim(model=~1+b*v, params=FLPar(b=0.05))
-mObj &lt;- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3, range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
+mObj &lt;- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3,
+  range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
 m(mObj, v=1:4)
 </div>
 <div class='output'>An object of class &quot;FLQuant&quot;
@@ -217,40 +237,40 @@ iters:  100
 
     year
 age  2000                 2001                 2002                
-  0  2.3876e+00(2.64e-01) 2.5013e+00(2.76e-01) 2.6150e+00(2.89e-01)
-  1  8.7836e-01(9.69e-02) 9.2018e-01(1.02e-01) 9.6201e-01(1.06e-01)
-  2  3.2313e-01(3.57e-02) 3.3852e-01(3.74e-02) 3.5390e-01(3.91e-02)
-  3  1.1887e-01(1.31e-02) 1.2453e-01(1.37e-02) 1.3019e-01(1.44e-02)
-  4  4.3731e-02(4.83e-03) 4.5813e-02(5.06e-03) 4.7896e-02(5.29e-03)
-  5  1.6088e-02(1.78e-03) 1.6854e-02(1.86e-03) 1.7620e-02(1.94e-03)
-  6  5.9183e-03(6.53e-04) 6.2001e-03(6.84e-04) 6.4820e-03(7.15e-04)
-  7  2.1772e-03(2.40e-04) 2.2809e-03(2.52e-04) 2.3846e-03(2.63e-04)
-  8  8.0096e-04(8.84e-05) 8.3910e-04(9.26e-05) 8.7724e-04(9.68e-05)
-  9  2.9466e-04(3.25e-05) 3.0869e-04(3.41e-05) 3.2272e-04(3.56e-05)
-  10 1.0840e-04(1.20e-05) 1.1356e-04(1.25e-05) 1.1872e-04(1.31e-05)
-  11 3.9877e-05(4.40e-06) 4.1776e-05(4.61e-06) 4.3675e-05(4.82e-06)
-  12 1.4670e-05(1.62e-06) 1.5369e-05(1.70e-06) 1.6067e-05(1.77e-06)
-  13 5.3968e-06(5.96e-07) 5.6538e-06(6.24e-07) 5.9108e-06(6.52e-07)
-  14 1.9854e-06(2.19e-07) 2.0799e-06(2.30e-07) 2.1745e-06(2.40e-07)
-  15 7.3038e-07(8.06e-08) 7.6516e-07(8.45e-08) 7.9994e-07(8.83e-08)
+  0  2.4253e+00(2.39e-01) 2.5408e+00(2.51e-01) 2.6563e+00(2.62e-01)
+  1  8.9221e-01(8.80e-02) 9.3470e-01(9.22e-02) 9.7718e-01(9.64e-02)
+  2  3.2823e-01(3.24e-02) 3.4386e-01(3.39e-02) 3.5949e-01(3.55e-02)
+  3  1.2075e-01(1.19e-02) 1.2650e-01(1.25e-02) 1.3225e-01(1.30e-02)
+  4  4.4421e-02(4.38e-03) 4.6536e-02(4.59e-03) 4.8651e-02(4.80e-03)
+  5  1.6341e-02(1.61e-03) 1.7120e-02(1.69e-03) 1.7898e-02(1.77e-03)
+  6  6.0117e-03(5.93e-04) 6.2979e-03(6.21e-04) 6.5842e-03(6.49e-04)
+  7  2.2116e-03(2.18e-04) 2.3169e-03(2.29e-04) 2.4222e-03(2.39e-04)
+  8  8.1359e-04(8.02e-05) 8.5233e-04(8.41e-05) 8.9108e-04(8.79e-05)
+  9  2.9930e-04(2.95e-05) 3.1356e-04(3.09e-05) 3.2781e-04(3.23e-05)
+  10 1.1011e-04(1.09e-05) 1.1535e-04(1.14e-05) 1.2059e-04(1.19e-05)
+  11 4.0506e-05(4.00e-06) 4.2435e-05(4.19e-06) 4.4364e-05(4.38e-06)
+  12 1.4901e-05(1.47e-06) 1.5611e-05(1.54e-06) 1.6321e-05(1.61e-06)
+  13 5.4819e-06(5.41e-07) 5.7430e-06(5.66e-07) 6.0040e-06(5.92e-07)
+  14 2.0167e-06(1.99e-07) 2.1127e-06(2.08e-07) 2.2088e-06(2.18e-07)
+  15 7.4190e-07(7.32e-08) 7.7723e-07(7.67e-08) 8.1256e-07(8.01e-08)
     year
 age  2003                
-  0  2.7287e+00(3.01e-01)
-  1  1.0038e+00(1.11e-01)
-  2  3.6929e-01(4.08e-02)
-  3  1.3585e-01(1.50e-02)
-  4  4.9978e-02(5.52e-03)
-  5  1.8386e-02(2.03e-03)
-  6  6.7638e-03(7.47e-04)
-  7  2.4883e-03(2.75e-04)
-  8  9.1538e-04(1.01e-04)
-  9  3.3675e-04(3.72e-05)
-  10 1.2388e-04(1.37e-05)
-  11 4.5574e-05(5.03e-06)
-  12 1.6766e-05(1.85e-06)
-  13 6.1678e-06(6.81e-07)
-  14 2.2690e-06(2.50e-07)
-  15 8.3472e-07(9.21e-08)
+  0  2.7717e+00(2.73e-01)
+  1  1.0197e+00(1.01e-01)
+  2  3.7512e-01(3.70e-02)
+  3  1.3800e-01(1.36e-02)
+  4  5.0766e-02(5.01e-03)
+  5  1.8676e-02(1.84e-03)
+  6  6.8705e-03(6.78e-04)
+  7  2.5275e-03(2.49e-04)
+  8  9.2982e-04(9.17e-05)
+  9  3.4206e-04(3.37e-05)
+  10 1.2584e-04(1.24e-05)
+  11 4.6293e-05(4.57e-06)
+  12 1.7030e-05(1.68e-06)
+  13 6.2651e-06(6.18e-07)
+  14 2.3048e-06(2.27e-07)
+  15 8.4788e-07(8.36e-08)
 
 units:  NA 
 </div></pre>
@@ -269,7 +289,7 @@ units:  NA
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

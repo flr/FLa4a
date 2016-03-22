@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>submodels. FLa4a 0.140.1</title>
+<title>submodels. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -39,33 +51,34 @@
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>submodels(object, ...)</div>
+<div>"submodels"(object, ...)</div>
+<div>"submodels"(object, ...)</div></pre>
         
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Class definition (slots), constructors, accessors,
-  replacement (when relevant) and common methods.</p>
+
+      <p>Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.</p>
   
     </div>
 
     <div class="Note">
       <h2>Note</h2>
-      
-      <p>This class is similar to other 'plural' calsses in
-  <code>FLR</code>. It's a list constraint by having all elements
-  of the same class, in this case <code>submodel</code>.
-  Otherwise it works exacly as any other list.</p>
+
+      <p>This class is similar to other 'plural' calsses in <code>FLR</code>. It is a list constrained to having all elements of the same class, in this case <code>submodel</code>. Otherwise it works exacly as any other list.</p>
   
     </div>
 
     <div class="Constructor">
       <h2>Constructor</h2>
-      
-      <p>A construction method exists for this class that can take
-  named arguments for any of its slots. All slots are then
-  created to match the requirements of the class validity.
-  If an unnamed <code>FLQuant</code> object is provided, this is
-  used for sizing but not stored in any slot.</p>
+
+      <p></p>
+  
+      <p>A construction method exists for this class that can take named arguments for
+any of its slots. All slots are then created to match the requirements of the
+class validity. If an unnamed <code>FLQuant</code> object is provided, this is used
+for sizing, but not for populating any slot.</p>
   
     </div>
       </div>
@@ -83,7 +96,7 @@
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

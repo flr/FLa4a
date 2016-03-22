@@ -1,17 +1,33 @@
-# Simple .travis.yml for R projects.
+# .travis.yml for FLa4a
+
+warnings_are_errors: false
 
 os:
   - linux
 
 language: r
-  
-sudo: required
+r:
+  - release
+  - devel
 
-r_binary_packages:
- - copula
- - triangle
- - mgcv
- - latticeExtra
+sudo: false
 
-r_github_packages:
- - flr/FLCore
+addons:
+  apt:
+    packages:
+    - libgsl0-dev
+
+repos:
+  CRAN: https://cloud.r-project.org
+  flr: http://flr-project.org/R
+
+cache: packages
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+branches:
+  only:
+    - master

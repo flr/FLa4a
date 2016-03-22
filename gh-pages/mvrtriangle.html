@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mvrtriangle. FLa4a 0.140.1</title>
+<title>mvrtriangle. FLa4a 0.700.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -14,13 +14,25 @@
 <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
 
   <body>
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">FLa4a 0.140.1</a>
+      <a class="brand" href="#">FLa4a 0.700.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,10 +47,12 @@
         
       </header>
       
-      <h1>Simulation with a copula model and triangle distributions</h1>
+      <h1>Simulation with a copula model and triangular distributions</h1>
 
 <div class="row">
   <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mvrtriangle(n, object, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -47,48 +61,64 @@
       <dt>object</dt>
       <dd>the <code>FLModelSim</code> object</dd>
       <dt>...</dt>
-      <dd>arguments to be passed to the rMvdc and copula
-  methods</dd>
+      <dd>arguments to be passed to the rMvdc and copula methods</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
-      
-      <p>a <code>FLModelSim</code> object with n groups of parameters</p>
+
+      <p><dl>
+an <code>FLModelSim</code> object with n sets of parameters
+</dl></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
-      
-      <p>Simulates the model parameters using elliptic copulas and
-  triangle margins.</p>
+
+      <p>Simulates model parameters using elliptical copulas and triangular marginals.</p>
   
     </div>
     
     <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'>mm &lt;- matrix(NA, ncol=3, nrow=3)
+    <pre class="examples"><div class='input'># Set up the FLModelSim object
+mm &lt;- matrix(NA, ncol=3, nrow=3)
 diag(mm) &lt;- c(100, 0.001,0.001)
 mm[upper.tri(mm)] &lt;- mm[lower.tri(mm)] &lt;- c(0.1,0.1,0.0003)
-vb &lt;- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c(&quot;cm&quot;,&quot;ano-1&quot;,&quot;ano&quot;)), vcov=mm, distr=&quot;norm&quot;)
+vb &lt;- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c(&quot;cm&quot;,&quot;yr^-1&quot;,&quot;yr&quot;)), vcov=mm, distr=&quot;norm&quot;)
+
+# Simulate from a multivariate normal distribution...
+  set.seed(1)
+  vbSim &lt;- mvrnorm(10000, vb)
+  mm &lt;- predict(vbSim, t=0:20+0.5)
+#...from a multivariate triangular distribution with default ranges (0.01 and
+#   0.99 quantiles for min and max using a normal distribution with mean from
+#   params and sigma from vcov, and with the apex located at params)...
+  set.seed(1)
+  vbSim1 &lt;- mvrtriangle(10000, vb)
+  mm1 &lt;- predict(vbSim1, t=0:20+0.5)
+#...and from a multivariate triangular distribution with specified ranges (note if &quot;c&quot; is missing, it will take the average of &quot;a&quot; and &quot;b&quot;)
+  set.seed(1)
+  pars &lt;- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
+  vbSim2 &lt;- mvrtriangle(10000, vb, paramMargins=pars)
+  mm2 &lt;- predict(vbSim2, t=0:20+0.5)
+
+# Plot the results
 par(mfrow=c(3,1))
-set.seed(1)
-vbSim &lt;- mvrnorm(10000, vb)
-mm &lt;- predict(vbSim, t=0:20+0.5)
 boxplot(t(mm), main=&quot;normal&quot;)
-set.seed(1)
-vbSim1 &lt;- mvrtriangle(10000, vb)
-mm1 &lt;- predict(vbSim1, t=0:20+0.5)
-boxplot(t(mm1), main=&quot;triangle&quot;)
-set.seed(1)
-pars &lt;- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
-vbSim2 &lt;- mvrtriangle(10000, vb, paramMargins=pars)
-mm2 &lt;- predict(vbSim2, t=0:20+0.5)
-boxplot(t(mm2), main=&quot;triangle2&quot;)
-splom(data.frame(t(params(vbSim)@.Data)), pch=&quot;.&quot;)
-splom(data.frame(t(params(vbSim1)@.Data)), pch=&quot;.&quot;)
-splom(data.frame(t(params(vbSim2)@.Data)), pch=&quot;.&quot;)
-</div></pre>
+boxplot(t(mm1), main=&quot;triangular&quot;)
+boxplot(t(mm2), main=&quot;triangular2&quot;)
+</div>
+<p><img src='mvrtriangle-2.png' alt='' width='540' height='400' /></p>
+<div class='input'>splom(data.frame(t(params(vbSim)@.Data)), pch=&quot;.&quot;)
+</div>
+<p><img src='mvrtriangle-4.png' alt='' width='540' height='400' /></p>
+<div class='input'>splom(data.frame(t(params(vbSim1)@.Data)), pch=&quot;.&quot;)
+</div>
+<p><img src='mvrtriangle-6.png' alt='' width='540' height='400' /></p>
+<div class='input'>splom(data.frame(t(params(vbSim2)@.Data)), pch=&quot;.&quot;)
+</div>
+<p><img src='mvrtriangle-8.png' alt='' width='540' height='400' /></p></pre>
   </div>
   <div class="span4">
     <!-- <ul>
@@ -104,7 +134,7 @@ splom(data.frame(t(params(vbSim2)@.Data)), pch=&quot;.&quot;)
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>
