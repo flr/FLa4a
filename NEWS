@@ -5,6 +5,7 @@ CHANGES IN FLa4a 0.700.x:
 	NEW FEATURES:
 		
 	BUG FIXES:
+		a4aInternal was calling check.executable() which isn't needed and was making a mess in parallel
 		sr geomean fixed, it was failing due to including par "b" in outcome while admb was not reporting.
 		R~ssb was using the previous year to compute SSB, now it matches the SSB with the correct yearclass.
 		Biomass age ranges for fitting biomass indices was not computed properly, was using position instead of real ages.
