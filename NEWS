@@ -1,4 +1,10 @@
 FLa4a NEWS
+CHANGES IN FLa4a 0.800.x:
+
+	NEW FEATURES:
+		
+	BUG FIXES:
+		a4aInternal to remove files after a4a ADMB run
 
 CHANGES IN FLa4a 0.700.x:
 

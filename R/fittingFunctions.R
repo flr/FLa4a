@@ -1202,7 +1202,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	units(a4aout@harvest) <- "f"  
 	
 	# remove temporary directory - keep only true when dir is not temp dir
-	if (!keep) unlink(wkdir)
+	if (!keep) unlink(wkdir, recursive=TRUE, force=TRUE)
 	return(a4aout)  
 }
 
