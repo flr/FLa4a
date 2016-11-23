@@ -20,19 +20,16 @@
 setGeneric("genFLStock", function(object, R, C, F, ...) standardGeneric("genFLStock"))
 
 #' @rdname genFLStock-methods
-#' @aliases genFLStock,FLStock,FLQuant,FLQuant,missing-method
 setMethod("genFLStock", c("FLStock", "FLQuant", "FLQuant", "missing"), function(object, R, C, F, ...){
 	cat("Not implemented yet\n")
 })
 
 #' @rdname genFLStock-methods
-#' @aliases genFLStock,FLStock,missing,FLQuant,FLQuant-method
 setMethod("genFLStock", c("FLStock", "missing", "FLQuant", "FLQuant"), function(object, R, C, F, ...){
 	cat("Not implemented yet\n")
 })
 
 #' @rdname genFLStock-methods
-#' @aliases genFLStock,FLStock,FLQuant,missing,FLQuant-method
 setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(object, R, C, F, ...){
 	# requires checking dimensions
 	if(!identical(dim(catch.n(object))[-c(1,6)], dim(R)[-c(1,6)])) stop("Recruitment vector must have consistent dimensions with the stock object")
@@ -87,16 +84,16 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
 #' @rdname getAcor-methods
 #' @title compute log-correlation matrix
 #' @description Method to compute the log-correlation matrix for the first dimension (\code{quant}) of the \code{FLQuant} object.
-#' @param object an \code{FLQuant} object
+#' @template bothargs
 #' @return an \code{FLQuant} object with a quant log-correlation matrix
-#' @aliases getAcor getAcor-methods getAcor,FLQuant-method
+#' @aliases getAcor getAcor-methods
 #' @examples
 #' data(ple4)
 #' getAcor(harvest(ple4))
 
 setGeneric("getAcor", function(object, ...) standardGeneric("getAcor"))
-
-setMethod("getAcor", c("FLQuant"), function(object, tf=log, ...) {
+#' @rdname getAcor-methods
+setMethod("getAcor", c("FLQuant"), function(object, ...) {
 		mu <- log(object)
 		Rho <- cor(t(mu[drop = TRUE]))
 		return(Rho)
@@ -108,6 +105,7 @@ setMethod("getAcor", c("FLQuant"), function(object, tf=log, ...) {
 #' @param cv the coefficient of variation
 #' @param method the method used to compute the correlation matrix; for now only "ac" (autocorrelation) is implemented
 #' @param niter the number of iterations to be generated
+#' @param ... additional argument list that might not ever be used.
 #' @return an FLQuant
 #' @docType methods
 #' @rdname genFLQuant-methods
@@ -115,11 +113,9 @@ setMethod("getAcor", c("FLQuant"), function(object, tf=log, ...) {
 #' @examples
 #' data(ple4)
 #' sim.F <- genFLQuant(harvest(ple4))
-
 setGeneric("genFLQuant", function(object, ...) standardGeneric("genFLQuant"))
 
 #' @rdname genFLQuant-methods
-#' @aliases genFLQuant,FLQuant-method
 setMethod("genFLQuant", c("FLQuant"), function(object, cv = 0.2, method = "ac", niter = 250) {
   # use log transform, to be expanded on later versions
 	mu <- log(object)
@@ -148,7 +144,6 @@ setMethod("genFLQuant", c("FLQuant"), function(object, cv = 0.2, method = "ac", 
 setGeneric("genFLIndex", function(object, ...) standardGeneric("genFLIndex"))
 
 #' @rdname genFLIndex-methods
-#' @aliases genFLIndex,FLQuant-method
 setMethod("genFLIndex", c("FLQuant"), function(object, cv = 0.2, niter = 250) {
       # use log transform, to be expanded on later versions
       mu <- log(object)

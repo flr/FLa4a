@@ -20,11 +20,11 @@ setClass("submodels", contains="FLComps",
 
 #' @rdname submodels-class
 #' @template Constructors
-#' @aliases submodels submodels-methods submodels,missing-method
-
+#' @template bothargs
+#' @aliases submodels submodels-methods
 setGeneric("submodels", function(object, ...)
 	standardGeneric("submodels"))
-
+#' @rdname submodels-class
 setMethod("submodels", signature(object="missing"),
   function(...) {
     # empty
@@ -41,14 +41,12 @@ setMethod("submodels", signature(object="missing"),
 )
 
 #' @rdname submodels-class
-#' @aliases submodels,submodel-method
 setMethod("submodels", signature(object="submodel"), function(object, ...) {
     lst <- c(object, list(...))
     submodels(lst)
 })
 
 #' @rdname submodels-class
-#' @aliases submodels,list-method
 setMethod("submodels", signature(object="list"),
   function(object, ...) {
     

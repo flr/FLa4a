@@ -6,7 +6,6 @@
 #' @description Simulation methods for a4a stock assessment fits.
 #' @name simulate
 #' @rdname simulate-methods
-#' @aliases simulate simulate-methods
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
@@ -20,7 +19,11 @@
 setGeneric("simulate", useAsDefault = simulate)
 
 #' @rdname simulate-methods
-#' @aliases simulate,a4aFitSA-method
+#' @template object
+#' @param nsim number of iterations
+#' @param seed \code{numeric} with random number seed 
+#' @param empirical logical, shall the empirical method in MASS be used
+#' @template dots
 setMethod("simulate", signature(object = "a4aFitSA"),
   function(object, nsim = 1, seed = NULL, empirical=TRUE) {
     out <- object
@@ -97,7 +100,6 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 })
 
 #' @rdname simulate-methods
-#' @aliases simulate,SCAPars-method
 setMethod("simulate", signature(object = "SCAPars"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {    
     out <- object
@@ -108,7 +110,6 @@ setMethod("simulate", signature(object = "SCAPars"),
   })
 
 #' @rdname simulate-methods
-#' @aliases simulate,a4aStkParams-method
 setMethod("simulate", signature(object = "a4aStkParams"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {    
 
@@ -161,7 +162,6 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 })
 
 #' @rdname simulate-methods
-#' @aliases simulate,submodels-method
 setMethod("simulate", signature(object = "submodels"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {
     out <- lapply(object, simulate, nsim = nsim, seed=seed, empirical=empirical)
@@ -169,7 +169,6 @@ setMethod("simulate", signature(object = "submodels"),
   })
 
 #' @rdname simulate-methods
-#' @aliases simulate,submodel-method
 setMethod("simulate", signature(object = "submodel"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {
     # get parameter estimates

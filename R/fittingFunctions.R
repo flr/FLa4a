@@ -2,6 +2,7 @@
 #' @name a4a
 #' @docType methods
 #' @rdname a4a
+#' @template dots
 #' @description This was the old stock assessment framework user's interface. It was replaced by \code{sca} or the advanced version \code{a4aSCA}.    
 #' @aliases a4a
 a4a <- function(...){
@@ -56,8 +57,10 @@ collapseSeasons <- function (stock) {
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a formula object depicting the model for log recruitment
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
+#' @param mcmc a \code{SCAMCMC} object with the arguments to run MCMC 
+#' @template dots
 #' @return an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
-#' @aliases sca sca-methods sca,FLStock,FLIndices-method sca,FLStock,FLIndex-method
+#' @aliases sca sca-methods
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
@@ -84,10 +87,9 @@ collapseSeasons <- function (stock) {
 #'
 #' AIC(fit1, fit2, fit3, fit4)
 #' BIC(fit1, fit2, fit3, fit4)
-
-
 setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
 
+#' @rdname sca
 setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing)
 {
   stkdms <- dims(stock)
@@ -149,9 +151,8 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @docType methods
 #' @rdname a4aSCA
 #' @description Advanced user interface to the statistical catch-at-age method of the a4a stock assessment framework.   
-#'
-#' @param stock an FLStock object containing catch and stock information
-#' @param indices an FLIndices object containing survey indices 
+#' @param stock an \code{FLStock} object containing catch and stock information
+#' @param indices an \code{FLIndices} object containing survey indices 
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a formula object depicting the model for log recruitment
@@ -162,8 +163,10 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @param verbose if true, admb fitting information is printed to the screen
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
 #' @param center logical defining if the data should be centered before fitting
+#' @param mcmc a \code{SCAMCMC} object with the arguments to run MCMC 
+#' @template dots
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
-#' @aliases a4aSCA a4aSCA-methods a4aSCA,FLStock,FLIndices-method
+#' @aliases a4aSCA a4aSCA-methods
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
@@ -205,10 +208,9 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' # fit3 + bevholt
 #' rmodel <- ~ bevholt(CV=0.05)
 #' fit7 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
-
-
 setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
 
+#' @rdname a4aSCA
 setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
   fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
@@ -1212,9 +1214,11 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 #' @description Method to set breakpoints in submodels
 #' @param var a \code{numeric} object that defines the variable to be "broken"
 #' @param breaks a \code{numeric} object that defines the breakpoints 
+#' @template dots
 #' @return a \code{factor} with levels according to the defined breaks 
-#' @aliases breakpts breakpts-methods breakpts,numeric-method
+#' @aliases breakpts breakpts-methods
 setGeneric("breakpts", function(var, ...) standardGeneric("breakpts"))
+#' @rdname breakpts
 setMethod("breakpts", "numeric", function(var, breaks, ...) {
   if (min(var, na.rm = TRUE) < min(breaks)) breaks <- c(min(var, na.rm = TRUE) - 1, breaks)
   if (max(var, na.rm = TRUE) > max(breaks)) breaks <- c(breaks, max(var, na.rm = TRUE)) 

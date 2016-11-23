@@ -24,11 +24,11 @@ setClass("a4aFitMCMC",
 )
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitMCMC a4aFitMCMC-method
+#' @template bothargs
+#' @aliases a4aFitMCMC a4aFitMCMC-methods
 setGeneric("a4aFitMCMC", function(object, ...) standardGeneric("a4aFitMCMC"))
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitMCMC,missing-method
 setMethod("a4aFitMCMC", signature(object="missing"),
   function(...) {
     # empty
@@ -44,7 +44,6 @@ setMethod("a4aFitMCMC", signature(object="missing"),
 )
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitSA,a4aFitMCMC-method
 setMethod("a4aFitSA", signature(object="a4aFitMCMC"),
   function(object, ...) {
     out <- a4aFitSA()
@@ -64,7 +63,6 @@ setMethod("a4aFitSA", signature(object="a4aFitMCMC"),
 )
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitMCMC,a4aFitSA-method
 setMethod("a4aFitMCMC", signature(object="a4aFitSA"),
   function(object, ...) {
     out <- a4aFitMCMC()
@@ -86,10 +84,12 @@ setMethod("a4aFitMCMC", signature(object="a4aFitSA"),
 #====================================================================
 # coerce to coda object
 #====================================================================
+#' @rdname a4aFitMCMC-class
+#' @param x an object to be coerced into mcmc
+#' @aliases as.mcmc as.mcmc-methods
 setGeneric("as.mcmc", function(x, ...) standardGeneric("as.mcmc"))
 
 #' @rdname a4aFitMCMC-class
-#' @aliases as.mcmc,a4aFitMCMC-method
 setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {
 		object <- x
 		df0 <- t(object@pars@stkmodel@params[drop=T])

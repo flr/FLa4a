@@ -1,13 +1,14 @@
 #' @title natural mortality 
+#' @docType methods
 #' @description Method to compute natural mortality.
-#' @name M 
-#' @rdname M 
-#' @param object an \code{a4aM} object
-#' @param grMod an \code{a4aGr} object from which the growth parameter K can be extracted
+#' @name m 
+#' @rdname m
+#' @aliases m,a4aM-method
+#' @param object a \code{a4aM} object
+#' @param grMod a \code{a4aGr} object from which the growth parameter K can be extracted
 #' @param ... placeholder for covariates of the models. The names must match formula variables (not parameters), with the exception of the \code{a4aGr} individual growth model. To use a growth model, it must be called \code{grMod} and be of class \code{a4aGr}, in which case the parameters will be matched. The main objective is to be able to use \code{K} from von Bertalanffy models in M.
 #' @details The method uses the range slot to define the quant and year dimensions of the resulting \code{M} \code{FLQuant}. The name for the quant dimension is taken as the name of a variable that is present in the \code{shape} formula, but not in the \code{params} slot of the \code{shape} model. If more than one such variable exists, then there is a problem with the \code{shape} model definition.
 #' @return an \code{FLQuant} object
-#' @aliases m,a4aM-method
 #' @examples
 #' age <- 0:15
 #' k <- 0.4
@@ -49,7 +50,6 @@
 #' mObj <- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3,
 #'   range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
 #' m(mObj, v=1:4)
-
 setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	args <- list(...)
 
@@ -139,11 +139,11 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 #' @title natural mortality 
 #' @description Method to simulate multivariate normal parameters for an \code{a4aM} object.
 #' @name mvnorm 
-#' @rdname mvnorm-a4aM 
+#' @rdname mvnorm-a4aM
+#' @aliases mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
 #' @param n the number of iterations to be generated
 #' @param mu an \code{a4aM} object
 #' @return an \code{a4aM} object with n iterations
-#' @aliases mvrnorm,numeric,a4aM,missing,missing,missing,missing-method
 #' @examples
 #' mod1 <- FLModelSim(model=~exp(-age-0.5))
 #' mod2 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11),
@@ -166,7 +166,6 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 #'   mvrnorm(2,mod2)
 #'   m2<-mvrnorm(2,mod2)
 #'   c(params(m2))
-
 setMethod("mvrnorm", c(n="numeric", mu="a4aM", Sigma="missing",
 	tol="missing", empirical="missing", EISPACK="missing"), function(n=1, mu) {
 	args <- list()

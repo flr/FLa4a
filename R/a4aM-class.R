@@ -42,7 +42,8 @@ setClass("a4aM",
 )
 
 #' @rdname a4aM-class
-#' @aliases a4aM a4aM-methods a4aM,missing-method
+#' @template bothargs
+#' @aliases a4aM a4aM-methods
 #' @template Accessors
 #' @template Constructors
 #' @examples
@@ -51,6 +52,7 @@ setClass("a4aM",
 #' m1 <- a4aM(shape=mod1, level=mod2)
 
 setGeneric("a4aM", function(object, ...) standardGeneric("a4aM"))
+#' @rdname a4aM-class
 setMethod("a4aM", signature(object="missing"),
   function(...) {
     # empty
@@ -66,7 +68,6 @@ setMethod("a4aM", signature(object="missing"),
 )
 
 #' @rdname a4aM-class
-#' @aliases show,a4aM-method
 setMethod("show", "a4aM", function(object){
 	cat(paste("a4aM object", object@name, ":\n", sep=""))
 	cat(paste("  shape: ", deparse(object@shape@model), "\n", sep=""))
@@ -75,39 +76,46 @@ setMethod("show", "a4aM", function(object){
 })
 
 #' @rdname a4aM-class
-#' @aliases shape shape-methods shape,a4aM-method
+#' @aliases shape shape-methods
 setGeneric("shape", function(object, ...) standardGeneric("shape"))
+#' @rdname a4aM-class
 setMethod("shape", "a4aM", function(object) object@shape)
 
 #' @rdname a4aM-class
-#' @aliases shape<- shape<--methods shape<-,a4aM-method
+#' @param value the new object
+#' @aliases shape<- shape<--methods
 setGeneric("shape<-", function(object,value) standardGeneric("shape<-"))
+#' @rdname a4aM-class
 setReplaceMethod("shape", "a4aM", function(object, value){
 	if(all.equal(is(value), is(object@shape))) object@shape <- value
 	object
 })
 
 #' @rdname a4aM-class
-#' @aliases level level-methods level,a4aM-method
+#' @aliases level level-methods
 setGeneric("level", function(object, ...) standardGeneric("level"))
+#' @rdname a4aM-class
 setMethod("level", "a4aM", function(object) object@level)
 
 #' @rdname a4aM-class
-#' @aliases level<- level<--methods level<-,a4aM-method
+#' @aliases level<- level<--methods
 setGeneric("level<-", function(object,value) standardGeneric("level<-"))
+#' @rdname a4aM-class
 setReplaceMethod("level", "a4aM", function(object, value){
 	if(all.equal(is(value), is(object@level))) object@level <- value
 	object
 })
 
 #' @rdname a4aM-class
-#' @aliases trend trend-methods trend,a4aM-method
+#' @aliases trend trend-methods
 setGeneric("trend", function(object, ...) standardGeneric("trend"))
+#' @rdname a4aM-class
 setMethod("trend", "a4aM", function(object) object@trend)
 
 #' @rdname a4aM-class
-#' @aliases trend<- trend<--methods trend<-,a4aM-method
+#' @aliases trend<- trend<--methods
 setGeneric("trend<-", function(object,value) standardGeneric("trend<-"))
+#' @rdname a4aM-class
 setReplaceMethod("trend", "a4aM", function(object, value){
 	if(all.equal(is(value), is(object@trend))) object@trend <- value
 	object
@@ -117,24 +125,26 @@ setReplaceMethod("trend", "a4aM", function(object, value){
 #' @rdname rngmbar
 #' @title M bar range extract and replacement
 #' @description Methods to extract from \code{a4aM} objects the M bar age range, or replace its value.
-#' @param object an \code{a4aM} object
+#' @template bothargs
 #' @param value a \code{vector} with max and min age range to replace the object info
 #' @return a \code{vector} object when extracting or an \code{a4aM} object when replacing
-#' @aliases rngmbar rngmbar-methods rngmbar,a4aM-method
-#' @aliases rngmbar<- rngmbar<--methods rngmbar<-,a4aM-method
+#' @aliases rngmbar rngmbar-methods
 #' @examples
 #' mod1 <- FLModelSim(model=~exp(-age-0.5))
 #' mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 #' m1 <- a4aM(shape=mod1, level=mod2)
 #' rngmbar(m1)<-c(1,5)
 #' rngmbar(m1)
-
 setGeneric("rngmbar", function(object, ...) standardGeneric("rngmbar"))
+#' @rdname rngmbar
 setMethod("rngmbar", "a4aM", function(object){
 	object@range[c("minmbar","maxmbar")]
 })
 
+#' @rdname rngmbar
+#' @aliases rngmbar<- rngmbar<--methods
 setGeneric("rngmbar<-", function(object,value) standardGeneric("rngmbar<-"))
+#' @rdname rngmbar
 setReplaceMethod("rngmbar", "a4aM", function(object, value){
 	object@range[c("minmbar","maxmbar")] <- value
 	object
@@ -144,17 +154,17 @@ setReplaceMethod("rngmbar", "a4aM", function(object, value){
 #' @rdname vecmbar
 #' @title M age vector
 #' @description Method to extract from \code{a4aM} objects the vector of ages for the mean M.
-#' @param object a \code{a4aM} object
+#' @template bothargs
 #' @return an \code{vector} object
-#' @aliases vecmbar vecmbar-methods vecmbar,a4aM-method
+#' @aliases vecmbar vecmbar-methods
 #' @examples
 #' mod1 <- FLModelSim(model=~exp(-age-0.5))
 #' mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 #' m1 <- a4aM(shape=mod1, level=mod2)
 #' rngmbar(m1)<-c(1,5)
 #' vecmbar(m1)
-
 setGeneric("vecmbar", function(object, ...) standardGeneric("vecmbar"))
+#' @rdname vecmbar
 setMethod("vecmbar", "a4aM", function(object){
 	rng <- object@range[c("minmbar","maxmbar")]
 	rng[1]:rng[2]

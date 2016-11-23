@@ -1,36 +1,10 @@
 #' @title Assorted methods needed by FLa4a
 #' @docType methods
-#' @name methods
+#' @name assorted methods
+#' @description Assorted methods needed by FLa4a
 #' @rdname assorted-methods
-#' @aliases is.empty
-#' @section is.empty:
-#' Method \code{is.empty} checks if an object is empty. It takes any object and returns a logical, \code{TRUE}, if the object is of length 0.
-#' @examples
-#' #Example use of is.empty:
-#' is.empty(list())
-#' is.empty(list(a=2))
-
-is.empty <- function(object) {
-	length(object) == 0
-}
-
-#' @rdname assorted-methods
-#' @aliases pars2dim,FLPar-method
-#' @section pars2dim:
-#' Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
-#' @examples
-#' #Example use of pars2dim:
-#' pars2dim(FLPar())
-#' pars2dim(FLPar(array(dim=c(1,1,1))))
-setMethod("pars2dim", "FLPar", function(object) {
-
-	dnm <- dimnames(object)
-	names(dnm)[2]=="iter"
-
-})
-
-#' @rdname assorted-methods
-#' @aliases getYidx getYidx-methods getYidx,FLQuant-method
+#' @aliases getYidx getYidx-methods
+#' @template bothargs
 #' @section getYidx:
 #' Gets an FLQuant's numeric id for a vector of "years". For internal use and not very interesting for users. It takes an \code{FLQuant} object and \code{vector} of years and returns a \code{numeric vector} that can be used to subset the \code{FLQuant}.
 #' @examples
@@ -41,6 +15,8 @@ setMethod("pars2dim", "FLPar", function(object) {
 #' flq[, getYidx(flq, 2000:2004)]
 
 setGeneric("getYidx", function(object, ...) standardGeneric("getYidx"))
+#' @rdname assorted-methods
+#' @param year \code{numeric} with year to be extracted
 setMethod("getYidx", "FLQuant", function(object, year) {
 	yrs <- dimnames(object)[[2]]
 	if(sum(year>0)>0){
@@ -56,8 +32,34 @@ setMethod("getYidx", "FLQuant", function(object, year) {
 
 })
 
+#' @rdname pars2dim-methods
+#' @section pars2dim:
+#' Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
+#' @examples
+#' #Example use of pars2dim:
+#' pars2dim(FLPar())
+#' pars2dim(FLPar(array(dim=c(1,1,1))))
+setMethod("pars2dim", "FLPar", function(object) {
+
+	dnm <- dimnames(object)
+	names(dnm)[2]=="iter"
+
+})
+
 #' @rdname assorted-methods
-#' @aliases niters niters-methods niters,FLModelSim-method
+#' @aliases is.empty
+#' @section is.empty:
+#' Method \code{is.empty} checks if an object is empty. It takes any object and returns a logical, \code{TRUE}, if the object is of length 0.
+#' @examples
+#' #Example use of is.empty:
+#' is.empty(list())
+#' is.empty(list(a=2))
+is.empty <- function(object) {
+	length(object) == 0
+}
+
+#' @rdname assorted-methods
+#' @aliases niters niters-methods
 #' @section niters:
 #' Compute number of iterations. Takes an object of any \code{FLR} class and returns a \code{numeric}.
 #' @examples
@@ -71,6 +73,7 @@ setMethod("getYidx", "FLQuant", function(object, year) {
 #' niters(vbObj)
 
 setGeneric("niters", function(object, ...) standardGeneric("niters"))
+#' @rdname assorted-methods
 setMethod("niters", "FLModelSim", function(object){
 	dim(params(object))[2]
 })
@@ -131,7 +134,7 @@ getADMBCovariance <- function(wkdir) {
 }
 
 #' @rdname assorted-methods
-#' @aliases dims,a4aStkParams-method
+#' @param obj an object
 #' @section dims:
 #' Extracts the dims of the parameters.
 #' @examples
@@ -143,10 +146,8 @@ setMethod("dims", "a4aStkParams", function(obj) {
 })
 
 #' @title plot of fitted catch numbers-at-age
-#' @name plotc
 #' @docType methods
 #' @rdname plotc
-#' @aliases plot,a4aFit,FLStock-method
 #' @description Method to plot fitted versus observed catch numbers-at-age.
 #' @param x an \code{a4aFit} object with the fitted values
 #' @param y an \code{FLStock} object with the observed values
@@ -178,12 +179,9 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 })
 
 #' @title plot of fitted indices-at-age
-#' @name ploti
 #' @docType methods
 #' @rdname ploti
-#' @aliases plot,a4aFit,FLIndices-method
 #' @description Method to plot fitted versus observed indices-at-age.
-#'
 #' @param x an \code{a4aFit} object with the fitted values
 #' @param y an \code{FLIndices} object with the observed values
 #' @param ... additional argument list that might never be used
@@ -231,6 +229,17 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 #====================================================================
 # get tpl
 #====================================================================
+
+#' @title Get TPL with ADMB code 
+#' @name getTPL
+#' @docType methods
+#' @rdname getTPL
+#' @aliases getTPL
+#' @description Function to get the a4a TPL file with ADMB code and copy into a specific folder.
+#' @param dir folder where the a4a.tpl file will be copied to.
+#' @return file a4a.tpl
+#' @examples
+#' getTPL("myfolder")
 
 getTPL <- function(dir){
 	to <- paste0(dir,"/a4a.tpl", sep="")

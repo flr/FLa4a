@@ -105,20 +105,6 @@ check.executable <- function() {
  }   
 }
 
-#' coerces FLPar into list for call
-#'
-#' @return a list with each parametr as one element
-#' @author EJ \email{ernesto.jardim@@jrc.ec.europa.eu}
-#setAs("FLPar", "list", function(from){
-#	lst <- split(from@.Data, 1:nrow(from))
-#	names(lst) <- dimnames(from)[[1]]	
-#	lst
-#})
-
-#setMethod("iterMedians", "FLPar", function(x){
-#	apply(x, -match("iter", names(dimnames(x))), median)
-#})
-
 # utility to convert to a 2d array
 
 quant2mat <- function(x) {

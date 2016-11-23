@@ -47,10 +47,11 @@ setClass("submodel",
 #' @rdname submodel-class
 #' @template Accessors
 #' @template Constructors
-#' @aliases submodel submodel-methods submodel,missing-method
+#' @template bothargs
+#' @aliases submodel submodel-methods
 setGeneric("submodel", function(object, ...)
 	standardGeneric("submodel"))
-
+#' @rdname submodel-class
 setMethod("submodel", signature(object="missing"),
   function(...) {
     # empty
@@ -66,15 +67,12 @@ setMethod("submodel", signature(object="missing"),
 )
 
 #' @rdname submodel-class
-#' @aliases params,submodel-method
 setMethod("params", "submodel", function(object) object@params)
 
 #' @rdname submodel-class
-#' @aliases model,submodel-method
 setMethod("model", "submodel", function(object) object@model)
 
 #' @rdname submodel-class
-#' @aliases covar,submodel-method
 setMethod("covar", "submodel", function(object) object@covar)
 
 

@@ -73,11 +73,10 @@ setClass("a4aFit",
 )
 
 #' @rdname a4aFit-class
+#' @template bothargs
 #' @aliases a4aFit a4aFit-methods
 setGeneric("a4aFit", function(object, ...) standardGeneric("a4aFit"))
-
 #' @rdname a4aFit-class
-#' @aliases a4aFit,missing-method
 setMethod("a4aFit", signature(object="missing"),
   function(...) {
     # empty
@@ -93,33 +92,30 @@ setMethod("a4aFit", signature(object="missing"),
 )
 
 #' @rdname a4aFit-class
-#' @aliases clock,a4aFit-method
+#' @aliases clock clock-methods
 setGeneric("clock", function(object, ...) standardGeneric("clock"))
+#' @rdname a4aFit-class
 setMethod("clock", "a4aFit", function(object) object@clock)
 
 #' @rdname a4aFit-class
-#' @aliases fitSumm fitSumm-methods fitSumm,a4aFit-method
+#' @aliases fitSumm fitSumm-methods
 setGeneric("fitSumm", function(object, ...) standardGeneric("fitSumm"))
+#' @rdname a4aFit-class
 setMethod("fitSumm", "a4aFit", function(object) object@fitSumm)
 
 #' @rdname a4aFit-class
-#' @aliases stock.n,a4aFit-method
 setMethod("stock.n", "a4aFit", function(object) object@stock.n)
 
 #' @rdname a4aFit-class
-#' @aliases harvest,a4aFit-method
 setMethod("harvest", "a4aFit", function(object) object@harvest)
 
 #' @rdname a4aFit-class
-#' @aliases catch.n,a4aFit-method
 setMethod("catch.n", "a4aFit", function(object) object@catch.n)
 
 #' @rdname a4aFit-class
-#' @aliases index,a4aFit-method
 setMethod("index", "a4aFit", function(object) object@index)
 
 #' @rdname a4aFit-class
-#' @aliases show,a4aFit-method
 setMethod("show", signature(object = "a4aFit"),
   function(object) 
   {
@@ -133,7 +129,6 @@ setMethod("show", signature(object = "a4aFit"),
  })
 
 #' @rdname a4aFit-class
-#' @aliases logLik,a4aFit-method
 setMethod("logLik", signature(object = "a4aFit"),
   function(object, ...) 
   {  

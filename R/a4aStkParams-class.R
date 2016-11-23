@@ -51,10 +51,12 @@ setClass("a4aStkParams",
 )
 
 #' @rdname a4aStkParams-class
-#' @aliases a4aStkParams a4aStkParams-methods a4aStkParams,missing-method
+#' @template bothargs
+#' @aliases a4aStkParams a4aStkParams-methods
 #' @template Accessors
 #' @template Constructors
 setGeneric("a4aStkParams", function(object, ...) standardGeneric("a4aStkParams"))
+#' @rdname a4aStkParams-class
 setMethod("a4aStkParams", signature(object="missing"),
   function(...) {
     # empty
@@ -70,83 +72,80 @@ setMethod("a4aStkParams", signature(object="missing"),
 )
 
 
-#' @rdname a4aGr-class
-#' @aliases m,a4aStkParams-method
+#' @rdname a4aStkParams-class
 setMethod("m", signature(object="a4aStkParams"), function(object) object @ m)
 
-#' @rdname a4aGr-class
-#' @aliases wt,a4aStkParams-method
+#' @rdname a4aStkParams-class
 setMethod("wt", signature(object="a4aStkParams"), function(object) object @ wt)
 
 #' @rdname a4aStkParams-class
-#' @aliases fMod fMod-methods fMod,a4aStkParams-method
+#' @aliases fMod fMod-methods
 setGeneric("fMod", function(object, ...) standardGeneric("fMod"))
+#' @rdname a4aStkParams-class
 setMethod("fMod", "a4aStkParams", function(object) object@fMod)
 
 #' @rdname a4aStkParams-class
-#' @aliases fMod<- fMod<--methods fMod<-,a4aStkParams,formula-method
+#' @param value the new object
+#' @aliases fMod<- fMod<--methods
 setGeneric("fMod<-", function(object,value) standardGeneric("fMod<-"))
+#' @rdname a4aStkParams-class
 setReplaceMethod("fMod", signature("a4aStkParams","formula"), function(object, value){
     if(all.equal(is(value), is(object@fMod))) object@fMod <- value
     object
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases n1Mod n1Mod-methods n1Mod,a4aStkParams-method
+#' @aliases n1Mod n1Mod-methods
 setGeneric("n1Mod", function(object, ...) standardGeneric("n1Mod"))
+#' @rdname a4aStkParams-class
 setMethod("n1Mod", "a4aStkParams", function(object) object@n1Mod)
 
 #' @rdname a4aStkParams-class
-#' @aliases n1Mod<- n1Mod<--methods n1Mod<-,a4aStkParams,formula-method
+#' @aliases n1Mod<- n1Mod<--methods
 setGeneric("n1Mod<-", function(object,value) standardGeneric("n1Mod<-"))
+#' @rdname a4aStkParams-class
 setReplaceMethod("n1Mod", signature("a4aStkParams","formula"), function(object, value){
     if(all.equal(is(value), is(object@n1Mod))) object@n1Mod <- value
     object
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases rMod rMod-methods rMod,a4aStkParams-method
+#' @aliases rMod rMod-methods
 setGeneric("rMod", function(object, ...) standardGeneric("rMod"))
+#' @rdname a4aStkParams-class
 setMethod("rMod", "a4aStkParams", function(object) object@rMod)
 
 #' @rdname a4aStkParams-class
-#' @aliases rMod<- rMod<--methods rMod<-,a4aStkParams,formula-method
+#' @aliases rMod<- rMod<--methods
 setGeneric("rMod<-", function(object,value) standardGeneric("rMod<-"))
+#' @rdname a4aStkParams-class
 setReplaceMethod("rMod", signature("a4aStkParams","formula"), function(object, value){
     if(all.equal(is(value), is(object@rMod))) object@rMod <- value
     object
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases params,a4aStkParams-method
 setMethod("params", "a4aStkParams", function(object) object@params)
 
-#' @name a4aStkParams
 #' @rdname a4aStkParams-class
-#' @aliases params<-,a4aStkParams,FLPar-method
 setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){
     if(all.equal(is(value), is(object@params))) object@params <- value
     object
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases distr distr-methods distr,a4aStkParams-method
 setMethod("distr", "a4aStkParams", function(object) object@distr)
 
 #' @rdname a4aStkParams-class
-#' @aliases distr<- distr<--methods distr<-,a4aStkParams,character-method
 setReplaceMethod("distr", signature("a4aStkParams","character"), function(object, value){
     if(all.equal(is(value), is(object@distr))) object@distr <- value
     object
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases vcov,a4aStkParams-method
 setMethod("vcov", "a4aStkParams", function(object) object@vcov)
 
-#' @name vcov<-
 #' @rdname a4aStkParams-class
-#' @aliases vcov<-,a4aStkParams-method
 setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, value){
     if(all.equal(is(value), is(object@vcov))) object@vcov <- value
     object

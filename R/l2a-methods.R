@@ -1,4 +1,5 @@
 #' @title Method to convert length-based data to age-based
+#' @description Method to convert length-based data to age-based
 #' @details
 #' A deterministic slicing method converts the length-based data to age-based data, using the supplied growth model (the \code{a4aGr} object).
 #' Each length-based observation is allocated to a corresponding age, based on the growth model, and aggregated accordingly (either the sum or the mean).
@@ -7,13 +8,15 @@
 #' 
 #' @name l2a 
 #' @rdname l2a 
-#' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
+#' @aliases l2a l2a-methods
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model an \code{a4aGr} object
 #' @param halfwidth the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an \code{FLStockLen}
 #' @param stat the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.
 #' @param max_age the maximum age in the returned \code{FLQuant}; all ages above this are set to \code{max_age}; only used if object is an \code{FLQuant}
 #' @param plusgroup the plusgroup of the stock; only used if the object is an \code{FLStockLen}.
+#' @param weights external weighting ??
+#' @template dots
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
 #' # Southern hake
@@ -55,6 +58,7 @@
 #' index_pt_age <- l2a(propagate(index_pt_len, 10), vbObj)
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
+#' @rdname l2a 
 setMethod("l2a", c("FLQuant", "a4aGr"),
 	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), max_age=NA) {
 	# constants
@@ -112,7 +116,6 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 
 
 #' @rdname l2a 
-#' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
     # Use the catch.n slot to build the resulting FLStock
@@ -170,7 +173,6 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 })
 
 #' @rdname l2a 
-#' @aliases l2a,FLIndex,a4aGr-method
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Slots are treated differently
     # Sum: index, index.var, catch.n

@@ -4,9 +4,8 @@
 
 #' @title Variance-covariance matrix
 #' @description Methods to extract and replace the variance-covariance matrix.
-#' @name vcov
+#' @template bothargs
 #' @rdname vcov-methods
-#' @aliases vcov,a4aFitSA-method
 setMethod("vcov", signature(object = "a4aFitSA"),
   function(object) {
     vcov(pars(object))
@@ -14,7 +13,6 @@ setMethod("vcov", signature(object = "a4aFitSA"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov,SCAPars-method
 setMethod("vcov", signature(object = "SCAPars"),
   function(object) {
     list(
@@ -25,7 +23,6 @@ setMethod("vcov", signature(object = "SCAPars"),
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov,submodels-method
 setMethod("vcov", signature(object = "submodels"),
   function(object) {
       lapply(object, vcov)
@@ -33,7 +30,6 @@ setMethod("vcov", signature(object = "submodels"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov,submodel-method
 setMethod("vcov", signature(object = "submodel"),
   function(object) {
       object @ vcov
@@ -44,7 +40,7 @@ setMethod("vcov", signature(object = "submodel"),
 #==================================================================== 
 
 #' @rdname vcov-methods
-#' @aliases vcov<-,a4aFitSA,numeric-method
+#' @param value the new object
 setMethod("vcov<-", signature(object = "a4aFitSA", value = "numeric"),
   function(object, ..., value) {
     vcov(object @ pars) <- value
@@ -53,7 +49,6 @@ setMethod("vcov<-", signature(object = "a4aFitSA", value = "numeric"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov<-,SCAPars,numeric-method
 setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
   function(object, ..., value) {
     v <- vcov(object)
@@ -69,7 +64,6 @@ setMethod("vcov<-", signature(object = "SCAPars", value = "numeric"),
 
 
 #' @rdname vcov-methods
-#' @aliases vcov<-,a4aStkParams,numeric-method
 setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
   function(object, ..., value) {    
     object @ vcov[] <- value
@@ -77,7 +71,6 @@ setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov<-,submodels,numeric-method
 setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
   function(object, ..., value) {
     v <- vcov(object)
@@ -91,7 +84,6 @@ setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
   })
 
 #' @rdname vcov-methods
-#' @aliases vcov<-,submodel,numeric-method
 setMethod("vcov<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
       object @ vcov[] <- value

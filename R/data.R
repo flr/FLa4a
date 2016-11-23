@@ -54,4 +54,39 @@ NULL
 #' @author Daniel Howell
 NULL
 
+#' @name index_cd_len
+#' @title index_cd_len 
+#' @description Survey abundance index for hake in the Gulf of Cadiz. Lenth frequencies.
+#' @docType data
+#' @usage index_cd_len
+#' @format an \code{FLIndex} object
+#' @author Santiago Cervi\~no
+NULL
+
+#' @name index_pt_len
+#' @title index_pt_len 
+#' @description Survey abundance index for hake in Portuguese continental waters. Lenth frequencies.
+#' @docType data
+#' @usage index_pt_len
+#' @format an \code{FLIndex} object
+#' @author Santiago Cervi\~no
+NULL
+
+#' @name index_sp_len
+#' @title index_sp_len 
+#' @description Survey abundance index for hake in Northwest Spanish waters. Lenth frequencies.
+#' @docType data
+#' @usage index_sp_len
+#' @format an \code{FLIndex} object
+#' @author Santiago Cervi\~no
+NULL
+
+#' @name shake_len
+#' @title shake_len
+#' @description FLR stock object for southern hake.
+#' @docType data
+#' @usage shake_len
+#' @format an \code{FLStock} object
+#' @author Santiago Cervi\~no
+NULL
 

@@ -28,8 +28,10 @@ setClass("SCAPars",
 #' @rdname SCAPars-class
 #' @template Accessors
 #' @template Constructors
-#' @aliases SCAPars SCAPars-methods SCAPars,missing-method
+#' @template bothargs
+#' @aliases SCAPars SCAPars-methods
 setGeneric("SCAPars", function(object, ...) standardGeneric("SCAPars"))
+#' @rdname SCAPars-class
 setMethod("SCAPars", signature(object="missing"),
   function(...) {
     # empty
@@ -47,101 +49,117 @@ setMethod("SCAPars", signature(object="missing"),
 # accessors
 
 #' @rdname SCAPars-class
-#' @aliases stkmodel stkmodel-methods stkmodel,SCAPars-method
+#' @aliases stkmodel stkmodel-methods
 setGeneric("stkmodel", function(object, ...) standardGeneric("stkmodel"))
+#' @rdname SCAPars-class
 setMethod("stkmodel", "SCAPars", function(object) object @ stkmodel)
 
 #' @rdname SCAPars-class
-#' @aliases n1model n1model-methods n1model,SCAPars-method
+#' @aliases n1model n1model-methods
 setGeneric("n1model", function(object, ...) standardGeneric("n1model"))
+#' @rdname SCAPars-class
 setMethod("n1model", "SCAPars", function(object) object @ stkmodel @ n1Mod)
 
 #' @rdname SCAPars-class
-#' @aliases srmodel srmodel-methods srmodel,SCAPars-method
+#' @aliases srmodel srmodel-methods
 setGeneric("srmodel", function(object, ...) standardGeneric("srmodel"))
+#' @rdname SCAPars-class
 setMethod("srmodel", "SCAPars", function(object) object @ stkmodel @ srMod)
 
 #' @rdname SCAPars-class
-#' @aliases fmodel fmodel-methods fmodel,SCAPars-method
+#' @aliases fmodel fmodel-methods
 setGeneric("fmodel", function(object, ...) standardGeneric("fmodel"))
+#' @rdname SCAPars-class
 setMethod("fmodel", "SCAPars", function(object) object @ stkmodel @ fMod)
 
 #' @rdname SCAPars-class
-#' @aliases qmodel qmodel-methods qmodel,SCAPars-method
+#' @aliases qmodel qmodel-methods
 setGeneric("qmodel", function(object, ...) standardGeneric("qmodel"))
+#' @rdname SCAPars-class
 setMethod("qmodel", "SCAPars", function(object) object@qmodel)
 
 #' @rdname SCAPars-class
-#' @aliases vmodel vmodel-methods vmodel,SCAPars-method
+#' @aliases vmodel vmodel-methods
 setGeneric("vmodel", function(object, ...) standardGeneric("vmodel"))
+#' @rdname SCAPars-class
 setMethod("vmodel", "SCAPars", function(object) object@vmodel)
 
 #' @rdname SCAPars-class
-#' @aliases srPars srPars-methods srPars,SCAPars-method
+#' @aliases srPars srPars-methods
 setGeneric("srPars", function(object, ...) standardGeneric("srPars"))
+#' @rdname SCAPars-class
 setMethod("srPars", "SCAPars", function(object) object@srmodel@pars)
 
 #' @rdname SCAPars-class
-#' @aliases srCovar srCovar-methods srCovar,SCAPars-method
+#' @aliases srCovar srCovar-methods
 setGeneric("srCovar", function(object, ...) standardGeneric("srCovar"))
+#' @rdname SCAPars-class
 setMethod("srCovar", "SCAPars", function(object) object@srmodel@covar)
 
 #' @rdname SCAPars-class
-#' @aliases srFrml srFrml-methods srFrml,SCAPars-method
+#' @aliases srFrml srFrml-methods
 setGeneric("srFrml", function(object, ...) standardGeneric("srFrml"))
+#' @rdname SCAPars-class
 setMethod("srFrml", "SCAPars", function(object) object@srmodel@model)
 
 #' @rdname SCAPars-class
-#' @aliases fPars fPars-methods fPars,SCAPars-method
+#' @aliases fPars fPars-methods
 setGeneric("fPars", function(object, ...) standardGeneric("fPars"))
+#' @rdname SCAPars-class
 setMethod("fPars", "SCAPars", function(object) object@fmodel@pars)
 
 #' @rdname SCAPars-class
-#' @aliases fCovar fCovar-methods fCovar,SCAPars-method
+#' @aliases fCovar fCovar-methods
 setGeneric("fCovar", function(object, ...) standardGeneric("fCovar"))
+#' @rdname SCAPars-class
 setMethod("fCovar", "SCAPars", function(object) object@fmodel@covar)
 
 #' @rdname SCAPars-class
-#' @aliases fFrml fFrml-methods fFrml,SCAPars-method
+#' @aliases fFrml fFrml-methods
 setGeneric("fFrml", function(object, ...) standardGeneric("fFrml"))
+#' @rdname SCAPars-class
 setMethod("fFrml", "SCAPars", function(object) object@fmodel@model)
 
 #' @rdname SCAPars-class
-#' @aliases qPars qPars-methods qPars,SCAPars-method
+#' @aliases qPars qPars-methods
 setGeneric("qPars", function(object, ...) standardGeneric("qPars"))
+#' @rdname SCAPars-class
 setMethod("qPars", "SCAPars", function(object) object@qmodel@pars)
 
 #' @rdname SCAPars-class
-#' @aliases qCovar qCovar-methods qCovar,SCAPars-method
+#' @aliases qCovar qCovar-methods
 setGeneric("qCovar", function(object, ...) standardGeneric("qCovar"))
+#' @rdname SCAPars-class
 setMethod("qCovar", "SCAPars", function(object) object@qmodel@covar)
 
 #' @rdname SCAPars-class
-#' @aliases qFrml qFrml-methods qFrml,SCAPars-method
+#' @aliases qFrml qFrml-methods
 setGeneric("qFrml", function(object, ...) standardGeneric("qFrml"))
+#' @rdname SCAPars-class
 setMethod("qFrml", "SCAPars", function(object) object@qmodel@model)
 
 #' @rdname SCAPars-class
-#' @aliases vPars vPars-methods vPars,SCAPars-method
+#' @aliases vPars vPars-methods
 setGeneric("vPars", function(object, ...) standardGeneric("vPars"))
+#' @rdname SCAPars-class
 setMethod("vPars", "SCAPars", function(object) object@vmodel@pars)
 
 #' @rdname SCAPars-class
-#' @aliases vCovar vCovar-methods vCovar,SCAPars-method
+#' @aliases vCovar vCovar-methods
 setGeneric("vCovar", function(object, ...) standardGeneric("vCovar"))
+#' @rdname SCAPars-class
 setMethod("vCovar", "SCAPars", function(object) object@vmodel@covar)
 
 #' @rdname SCAPars-class
-#' @aliases vFrml vFrml-methods vFrml,SCAPars-method
+#' @aliases vFrml vFrml-methods
 setGeneric("vFrml", function(object, ...) standardGeneric("vFrml"))
+#' @rdname SCAPars-class
 setMethod("vFrml", "SCAPars", function(object) object@vmodel@model)
 
 #' @rdname SCAPars-class
-#' @aliases m,SCAPars-method
 setMethod("m", signature(object="SCAPars"), function(object) m(stkmodel(object)))
 
 #' @rdname SCAPars-class
-#' @aliases wt,SCAPars-method
 setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object)))
 
 

@@ -2,14 +2,14 @@
 #' @name getX
 #' @rdname getX-methods
 #' @description Uses the user-specified formula to build a model matrix.
-#' @param formula a formula object
-#' @param df the data.frame to build the model matrix against
-#' @param df the data.frame to create the model matrix for.
+#' @template bothargs
+#' @param df the data.frame to build the model matrix against.
+#' @param newdf the data.frame to create the model matrix for.
 #' @return a matrix.
 #' @note \code{getX} is intended to be used internally
-#' @aliases getX getX-methods getX,formula-method
+#' @aliases getX getX-methods
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
-
+#' @rdname getX-methods
 setMethod("getX", "formula", function(object, df, newdf = df) {
     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
@@ -155,7 +155,6 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
 #' @param tau numeric giving the multiplier of the structure matrix for the model
 #' @return a covariance matrix
 #' @aliases getCov 
-
 getCov <- function(n, model, tau)
 {
   model <- match.arg(model, c("iid","rw1","rw2"))

@@ -5,7 +5,7 @@
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return an \code{FLModelSim} object with n sets of parameters
-#' @aliases mvrtriangle,numeric,FLModelSim-method
+#' @rdname mvrtriangle
 #' @examples
 #' # Set up the FLModelSim object
 #' mm <- matrix(NA, ncol=3, nrow=3)
@@ -37,8 +37,8 @@
 #' splom(data.frame(t(params(vbSim)@@.Data)), pch=".")
 #' splom(data.frame(t(params(vbSim1)@@.Data)), pch=".")
 #' splom(data.frame(t(params(vbSim2)@@.Data)), pch=".")
-
 setGeneric("mvrtriangle", function(n, object, ...) standardGeneric("mvrtriangle"))
+#' @rdname mvrtriangle
 setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, object, ...) {
 		args <- list(...)	
 		model <- object
@@ -99,14 +99,13 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 )
 
 #' @title Simulation using copula models
-#'
 #' @description Simulates model parameters with user-defined copulas and marginals.
-#'
 #' @param n the number of iterations
-#' @param object an \code{FLModelSim} object
-#' @param ... arguments to be passed to the rMvdc and copula methods
+#' @param mvdc an \code{FLModelSim} object
+#' @param copula the name of the copula to be used
+#' @param ... arguments to be passed to the copula methods
 #' @return an \code{FLModelSim} object with n groups of parameters
-#' @aliases mvrcop,numeric,FLModelSim-method
+#' @rdname mvrcop
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
@@ -116,8 +115,8 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 #' vbSim <- mvrcop(10000, vb, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
 #' boxplot(t(predict(vbSim, t=0:20+0.5)))
 #' splom(data.frame(t(params(vbSim)@@.Data)), pch=".")
-
 setGeneric("mvrcop", function(n, mvdc, ...) standardGeneric("mvrcop"))
+#' @rdname mvrcop
 setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula, ...) {
 
 		args <- list(...)	
@@ -165,12 +164,14 @@ setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula
 #' @title Check that the second dimension in params is "iter"
 #' @name pars2dim
 #' @rdname pars2dim-methods
-#' @aliases pars2dim pars2dim-methods pars2dim,FLModelSim-method
+#' @template object
+#' @aliases pars2dim pars2dim-methods
 #' @description Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLModelSim} object and returns a \code{logical}.
 #' @examples
 #' pars2dim(FLModelSim())
-
 setGeneric("pars2dim", function(object) standardGeneric("pars2dim"))
+#' @rdname pars2dim-methods
+#' @aliases pars2dim,FLModelSim-method
 setMethod("pars2dim", "FLModelSim", function(object) {
 
 	pars <- params(object)
@@ -179,3 +180,4 @@ setMethod("pars2dim", "FLModelSim", function(object) {
 
 
 })
+
