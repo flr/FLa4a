@@ -148,13 +148,13 @@ setMethod("genFLIndex", c("FLQuant"), function(object, cv = 0.2, niter = 250) {
       # use log transform, to be expanded on later versions
       mu <- log(object)
       
-      if(method == "ac") {
+#      if(method == "ac") {
         Rho <- cor(t(mu[drop = TRUE]))
         flq <- mvrnorm(niter * dim(mu)[2], rep(0, nrow(Rho)), log(cv^2+1) * Rho)
         mu <- propagate(mu, niter)
         flq <- FLQuant(c(t(flq)), dimnames = dimnames(mu))
         flq <- exp(mu + flq)
-      }
+#      }
       return(flq)
 })
 

@@ -7,6 +7,5 @@ man-roxygen
 Makefile
 .git
 .gitignore
-
 ^.*\.Rproj$
 ^\.Rproj\.user$

@@ -1,3 +1,4 @@
+globalVariables("qname")
 #' @title Assorted methods needed by FLa4a
 #' @docType methods
 #' @name assorted methods

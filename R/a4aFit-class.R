@@ -5,19 +5,12 @@
 #' @section Slots:
 #' \describe{
 #'    \item{call}{The function call}
-#'
 #'    \item{clock}{Information on call duration}
-#'
 #'    \item{fitSumm}{Fit summary}
-#'
 #'    \item{stock.n}{Estimates of stock numbers-at-age}
-#'
 #'    \item{harvest}{Estimates of fishing mortality at age}
-#'
 #'    \item{catch.n}{Estimates of catch numbers-at-age}
-#'
 #'    \item{index}{Estimates of survey or CPUE indices-at-age}
-#'
 #'  }
 #' @template Accessors
 #' @template Constructors

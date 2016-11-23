@@ -1,3 +1,5 @@
+globalVariables(c("obs", "year", "age", "fleet"))
+
 #' @title a4a
 #' @name a4a
 #' @docType methods

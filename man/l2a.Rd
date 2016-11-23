@@ -14,7 +14,7 @@ l2a(object, model, ...)
 \S4method{l2a}{FLQuant,a4aGr}(object, model,
   halfwidth = c(diff(as.numeric(dimnames(object)[[1]])),
   tail(diff(as.numeric(dimnames(object)[[1]])), 1))/2, stat = "sum",
-  weights = FLQuant(1, dimnames = dimnames(object)), max_age = NA)
+  max_age = NA)
 
 \S4method{l2a}{FLStockLen,a4aGr}(object, model, plusgroup = NA, ...)
 
@@ -30,8 +30,6 @@ l2a(object, model, ...)
 \item{halfwidth}{the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an \code{FLStockLen}}
 
 \item{stat}{the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.}
-
-\item{weights}{external weighting ??}
 
 \item{max_age}{the maximum age in the returned \code{FLQuant}; all ages above this are set to \code{max_age}; only used if object is an \code{FLQuant}}
 

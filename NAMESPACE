@@ -131,4 +131,6 @@ importFrom("lattice",qqmath, panel.xyplot, panel.abline, prepanel.qqmathline, pa
 importFrom("Matrix",bdiag,Diagonal,Matrix)
 importClassesFrom("Matrix",dsCMatrix,Matrix)
 importFrom("coda", mcmc, as.mcmc)
+importFrom("utils", capture.output, read.table, write.table)
+importFrom("stats", runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm, as.formula)
 

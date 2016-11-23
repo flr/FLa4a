@@ -15,7 +15,6 @@
 #' @param stat the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.
 #' @param max_age the maximum age in the returned \code{FLQuant}; all ages above this are set to \code{max_age}; only used if object is an \code{FLQuant}
 #' @param plusgroup the plusgroup of the stock; only used if the object is an \code{FLStockLen}.
-#' @param weights external weighting ??
 #' @template dots
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
@@ -60,10 +59,13 @@
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
 #' @rdname l2a 
 setMethod("l2a", c("FLQuant", "a4aGr"),
-	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), max_age=NA) {
+	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", max_age=NA) {
+
+# EJ: don't know what weights are doing ...
+#	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), max_age=NA) {
 	# constants
 	dnms <- dimnames(object)
-	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
+#	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
 	len <- as.numeric(dnms[[1]]) + halfwidth 
 	mit <- niters(model) # iters in the growth model
 	qit <- length(dnms[[6]])  # iters in the FLQuant

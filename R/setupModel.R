@@ -92,7 +92,7 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
         df <- cbind(df, gmf)
   
         # now replace by = ... to by = by1. etc and rebuild the formula :)
-        tmp.sfunc <- function(..., by) deparse(substitute(by))
+        #tmp.sfunc <- function(..., by) deparse(substitute(by))
         replace.by <- lapply(dummy.gams[bygams], function(x) gsub("[)]","[)]", gsub("[(]", "[(]", eval(parse(text = x)))))
         facs[gams][bygams] <- sapply(seq(ncol(gmf)), function(i) gsub(replace.by[[i]], names(gmf)[i], facs[gams][bygams][i]))
         model <- eval(parse(text = paste("~", paste(facs, collapse = "+"))))
@@ -157,19 +157,20 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
 #' @aliases getCov 
 getCov <- function(n, model, tau)
 {
-  model <- match.arg(model, c("iid","rw1","rw2"))
+  model <- match.arg(model, c("iid"))
+#  model <- match.arg(model, c("iid","rw1","rw2"))
   # try and add AR1 - need extra param for that though...
 
-  if (model == "iid") {
+#  if (model == "iid") {
     Cov <- as(Diagonal(n) * tau, "CsparseMatrix")
 
-  } else if (model %in% c("rw1", "rw2")) {
-    Q <- Qfunc(n, type = model) / tau
-    # make positive definate
-    Q[] <- c(Q) + rowSums(apply( eigen(Q)$vectors, 2, function(x) outer(x, x)))
-    Q <- as(Q, "CsparseMatrix")
-    Cov <- solve(Q)
-  }
+#  } else if (model %in% c("rw1", "rw2")) {
+#    Q <- Qfunc(n, type = model) / tau
+#    # make positive definate
+#    Q[] <- c(Q) + rowSums(apply( eigen(Q)$vectors, 2, function(x) outer(x, x)))
+#    Q <- as(Q, "CsparseMatrix")
+#    Cov <- solve(Q)
+#  }
 
   Cov
 }

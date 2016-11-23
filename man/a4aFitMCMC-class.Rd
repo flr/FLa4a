@@ -38,7 +38,17 @@ The \code{a4aFitMCMC} class extends \code{a4aFitSA} to store information about t
 \section{Slots}{
 
 \describe{
-   \item{SCAMCMC}{An object of class \code{SCAMCMC} with information about the MCMC run}
+   \item{name}{A character vector for the object name.}
+   \item{desc}{A textual description of the object contents.}
+   \item{range}{A named numeric vector with various values of quant and year ranges, plusgroup, fishing mortality ranges, etc.}
+   \item{call}{The function call}
+   \item{clock}{Information on call duration}
+   \item{fitSumm}{Fit summary}
+   \item{stock.n}{Estimates of stock numbers-at-age}
+   \item{harvest}{Estimates of fishing mortality at age}
+   \item{catch.n}{Estimates of catch numbers-at-age}
+   \item{index}{Estimates of survey or CPUE indices-at-age}
+   \item{mcmc}{An object of class \code{SCAMCMC} with information about the MCMC run}
 }
 }
 
