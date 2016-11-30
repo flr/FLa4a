@@ -97,7 +97,7 @@ setMethod("a4aFitMCMC", signature(object="a4aFitSA"),
 #' @rdname a4aFitMCMC-class
 #' @param x an object to be coerced into mcmc
 #' @aliases as.mcmc as.mcmc-methods
-setGeneric("as.mcmc", function(x, ...) standardGeneric("as.mcmc"))
+setGeneric("as.mcmc", function(x, ...) useAsDefault=coda::as.mcmc)
 
 #' @rdname a4aFitMCMC-class
 setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {

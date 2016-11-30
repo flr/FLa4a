@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 0.900.0
+Version: 0.920.0
 Date: 2015-12-11
 Author: Colin P. Millar and Ernesto Jardim
 Maintainer: Colin Millar <colinpmillar@googlemail.com> and Ernesto Jardim
@@ -23,9 +23,10 @@ Imports:
     coda
 Additional_Repositories: http://flr-project.org/R
 Suggests:
-    latticeExtra
+    latticeExtra, knitr
 LazyLoad: yes
 LazyData: yes
+VignetteBuilder: knitr
 Collate:
     'FLCompMethods.R'
     'FLModelSimMethods.R'

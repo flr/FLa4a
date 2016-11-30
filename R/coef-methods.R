@@ -10,7 +10,7 @@
 #' @aliases coef,a4aFitSA-methods
 #' @description Methods to extract and replace the model coefficients.
 
-setGeneric("coef", function(object, ...) standardGeneric("coef"))
+setGeneric("coef", function(object, ...) useAsDefault=stats::coef)
 
 #' @rdname coef-methods
 setMethod("coef", signature(object = "a4aFitSA"),

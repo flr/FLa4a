@@ -16,7 +16,7 @@
 #' summary(fit1)
 #' stock.n(fit1)
 
-setGeneric("simulate", useAsDefault = simulate)
+setGeneric("simulate", useAsDefault = stats::simulate)
 
 #' @rdname simulate-methods
 #' @template object

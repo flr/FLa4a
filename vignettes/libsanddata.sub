@@ -1,0 +1,41 @@
+\section{Installing and loading libraries}
+
+To run the \pkg{FLa4a} methods the reader will need to install the package and its dependencies and load them. Some datsets are distributed with the package and as such need to be loaded too.
+
+<<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(knitr)
+library(formatR)
+thm = knit_theme$get("bclear") #moe, bclear
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=FALSE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=60, tidy=TRUE)
+@
+
+<<eval=FALSE>>=
+# from CRAN
+install.packages(c("copula","triangle", "coda"))
+# from FLR
+install.packages(c("FLCore", "FLa4a"), repos="http://flr-project.org/R")
+@
+
+<<load_libraries, message=FALSE, warning=FALSE>>=
+# libraries
+library(FLa4a)
+library(XML)
+library(reshape2)
+library(latticeExtra)
+# datasets
+data(ple4)
+data(ple4.indices)
+data(ple4.index)
+data(rfLen)
+@
+
+<<lattice_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
+#opar <- trellis.par.get()
+#trellis.par.set(theEconomist.theme())
+#oopt <- lattice.options(theEconomist.opts())
+a4a.theme = trellis.par.get()
+a4a.theme$strip.background$col <- "gray90"
+trellis.par.set(a4a.theme)
+@
+

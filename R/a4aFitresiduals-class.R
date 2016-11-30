@@ -126,10 +126,29 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' qqmath(flqs)
 
-setGeneric("qqmath", function(x, data, ...) standardGeneric("qqmath"))
+setGeneric("qqmath", function(x, data, ...) useAsDefault=lattice::qqmath)
 #' @rdname qqmath-methods
 setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
-	qqmath(~data|factor(age)*qname, data=as.data.frame(x), ylab="standardized residuals", xlab="", prepanel=prepanel.qqmathline, panel = function(x, ...){panel.qqmathline(x, col="gray50"); panel.qqmath(x, ...)}, col=1, pch=19, cex=0.2, par.settings=list(strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="quantile-quantile plot of log residuals of catch and abundance indices", ...)
+	args <- list()
+	args$data <- as.data.frame(x)
+	args$x <- ~data|factor(age)*qname
+	args$ylab <- "standardized residuals"
+	args$xlab <- ""
+	args$prepanel <- prepanel.qqmathline
+	args$panel <- function(x, ...){
+		panel.qqmathline(x, col="gray50")
+		panel.qqmath(x, ...)
+	}
+	args$par.settings <- list(
+		strip.background=list(col="gray90")
+	#	superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
+	#	superpose.line=list(col=1, lty=1, lwd=2)
+	)
+	args$pch <- 19
+	args$col <- 1
+	args$cex <- 0.2
+	args$main <- "quantile-quantile plot of log residuals of catch and abundance indices"
+	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("qqmath", args)) else do.call("qqmath", args)
 })
 
 #' @title Bubbles plot of standardized log residuals
@@ -149,7 +168,7 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' bubbles(flqs)
 setMethod("bubbles", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
-	bubbles(age~year|qname, data=x, par.settings=list(strip.background=list(col="gray90"), strip.border=list(col="gray90"), box.rectangle=list(col="gray90")), main="log residuals of catch and abundance indices", ...)
+	bubbles(age~year|qname, data=x, main="log residuals of catch and abundance indices", ...)
 })
 
 

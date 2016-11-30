@@ -1,0 +1,9 @@
+
+
+<<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
+thm = knit_theme$get("bclear") #moe, bclear
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=FALSE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=60)
+@
+
+

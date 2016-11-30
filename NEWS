@@ -1,4 +1,15 @@
 FLa4a NEWS
+CHANGES IN FLa4a 0.900.x:
+
+	NEW FEATURES:
+		new vignette for introduction
+		new vignette for growth modelling
+		new vignette for natural mortality modelling
+		new vignette for stock assessment
+		new themes for residual plots
+	BUG FIXES:
+		man pages reviewed
+
 CHANGES IN FLa4a 0.800.x:
 
 	NEW FEATURES:
@@ -20,7 +31,7 @@ CHANGES IN FLa4a 0.700.x:
 CHANGES IN FLa4a 0.600.x:
 
 	NEW FEATURES:
-		MCMC fits
+		MCMC fits, including tests
 		a4a tpl copy method
 		coda coercing
 		
