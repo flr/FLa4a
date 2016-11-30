@@ -6,5 +6,4 @@
 #' A numeric vector can also be used when replacing FLQuant slots, and the
 #' vector will be used to substitute the values in the slot, but not its other
 #' attributes.
-#' blah blah
 

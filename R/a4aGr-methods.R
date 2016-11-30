@@ -22,6 +22,7 @@ setMethod("getK", "a4aGr", function(object){
 
 #' @title mvrnorm 
 #' @rdname mvrnorm-a4aGr
+#' @name mvrnorm for a4aGR
 ##' @aliases mvrnorm,numeric,a4aGr-method
 #' @description Method to generate multivariate normal parameters for \code{a4aGr} objects.
 #' @param n the number of simulations to be generated
@@ -104,7 +105,8 @@ setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 	object	
 })
 
-#' @title predict for \code{a4aGr} 
+##' @title predict for \code{a4aGr} 
+#' @name predict for a4aGr
 #' @rdname predict-a4aGr
 #' @description Predicts ages or lengths using a growth class
 #' @param object the \code{a4aGr} object

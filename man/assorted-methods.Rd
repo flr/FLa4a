@@ -10,6 +10,7 @@
 \alias{is.empty}
 \alias{niters}
 \alias{niters,FLModelSim-method}
+\alias{niters,a4aGr-method}
 \alias{niters-methods}
 \title{Assorted methods needed by FLa4a}
 \usage{
@@ -22,6 +23,8 @@ is.empty(object)
 niters(object, ...)
 
 \S4method{niters}{FLModelSim}(object)
+
+\S4method{niters}{a4aGr}(object)
 
 \S4method{dims}{a4aStkParams}(obj)
 }

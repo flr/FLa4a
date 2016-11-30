@@ -3,6 +3,7 @@
 #==================================================================== 
 
 #' @title Predict methods for SCA
+#' @name predict for sca
 #' @description Predict methods for a4a stock assessment fits.
 #' @rdname predict-methods
 #' @template object

@@ -3,6 +3,7 @@
 #==================================================================== 
 
 #' @title Variance-covariance matrix
+#' @name vcov
 #' @description Methods to extract and replace the variance-covariance matrix.
 #' @template bothargs
 #' @rdname vcov-methods

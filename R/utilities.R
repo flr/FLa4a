@@ -78,6 +78,10 @@ setGeneric("niters", function(object, ...) standardGeneric("niters"))
 setMethod("niters", "FLModelSim", function(object){
 	dim(params(object))[2]
 })
+#' @rdname assorted-methods
+setMethod("niters", "a4aGr", function(object){
+	dim(params(object))[2]
+})
 
 #' @title Get ADMB Hessian
 #' @name getADMBHessian
@@ -146,7 +150,8 @@ setMethod("dims", "a4aStkParams", function(obj) {
   dim(obj@params)
 })
 
-#' @title plot of fitted catch numbers-at-age
+#' @title plot for fitted catch-at-age
+#' @name plot for fitted catch-at-age
 #' @docType methods
 #' @rdname plotc
 #' @description Method to plot fitted versus observed catch numbers-at-age.
@@ -179,7 +184,8 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	do.call("xyplot", args)
 })
 
-#' @title plot of fitted indices-at-age
+##' @title plot for fitted indices-at-age
+#' @name plot for fitted indices-at-age
 #' @docType methods
 #' @rdname ploti
 #' @description Method to plot fitted versus observed indices-at-age.
@@ -235,7 +241,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 #' @name getTPL
 #' @docType methods
 #' @rdname getTPL
-#' @aliases getTPL
+##' @aliases getTPL
 #' @description Function to get the a4a TPL file with ADMB code and copy into a specific folder.
 #' @param dir folder where the a4a.tpl file will be copied to.
 #' @return file a4a.tpl

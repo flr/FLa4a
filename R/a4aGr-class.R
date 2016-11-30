@@ -127,22 +127,3 @@ setReplaceMethod("vcov", signature(object = "a4aGr", value = "numeric"), functio
 	object@vcov <- value
 	object
 })
-
-#' @rdname niters
-#' @title Number of iterations
-#' @description Method to extract from \code{a4aGr} objects the number of iterations.
-#' @param object a \code{a4aGr} object
-#' @return an \code{numeric} object
-#' @examples
-#' mm <- matrix(NA, ncol=3, nrow=3)
-#' diag(mm) <- c(50, 0.001,0.001)
-#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
-#' # Generate 100 sample sets
-#'   vbObj <- mvrnorm(100,vbObj)
-#' niters(vbObj)
-setMethod("niters", "a4aGr", function(object){
-	dim(params(object))[2]
-})
-
-
