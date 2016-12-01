@@ -2,11 +2,14 @@ FLa4a NEWS
 CHANGES IN FLa4a 0.900.x:
 
 	NEW FEATURES:
+		wireframe for FLQuant
+		plot fits vs observation improved (yaxis removed)
 		new vignette for introduction
 		new vignette for growth modelling
 		new vignette for natural mortality modelling
 		new vignette for stock assessment
 		new themes for residual plots
+		default model in sca changed from if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6) to if (ka < 3) ka else min(max(3, floor(.66 * ka)), 10), adding more degress of freedom. It has been noticed that age tends to be modelled with a reduced number of ks. 
 	BUG FIXES:
 		man pages reviewed
 

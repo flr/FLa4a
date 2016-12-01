@@ -154,7 +154,8 @@ setMethod("dims", "a4aStkParams", function(obj) {
 #' @name plot for fitted catch-at-age
 #' @docType methods
 #' @rdname plotc
-#' @description Method to plot fitted versus observed catch numbers-at-age.
+#' @aliases plot,a4aFit,FLStock-method
+#' @description Method to plot fitted versus observed catch numbers-at-age. Note the yaxis doesn't has a scale. The visual is about the difference between the two lines, not about the value of each line, which in any case would be very difficult to assess visually.
 #' @param x an \code{a4aFit} object with the fitted values
 #' @param y an \code{FLStock} object with the observed values
 #' @param ... additional argument list that might never be used
@@ -174,7 +175,7 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	args$groups <- quote(qname)
 	args$ylab="numbers"
 	args$xlab="age"
-	args$scales=list(y="free")
+	args$scales=list(y=list(relation="free", draw=FALSE))
 	args$auto.key <- list(points=FALSE, lines=TRUE, columns=2)
 	args$par.settings=list(
 		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
@@ -184,11 +185,12 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	do.call("xyplot", args)
 })
 
-##' @title plot for fitted indices-at-age
+##' @title testing
 #' @name plot for fitted indices-at-age
 #' @docType methods
 #' @rdname ploti
-#' @description Method to plot fitted versus observed indices-at-age.
+#' @aliases plot,a4aFit,FLIndices-method
+#' @description Method to plot fitted versus observed indices-at-age. Note the yaxis doesn't has a scale. The visual is about the difference between the two lines, not about the value of each line, which in any case would be very difficult to assess visually.
 #' @param x an \code{a4aFit} object with the fitted values
 #' @param y an \code{FLIndices} object with the observed values
 #' @param ... additional argument list that might never be used
@@ -212,7 +214,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	args$groups <- quote(src)
 	args$ylab="numbers"
 	args$xlab=""
-	args$scales=list(y="free")
+	args$scales=list(y=list(relation="free", draw=FALSE))
 	args$auto.key=list(lines=TRUE, points=FALSE, columns=2)
 	args$par.settings=list(
 		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
@@ -231,6 +233,32 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 		args$layout <- c(0,length(unique(args$data$year)))
 		do.call("xyplot", args)
 	}
+})
+
+
+#' @title wireframe plot for FLQuant
+#' @name wire frame plot for FLQuant
+#' @docType methods
+#' @rdname wireframe
+#' @aliases wireframe,FLQuant-method
+#' @description Method to 3D plot \code{FLQuant} objects.
+#' @param x a \code{FLQuant} 
+#' @param y missing
+#' @param screen list with numeric components 'x','y' and 'z' to change the 3D perspective 
+#' @param ... additional argument list for the lattice engine 
+#' @return a 3D surface plot
+#' @examples
+#' data(ple4)
+#' wireframe(harvest(ple4))
+
+setMethod("wireframe", c("FLQuant", "missing"), function(x, y, screen=list(x = -90, y=-45), ...){
+	args <- list()
+	args$data <- as.data.frame(x)
+	args$x <- data~age*year
+	args$screen = screen
+	args$par.settings = list(axis.line = list(col = 'transparent'), box.3d=list(col="transparent")) 
+	args$scales=list(col=1)
+	do.call("wireframe", args)
 })
 
 #====================================================================

@@ -101,10 +101,13 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
   if(missing(fmodel)){
 	  # set up a robust model...  this needs some work...
 	  ka <- stkdms$age
-	  ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
+	  #ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
 	  ky <- floor(.5 * stkdms$year)
 	  if (ka >= 3) {
-		fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
+		ka <- min(max(3, floor(.4 * ka)), 6)
+		kb <- min(max(3, floor(2 * ka)), 10)
+	    #fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
+	    fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp') + s(age, k=", kb, ")"))
 	  } else {
 		fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
 	  }

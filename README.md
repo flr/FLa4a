@@ -1,5 +1,5 @@
 # FLa4a
-- Version: 0.930.0
+- Version: 0.940.0
 - Date: 2015-12-11
 - Author: Colin P. Millar and Ernesto Jardim
 - Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>

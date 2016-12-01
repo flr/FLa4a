@@ -1,0 +1,28 @@
+\BOOKMARK [1][-]{section.1}{Installing and loading libraries}{}% 1
+\BOOKMARK [1][-]{section.2}{Background}{}% 2
+\BOOKMARK [1][-]{section.3}{Stock assessment model details}{}% 3
+\BOOKMARK [1][-]{section.4}{Quick and dirty}{}% 4
+\BOOKMARK [1][-]{section.5}{Diagnostics}{}% 5
+\BOOKMARK [1][-]{section.6}{The statistical catch-at-age stock assessment framework - the sca method}{}% 6
+\BOOKMARK [2][-]{subsection.6.1}{Fishing mortality submodel}{section.6}% 7
+\BOOKMARK [2][-]{subsection.6.2}{Catchability submodel}{section.6}% 8
+\BOOKMARK [2][-]{subsection.6.3}{Catchability submodel for age aggregated indices}{section.6}% 9
+\BOOKMARK [2][-]{subsection.6.4}{Catchability submodel for single age indices}{section.6}% 10
+\BOOKMARK [2][-]{subsection.6.5}{Stock-recruitment submodel}{section.6}% 11
+\BOOKMARK [1][-]{section.7}{The major effects - age, year and cohort}{}% 12
+\BOOKMARK [1][-]{section.8}{The statistical catch-at-age stock assessment framework advanced features - the a4aSCA method}{}% 13
+\BOOKMARK [2][-]{subsection.8.1}{N1 model}{section.8}% 14
+\BOOKMARK [2][-]{subsection.8.2}{Variance model}{section.8}% 15
+\BOOKMARK [2][-]{subsection.8.3}{Working with covariates}{section.8}% 16
+\BOOKMARK [2][-]{subsection.8.4}{Assessing ADMB files}{section.8}% 17
+\BOOKMARK [1][-]{section.9}{Predict and simulate}{}% 18
+\BOOKMARK [2][-]{subsection.9.1}{Predict}{section.9}% 19
+\BOOKMARK [2][-]{subsection.9.2}{Simulate}{section.9}% 20
+\BOOKMARK [1][-]{section.10}{The statistical catch-at-age stock assessment framework with MCMC}{}% 21
+\BOOKMARK [1][-]{section.11}{Geeky stuff}{}% 22
+\BOOKMARK [2][-]{subsection.11.1}{External weigthing of likelihood components}{section.11}% 23
+\BOOKMARK [2][-]{subsection.11.2}{More models}{section.11}% 24
+\BOOKMARK [2][-]{subsection.11.3}{Propagate natural mortality uncertainty}{section.11}% 25
+\BOOKMARK [2][-]{subsection.11.4}{WCSAM exercise - replicating itself}{section.11}% 26
+\BOOKMARK [2][-]{subsection.11.5}{Parallel computing}{section.11}% 27
+\BOOKMARK [1][-]{section.12}{Model averaging}{}% 28

@@ -3,7 +3,8 @@
 \docType{methods}
 \name{plot for fitted indices-at-age}
 \alias{plot for fitted indices-at-age}
-\title{plot for fitted indices-at-age}
+\alias{plot,a4aFit,FLIndices-method}
+\title{testing}
 \usage{
 \S4method{plot}{a4aFit,FLIndices}(x, y, ...)
 }
@@ -18,7 +19,7 @@
 a \code{plot} with fitted and observed indices-at-age
 }
 \description{
-Method to plot fitted versus observed indices-at-age.
+Method to plot fitted versus observed indices-at-age. Note the yaxis doesn't has a scale. The visual is about the difference between the two lines, not about the value of each line, which in any case would be very difficult to assess visually.
 }
 \examples{
 data(ple4)

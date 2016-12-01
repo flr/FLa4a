@@ -23,7 +23,7 @@ setMethod("getK", "a4aGr", function(object){
 #' @title mvrnorm 
 #' @rdname mvrnorm-a4aGr
 #' @name mvrnorm for a4aGR
-##' @aliases mvrnorm,numeric,a4aGr-method
+#' @aliases mvrnorm,numeric,a4aGr-method
 #' @description Method to generate multivariate normal parameters for \code{a4aGr} objects.
 #' @param n the number of simulations to be generated
 #' @param mu an \code{a4aGr} object

@@ -98,36 +98,20 @@ plot(stk)
 
 In more detail, one can plot a 3D representation of fishing mortality (Figure~\ref{fig:F}),
 
-<<F, fig.cap="3D contour plot of estimated fishing mortality at age and year", echo=FALSE>>=
-#persp3D(z=harvest(fit)[drop=TRUE], x=as.numeric(dimnames(harvest(fit))[[1]]), 
-#        y=as.numeric(dimnames(harvest(fit))[[2]]), expand = 0.9, space = 0.3, 
-#        along = "xy", colkey = list(side=1, width = 0.9, length = 0.4, 
-#        cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE], 
-#        zlab="Fishing mortality", ylab="Year", xlab="Age")
-wireframe(data~year+age, data=harvest(fit), zlab="F", ylab="Year", xlab="Age")
+<<F, fig.cap="3D contour plot of estimated fishing mortality at age and year">>=
+wireframe(harvest(fit), zlab="F")
 @
 
-population abundance (Figure~\ref{fig:N}) is displaid as a 3D ribbon, 
+population abundance (Figure~\ref{fig:N}) is displaid as a 3D wireframe, 
 
-<<N, fig.cap="Population abundance by age and year", echo=FALSE>>=
-#ribbon3D( z = stock.n(fit)[drop=TRUE], x= as.numeric(dimnames(stock.n(fit))[[1]]), 
-#          y= as.numeric(dimnames(stock.n(fit))[[2]]) , expand = 0.9, space = 0.1, 
-#          along = "x", colkey = list( side=1, width = 0.9, length = 0.4, 
-#          cex.axis = 0.8), main="Population Abundance" , box = TRUE, 
-#          col.var=stock.n(fit)[drop=TRUE],   zlab="Stock Numbers", ylab="Year", 
-#          xlab="Age")
-wireframe(data~year+age, data=stock.n(fit), zlab="N", ylab="Year", xlab="Age")
+<<N, fig.cap="Population abundance by age and year">>=
+wireframe(stock.n(fit), zlab="N")
 @
 
 as well as catch-at-age (Figure~\ref{fig:C}).
 
-<<C, fig.cap="Catches in number of individuals by age and year", echo=FALSE>>=
-#ribbon3D( z = catch.n(fit)[drop=TRUE], x= as.numeric(dimnames(catch.n(fit))[[1]]), 
-#          y= as.numeric(dimnames(catch.n(fit))[[2]]) , expand = 0.9, space = 0.3, 
-#          along = "x", colkey = list( side=1, width = 0.9, length = 0.4, 
-#          cex.axis = 0.8),box = TRUE, col.var=catch.n(fit)[drop=TRUE] , 
-#          zlab="Catch at age (tons)", ylab="Year", xlab="Age")
-wireframe(data~year+age, data=catch.n(fit), zlab="C", ylab="Year", xlab="Age")
+<<C, fig.cap="Catches in number of individuals by age and year">>=
+wireframe(catch.n(fit), zlab="C")
 @
 
 \section{Diagnostics}
@@ -422,13 +406,14 @@ fit4 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 srmod <- ~ geomean(CV=0.1)
 fit5 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
 flqs <- FLQuants(factor=stock.n(fit)[1], smother=stock.n(fit1)[1],      
-                 ricker=stock.n(fit2)[1], bevertonHolt=stock.n(fit3)[1],      
-                 hockeyStick=stock.n(fit4)[1], geometricMean=stock.n(fit5)[1])
+                 ricker=stock.n(fit2)[1], bevholt=stock.n(fit3)[1],      
+                 hockey=stock.n(fit4)[1], geomean=stock.n(fit5)[1])
 @
 
 <<srmod, fig.cap="Stock-recruitment models fits">>=
 xyplot(data~year, groups=qname, data=flqs, type="l", 
-       auto.key=list(points=FALSE, lines=TRUE, columns=3))
+       auto.key=list(points=FALSE, lines=TRUE, columns=3),
+       ylab="No. recruits")
 @
 
 \section{The major effects - age, year and cohort}
@@ -837,7 +822,6 @@ stks <- ple4 + fits
 idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
 library(parallel)
-options(mc.cores=3)
 lst <- mclapply(split(1:nits, 1:nits), function(x){
 	out <- try(a4aSCA(iter(stks, x), FLIndices(iter(idxs[[1]], x)), fit="MP")) 
 	if(is(out, "try-error")) NULL else out

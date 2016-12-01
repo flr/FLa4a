@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot for fitted catch-at-age}
 \alias{plot for fitted catch-at-age}
+\alias{plot,a4aFit,FLStock-method}
 \title{plot for fitted catch-at-age}
 \usage{
 \S4method{plot}{a4aFit,FLStock}(x, y, ...)
@@ -18,7 +19,7 @@
 a \code{plot} with fitted and observed catch numbers-at-age
 }
 \description{
-Method to plot fitted versus observed catch numbers-at-age.
+Method to plot fitted versus observed catch numbers-at-age. Note the yaxis doesn't has a scale. The visual is about the difference between the two lines, not about the value of each line, which in any case would be very difficult to assess visually.
 }
 \examples{
 data(ple4)
