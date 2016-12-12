@@ -27,13 +27,16 @@ sca(stock, indices, ...)
 
 \item{fit}{character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.}
 
-\item{mcmc}{a \code{SCAMCMC} object with the arguments to run MCMC}
+\item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
 }
 \value{
 an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
 }
 \description{
 User interface to the statistical catch-at-age method of the a4a stock assessment framework.
+}
+\details{
+This method is the simple method for stock assessment. Some arguments are not accessible to make it simpler for the user. The advanced method is  \code{a4aSCA}. In particular, the default for the \code{fit} argument is 'MP'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}).
 }
 \examples{
 data(ple4)

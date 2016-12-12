@@ -52,14 +52,15 @@ collapseSeasons <- function (stock) {
 #' @name sca
 #' @docType methods
 #' @rdname sca
-#' @description User interface to the statistical catch-at-age method of the a4a stock assessment framework.   
+#' @description User interface to the statistical catch-at-age method of the a4a stock assessment framework.  
+#' @details This method is the simple method for stock assessment. Some arguments are not accessible to make it simpler for the user. The advanced method is  \code{a4aSCA}. In particular, the default for the \code{fit} argument is 'MP'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}). 
 #' @param stock an \code{FLStock} object
 #' @param indices an \code{FLIndices} object
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a formula object depicting the model for log recruitment
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
-#' @param mcmc a \code{SCAMCMC} object with the arguments to run MCMC 
+#' @param mcmc an \code{SCAMCMC} object with the arguments to run MCMC 
 #' @template dots
 #' @return an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
 #' @aliases sca sca-methods
@@ -161,6 +162,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @docType methods
 #' @rdname a4aSCA
 #' @description Advanced user interface to the statistical catch-at-age method of the a4a stock assessment framework.   
+#' @details This method is the advanced method for stock assessment, it gives the user access to a set of arguments that the \code{sca} method doesn't. In particular, the default for the \code{fit} argument is 'assessment'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}). 
 #' @param stock an \code{FLStock} object containing catch and stock information
 #' @param indices an \code{FLIndices} object containing survey indices 
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
@@ -168,12 +170,12 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @param srmodel a formula object depicting the model for log recruitment
 #' @param n1model a formula object depicting the model for the population in the first year of the time series
 #' @param vmodel a list of formula objects depicting the model for the variance of fishing mortality and the indices
-#' @param covar a list with covariates 
-#' @param wkdir used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted
-#' @param verbose if true, admb fitting information is printed to the screen
+#' @param covar a list with covariates to be used by the submodels. The formula must have an element with the same name as the list element.
+#' @param wkdir used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted.
+#' @param verbose if true, admb fitting information is printed to the screen.
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
-#' @param center logical defining if the data should be centered before fitting
-#' @param mcmc a \code{SCAMCMC} object with the arguments to run MCMC 
+#' @param center, logical defining if the data should be centered before fitting.
+#' @param mcmc an \code{SCAMCMC} object with the arguments to run MCMC 
 #' @template dots
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases a4aSCA a4aSCA-methods
@@ -225,14 +227,63 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
 
 #' @rdname a4aSCA
-setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
+#setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
+
+setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), n1model, vmodel, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
+
   fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
-  # set up default for vmodel
-  if (missing(vmodel)) {
-    vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
-    vmodel[[1]] <- ~ s(age, k = 3)
+#  # set up default for vmodel
+#  if (missing(vmodel)) {
+#    vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
+#    vmodel[[1]] <- ~ s(age, k = 3)
+#  }
+
+  #-----------------------------------------------------------------
+  # default submodels, same as sca
+  stkdms <- dims(stock)
+  if(stkdms$quant != "age"){
+    stop("FLStock object must be age based") #Happy now, Rob?
   }
+
+  if(missing(fmodel)){
+	  # set up a robust model...  this needs some work...
+	  ka <- stkdms$age
+	  #ka <- if (ka < 3) ka else min(max(3, floor(.5 * ka)), 6)
+	  ky <- floor(.5 * stkdms$year)
+	  if (ka >= 3) {
+		ka <- min(max(3, floor(.4 * ka)), 6)
+		kb <- min(max(3, floor(2 * ka)), 10)
+	    #fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp')"))
+	    fmodel <- formula(paste("~ te(age, year, k = c(", ka,",", ky,"), bs = 'tp') + s(age, k=", kb, ")"))
+	  } else {
+		fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
+	  }
+  }
+
+  if(missing(qmodel)){
+	  inddms <- lapply(indices, dims)
+	  ka <- sapply(inddms, "[[", "age")
+	  qmodel <- lapply(ka, function(i){
+	  	# one age ~1 2 ages ~ age 3 or more s(age)
+	  	if (i == 1) ~ 1 else if (i <= 3) ~ age else formula(paste("~ s(age, k = ", pmax(3, pmin(floor(.7 * ka), 7)), ")"))
+	  })
+  }
+
+  if(missing(n1model)){
+	  if (stkdms$age > 10) {
+		n1model <- ~ s(age, k = 10) 
+	  } else {
+		n1model <- ~ factor(age)
+	  }  
+  }
+
+  if(missing(vmodel)){
+	  vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
+	  vmodel[[1]] <- ~ s(age, k = 3)
+  }
+
+  #-----------------------------------------------------------------
   # now to deal with iterations ...
   
   # create a df for dimension information:

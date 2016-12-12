@@ -11,7 +11,7 @@
 #' @aliases l2a l2a-methods
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model an \code{a4aGr} object
-#' @param halfwidth the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an \code{FLStockLen}
+#' @param halfwidth the halfwidths of the length classes; a single numeric or vector the size of the number of length classes; not used if object is an \code{FLStockLen}
 #' @param stat the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.
 #' @param max_age the maximum age in the returned \code{FLQuant}; all ages above this are set to \code{max_age}; only used if object is an \code{FLQuant}
 #' @param plusgroup the plusgroup of the stock; only used if the object is an \code{FLStockLen}.

@@ -2,6 +2,7 @@ FLa4a NEWS
 CHANGES IN FLa4a 0.900.x:
 
 	NEW FEATURES:
+		sca and a4aSCA have the same default submodels
 		wireframe for FLQuant
 		plot fits vs observation improved (yaxis removed)
 		new vignette for introduction
