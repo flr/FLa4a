@@ -39,7 +39,7 @@ There are 5 submodels in operation: a model for F-at-age, a model for the initia
 
 The submodels form use linear models. This opens the possibility of using the linear modelling tools available in R: see for example the \href{http://cran.r-project.org/web/packages/mgcv/index.html}{mgcv} gam formulas, or factorial design formulas using \code{lm()}. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example, we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
 
-The 'language' of linear models has been developing within the statistical community for many years, and constitutes an elegant way of defining models without going through the complexity of mathematical representations. This approach makes it also easier to communicate among scientists 
+The 'language' of linear models has been developing within the statistical community for many years, and constitutes an elegant way of defining models without going through the complexity of mathematical representations. This approach makes it also easier to communicate among scientists
   \begin{itemize}
   \item \href{http://rspa.royalsocietypublishing.org/content/283/1393/147.short}{1965 J. A. Nelder}, notation for randomized block design
   \item \href{http://www.jstor.org/stable/info/2346786}{1973 Wilkinson and Rodgers}, symbolic description for factorial designs
@@ -57,19 +57,19 @@ The statistical catch at age model is based on the well known Baranov catch equa
 e^{\E{\log C_{ay}}} = \frac{\mathbf{F_{ay}}}{\mathbf{F_{ay}}+M_{ay}}\left(1 - e^{-(\mathbf{F_{ay}}+M_{ay})}\right) \mathbf{R_{a=0,y}}e^{-\sum (\mathbf{F_{ay}} + M_{ay})}
 \end{equation*}
 
-and the common survey/index catchability 
+and the common survey/index catchability
 
 \begin{equation*}
 e^{\E{\log I_{ay}}} = \mathbf{Q_{ay}} \mathbf{R_{a=0,y}}e^{-\sum (\mathbf{F_{ay}} + M_{ay})}
 \end{equation*}
 
-where 
+where
 
 \begin{equation*}
 C_{ay} \sim LogNormal(\E{\log C_{ay}}, \mathbf{\sigma^2_{ay}}) \qquad I \sim LogNormal(\E{\log I_{ay}}, \mathbf{\tau^2_{ay}})
 \end{equation*}
 
-The likelihood is defined by 
+The likelihood is defined by
 
 \begin{equation*}
 \hat{\ell}_C = \sum_{ay}(w^{(c)}_{ay}\ \hat{\ell}_N(log \hat{C}_{ay}, \hat{\sigma}^2_{ay};\ \log C_{ay})) 
@@ -90,8 +90,8 @@ If there's a S/R model it's likelihood will be added
 \end{equation*}
 
 In these equations $M$ is natural mortality, $F$ fishing mortality, $R$ recruitment, $Q$ survey catchability, $C$ catch and $\hat{\ell}$ is the negative log-likelihood of a normal distribution. All these variables are defined by age groups, although in the formula the indices were removed for better readability.
- 
-The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in bold in the equations above), need to be given a form, which is done using linear models. Recruitment is a special case. It is modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. As an alternative the $\log{R}$ submodel can use a linear model like the other submodels 
+
+The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in bold in the equations above), need to be given a form, which is done using linear models. Recruitment is a special case. It is modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. As an alternative the $\log{R}$ submodel can use a linear model like the other submodels
 
 \section{Quick and dirty}
 
@@ -116,7 +116,7 @@ In more detail, one can plot a 3D representation of fishing mortality (Figure~\r
 wireframe(harvest(fit), zlab="F")
 @
 
-population abundance (Figure~\ref{fig:N}) is displaid as a 3D wireframe, 
+population abundance (Figure~\ref{fig:N}) is displaid as a 3D wireframe,
 
 <<N, fig.cap="Population abundance by age and year", echo=FALSE>>=
 wireframe(stock.n(fit), zlab="N")
@@ -183,9 +183,9 @@ BIC(fit)
 
 \section{The statistical catch-at-age stock assessment framework - the \code{sca} method}
 
-The statistical catch at age (\code{sca()}) method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for fishing mortality ($F$), catchability ($Q$) and recruitment ($R$). 
+The statistical catch at age (\code{sca()}) method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for fishing mortality ($F$), catchability ($Q$) and recruitment ($R$).
 
-An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt or 'MP' for a simpler assessment. By default \code{sca()} uses \code{fit='MP'}. 
+An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt or 'MP' for a simpler assessment. By default \code{sca()} uses \code{fit='MP'}.
 
 We'll start by looking at the submodel for $F$, then $Q$ and finally $R$.
 
@@ -193,12 +193,12 @@ Please note that each of these model \emph{forms} have not been tuned to the dat
 
 \subsection{Fishing mortality submodel}
 
-We will now take a look at some examples for F models and the forms that we can get. We'll fix the $Q$ and $R$ submodels. 
+We will now take a look at some examples for F models and the forms that we can get. We'll fix the $Q$ and $R$ submodels.
 
-Lets start with a separable model in which age and year effects are modelled as dummy variables, using the \code{factor} coding provided by R (Figure~\ref{fig:sep1}). 
+Lets start with a separable model in which age and year effects are modelled as dummy variables, using the \code{factor} coding provided by R (Figure~\ref{fig:sep1}).
 
 <<>>=
-qmod <- list(~ factor(age)) 
+qmod <- list(~ factor(age))
 fmod <- ~ factor(age) + factor(year)
 srmod <- ~ factor(year)
 fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel=fmod, qmodel=qmod, srmodel=srmod)
@@ -212,16 +212,16 @@ Next we may make things a bit more interesting by using an (unpenalised) thin pl
 
 <<>>=
 fmod <- ~ s(age, k=4) + s(year, k = 20)
-# notice that you can specify the submodels without the argument, as an example you 
+# notice that you can specify the submodels without the argument, as an example you
 # don't need fmodel=fmod, but the order should be respected...
-fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<sep2, echo=FALSE, fig.cap="Fishing mortality smoothed separable model">>=
 wireframe(harvest(fit1), zlab="F")
 @
 
-A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the F model using a tensor product of cubic splines with the \code{te} method (Figure~\ref{fig:te1}), again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. 
+A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the F model using a tensor product of cubic splines with the \code{te} method (Figure~\ref{fig:te1}), again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}.
 
 <<>>=
 fmod <- ~ te(age, year, k = c(4,20))
@@ -247,7 +247,7 @@ wireframe(harvest(fit4), zlab="F")
 
 The catchability submodel is set up the same way as the $F$ submodel and the tools available are the same. The only difference is that the submodel is set up as a list of formulas, where each formula relates with one abundance index.
 
-We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates to, which will allow us to compute catchability at age and year. 
+We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates to, which will allow us to compute catchability at age and year.
 
 <<>>=
 fmod <- ~ factor(age) + factor(year)
@@ -257,7 +257,7 @@ srmod <- ~ factor(year)
 A first model is simply a dummy effect on age, which means that a coefficient will be estimated for each age. Note that this kind of model considers that levels of the factor are independent (Figure~\ref{fig:dummyage}).
 
 <<>>=
-qmod <- list(~ factor(age)) 
+qmod <- list(~ factor(age))
 fit <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
@@ -406,17 +406,17 @@ qmod <- list(~ s(age, k=4))
 
 <<>>=
 srmod <- ~ factor(year)
-fit <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 srmod <- ~ s(year, k=20)
-fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 srmod <- ~ ricker(CV=0.1)
-fit2 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit2 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 srmod <- ~ bevholt(CV=0.1)
-fit3 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit3 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 srmod <- ~ hockey(CV=0.2)
-fit4 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit4 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 srmod <- ~ geomean(CV=0.1)
-fit5 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) 
+fit5 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<srmod, fig.cap="Stock-recruitment models fits", echo=FALSE>>=
@@ -435,7 +435,7 @@ ageeffect <- ~ factor(age)
 # the year effect
 yeareffect <- ~ factor(year)
 
-# the cohort 
+# the cohort
 cohorteffect <- ~ factor(year-age)
 
 # the fits
@@ -463,7 +463,7 @@ wireframe(harvest(fit3), main='cohort effect')
 A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
 
 <<>>=
-fit <- a4aSCA(ple4, ple4.indices[1]) 
+fit <- a4aSCA(ple4, ple4.indices[1])
 submodels(fit)
 @
 
@@ -473,14 +473,14 @@ The submodel for the stock number at age in the first year of the time series is
 
 <<>>=
 n1mod <- ~s(age, k=4)
-fit1 <- a4aSCA(ple4, ple4.indices[1], n1model=n1mod) 
+fit1 <- a4aSCA(ple4, ple4.indices[1], n1model=n1mod)
 flqs <- FLQuants(smo=stock.n(fit1)[,1], fac=stock.n(fit)[,1])
 @
 
 <<ny1, fig.cap="Nay=1 models", echo=FALSE>>=
-xyplot(data~age, groups=qname, data=flqs, type="l", 
+xyplot(data~age, groups=qname, data=flqs, type="l",
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
        strip.background=list(col="gray90")), ylab="")
 @
 
@@ -492,26 +492,26 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 
 <<>>=
 vmod <- list(~1, ~1)
-fit1 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod) 
+fit1 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod)
 vmod <- list(~ s(age, k=4), ~1)
-fit2 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod) 
+fit2 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod)
 flqs <- FLQuants(cts=catch.n(fit1), smo=catch.n(fit2))
 @
 
 <<varmod, fig.cap="Population estimates using two different variance models", echo=FALSE>>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l", 
-       scales=list(y=list(relation="free", draw=FALSE)), 
+xyplot(data~year|age, groups=qname, data=flqs, type="l",
+       scales=list(y=list(relation="free", draw=FALSE)),
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
        strip.background=list(col="gray90")), ylab="")
 @
 
 \subsection{Working with covariates}
 
-In linear model one can use covariates to explain part of the variance observed on the data that the 'core' model does not explain. The same can be done in the \aFa framework. The example below uses the North Atlantic Oscillation (NAO) index to model recruitment. 
+In linear model one can use covariates to explain part of the variance observed on the data that the 'core' model does not explain. The same can be done in the \aFa framework. The example below uses the North Atlantic Oscillation (NAO) index to model recruitment.
 
 <<>>=
-nao <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1, 
+nao <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1,
                   nrow=62, na.strings="-99.90")
 dnms <- list(quant="nao", year=1948:2009, unit="unique", season=1:12, area="unique")
 nao <- FLQuant(unlist(nao[,-1]), dimnames=dnms, units="nao")
@@ -523,29 +523,29 @@ First by simply assuming that the index drives recruitment (Figure~\ref{fig:naor
 
 <<>>=
 srmod <- ~ nao
-fit2 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod) 
+fit2 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod)
 flqs <- FLQuants(simple=stock.n(fit)[1], covar=stock.n(fit2)[1])
 @
 
 <<naor, echo=FALSE, fig.cap="Recruitment model with covariates. Using the NAO index as a recruitment index.">>=
-xyplot(data~year, groups=qname, data=flqs, type="l", 
+xyplot(data~year, groups=qname, data=flqs, type="l",
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
        strip.background=list(col="gray90")), ylab="")
 @
 
-In a second model we're using the NAO index not to model recruitment directly but to model one of the parameters of the S/R function (Figure~\ref{fig:naor2}). 
+In a second model we're using the NAO index not to model recruitment directly but to model one of the parameters of the S/R function (Figure~\ref{fig:naor2}).
 
 <<>>=
 srmod <- ~ ricker(a=~nao, CV=0.1)
-fit3 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod) 
+fit3 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod)
 flqs <- FLQuants(simple=stock.n(fit)[1], covar=stock.n(fit3)[1])
 @
 
 <<naor2, echo=FALSE, fig.cap="Recruitment model with covariates. Using the NAO index as a covariate for the stock-recruitment model parameters.">>=
-xyplot(data~year, groups=qname, data=flqs, type="l", 
+xyplot(data~year, groups=qname, data=flqs, type="l",
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
        strip.background=list(col="gray90")), ylab="")
 @
 
@@ -556,7 +556,7 @@ Note that covariates can be added to any submodel using the linear model capabil
 The framework gives access to the files produced to run the \pkg{ADMB} fitting routine through the argument \code{wkdir}. When set up all the \pkg{ADMB} files will be left in the directory. Note that the \pkg{ADMB} tpl file is distributed with the \pkg{FLa4a}. One can get it from your \pkg{R} library, under the folder \code{myRlib/FLa4a/admb/}.
 
 <<>>=
-fit1 <- a4aSCA(ple4, ple4.indices, wkdir="mytest") 
+fit1 <- a4aSCA(ple4, ple4.indices, wkdir="mytest")
 @
 
 \section{Predict and simulate}
@@ -564,7 +564,7 @@ fit1 <- a4aSCA(ple4, ple4.indices, wkdir="mytest")
 To predict and simulate \pkg{R} uses the methods \code{predict()} and \code{simulate()}, which were implemented in \pkg{FLa4a} in the same fashion.
 
 <<>>=
-fit <- sca(ple4, ple4.indices[1], fit="assessment") 
+fit <- sca(ple4, ple4.indices[1], fit="assessment")
 @
 
 \subsection{Predict}
@@ -586,10 +586,10 @@ flqs <- FLQuants(sim=iterMedians(stock.n(fits)), det=stock.n(fit))
 @
 
 <<sim, echo=FALSE, fig.cap="Median simulations VS fit">>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l", 
-       scales=list(y=list(relation="free", draw=FALSE)), 
+xyplot(data~year|age, groups=qname, data=flqs, type="l",
+       scales=list(y=list(relation="free", draw=FALSE)),
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
        strip.background=list(col="gray90")), ylab="")
 @
 
@@ -613,13 +613,13 @@ fit <- simulate(fit, 1000)
 To run the MCMC estimate, one needs to configure a set of arguments, which is done by creating a \code{SCAMCMC} object. For details on the MCMC configuration in \code{ADMB} visit the ADMB website.
 
 <<>>=
-# mcmc 
+# mcmc
 mc <- SCAMCMC()
 # check the default pars
 mc
 @
 
-Defaults for now are ok, so lets fit the model. Note that the argument \code{fit} ius set to \emph{MCMC} and the argument \code{mcmc} takes the \code{SCAMCMC} object. A major check when running MCMC is the acceptance rate, which should be around 0.3. This is a rule of thumb, for more information read the (extensive) literature on MCMC. The slot \code{fitSumm} stores that information.  
+Defaults for now are ok, so lets fit the model. Note that the argument \code{fit} ius set to \emph{MCMC} and the argument \code{mcmc} takes the \code{SCAMCMC} object. A major check when running MCMC is the acceptance rate, which should be around 0.3. This is a rule of thumb, for more information read the (extensive) literature on MCMC. The slot \code{fitSumm} stores that information.
 
 <<>>=
 # fit the model
@@ -641,7 +641,7 @@ The usual summary plot,
 plot(ple4 + fitmc1)
 @
 
-As mentioned above \code{ADMB} has several options for MCMC. Here we demonstrate one of them, \code{mcprobe} which sets a fat-tailed proposal distribution, as an example of how to use the \code{SCAMCMC} objects. 
+As mentioned above \code{ADMB} has several options for MCMC. Here we demonstrate one of them, \code{mcprobe} which sets a fat-tailed proposal distribution, as an example of how to use the \code{SCAMCMC} objects.
 
 <<>>=
 mc <- SCAMCMC(mcmc=10000, mcsave=200, mcprobe=0.4)
@@ -656,10 +656,10 @@ plot(FLStocks(ll=ple4 + fit, mc0=ple4 + fitmc1, mcalt=ple4 + fitmc2))
 
 \section{Geeky stuff}
 
-A lot more can be done with the \aFa framework. The next sections will describe methods that are more technical. What we'd categorize as 'matters for geeks', in the sense that these methods usually will require the users to 'dive' into \pkg{R} a bit more. 
+A lot more can be done with the \aFa framework. The next sections will describe methods that are more technical. What we'd categorize as 'matters for geeks', in the sense that these methods usually will require the users to 'dive' into \pkg{R} a bit more.
 
 <<>>=
-fit <- sca(ple4, ple4.indices[1], fit="assessment") 
+fit <- sca(ple4, ple4.indices[1], fit="assessment")
 @
 
 \subsection{External weigthing of likelihood components}
@@ -678,15 +678,15 @@ varslt <- index(idx[[1]])
 varslt[] <- 0.1
 index.var(idx[[1]]) <- varslt
 # run
-fit1 <- a4aSCA(stk, idx) 
+fit1 <- a4aSCA(stk, idx)
 flqs <- FLQuants(nowgt=stock.n(fit), extwgt=stock.n(fit1))
 @
 
 <<likwgt, echo=FALSE, fig.cap="Stock summary of distinct likelihood weightings">>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l", 
-       scales=list(y=list(relation="free", draw=FALSE)), 
+xyplot(data~year|age, groups=qname, data=flqs, type="l",
+       scales=list(y=list(relation="free", draw=FALSE)),
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
        strip.background=list(col="gray90")), ylab="")
 @
 
@@ -708,7 +708,7 @@ wireframe(harvest(fit), zlab="F")
 Or else one can use a closed form fort the selection pattern. The example below uses a logistic form (Figure~\ref{fig:logistic}).
 
 <<>>=
-fmod <- ~ I(1/(1+exp(-age))) 
+fmod <- ~ I(1/(1+exp(-age)))
 fit <- sca(ple4, ple4.indices, fmod)
 @
 
@@ -742,7 +742,7 @@ A quite complex model that implements a cohort effect can be set through the fol
 
 <<>>=
 fmodel <- ~ s(age, k = 4) + s(pmax(year - age, 1957), k = 10) + s(year, k = 10)
-fit <- sca(ple4, ple4.indices, fmodel=fmodel) 
+fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
 <<coh, echo=FALSE, fig.cap="F-at-age with a cohort effect.">>=
@@ -751,7 +751,7 @@ wireframe(harvest(fit), zlab="F")
 
 \subsection{Propagate natural mortality uncertainty}
 
-In this section we give an example of how uncertainty in natural mortality, set up using the \code{m()} method and the class \class{a4aM} (see \code{vignette("M")}), is propagated through the stock assessment. We'll start by fitting the default model to the data. 
+In this section we give an example of how uncertainty in natural mortality, set up using the \code{m()} method and the class \class{a4aM} (see \code{vignette("M")}), is propagated through the stock assessment. We'll start by fitting the default model to the data.
 
 <<>>=
 data(ple4)
@@ -759,13 +759,13 @@ data(ple4.indices)
 fit <- sca(ple4, ple4.indices)
 @
 
-Using the \aFa methods we'll model natural mortality using a negative exponential model by age, Jensen's estimator for the level and a constant trend with time. We include multivariate normal uncertainty using the \code{mvrnorm()} method and create 25 iterations. 
+Using the \aFa methods we'll model natural mortality using a negative exponential model by age, Jensen's estimator for the level and a constant trend with time. We include multivariate normal uncertainty using the \code{mvrnorm()} method and create 25 iterations.
 
 <<>>=
 nits <- 25
 
 shape <- FLModelSim(model=~exp(-age-0.5))
-level <- FLModelSim(model=~k^0.66*t^0.57, params = FLPar(k=0.4, t=10), 
+level <- FLModelSim(model=~k^0.66*t^0.57, params = FLPar(k=0.4, t=10),
                     vcov=matrix(c(0.002, 0.01,0.01, 1), ncol=2))
 trend <- FLModelSim(model=~b, params=FLPar(b=0.5), vcov=matrix(0.02))
 
@@ -786,7 +786,7 @@ The assessment is performed for each of the 25 iterations.
 fit1 <- sca(stk, ple4.indices)
 @
 
-And compare the two results (Figure~\ref{fig:mprop}). It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so. 
+And compare the two results (Figure~\ref{fig:mprop}). It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so.
 
 <<mprop, echo=FALSE, fig.cap="Stock summary for two M models", fig.width=8, fig.height=10>>=
 plot(FLStocks(munc=propagate(ple4, 25)+fit1, m02=ple4+fit), key=TRUE)
@@ -815,13 +815,13 @@ The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-
 # number of iters
 nits <- 25
 # fit the model
-fit <- a4aSCA(ple4, ple4.indices[1]) 
+fit <- a4aSCA(ple4, ple4.indices[1])
 # update the stock data
 stk <- ple4 + fit
 # simulate controlling the random seed
 fits <- simulate(fit, nits, 1234)
 # update stock and index data, now with iters
-stks <- ple4 + fits 
+stks <- ple4 + fits
 idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
 # run assessments on each iter
@@ -842,15 +842,15 @@ Finally, compare this code with the one for replicating WCSAM and note that it's
 data(ple4)
 data(ple4.indices)
 nits <- 25
-fit <- a4aSCA(ple4, ple4.indices[1]) 
+fit <- a4aSCA(ple4, ple4.indices[1])
 stk <- ple4 + fit
 fits <- simulate(fit, nits, 1234)
-stks <- ple4 + fits 
+stks <- ple4 + fits
 idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
 library(parallel)
 lst <- mclapply(split(1:nits, 1:nits), function(x){
-	out <- try(a4aSCA(iter(stks, x), FLIndices(iter(idxs[[1]], x)), fit="MP")) 
+	out <- try(a4aSCA(iter(stks, x), FLIndices(iter(idxs[[1]], x)), fit="MP"))
 	if(is(out, "try-error")) NULL else out
 })
 
@@ -859,9 +859,9 @@ for(i in 1:nits){
 	iter(catch.n(stks2), i) <- catch.n(lst[[i]])
 	iter(stock.n(stks2), i) <- stock.n(lst[[i]])
 	iter(harvest(stks2), i) <- harvest(lst[[i]])
-} 
-catch(stks2) <- computeCatch(stks2) 
-stock(stks2) <- computeStock(stks2) 
+}
+catch(stks2) <- computeCatch(stks2)
+stock(stks2) <- computeStock(stks2)
 stks3 <- FLStocks(orig=stk, sim=stks, fitsim=stks2)
 
 @
@@ -872,7 +872,7 @@ plot(stks3, key=TRUE)
 
 %\section{Mimicking other stock assessment models- WORK IN PROGRESS}
 
-%Mimicking other stock assessment models is relevant for the implementation of MSEs, when the analyst is interested in comparing the performance of HCRs based on inputs from distinct stock assessment models. 
+%Mimicking other stock assessment models is relevant for the implementation of MSEs, when the analyst is interested in comparing the performance of HCRs based on inputs from distinct stock assessment models.
 
 %\subsection{Separable F model}
 %<<>>=
@@ -896,7 +896,7 @@ plot(stks3, key=TRUE)
 
 \section{Model averaging}
 
-To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results. 
+To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results.
 
 <<>>=
 data(ple4)
