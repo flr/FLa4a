@@ -51,47 +51,90 @@ There are two basic types of assessments available in \aFa: the management proce
 
 \section{Stock assessment model details}
 
-The statistical catch at age model is based on the well known Baranov catch equation
+Modelled catches $C$ are defined in terms of the three quantities, natural mortality $M$, fishing mortality $F$ and recruitment $R$, using a modified form of the well known Baranov catch equation:
 
 \begin{equation*}
-e^{\E{\log C_{ay}}} = \frac{\mathbf{F_{ay}}}{\mathbf{F_{ay}}+M_{ay}}\left(1 - e^{-(\mathbf{F_{ay}}+M_{ay})}\right) \mathbf{R_{a=0,y}}e^{-\sum (\mathbf{F_{ay}} + M_{ay})}
+  C_{ay} = \frac{\bm{F}_{ay}}{\bm{F}_{ay}+M_{ay}}\left(1 - e^{-(\bm{F}_{ay}+M_{ay})}\right) \bm{R}_{y}e^{-\sum (\bm{F}_{ay} + M_{ay})}
 \end{equation*}
 
-and the common survey/index catchability
+where $a$ and $y$ denote age and year. Modelled survey indices $I$ are defined in terms of the same three quantities with the addition of survey catchability $Q$:
 
 \begin{equation*}
-e^{\E{\log I_{ay}}} = \mathbf{Q_{ay}} \mathbf{R_{a=0,y}}e^{-\sum (\mathbf{F_{ay}} + M_{ay})}
+  I_{ays} = \bm{Q}_{ays} \bm{R}_{y}e^{-\sum (\bm{F}_{ay} + M_{ay})}
 \end{equation*}
 
-where
+where $s$ denotes survey or abundance index and allows for multiple surveys to be considered. Observed catches $C^{(obs)}$ and the observed survey indices $I^{(obs)}$ are assumed to be log-normally distributed, or equivalently, normally distributed on the log-scale, with age, year and survey specific observation variance:
 
 \begin{equation*}
-C_{ay} \sim LogNormal(\E{\log C_{ay}}, \mathbf{\sigma^2_{ay}}) \qquad I \sim LogNormal(\E{\log I_{ay}}, \mathbf{\tau^2_{ay}})
+  \log C^{(obs)}_{ay} \sim \text{Normal} \Big( \log C_{ay}, \bm{\sigma}^2_{ay}\Big) \qquad
+  \log I^{(obs)}_{ays} \sim \text{Normal} \Big( \log I_{ays}, \bm{\tau}^2_{ays} \Big)
 \end{equation*}
 
-The likelihood is defined by
+The full log-likelihood for the \aFa statistical catch at age model can now be defined as the sum of the log-likelihood of the observed catches ($\ell_N$ is the log-likelihood of a normal distribution)
 
 \begin{equation*}
-\hat{\ell}_C = \sum_{ay}(w^{(c)}_{ay}\ \hat{\ell}_N(log \hat{C}_{ay}, \hat{\sigma}^2_{ay};\ \log C_{ay})) 
+  \ell_C = \sum_{ay} w^{(c)}_{ay}\ \ell_N \Big( \log C_{ay}, \bm{\sigma}^2_{ay} ;\ \log C^{(obs)}_{ay} \Big)
 \end{equation*}
+
+and the log-likelihood of the observed survey indices
 
 \begin{equation*}
-\hat{\ell}_I = \sum_s \sum_{ay}(w^{(s)}_{ays}\ \hat{\ell}_N(log \hat{I}_{ays}, \hat{\tau}_{ays}^2;\ \log I_{ays}))
+  \ell_I = \sum_s \sum_{ay} w^{(s)}_{ays}\ \ell_N \Big( \log I_{ays}, \bm{\tau}_{ays}^2 ;\ \log I^{(obs)}_{ays} \Big)
 \end{equation*}
+
+giving the total log-likelihood
 
 \begin{equation*}
-\hat{\ell} = \hat{\ell}_C + \hat{\ell}_I
+  \ell = \ell_C + \ell_I
 \end{equation*}
 
-If there's a S/R model it's likelihood will be added
+which is defined in terms of the strictly positive quantites, $M_{ay}$, $F_{ay}$, $Q_{ays}$ and $R_{y}$, and the observation variances $\sigma_{ay}$ and $\tau_{ays}$.  As such, the log-likelihood is over-parameterised as there are many more parameters than observations.  In order to reduce the number of parameters, $M_{ay}$ is assumed known (as is common), and the remaining parameters are written in terms of a linear combination of covariates $x_{ayk}$, e.g.
 
 \begin{equation*}
-\hat{\ell}_{SR} = \sum_y( \hat{\ell}_N(log \tilde{R}_y, \phi_y^2;\ \log \hat{R}_y))
+  \log F_{ay} = \sum_k \beta_k x_{ayk}
 \end{equation*}
 
-In these equations $M$ is natural mortality, $F$ fishing mortality, $R$ recruitment, $Q$ survey catchability, $C$ catch and $\hat{\ell}$ is the negative log-likelihood of a normal distribution. All these variables are defined by age groups, although in the formula the indices were removed for better readability.
+where $k$ is the number of parameters to be estimated and is sufficiently small. Using this tecnique the quantities $\log F$, $\log Q$, $\log \sigma$ and $\log \tau$
+%$\log \text{initial\,age\,structure}$ % this is not present in the above
+(in bold in the equations above) can be described by a reduced number of parameters.  The following section has more discussion on the use of linear models in \aFa.
 
-The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in bold in the equations above), need to be given a form, which is done using linear models. Recruitment is a special case. It is modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. As an alternative the $\log{R}$ submodel can use a linear model like the other submodels
+
+\subsubsection*{Stock recruitment relationships}
+
+The \aFa statistical catch at age model can addiionally allow for a functional relationship to be imposed that links predicted recruitment $\tilde{R}$ based on spawning stock biomass and modelled recruitment $R$, included as a fixed variance random effect.  Options for the relationship are the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean. This is implemented by including a third component in the log-likelihood
+
+\begin{equation*}
+  \ell_{SR} = \sum_y \ell_N \Big( \log \tilde{R}_y(a, b), \phi_y^2 ;\ \log R_y \Big)
+\end{equation*}
+
+giving the total log-likelihood
+
+\begin{equation*}
+  \ell = \ell_C + \ell_I + \ell_{SR}
+\end{equation*}
+
+Using the (time varying) Ricker model as an example, predicted recruitment is
+
+\begin{equation*}
+  \tilde{R}_y(a_y,b_y) = a_y S_{y-1} e^{-b_y S_{y-1}}
+\end{equation*}
+
+where $S$ is spawning stock biomass derived from the model parameters $F$ and $R$, and the fixed quantites $M$ and mean weights by year and age. It is assumed that $R$ is log-normally distributed, or equivalently, normally distributed on the log-scale about the (log) recruitment predicted by the SR model $\tilde{R}$, with known variance $\phi^2$, i.e.
+
+\begin{equation*}
+  \log R_y \sim \text{Normal} \Big( \log \tilde{R}_y, \phi_y^2 \Big)
+\end{equation*}
+
+which leads to the definition of $\ell_{SR}$ given above. In all cases $a$ and $b$ are strictly positive, and with the quantities $F$, $R$, etc. linear models are used to parameterise $\log a$ and/or $\log b$, where relevant.
+
+By default, recruitment $R$ as apposed to the reruitment predicted from a stock recruitment model $\tilde{R}$, is specified as a linear model with a parameter for each year, i.e.
+
+\begin{equation*}
+  \log R_y = \gamma_y
+\end{equation*}
+
+This is to allow modelled recruitment $R_y$ to be shrunk towards the stock recruitment model.  However, if it is considered appropriate that recruitment can be determined exactly by a relationship with covariates, it is possible, to instead define $\log R$ in terms of a linear model in the same way as $\log F$, $\log Q$, $\log \sigma$ and $\log \tau$.  %But this is pretty much the same as taking a geometric mean, with a model on log a, and making the variance very small.
+
 
 \section{Quick and dirty}
 
