@@ -27,7 +27,7 @@ l2a(object, model, ...)
 
 \item{...}{additional argument list that might never be used}
 
-\item{halfwidth}{the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an \code{FLStockLen}}
+\item{halfwidth}{the halfwidths of the length classes; a single numeric or vector the size of the number of length classes; not used if object is an \code{FLStockLen}}
 
 \item{stat}{the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.}
 
