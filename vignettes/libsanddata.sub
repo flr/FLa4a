@@ -2,13 +2,13 @@
 
 To run the \pkg{FLa4a} methods the reader will need to install the package and its dependencies and load them. Some datsets are distributed with the package and as such need to be loaded too.
 
-<<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
-library(knitr)
-library(formatR)
-thm = knit_theme$get("bclear") #moe, bclear
-knit_theme$set(thm)
-opts_chunk$set(dev='png', cache=FALSE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=60, tidy=TRUE)
-@
+%<<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
+%library(knitr)
+%library(formatR)
+%thm = knit_theme$get("bclear") #moe, bclear
+%knit_theme$set(thm)
+%opts_chunk$set(dev='png', cache=FALSE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=60, tidy=TRUE)
+%@
 
 <<eval=FALSE>>=
 # from CRAN
@@ -38,4 +38,18 @@ a4a.theme = trellis.par.get()
 a4a.theme$strip.background$col <- "gray90"
 trellis.par.set(a4a.theme)
 @
+
+\section{How to read this document}
+
+The target audience for this document are readers with some experience in R and some background on stock assessment.
+
+The document explains the approach being developed by \aFa for fish stock assessment and scientific advice. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided. Moreover, having the code allows the reader to copy/paste and replicate the analysis presented here.
+
+The sections and subsections are as independent as possible, so it can be used as a reference document for the \pkg{FLa4a}. 
+
+%Section~\ref{sec:in} deals with reading and preparing data in \pkg{FLR} objects, which constitute the basic dataset for stock assessment with length structured models. This section is independent from \pkg{FLa4a} and relies mostly on \R and \pkg{reshape}.
+
+%Sections~\ref{sec:l2a},\ref{sec:M} and \ref{sec:sca} are related with \pkg{FLa4a} and describe the concepts described in the previous section.
+
+Finally, this is a live document which will be updated and released often.
 
