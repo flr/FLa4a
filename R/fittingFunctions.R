@@ -80,11 +80,16 @@ collapseSeasons <- function (stock) {
 #' wireframe(data~year*age, data=harvest(fit2), zlab="F")
 #'
 #' # fit2 + catcability as a smoother by age without year trend
-#' fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)))
+#' fmod <- ~factor(age) + factor(year)
+#' qmod <- list(~s(age, k=4))
+#' fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod)
 #' plot(ple4 + fit3)
 #'
 #' # fit3 + srmodel as a smoother by year
-#' fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)), srmodel=~s(year, k=45))
+#' fmod <- ~factor(age) + factor(year)
+#' qmod <- list(~s(age, k=4))
+#' srmod <- ~s(year, k=45)
+#' fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod, srmodel=srmod)
 #' plot(ple4 + fit4)
 #'
 #' AIC(fit1, fit2, fit3, fit4)
@@ -181,17 +186,20 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' qmodel <- list(~factor(age))
 #' fit1 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 #'
-#' # fishing mortality as a smoother by age and year (but still separable) AND catchability at age without year trend
+#' # fishing mortality as a smoother by age and year (but still separable) AND 
+#' # catchability at age without year trend
 #' fmodel <- ~ s(age, k=4) + s(year, k=10)
 #' qmodel <- list(~factor(age))
 #' fit2 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 #'
-#' # fishing mortality as a smoother by age and year (but still separable) AND catchability as a smoother by age without year trend
+#' # fishing mortality as a smoother by age and year (but still separable) AND 
+#' # catchability as a smoother by age without year trend
 #' fmodel <- ~ s(age, k=4) + s(year, k=10)
 #' qmodel <- list(~s(age, k=4))
 #' fit3 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 #'
-#' # fishing mortality as a smoother by age and year (but still separable) AND catchability as a smoother by age with year trend
+#' # fishing mortality as a smoother by age and year (but still separable) AND 
+#' # catchability as a smoother by age with year trend
 #' fmodel <- ~ s(age, k=4) + s(year, k=10)
 #' qmodel <- list(~s(age, k=4) + year)
 #' fit4 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
@@ -199,7 +207,8 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' # It's a statistical model
 #' BIC(fit1, fit2, fit3, fit4)
 #'
-#' # fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND catchability as a smoother by age without year trend
+#' # fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND 
+#' # catchability as a smoother by age without year trend
 #' fmodel <- ~ te(age, year, k=c(4, 10))
 #' qmodel <- list(~s(age, k=4))
 #' fit5 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))

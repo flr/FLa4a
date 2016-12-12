@@ -52,11 +52,16 @@ plot(ple4 + fit2)
 wireframe(data~year*age, data=harvest(fit2), zlab="F")
 
 # fit2 + catcability as a smoother by age without year trend
-fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)))
+fmod <- ~factor(age) + factor(year)
+qmod <- list(~s(age, k=4))
+fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod)
 plot(ple4 + fit3)
 
 # fit3 + srmodel as a smoother by year
-fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)), srmodel=~s(year, k=45))
+fmod <- ~factor(age) + factor(year)
+qmod <- list(~s(age, k=4))
+srmod <- ~s(year, k=45)
+fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod, srmodel=srmod)
 plot(ple4 + fit4)
 
 AIC(fit1, fit2, fit3, fit4)

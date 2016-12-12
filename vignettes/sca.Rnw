@@ -17,6 +17,14 @@
 <<libs, child='libsanddata.sub'>>=
 @
 
+<<knitr_opts2, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(knitr)
+library(formatR)
+thm = knit_theme$get("bclear") #moe, bclear
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=FALSE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=60, tidy=TRUE)
+@
+
 \section{Background}
 
 In the \aFa assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that require structural assumptions.
@@ -187,12 +195,11 @@ Lets start with a separable model in which age and year effects are modelled as 
 qmod <- list(~ factor(age)) 
 fmod <- ~ factor(age) + factor(year)
 srmod <- ~ factor(year)
-fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel=fmod, qmodel=qmod, 
-           srmodel=srmod)
+fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel=fmod, qmodel=qmod, srmodel=srmod)
 @
 
 <<sep1, echo=FALSE, fig.cap="Fishing mortality separable model">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 Next we may make things a bit more interesting by using an (unpenalised) thin plate spline, where we'll borrow the smoothing splines method (\code{s()}) provided by package \href{http://cran.r-project.org/web/packages/mgcv/}{\pkg{mgcv}}. We're using the North Sea Plaice data again, and since it has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom. We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom. Note that this is still a separable model, it's a smoothed version of the previous model (Figure~\ref{fig:sep2}).
@@ -205,8 +212,7 @@ fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<sep2, echo=FALSE, fig.cap="Fishing mortality smoothed separable model">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit1)),  
-           screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit1), zlab="F")
 @
 
 A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the F model using a tensor product of cubic splines with the \code{te} method (Figure~\ref{fig:te1}), again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. 
@@ -217,7 +223,7 @@ fit3 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<te1, echo=FALSE, fig.cap="Fishing mortality smoothed non-separable model">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit3)),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit3), zlab="F")
 @
 
 In the last examples the fishing mortalities (Fs') are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1 (Figure~\ref{fig:age1}).
@@ -228,7 +234,7 @@ fit4 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<age1, echo=FALSE, fig.cap="Fishing mortality age-year interaction model with extra age 1 smoother.">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit4)),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit4), zlab="F")
 @
 
 \subsection{Catchability submodel}
@@ -264,7 +270,7 @@ qhat <- index(fit)[[1]]/stkn
 @
 
 <<dummyage, echo=FALSE, fig.cap="Catchability age independent model">>=
-wireframe(data ~ age + year, data = as.data.frame(qhat),  screen = list(x = -90, y=-45), zlab="q")
+wireframe(qhat, zlab="q")
 @
 
 If one considers catchability at a specific age to be dependent on catchability on the other ages, similar to a selectivity modelling approach, one option is to use a smoother at age, and let the data 'speak' regarding the shape (Figure~\ref{fig:smoothage}).
@@ -282,7 +288,7 @@ qhat <- index(fit)[[1]]/stkn
 @
 
 <<smoothage, echo=FALSE, fig.cap="Catchability smoother age model">>=
-wireframe(data ~ age + year, data = as.data.frame(qhat),  screen = list(x = -90, y=-45), zlab="q")
+wireframe(qhat, zlab="q")
 @
 
 As in the case of $F$, one may consider catchability to be a process that evolves with age and year, including an interaction between the two effects. Such model can be modelled using the tensor product of cubic splines, the same way we did for the $F$ model (Figure~\ref{fig:te2}).
@@ -300,7 +306,7 @@ qhat <- index(fit)[[1]]/stkn
 @
 
 <<te2, echo=FALSE, fig.cap="Catchability tensor product of age and year">>=
-wireframe(data ~ age + year, data = as.data.frame(qhat),  screen = list(x = -90, y=-45), zlab="q")
+wireframe(qhat, zlab="q")
 @
 
 Finally, one may want to investigate a trend in catchability with time, very common in indices built from CPUE data. In the example given here we'll use a linear trend in time, set up by a simple linear model (Figure~\ref{fig:qtrend}).
@@ -318,7 +324,7 @@ qhat <- index(fit)[[1]]/stkn
 @
 
 <<qtrend, echo=FALSE, fig.cap="Catchability with a linear trend in year">>=
-wireframe(data ~ age + year, data = as.data.frame(qhat),  screen = list(x = -90, y=-45), zlab="q")
+wireframe(qhat, zlab="q")
 @
 
 \subsection{Catchability submodel for age aggregated indices}
@@ -436,12 +442,18 @@ fit2 <- sca(ple4, ple4.indices, fmodel=ageeffect)
 fit3 <- sca(ple4, ple4.indices, fmodel=cohorteffect)
 @
 
-and the graphical representation of the three models in Figure~\ref{fig:majeff}
+and the graphical representation of the three models in Figures~\ref{fig:majeffy} to \ref{fig:majeffc}.
 
-<<majeff, fig.cap="Examples of fishing mortality models for age, year and cohort.">>=
-wireframe(data~year*age, data=harvest(fit1), main='year effect')
-wireframe(data~year*age, data=harvest(fit2), main='age effect')
-wireframe(data~year*age, data=harvest(fit3), main='cohort effect')
+<<majeffy, fig.cap="Major effects: the year effect (~ factor(year))">>=
+wireframe(harvest(fit1), main='year effect')
+@
+
+<<majeffa, fig.cap="Major effects: the age effect (~ factor(age))">>=
+wireframe(harvest(fit2), main='age effect')
+@
+
+<<majeffc, fig.cap="Major effects: the cohort effect (~ factor(year-age))">>=
+wireframe(harvest(fit3), main='cohort effect')
 @
 
 \section{The statistical catch-at-age stock assessment framework advanced features - the \code{a4aSCA} method}
@@ -625,7 +637,7 @@ fitmc2 <- a4aSCA(ple4, ple4.indices, qmodel=list(~s(age, k=3), ~s(age, k=3),~s(a
 
 All fits together
 
-<<,echo=FALSE>>=
+<<,echo=FALSE, fig.width=8, fig.height=10>>=
 plot(FLStocks(ll=ple4 + fit, mc0=ple4 + fitmc1, mcalt=ple4 + fitmc2))
 @
 
@@ -659,8 +671,10 @@ flqs <- FLQuants(nowgt=stock.n(fit), extwgt=stock.n(fit1))
 
 <<likwgt, echo=FALSE, fig.cap="Stock summary of distinct likelihood weightings">>=
 xyplot(data~year|age, groups=qname, data=flqs, type="l", 
-       scales=list(y=list(relation="free")), 
-       auto.key=list(points=FALSE, lines=TRUE, columns=2))
+       scales=list(y=list(relation="free", draw=FALSE)), 
+       auto.key=list(points=FALSE, lines=TRUE, columns=2),
+       par.settings=list(superpose.line=list(col=c("gray35", "black")), 
+       strip.background=list(col="gray90")))
 @
 
 \subsection{More models}
@@ -675,7 +689,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<rep, echo=FALSE, fig.cap="F-at-age fixed above age 5">>=
-wireframe(data ~ age + year, data = harvest(fit),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 Or else one can use a closed form fort the selection pattern. The example below uses a logistic form (Figure~\ref{fig:logistic}).
@@ -686,7 +700,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<logistic, echo=FALSE, fig.cap="F-at-age logistic">>=
-wireframe(data ~ age + year, data = harvest(fit),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots (Figure~\ref{fig:brk}).
@@ -697,7 +711,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<brk, echo=FALSE, fig.cap="F-at-age in two periods using in both cases a thin plate spline with 3 knots">>=
-wireframe(data ~ age + year, data = harvest(fit),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 More complicated models can be built with these tools. For example, Figure~\ref{fig:ageind} shows a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
@@ -708,7 +722,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<ageind, echo=FALSE, fig.cap="F-at-age as thin plate spline with 3 knots for each age">>=
-wireframe(data ~ age + year, data = harvest(fit),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 A quite complex model that implements a cohort effect can be set through the following formula. Figure~\ref{fig:coh} shows the resulting fishing mortality. Note that in this case we end up with a variable F pattern over time, but rather than using 4 * 10 = 40 parameters, it uses, 4 + 10 + 10 = 24.
@@ -719,7 +733,7 @@ fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
 <<coh, echo=FALSE, fig.cap="F-at-age with a cohort effect.">>=
-wireframe(data ~ age + year, data = harvest(fit),  screen = list(x = -90, y=-45), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 \subsection{Propagate natural mortality uncertainty}
@@ -761,7 +775,7 @@ fit1 <- sca(stk, ple4.indices)
 
 And compare the two results (Figure~\ref{fig:mprop}). It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so. 
 
-<<mprop, echo=FALSE, fig.cap="Stock summary for two M models">>=
+<<mprop, echo=FALSE, fig.cap="Stock summary for two M models", fig.width=8, fig.height=10>>=
 plot(FLStocks(munc=propagate(ple4, 25)+fit1, m02=ple4+fit), key=TRUE)
 @
 
@@ -801,7 +815,7 @@ index(idxs[[1]]) <- index(fits)[[1]]
 sfit <- a4aSCA(stks, idxs, fit="MP")
 @
 
-<<wcsam, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach)">>=
+<<wcsam, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach)", fig.width=8, fig.height=10>>=
 plot(FLStocks(orig=stk, sim=stks, fitsim=stks+sfit), key=TRUE)
 @
 
@@ -890,7 +904,7 @@ flqs <- lapply(flqs, iterMedians)
 xyplot(data~year, groups=qname, data=flqs, type="l")
 @
 
-<<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average">>=
+<<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average", fig.width=8, fig.height=10>>=
 plot(stks, key=TRUE)
 @
 

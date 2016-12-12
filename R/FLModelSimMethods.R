@@ -1,5 +1,4 @@
 #' @title Simulation with a copula model and triangular distributions
-#'
 #' @description Simulates model parameters using elliptical copulas and triangular marginals.
 #' @param n the number of iterations
 #' @param object the \code{FLModelSim} object
@@ -11,7 +10,9 @@
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
-#' vb <- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' prs <- FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr"))
+#' vb <- FLModelSim(model=md, params=prs, vcov=mm, distr="norm")
 #'
 #' # Simulate from a multivariate normal distribution...
 #'   set.seed(1)
@@ -23,7 +24,8 @@
 #'   set.seed(1)
 #'   vbSim1 <- mvrtriangle(10000, vb)
 #'   mm1 <- predict(vbSim1, t=0:20+0.5)
-#' #...and from a multivariate triangular distribution with specified ranges (note if "c" is missing, it will take the average of "a" and "b")
+#' #...and from a multivariate triangular distribution with specified ranges 
+#' #   (note if "c" is missing, it will take the average of "a" and "b")
 #'   set.seed(1)
 #'   pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 #'   vbSim2 <- mvrtriangle(10000, vb, paramMargins=pars)
@@ -110,9 +112,12 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
-#' vb <- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' prs <- FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr"))
+#' vb <- FLModelSim(model=md, params=prs, vcov=mm, distr="norm")
 #' pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
-#' vbSim <- mvrcop(10000, vb, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
+#' vbSim <- mvrcop(10000, vb, copula="archmCopula", family="clayton", param=2, 
+#'    margins="triangle", paramMargins=pars)
 #' boxplot(t(predict(vbSim, t=0:20+0.5)))
 #' splom(data.frame(t(params(vbSim)@@.Data)), pch=".")
 setGeneric("mvrcop", function(n, mvdc, ...) standardGeneric("mvrcop"))
