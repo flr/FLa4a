@@ -4,6 +4,7 @@
 \name{vcov}
 \alias{vcov}
 \alias{vcov,SCAPars-method}
+\alias{vcov,a4aFitSA-method}
 \alias{vcov,submodel-method}
 \alias{vcov,submodels-method}
 \alias{vcov<-,SCAPars,numeric-method}

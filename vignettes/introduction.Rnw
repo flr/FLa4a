@@ -12,11 +12,6 @@
 \tableofcontents
 \newpage
 
-%% ======================================
-%% Call child document with libs and data
-<<libs, child='libsanddata.sub'>>=
-@
-
 \section{Background}
 
 (This section is based on \href{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}{Jardim, et.al, 2014})
@@ -36,6 +31,8 @@ To achieve these objectives, the Initiative identified a series of tasks, which 
 	\item develop a forecasting algorithm based on \MSE;
 	\item organize training courses for marine scientists.
 \end{itemize}
+
+\input{formoreinfo}
 
 \subsection{The moderate data stock}
 
@@ -68,7 +65,7 @@ The stock assessment model framework is a non-linear catch-at-age model implemen
 
 \subsection{\MSE}
 
-The \MSE is a sophisticated forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
+The \MSE is a sophisticated simulation/forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
 
 The \aFa approach to \MSE is to develop a set of methods to build a standard algorithm, which has the most common elements of uncertainty and management. So that the development of the quantitative side of a \MSE can be done in a operational time frame.
 
@@ -94,6 +91,11 @@ Analysis related to projections and biological reference points are dealt with b
 In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. If the stock under analysis does not have specific information on the growth or natural mortality processes, generic information about life history invariants may be used such as the generic priors suggested by \href{http://icesjms.oxfordjournals.org/content/early/2014/03/04/icesjms.fsu023.abstract}{Bentley, (2014)}.
 
 Note that an environment like the one distributed by \aFa promotes the exploration of different models for each process, giving the analyst a lot of flexibility. It also opens the possibility to efficiently include distinct models in the analysis. For example, a stock assessment using two growth, or several models for natural mortality could be performed. Our suggestion to streamline the assessment process is to combine the final outcomes using model averaging (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Miller, et. al, 2014}). Other solutions may be implemented, like scenario analysis, etc. What is important is to keep the data flowing smoothly and the models clear. R (\href{http://www.R-project.org/}{R Core Team, 2014}) and \pkg{FLR} (\href{http://icesjms.oxfordjournals.org/content/64/4/640.abstract}{Kell, et.al, 200}) provide powerful platforms for this approach.
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
 
 \end{document}
 

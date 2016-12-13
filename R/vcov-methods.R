@@ -4,6 +4,7 @@
 
 #' @title Variance-covariance matrix
 #' @name vcov
+#' @aliases vcov,a4aFitSA-method
 #' @description Methods to extract and replace the variance-covariance matrix.
 #' @template bothargs
 #' @rdname vcov-methods

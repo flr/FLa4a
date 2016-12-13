@@ -239,11 +239,11 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 })
 
 
-#' @title wireframe plot for FLQuant
-#' @name wire frame plot for FLQuant
+##' @title wireframe plot for FLQuant
+#' @name wireframe plot for FLQuant
 #' @docType methods
 #' @rdname wireframe
-#' @aliases wireframe,FLQuant-method
+#' @aliases wireframe,FLQuant-method wireframe,FLQuant,missing-method
 #' @description Method to 3D plot \code{FLQuant} objects.
 #' @param x a \code{FLQuant} 
 #' @param y missing

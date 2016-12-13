@@ -21,12 +21,7 @@ library(knitr)
 library(formatR)
 thm = knit_theme$get("bclear") #moe, bclear
 knit_theme$set(thm)
-opts_chunk$set(dev='png', cache=FALSE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=80, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=70, tidy=TRUE)
-@
-
-%% ======================================
-%% Call child document with libs and data
-<<libs, child='libsanddata.sub'>>=
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=70, tidy=TRUE, out.width='.9\\linewidth')
 @
 
 \section{Background}
@@ -48,6 +43,13 @@ The 'language' of linear models has been developing within the statistical commu
   \end{itemize}
 
 There are two basic types of assessments available in \aFa: the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
+
+\input{formoreinfo}
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
 
 \section{Stock assessment model details}
 
@@ -554,7 +556,7 @@ xyplot(data~year|age, groups=qname, data=flqs, type="l",
 In linear model one can use covariates to explain part of the variance observed on the data that the 'core' model does not explain. The same can be done in the \aFa framework. The example below uses the North Atlantic Oscillation (NAO) index to model recruitment.
 
 <<>>=
-nao <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1,
+nao <- read.table("https://www.esrl.noaa.gov/psd/data/correlation/nao.data", skip=1,
                   nrow=62, na.strings="-99.90")
 dnms <- list(quant="nao", year=1948:2009, unit="unique", season=1:12, area="unique")
 nao <- FLQuant(unlist(nao[,-1]), dimnames=dnms, units="nao")

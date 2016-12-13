@@ -3,6 +3,7 @@
 \docType{methods}
 \name{predict for a4aGr}
 \alias{predict for a4aGr}
+\alias{predict,a4aGr-method}
 \title{predict for \code{a4aGr}}
 \usage{
 \S4method{predict}{a4aGr}(object, ...)

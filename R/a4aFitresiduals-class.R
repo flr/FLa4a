@@ -109,11 +109,11 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("xyplot", args)) else do.call("xyplot", args)
 })
 
-#' @title qqplot of standardized log residuals
+##' @title qqplot of standardized log residuals
 #' @name qqmath plot of residuals
 #' @docType methods
 #' @rdname qqmath-methods
-##' @aliases qqmath,a4aFitResiduals,missing-method
+#' @aliases qqmath,a4aFitResiduals,missing-method
 #' @description Method to produce qqplots of standardized residuals
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param data ignored

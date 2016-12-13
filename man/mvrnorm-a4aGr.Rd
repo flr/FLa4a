@@ -3,6 +3,7 @@
 \docType{methods}
 \name{mvrnorm for a4aGR}
 \alias{mvrnorm for a4aGR}
+\alias{mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method}
 \alias{mvrnorm,numeric,a4aGr-method}
 \title{mvrnorm}
 \usage{
