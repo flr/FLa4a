@@ -7,3 +7,9 @@
 # gedit backup files
 *~
 .Rproj.user
+
+# rstudio files
+*.Rproj
+
+# built vignettes
+inst/doc/*
