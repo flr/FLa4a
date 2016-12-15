@@ -79,7 +79,7 @@ We use this to make a complicated natural mortality model with an age based shap
 
 <<nao_m>>=
 # Get NAO
-nao.orig <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1, nrow=62, na.strings="-99.90")
+nao.orig <- read.table("https://www.esrl.noaa.gov/psd/data/correlation/nao.data", skip=1, nrow=62, na.strings="-99.90")
 dnms <- list(quant="nao", year=1948:2009, unit="unique", season=1:12, area="unique")
 # Build an FLQuant from the NAO data
 nao.flq <- FLQuant(unlist(nao.orig[,-1]), dimnames=dnms, units="nao")

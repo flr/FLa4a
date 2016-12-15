@@ -93,38 +93,6 @@ is(fit0, "a4aFitSA")
 fitSumm(fit0)["convergence",]==0
 
 #--------------------------------------------------------------------
-# equal submodels check
-#--------------------------------------------------------------------
-
-# sca defaults
-fit0 <-  a4aSCA(ple4, ple4.indices, fit="MP")
-# when fit="MP" class is "a4aFit" instead of "a4aFitSA"
-!is(fit0, "a4aFitSA") 
-
-fit1 <-  sca(ple4, ple4.indices)
-# default is fit="MP" and class "a4aFit"
-!is(fit1, "a4aFitSA") 
-
-all.equal(fit0@fitSumm, fit1@fitSumm)
-all.equal(fit0@harvest, fit1@harvest)
-all.equal(fit0@stock.n, fit1@stock.n)
-all.equal(fit0@catch.n, fit1@catch.n)
- 
-# a4aSCA defaults
-fit0 <-  a4aSCA(ple4, ple4.indices)
-# default fit is "assessment" class should be "a4aFitSA"
-is(fit0, "a4aFitSA") 
-
-# when fit="assessment" class is "a4aFitSA"
-fit1 <-  sca(ple4, ple4.indices, fit="assessment")
-is(fit1, "a4aFitSA") 
-
-all.equal(fit0@fitSumm, fit1@fitSumm)
-all.equal(fit0@harvest, fit1@harvest)
-all.equal(fit0@stock.n, fit1@stock.n)
-all.equal(fit0@catch.n, fit1@catch.n)
-
-#--------------------------------------------------------------------
 # iters
 #--------------------------------------------------------------------
 
@@ -190,6 +158,38 @@ dim(fit@pars@vmodel[[1]]@vcov)[3]==nits
 dim(fit@pars@vmodel[[1]]@params)[2]==nits
 dim(fit@pars@vmodel[[2]]@vcov)[3]==nits
 dim(fit@pars@vmodel[[2]]@params)[2]==nits
+
+#--------------------------------------------------------------------
+# equal submodels check
+#--------------------------------------------------------------------
+
+# sca defaults
+fit0 <-  a4aSCA(ple4, ple4.indices, fit="MP")
+# when fit="MP" class is "a4aFit" instead of "a4aFitSA"
+!is(fit0, "a4aFitSA") 
+
+fit1 <-  sca(ple4, ple4.indices)
+# default is fit="MP" and class "a4aFit"
+!is(fit1, "a4aFitSA") 
+
+all.equal(fit0@fitSumm, fit1@fitSumm)
+all.equal(fit0@harvest, fit1@harvest)
+all.equal(fit0@stock.n, fit1@stock.n)
+all.equal(fit0@catch.n, fit1@catch.n)
+ 
+# a4aSCA defaults
+fit0 <-  a4aSCA(ple4, ple4.indices)
+# default fit is "assessment" class should be "a4aFitSA"
+is(fit0, "a4aFitSA") 
+
+# when fit="assessment" class is "a4aFitSA"
+fit1 <-  sca(ple4, ple4.indices, fit="assessment")
+is(fit1, "a4aFitSA") 
+
+all.equal(fit0@fitSumm, fit1@fitSumm)
+all.equal(fit0@harvest, fit1@harvest)
+all.equal(fit0@stock.n, fit1@stock.n)
+all.equal(fit0@catch.n, fit1@catch.n)
 
 #====================================================================
 # run a4aSCA with simulate
