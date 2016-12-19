@@ -183,7 +183,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Weighted sum: catch.wt, index.q - weighted by catch.n
     # Ignored: sel.pattern
 	args <- list(...)
-browser()
+
     # Start with index - most likely to not be empty
     index <- l2a(index(object), model, stat="sum", ...)
     idx <- FLIndex(index=index)
