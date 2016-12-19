@@ -2,6 +2,7 @@ FLa4a NEWS
 CHANGES IN FLa4a 0.9xx.x:
 
 	NEW FEATURES:
+		ma() now takes any function to compute weights
 		tests extended to check sca/a4aSCA defaults submodels
 		sca and a4aSCA have the same default submodels
 		wireframe for FLQuant

@@ -92,12 +92,9 @@ vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
                             units=c("cm","year-1","year")), vcov=mm)
 @
 
-First we show a simple example where we assume that the parameters are represented 
-using a multivariate normal distribution.
-% This covariance matrix can have iterations (i.e. each iteration can have a 
-different covariance matrix). CHECK
-% If the parameters or the covariance matrix have iterations then the medians 
-accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
+First we show a simple example where we assume that the parameters are represented using a multivariate normal distribution.
+% This covariance matrix can have iterations (i.e. each iteration can have a different covariance matrix). CHECK
+% If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
 
 <<simulate_vcov_example>>=
 # Note that the object we have just created has a single iteration of each parameter
@@ -139,7 +136,7 @@ Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_gro
 
 <<plot_mv_growth, fig.cap="Growth curves using parameters simulated from a multivariate normal distribution.">>=
 df0 <- melt(predict(vbNorm, t=0:50+0.5))
-bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="time", xlab="length")
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
 #boxplot(t(predict(vbNorm, t=0:50+0.5)))
 @
 
@@ -187,7 +184,7 @@ We can still use \code{predict()} to see the growth model uncertainty (Figure~\r
 
 <<plot_tri_growth, echo=FALSE, fig.cap="Growth curves using parameters simulated from a multivariate triangle distribution.">>=
 df0 <- melt(predict(vbNorm, t=0:50+0.5))
-bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="time", xlab="length")
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
 #boxplot(t(predict(vbTri, t=0:20+0.5)))
 @
 
@@ -213,7 +210,7 @@ splom(data.frame(t(params(vbCop)@.Data)), pch=".")
 <<plot_cop_tri_growth, echo=FALSE, fig.cap="Growth curves from the using an archmCopula copula with triangle margins.">>=
 #boxplot(t(predict(vbCop, t=0:20+0.5)))
 df0 <- melt(predict(vbCop, t=0:50+0.5))
-bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="time", xlab="length")
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
 
 @
 
@@ -238,8 +235,7 @@ dim(cth.n)
 
 In the previous example, the \class{FLQuant} object that was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all \pkg{FLR} objects, the general rule is \emph{one or n} iterations.
 
-
-As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged.
+As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{catch.wt} and \code{sel.pattern} slots of an \class{FLIndex} object are averaged, while the \code{index}, \code{index.var} and \code{catch.n} slots are summed. 
 
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
 

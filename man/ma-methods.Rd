@@ -18,7 +18,7 @@ ma(object, ...)
 
 \item{stock}{a \code{stock} object with the original data used for fitting}
 
-\item{FUN}{a \code{function} that will be used to extract the values for weighting; for now it must be "AIC", "BIC" or "LogLik"}
+\item{FUN}{a \code{function} to compute the weights, which must return a named vector with weights. Note the weights will be normalized to sum 1 by \code{ma()}}
 
 \item{nsim}{a \code{numeric} with the number of simulations to be drawn}
 }
@@ -37,11 +37,18 @@ f1 <- sca(ple4, ple4.indices, fmodel=fmod, qmodel=qmod, fit = "assessment")
 fmod <- ~ factor(age) + s(year, k=20)
 qmod <- list(~ s(age, k = 4)+year, ~ s(age, k = 4), ~ s(age, k = 3))
 f2 <- sca(ple4, ple4.indices, fmodel=fmod, qmodel=qmod, fit = "assessment")
-stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, AIC, nsim = 100)
-stks <- FLStocks(f1=ple4+f1, f2=ple4+f2, ma=stock.sim)
-flqs <- lapply(stks, ssb)
-flqs <- lapply(flqs, iterMedians)
-xyplot(data~year, groups=qname, data=flqs, type="l")
-plot(stks)
+# AIC weighting
+aicwt <- function(object){
+ ICs <- -1 * sapply(object, AIC)
+ exp( 0.5 * (ICs - max(ICs)))
+}
+stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, aicwt, nsim = 100)
+# equal weighting
+eqwt <- function(object){
+ v <- rep(1, length(object))
+ names(v) <- names(object)
+ v
+}
+stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, eqwt, nsim = 100)
 }
 

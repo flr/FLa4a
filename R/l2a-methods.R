@@ -183,7 +183,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Weighted sum: catch.wt, index.q - weighted by catch.n
     # Ignored: sel.pattern
 	args <- list(...)
-
+browser()
     # Start with index - most likely to not be empty
     index <- l2a(index(object), model, stat="sum", ...)
     idx <- FLIndex(index=index)
@@ -197,7 +197,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
         }
     }
 
-    weighted_means_slots_names <- c("catch.wt","index.q")
+    weighted_means_slots_names <- c("catch.wt","sel.pattern","index.q")
     for(slot_counter in weighted_means_slots_names){
         total_quant <- slot(object,slot_counter) * slot(object,"catch.n")
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)

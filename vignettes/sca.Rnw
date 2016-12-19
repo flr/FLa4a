@@ -30,7 +30,16 @@ The stock assessment model framework is a non-linear catch-at-age model implemen
 
 In the \aFa assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that require structural assumptions.
 
-There are 5 submodels in operation: a model for F-at-age, a model for the initial age structure, a model for recruitment, a (list) of model(s) for abundance indices catchability-at-age, and a list of models for the observation variance of catch-at-age and abundance indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
+There are 5 submodels in operation: 
+\begin{itemize}
+	\item a model for F-at-age,
+	\item a (list) of model(s) for abundance indices catchability-at-age,
+	\item a model for recruitment, 
+	\item a list of models for the observation variance of catch-at-age and abundance indices,
+	\item a model for the initial age structure,
+\end{itemize}	
+	
+In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
 
 The submodels form use linear models. This opens the possibility of using the linear modelling tools available in R: see for example the \href{http://cran.r-project.org/web/packages/mgcv/index.html}{mgcv} gam formulas, or factorial design formulas using \code{lm()}. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example, we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
 
@@ -240,7 +249,7 @@ Please note that each of these model \emph{forms} have not been tuned to the dat
 
 We will now take a look at some examples for F models and the forms that we can get. We'll fix the $Q$ and $R$ submodels.
 
-Lets start with a separable model in which age and year effects are modelled as dummy variables, using the \code{factor} coding provided by R (Figure~\ref{fig:sep1}).
+Lets start with a separable model in which age and year effects are modelled as dummy variables, using the \code{factor} coding provided by R (Figure~\ref{fig:sep1}). We'll use only one index to save running time, with the code \code{ple4.indices[1]}. This code creates an \code{FLIndices} object which has the first element of our list of indices. Note the difference with \code{ple4.indices[[1]]} that would extract the first element of the list, an \code{FLIndex} object.
 
 <<>>=
 qmod <- list(~ factor(age))
@@ -259,33 +268,33 @@ Next we may make things a bit more interesting by using an (unpenalised) thin pl
 fmod <- ~ s(age, k=4) + s(year, k = 20)
 # notice that you can specify the submodels without the argument, as an example you
 # don't need fmodel=fmod, but the order should be respected...
-fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
+fit <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<sep2, echo=FALSE, fig.cap="Fishing mortality smoothed separable model">>=
-wireframe(harvest(fit1), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the F model using a tensor product of cubic splines with the \code{te} method (Figure~\ref{fig:te1}), again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}.
 
 <<>>=
 fmod <- ~ te(age, year, k = c(4,20))
-fit3 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
+fit <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<te1, echo=FALSE, fig.cap="Fishing mortality smoothed non-separable model">>=
-wireframe(harvest(fit3), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 In the last examples the fishing mortalities (Fs') are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1 (Figure~\ref{fig:age1}).
 
 <<>>=
 fmod <- ~ te(age, year, k = c(4,20)) + s(year, k = 5, by = as.numeric(age==1))
-fit4 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
+fit <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
 <<age1, echo=FALSE, fig.cap="Fishing mortality age-year interaction model with extra age 1 smoother.">>=
-wireframe(harvest(fit4), zlab="F")
+wireframe(harvest(fit), zlab="F")
 @
 
 \subsection{Catchability submodel}
@@ -383,7 +392,8 @@ wireframe(qhat, zlab="q")
 The previous section was focused on age disaggregated indices, but age aggregated indices (CPUE, biomass, DEPM, etc) may also be used to tune the total biomass of the population. In these cases a slightly different class for the index must be used, the \class{FLIndexBiomass}, which uses a vector \code{index} with the age dimension called "all". Note that in this case the qmodel should be set without age factors, although it can have a "year" component and covariates if needed. An interesting feature with biomass indices is the age range they refer to can be specified.
 
 <<>>=
-# creating an index (note the name of the first dimension element)
+# simulating a biomass index (note the name of the first dimension element) using 
+# the ple4 biomass and an arbritary catchability of 0.001 plus a lognormal error.
 dnms <- list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])
 bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=dnms))
 index(bioidx) <- stock(ple4)*0.001
@@ -420,7 +430,7 @@ range(bioidx)[c("min","max")] <- c(2,4)
 fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
 @
 
-And once more residuals can be a good dignostics (Figure~\ref{fig:resbio2}).
+And once more residual plots as dignostics (Figure~\ref{fig:resbio2}).
 
 <<resbio2, fig.cap="Catchability residuals for a biomass index", echo=FALSE>>=
 plot(residuals(fit, ple4, FLIndices(bioidx)))
@@ -471,7 +481,7 @@ xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE,
 
 \section{The major effects - age, year and cohort}
 
-All submodels use the same type of specification process, the R formula interface, wich gives lot's of flexibility to explore models and combination of sub-models. As a reference one can consider three major effects that can be modelled the same way, the age affect, year effect and cohort effect. As examples note the following models, in these cases applied to fishing mortality, and all of them as a factor, which means one coefficient will be estimated for each level of the factor, meaning age, year or cohort repectively.
+All submodels use the same type of specification process, the R formula interface, wich gives lot's of flexibility to explore models and combination of sub-models. As a reference one can consider three major effects that can be modelled the same way, the age affect, year effect and cohort effect. As examples note the following models, in these cases applied to fishing mortality, and all of them as a factor, which means one coefficient will be estimated for each level of the factor, meaning age, year or cohort respectively.
 
 <<>>=
 # the age effect
@@ -519,7 +529,7 @@ The submodel for the stock number at age in the first year of the time series is
 <<>>=
 n1mod <- ~s(age, k=4)
 fit1 <- a4aSCA(ple4, ple4.indices[1], n1model=n1mod)
-flqs <- FLQuants(smo=stock.n(fit1)[,1], fac=stock.n(fit)[,1])
+flqs <- FLQuants(smother=stock.n(fit1)[,1], factor=stock.n(fit)[,1])
 @
 
 <<ny1, fig.cap="Nay=1 models", echo=FALSE>>=
@@ -564,7 +574,7 @@ nao <- seasonMeans(trim(nao, year=dimnames(stock.n(ple4))$year))
 nao <- as.numeric(nao)
 @
 
-First by simply assuming that the index drives recruitment (Figure~\ref{fig:naor}).
+First by simply assuming that the NAO index drives recruitment (Figure~\ref{fig:naor}).
 
 <<>>=
 srmod <- ~ nao
@@ -834,7 +844,7 @@ fit1 <- sca(stk, ple4.indices)
 And compare the two results (Figure~\ref{fig:mprop}). It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so.
 
 <<mprop, echo=FALSE, fig.cap="Stock summary for two M models", fig.width=8, fig.height=10>>=
-plot(FLStocks(munc=propagate(ple4, 25)+fit1, m02=ple4+fit), key=TRUE)
+plot(FLStocks("Jensen M with uncertainty"=propagate(ple4, 25)+fit1, "Jensen M"=ple4+fit), key=TRUE)
 @
 
 %\subsection{Likelihood profiling - ToDo}
@@ -874,7 +884,7 @@ sfit <- a4aSCA(stks, idxs, fit="MP")
 @
 
 <<wcsam, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach)", fig.width=8, fig.height=10>>=
-plot(FLStocks(orig=stk, sim=stks, fitsim=stks+sfit), key=TRUE)
+plot(FLStocks(original=stk, simulation=stks, "fit over simulation"=stks+sfit), key=TRUE)
 @
 
 \subsection{Parallel computing}
@@ -907,8 +917,7 @@ for(i in 1:nits){
 }
 catch(stks2) <- computeCatch(stks2)
 stock(stks2) <- computeStock(stks2)
-stks3 <- FLStocks(orig=stk, sim=stks, fitsim=stks2)
-
+stks3 <- FLStocks(original=stk, simulation=stks, "fit over simulation"=stks2)
 @
 
 <<wcsampar, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach) using parallel computing">>=
@@ -941,25 +950,64 @@ plot(stks3, key=TRUE)
 
 \section{Model averaging}
 
-To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results.
+To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods. The major arguments of the \code{ma} method are the \code{a4aFitSAs} object (a list of \code{a4aFitSA} objects) and the function to compute the weights, which must return a named vector with weights. Note the weights will be normalized to sum 1 by \code{ma()}. 
+
+Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results using AIC weights.
 
 <<>>=
 data(ple4)
 data(ple4.indices)
-f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3)), fit = "assessment")
-f2 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=list(~ s(age, k = 4)+year, ~ s(age, k = 4), ~ s(age, k = 3)), fit = "assessment")
-stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, AIC, nsim = 100)
-stks <- FLStocks(f1=ple4+f1, f2=ple4+f2, ma=stock.sim)
+
+aicwt <- function(object){
+	ICs <- -1 * sapply(object, AIC)
+	exp( 0.5 * (ICs - max(ICs)))
+}
+
+qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
+
+f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=qmod, fit = "assessment")
+
+f2 <- sca(ple4, ple4.indices, fmodel=~ te(age, year, k=c(4,21)), qmodel=qmod, fit = "assessment")
+
+stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, aicwt, nsim = 100)
+
+stks <- FLStocks(separable=ple4+f1, interaction=ple4+f2, "model average"=stock.sim)
 @
 
 <<ssbmodav, echo=FALSE, fig.cap="SSB of the two models and their average">>=
 flqs <- lapply(stks, ssb)
 flqs <- lapply(flqs, iterMedians)
-xyplot(data~year, groups=qname, data=flqs, type="l")
+xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="", par.settings=list(superpose.line=list(col=c("gray35", "gray35", "black"), lwd=c(1,1,2))))
 @
 
 <<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average", fig.width=8, fig.height=10>>=
 plot(stks, key=TRUE)
+@
+
+Figure~\ref{fig:ssbmodav2} shows the results using equal weights.
+
+<<>>=
+eqwt <- function(object){
+	v <- rep(1, length(object))
+	names(v) <- names(object)
+	v
+}
+
+qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
+
+f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=qmod, fit = "assessment")
+
+f2 <- sca(ple4, ple4.indices, fmodel=~ te(age, year, k=c(4,21)), qmodel=qmod, fit = "assessment")
+
+stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, eqwt, nsim = 100)
+
+stks <- FLStocks(separable=ple4+f1, interaction=ple4+f2, "model average"=stock.sim)
+@
+
+<<ssbmodav2, echo=FALSE, fig.cap="SSB of the two models and their average">>=
+flqs <- lapply(stks, ssb)
+flqs <- lapply(flqs, iterMedians)
+xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="", par.settings=list(superpose.line=list(col=c("gray35", "gray35", "black"), lwd=c(1,1,2))))
 @
 
 \end{document}

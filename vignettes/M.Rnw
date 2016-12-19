@@ -238,7 +238,7 @@ Create the object with the M estimates by age and year, note the name of the fir
 m(m1)
 @
 
-The next example has an age-based shape. As the \code{shape} model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension of the resulting \class{FLQuant}. Note that in this case the \code{mbar} values in the range become relevant. \code{mbar} the range of quants (in this case, ages) that is used to compute the mean level. This mean level will match the value given by the \code{level} model. The \code{mbar} range can be changed with the \code{rngmbar()} method. We illustrate this by making an \class{FLQuant} with age varying natural mortality. 
+The next example has an age-based shape. As the \code{shape} model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension of the resulting \class{FLQuant}. Note that in this case the \code{mbar} values in the range become relevant, once that \code{mbar} is used to compute the mean level. This mean level will match the value given by the \code{level} model. The \code{mbar} range can be changed with the \code{rngmbar()} method. We illustrate this by making an \class{FLQuant} with age varying natural mortality. 
 
 Check the model and set the ranges:
 
@@ -316,7 +316,7 @@ dim(flq)
 @
 
 <<uncertain_m, echo=FALSE, fig.cap="Natural mortality with age and year trend.">>=
-bwplot(data~factor(age)|year, data=flq)
+bwplot(data~factor(age)|year, data=flq, ylab="M", xlab="age")
 @
 
 \end{document}

@@ -22,6 +22,11 @@ data(ple4.index)
 data(rfLen)
 @
 
+<<>>=
+packageVersion("FLCore")
+packageVersion("FLa4a")
+@
+
 <<lattice_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
 a4a.theme = trellis.par.get()
 a4a.theme$strip.background$col <- "gray90"
