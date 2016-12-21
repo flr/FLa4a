@@ -15,7 +15,6 @@
 #' fmod <- ~ factor(age) + s(year, k=20)
 #' qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
 #' f1 <- sca(ple4, ple4.indices, fmodel=fmod, qmodel=qmod, fit = "assessment")
-#' fmod <- ~ factor(age) + s(year, k=20)
 #' qmod <- list(~ s(age, k = 4)+year, ~ s(age, k = 4), ~ s(age, k = 3))
 #' f2 <- sca(ple4, ple4.indices, fmodel=fmod, qmodel=qmod, fit = "assessment")
 #' # AIC weighting
@@ -34,8 +33,10 @@
 
 setGeneric("ma", function(object, ...) standardGeneric("ma"))
 #' @rdname ma-methods
-setMethod("ma", "a4aFitSAs", function(object, stock, FUN = AIC, nsim = 1000){
+setMethod("ma", "a4aFitSAs", function(object, stock, FUN, nsim = 1000){
+	if(sum(unlist(lapply(object, function(x){dim(x@stock.n)[6]}))>1)>0) stop("\nNot working with stock assessment uncertainty yet, sorry !")
 	FUN <- match.fun(FUN)
+	warning("This method is experimental, use at your own risk ! \n")
 	# calculate weights
 #	if(FUN %in% c("AIC", "BIC")){
 #		ICs <- -1 * sapply(object, FUN)
