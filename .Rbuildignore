@@ -1,4 +1,5 @@
 .travis.yml
+appveyor.yml
 code-experimental
 man-experimental
 tests
