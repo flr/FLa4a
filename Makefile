@@ -31,7 +31,7 @@ update:
 
 build:
 	cd ..;\
-	R CMD build $(PKGSRC)
+	R CMD build $(PKGSRC) --compact-vignettes
 
 install: build
 	cd ..;\
