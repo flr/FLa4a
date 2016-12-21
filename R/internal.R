@@ -13,7 +13,7 @@
   ## message with version number
   tbl <- library(help = FLa4a)$info[[1]]
   version <- gsub(" |[a-zA-z]|:", "", tbl[grep("Version:",tbl)])
-  msg <- paste0("This is FLa4a RC3-", version,". For overview type \'help(package=\"FLa4a\")\'\n")
+  msg <- paste0("This is FLa4a ", version,". For overview type \'help(package=\"FLa4a\")\'\n")
   packageStartupMessage(msg)
 
   #
