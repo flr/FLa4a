@@ -1,0 +1,251 @@
+\documentclass[a4paper,english,10pt]{article}
+\usepackage{a4a}
+%\VignetteIndexEntry{Individual Growth and Stochastic Slicing}
+%\VignetteEngine{knitr::knitr}
+\begin{document}
+
+\title{Assessment for All initiative(a4a) \\ Modelling Individual Growth and Using Stochastic Slicing to Convert Length-based Data Into Age-based Data}
+
+\input{authors}
+
+\maketitle
+\tableofcontents
+\newpage
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
+
+\section{Backround}
+
+The \aFa stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth model and the uncertainty about the model parameters.
+
+Within the \aFa framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
+
+\section{a4aGr - The growth class}
+
+The conversion of length data to age is performed through the use of a growth model. The implementation is done through the \class{a4aGr} class.
+
+<<show_a4aGr>>=
+showClass("a4aGr")
+@
+
+To construct an \class{a4aGr} object, the growth model and parameters must be provided.
+Check the help file for more information.
+
+Here we show an example using the von Bertalanffy growth model. To create the \class{a4aGr} object it's necessary to pass the model equation ($length \sim time$), the inverse model equation ($time \sim length$) and the parameters. Any growth model can be used as long as it's possible to write the model (and the inverse) as an R formula.
+
+<<a4aGr_vB_example>>=
+vbObj <- a4aGr(
+	grMod=~linf*(1-exp(-k*(t-t0))),      
+	grInvMod=~t0-1/k*log(1-len/linf),      
+	params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","year-1","year"))     
+)
+
+# Check the model and its inverse
+lc=20
+predict(vbObj, len=lc)
+predict(vbObj, t=predict(vbObj, len=lc))==lc
+@
+
+The predict method allows the transformation between age and lengths using the growth model.
+
+<<predict_araGr_example>>=
+predict(vbObj, len=5:10+0.5)
+predict(vbObj, t=5:10+0.5)
+@
+
+\section{Adding uncertainty to growth parameters with a multivariate normal distribution}
+
+Uncertainty in the growth model is introduced through the inclusion of parameter uncertainty.
+This is done by making use of the parameter variance-covariance matrix (the \code{vcov} slot of the \class{a4aGr} class) and assuming a distribution. The numbers in the variance-covariance matrix could come from the parameter uncertainty from fitting the growth model parameters.
+
+Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2.
+
+<<set_vcov_example>>=
+# Make an empty cor matrix
+cm <- diag(c(1,1,1))
+# k and linf are negatively correlated while t0 is independent
+cm[1,2] <- cm[2,1] <- -0.5
+# scale cor to var using CV=0.2
+cv <- 0.2
+p <- c(linf=60, k=0.09, t0=-0.01)
+vc <- matrix(1, ncol=3, nrow=3)
+l <- vc
+l[1,] <- l[,1] <- p[1]*cv
+k <- vc
+k[,2] <- k[2,] <- p[2]*cv
+t <- vc
+t[3,] <- t[,3] <- p[3]*cv
+mm <- t*k*l
+diag(mm) <- diag(mm)^2
+mm <- mm*cm
+# check that we have the intended correlation
+all.equal(cm, cov2cor(mm))
+@
+
+Create the a4aGr object as before but now we also include the vcov argument for the variance-covariance matrix.
+<<making_vcov_example>>=
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), 
+               params=FLPar(linf=p["linf"], k=p["k"], t0=p["t0"], 
+                            units=c("cm","year-1","year")), vcov=mm)
+@
+
+First we show a simple example where we assume that the parameters are represented using a multivariate normal distribution.
+% This covariance matrix can have iterations (i.e. each iteration can have a different covariance matrix). CHECK
+% If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
+
+<<simulate_vcov_example>>=
+# Note that the object we have just created has a single iteration of each parameter
+vbObj@params
+dim(vbObj@params)
+# We simulate 10000 iterations from the a4aGr object by calling mvrnorm() using the 
+# variance-covariance matrix we created earlier.
+vbNorm <- mvrnorm(10000,vbObj)
+# Now we have 10000 iterations of each parameter, randomly sampled from the 
+# multivariate normal distribution
+vbNorm@params
+dim(vbNorm@params)
+@
+
+We can now convert from length to ages data based on the 10000 parameter iterations. This gives us 10000 sets of age data. For example, here we convert a single length vector using each of the 10000 parameter iterations: 
+
+<<>>=
+ages <- predict(vbNorm, len=5:10+0.5)
+dim(ages)
+# We show the first ten iterations only as an illustration
+ages[,1:10]
+@
+
+The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
+
+<<plot_norm_params, fig.cap="The marginal distributions of each of the parameters from using a multivariate normal distribution.">>=
+par(mfrow=c(3,1))
+hist(c(params(vbNorm)["linf",]), main="linf", prob=TRUE, xlab="")
+hist(c(params(vbNorm)["k",]), main="k", prob=TRUE, xlab="")
+hist(c(params(vbNorm)["t0",]), main="t0", prob=TRUE, xlab="")
+@
+
+The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
+<<plot_norm_scatter, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate normal distribution.">>=
+splom(data.frame(t(params(vbNorm)@.Data)), pch=".")
+@
+
+Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
+
+<<plot_mv_growth, fig.cap="Growth curves using parameters simulated from a multivariate normal distribution.">>=
+df0 <- melt(predict(vbNorm, t=0:50+0.5))
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
+#boxplot(t(predict(vbNorm, t=0:50+0.5)))
+@
+
+\section{Adding uncertainty to growth parameters with a multivariate triangle distribution}
+\label{sec:growth_triangle_cop}
+
+One alternative to using a normal distribution is to use a \href{http://en.wikipedia.org/wiki/Triangle\_distribution}{triangle distribution}. We use the package \href{http://cran.r-project.org/web/packages/triangle/index.html}{\pkg{triangle}}, where this distribution is parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+
+Here we show an example of setting a triangle distribution with values taken from Fishbase.
+
+<<tri_example>>=
+# The web address for the growth parameters for redfish (Sebastes norvegicus)
+addr <- "http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"
+# Scrape the data
+tab <- try(readHTMLTable(addr))
+# Interrogate the data table and get vectors of the values
+linf <- as.numeric(as.character(tab$dataTable[,2]))
+k <- as.numeric(as.character(tab$dataTable[,4]))
+t0 <- as.numeric(as.character(tab$dataTable[,5]))
+# Set the min (a), max (b) and median (c) values for the parameter as a list of lists
+# Note that t0 has no 'c' (median) value. This makes the distribution symmetrical
+triPars <- list(list(a=min(linf), b=max(linf), c=median(linf)),
+             list(a=min(k), b=max(k), c=median(k)),
+             list(a=median(t0, na.rm=T)-IQR(t0, na.rm=T)/2, b=median(t0, na.rm=T)+
+                    IQR(t0, na.rm=T)/2))
+# Simulate 10000 times using mvrtriangle
+vbTri <- mvrtriangle(10000, vbObj, paramMargins=triPars)
+@
+
+The marginals will reflect the uncertainty on the parameter values that were scraped from \href{http://fishbase.org}{Fishbase} but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
+The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params} and the shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
+
+<<plot_tri_params, echo=FALSE, fig.cap="The marginal distributions of each of the parameters from using a multivariate triangle distribution.">>=
+par(mfrow=c(3,1))
+hist(c(params(vbTri)["linf",]), main="linf", prob=TRUE, xlab="")
+hist(c(params(vbTri)["k",]), main="k", prob=TRUE, xlab="")
+hist(c(params(vbTri)["t0",]), main="t0", prob=TRUE, xlab="")
+@
+
+<<plot_tri_scatter, echo=FALSE, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.">>=
+splom(data.frame(t(params(vbTri)@.Data)), pch=".")
+@
+
+We can still use \code{predict()} to see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
+
+<<plot_tri_growth, echo=FALSE, fig.cap="Growth curves using parameters simulated from a multivariate triangle distribution.">>=
+df0 <- melt(predict(vbNorm, t=0:50+0.5))
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
+#boxplot(t(predict(vbTri, t=0:20+0.5)))
+@
+
+Remember that the above examples use a variance-covariance matrix that we essentially made up. An alternative would be to scrape the entire growth parameters dataset from Fishbase and compute the shape of the variance-covariance matrix yourself.
+
+\section{Adding uncertainty to growth parameters with statistical copulas}
+
+A more general approach to adding parameter uncertainty is to make use of \href{http://www.encyclopediaofmath.org/index.php/Copula}{statistical copulas} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \href{http://cran.r-project.org/web/packages/copula/}{\pkg{copula}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \pkg{copula} for more information. 
+
+% Needs more explanation
+
+<<copula_triangle_example>>=
+vbCop <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, 
+                margins="triangle", paramMargins=triPars)
+@
+
+The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
+
+<<plot_cop_tri_scatter, echo=FALSE, fig.cap="Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.">>=
+splom(data.frame(t(params(vbCop)@.Data)), pch=".")
+@
+
+<<plot_cop_tri_growth, echo=FALSE, fig.cap="Growth curves from the using an archmCopula copula with triangle margins.">>=
+#boxplot(t(predict(vbCop, t=0:20+0.5)))
+df0 <- melt(predict(vbCop, t=0:50+0.5))
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
+
+@
+
+\section{Converting from length to age based data - the \code{l2a()} method}
+
+After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There are two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
+
+When converting from length-based data to age-based data you need to be aware of how the aggregation of length classes is performed. For example, individuals in length classes 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
+
+If the values are abundances then the values should be summed. Summing other types of values, such as mean weight, does not make sense. Instead these values are averaged over the length classes (possibly weighted by the abundance). This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default). Fishing mortality is not computed to avoid making wrong assumptions about the meaning of F at length.
+
+We demonstrate the method by converting a catch-at-length \class{FLQuant} to a catch-at-age \class{FLQuant}. First we make an \class{a4aGr} object with a multivariate triangle distribution (using the parameters we set above). We use 10 iterations as an example. And call \code{l2a()} by passing in the length-based \class{FLQuant} and the \class{a4aGr} object.
+
+<<FLQ_l2a, message=FALSE, warning=FALSE>>=
+vbTriSmall <- mvrtriangle(10, vbObj, paramMargins=triPars)
+cth.n <- l2a(catch.n(rfLen.stk), vbTriSmall)
+@
+
+<<example_flq_slice>>=
+dim(cth.n)
+@
+
+In the previous example, the \class{FLQuant} object that was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all \pkg{FLR} objects, the general rule is \emph{one or n} iterations.
+
+As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{catch.wt} and \code{sel.pattern} slots of an \class{FLIndex} object are averaged, while the \code{index}, \code{index.var} and \code{catch.n} slots are summed. 
+
+The method for \class{FLStock} classes takes an additional argument for the plusgroup.
+
+<<FLS_FLI_l2a, message=FALSE, warning=FALSE>>=
+aStk <- l2a(rfLen.stk, vbTriSmall, plusgroup=14)
+aIdx <- l2a(rfTrawl.idx, vbTriSmall)
+@
+
+When converting with \code{l2a()} all lengths above Linf are converted to the 
+maximum age, as there is no information in the growth model about how to deal with individuals larger than Linf. 
+
+\end{document}
+
