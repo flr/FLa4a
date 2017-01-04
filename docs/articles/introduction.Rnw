@@ -1,0 +1,104 @@
+\documentclass[a4paper,english,10pt]{article}
+\usepackage{a4a}
+%\VignetteIndexEntry{Introduction to a4a}
+%\VignetteEngine{knitr::knitr}
+\begin{document}
+
+\title{Assessment for All initiative(a4a) \\ Introduction to FLa4a}
+
+\input{authors}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Background}
+
+(This section is based on \href{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}{Jardim, et.al, 2014})
+
+The volume and availability of data useful for fisheries stock assessment is continually increasing. Time series of 'traditional' sources of information, such as surveys and landings data are not only getting longer, but also cover an increasing number of species.
+
+For example, in Europe the 2009 revision of the Data Collection Regulation (EU, 2008a) has changed the focus of fisheries sampling programmes away from providing data for individual assessments of 'key' stocks (i.e. those that are economically important) to documenting fishing trips, thereby shifting the perspective to a large coastal monitoring programme. The result has been that data on growth and reproduction of fish stocks are being collected for more than 300 stocks in waters where the European fleets operate.
+
+Recognizing that the context above required new methodological developments, the European Commission Joint Research Centre (JRC) started its 'Assessment for All' Initiative (\aFa), with the aim to develop, test, and distribute methods to assess a large numbers of stocks in an operational time frame, and to build the necessary capacity/expertise on stock assessment and advice provision. 
+
+The long-term strategy of \aFa is to increase the number of stock assessments while simultaneously promoting the inclusion of the major sources of uncertainty in scientific advice. Our aim is to reduce the required workload by developing a software framework with the methods required to run the analysis a stock assessment needs, including methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}). Moreover, we aim to make the analysis more intuitive, thereby attracting more experts to join stock assessment teams. Having more scientists/analysts working in fisheries management advice will increase the human resource basis, which is currently recognized to be limited. Regarding the former, \aFa promotes a risk analysis approach to scientific advice through a wider usage of Operating Model/\MSE approaches. We're focused on developing methods that can deal with the most common settings these type of analysis require, and creating the conditions for scientists to develop their own methods. Our expectation is that having a common framework, with clear data structures and workflows, will promote research in this area and make it simpler to implement and share methods.
+
+To achieve these objectives, the Initiative identified a series of tasks, which were or are being carried out, namely:
+\begin{itemize}
+	\item define a moderate data stock;
+	\item develop a stock assessment framework;
+	\item develop a forecasting algorithm based on \MSE;
+	\item organize training courses for marine scientists.
+\end{itemize}
+
+\input{formoreinfo}
+
+\subsection{The moderate data stock}
+
+The moderate data stock definition was an important step in the Initiative's development. It clearly focused the Initiative on stocks with some information, moving away from the data-poor stocks, but without moving into data rich methodologies. It was recognized that there is a lot of research at both extremes of the data availability spectrum, but comparatively little in the middle 'region'. From this came the idea of the 'moderate data stock'. 
+
+The 'moderate data stock' constitutes the entry level of our analysis. It has at least the following available data, which can be assembled in different ways, using distinct methods.
+ 
+\begin{itemize}
+	\item in relation to exploitation:
+	\begin{itemize}
+		\item volume of catches, which may be split into landings and discards if possible;
+		\item length frequencies of the catches, landings or discards;
+		\item nominal effort (optional, needed in case CPUE indices are to be derived);
+	\end{itemize}
+	\item in relation to biology:
+	\begin{itemize}
+		\item estimated maturity ogive (e.g. can be as simple as an estimate of $L_{50}$);
+		\item estimated growth model and parameters;
+		\item estimated length-weight relationship;
+	\end{itemize}
+	\item in relation to abundance:
+	\begin{itemize}
+		\item index of abundance.
+	\end{itemize}	
+\end{itemize}
+
+\subsection{The stock assessment framework}
+
+The stock assessment model framework is a non-linear catch-at-age model implemented in \pkg{R}/\pkg{FLR}/\pkg{ADMB} that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (see vignette on sca).
+
+\subsection{\MSE}
+
+The \MSE is a sophisticated simulation/forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
+
+The \aFa approach to \MSE is to develop a set of methods to build a standard algorithm, which has the most common elements of uncertainty and management. So that the development of the quantitative side of a \MSE can be done in a operational time frame.
+
+\section{The \aFa approach to stock assessment and management advice}
+
+As stated before, one of the main objectives of \aFa is to promote a risk type of analysis, so that scientific advice provides policy and decision makers a perspective of the uncertainty existing on stock assessments and its propagation into the scenarios being analyzed.
+
+The sources of uncertainty implemented so far are related with the processes of growth, natural mortality and reproduction (stock-recruitment); and with the estimation of population abundance and fishing mortality by the stock assessment model. In all cases the framework can include sampling error.
+
+The approach is split into 4 steps: (i) converting length data to age data using a growth model (Section~\ref{sec:l2a}), (ii) modeling natural mortality (Section~\ref{sec:M}), (iii) assessing the stock (Section~\ref{sec:sca}), and (iv) \MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
+
+These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with building with Lego, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process, including the class of the objects that carry the data (in black).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{./inout}
+\caption{In/out process of the \aFa approach. The boxes in black represent the classes of the objects that carry the information in and out of each step.}
+\label{fig:inout}
+\end{figure}
+
+Analysis related to projections and biological reference points are dealt with by the \pkg{FLR} packages \pkg{FLash} and \pkg{FLBRP}. As such the Initiative does not provide specific methods for these analyses.
+
+In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. If the stock under analysis does not have specific information on the growth or natural mortality processes, generic information about life history invariants may be used such as the generic priors suggested by \href{http://icesjms.oxfordjournals.org/content/early/2014/03/04/icesjms.fsu023.abstract}{Bentley, (2014)}.
+
+Note that an environment like the one distributed by \aFa promotes the exploration of different models for each process, giving the analyst a lot of flexibility. It also opens the possibility to efficiently include distinct models in the analysis. For example, a stock assessment using two growth, or several models for natural mortality could be performed. Our suggestion to streamline the assessment process is to combine the final outcomes using model averaging (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Miller, et. al, 2014}). Other solutions may be implemented, like scenario analysis, etc. What is important is to keep the data flowing smoothly and the models clear. R (\href{http://www.R-project.org/}{R Core Team, 2014}) and \pkg{FLR} (\href{http://icesjms.oxfordjournals.org/content/64/4/640.abstract}{Kell, et.al, 200}) provide powerful platforms for this approach.
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
+
+\end{document}
+
+
+
+

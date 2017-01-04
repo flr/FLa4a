@@ -3,9 +3,9 @@ Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
 Version: 1.0.0
 Date: 2016-12-21
-Author: Colin P. Millar and Ernesto Jardim
-Maintainer: Colin Millar <colinpmillar@googlemail.com> and Ernesto Jardim
-    <ernesto.jardim@jrc.ec.europa.eu>
+Authors@R: c(
+  person("Colin P.", "Millar", email = "colinpmillar@googlemail.com", role = "aut"),
+  person("Ernesto", "Jardim", email = "ernesto.jardim@jrc.ec.europa.eu", role = c("aut", "cre")))
 Description: A simple and robust statistical Catch at Age model that is
     specifically designed for stocks with intermediate levels of data quantity and
     quality.
