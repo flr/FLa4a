@@ -1,5 +1,5 @@
 FLa4a NEWS
-CHANGES IN FLa4a 0.9xx.x:
+CHANGES IN FLa4a 1.0.x:
 
 	NEW FEATURES:
 		ma() now takes any function to compute weights
