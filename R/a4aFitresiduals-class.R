@@ -1,3 +1,5 @@
+setGeneric("qqmath", function(x, data, ...) useAsDefault=lattice::qqmath)
+
 #' @title S4 class \code{a4aFitResiduals}
 #' @description The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default, these should be log residuals of catches and indices.
 #' @docType class
@@ -109,11 +111,11 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("xyplot", args)) else do.call("xyplot", args)
 })
 
-##' @title qqplot of standardized log residuals
-#' @name qqmath plot of residuals
+#' @title qqplot of standardized log residuals
+#' @name qqplot of residuals
 #' @docType methods
 #' @rdname qqmath-methods
-#' @aliases qqmath,a4aFitResiduals,missing-method
+##' @aliases qqmath,a4aFitResiduals,missing-method
 #' @description Method to produce qqplots of standardized residuals
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param data ignored
@@ -125,9 +127,6 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 #' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' qqmath(flqs)
-
-setGeneric("qqmath", function(x, data, ...) useAsDefault=lattice::qqmath)
-#' @rdname qqmath-methods
 setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
 	args <- list()
 	args$data <- as.data.frame(x)
