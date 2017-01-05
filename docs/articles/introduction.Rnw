@@ -63,7 +63,7 @@ The 'moderate data stock' constitutes the entry level of our analysis. It has at
 
 The stock assessment model framework is a non-linear catch-at-age model implemented in \pkg{R}/\pkg{FLR}/\pkg{ADMB} that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (see vignette on sca).
 
-\subsection{\MSE}
+\subsection{MSE}
 
 The \MSE is a sophisticated simulation/forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
 
@@ -75,7 +75,7 @@ As stated before, one of the main objectives of \aFa is to promote a risk type o
 
 The sources of uncertainty implemented so far are related with the processes of growth, natural mortality and reproduction (stock-recruitment); and with the estimation of population abundance and fishing mortality by the stock assessment model. In all cases the framework can include sampling error.
 
-The approach is split into 4 steps: (i) converting length data to age data using a growth model (Section~\ref{sec:l2a}), (ii) modeling natural mortality (Section~\ref{sec:M}), (iii) assessing the stock (Section~\ref{sec:sca}), and (iv) \MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
+The approach is split into 4 steps: (i) converting length data to age data using a growth model, (ii) modeling natural mortality, (iii) assessing the stock, and (iv) \MSE\footnote{Under development, to be released with version 2.0}.
 
 These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with building with Lego, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process, including the class of the objects that carry the data (in black).
 

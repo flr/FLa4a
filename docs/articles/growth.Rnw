@@ -9,12 +9,19 @@
 \input{authors}
 
 \maketitle
+
+\abstract{The document explains the approach being developed by a4a to integrate uncertainty in individual growth into stock assessment and advice. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided.}
+
+\newpage
 \tableofcontents
 \newpage
 
-%% ======================================
-%% Call child document with libs and data
-<<libs, child='libsanddata.sub'>>=
+<<knitr_opts2, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(knitr)
+library(formatR)
+thm = knit_theme$get("bclear") #moe, bclear
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=80, tidy=TRUE, out.width='.9\\linewidth')
 @
 
 \section{Backround}
@@ -22,6 +29,13 @@
 The \aFa stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth model and the uncertainty about the model parameters.
 
 Within the \aFa framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
+
+\input{formoreinfo}
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
 
 \section{a4aGr - The growth class}
 
@@ -61,7 +75,13 @@ predict(vbObj, t=5:10+0.5)
 Uncertainty in the growth model is introduced through the inclusion of parameter uncertainty.
 This is done by making use of the parameter variance-covariance matrix (the \code{vcov} slot of the \class{a4aGr} class) and assuming a distribution. The numbers in the variance-covariance matrix could come from the parameter uncertainty from fitting the growth model parameters.
 
-Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2.
+Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2. Based on 
+
+$$\rho_{x,y}=\frac{\Sigma_{x,y}}{\sigma_x \sigma_y}$$
+
+and 
+
+$$CV_x=\frac{\sigma_x}{\mu_x}$$
 
 <<set_vcov_example>>=
 # Make an empty cor matrix
@@ -120,7 +140,7 @@ ages[,1:10]
 
 The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
 
-<<plot_norm_params, fig.cap="The marginal distributions of each of the parameters from using a multivariate normal distribution.">>=
+<<plot_norm_params, fig.cap="The marginal distributions of each of the parameters from using a multivariate normal distribution.", echo=FALSE>>=
 par(mfrow=c(3,1))
 hist(c(params(vbNorm)["linf",]), main="linf", prob=TRUE, xlab="")
 hist(c(params(vbNorm)["k",]), main="k", prob=TRUE, xlab="")
@@ -128,15 +148,15 @@ hist(c(params(vbNorm)["t0",]), main="t0", prob=TRUE, xlab="")
 @
 
 The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
-<<plot_norm_scatter, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate normal distribution.">>=
-splom(data.frame(t(params(vbNorm)@.Data)), pch=".")
+<<plot_norm_scatter, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate normal distribution.", echo=FALSE>>=
+splom(data.frame(t(params(vbNorm)@.Data)), par.settings=list(plot.symbol=list(pch=19, cex=0.1, col=1)))
 @
 
 Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
 
-<<plot_mv_growth, fig.cap="Growth curves using parameters simulated from a multivariate normal distribution.">>=
-df0 <- melt(predict(vbNorm, t=0:50+0.5))
-bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
+<<plot_mv_growth, fig.cap="Growth curves using parameters simulated from a multivariate normal distribution.", echo=FALSE>>=
+#df0 <- melt(predict(vbNorm, t=0:50+0.5))
+bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.2, col="gray50"), box.umbrella=list(col="gray40"), box.rectangle=list(col="gray30")), ylab="length (cm)", xlab="age (years)", scales=list(x=list(rot=90)))
 #boxplot(t(predict(vbNorm, t=0:50+0.5)))
 @
 
@@ -177,14 +197,14 @@ hist(c(params(vbTri)["t0",]), main="t0", prob=TRUE, xlab="")
 @
 
 <<plot_tri_scatter, echo=FALSE, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.">>=
-splom(data.frame(t(params(vbTri)@.Data)), pch=".")
+splom(data.frame(t(params(vbTri)@.Data)), par.settings=list(plot.symbol=list(pch=19, cex=0.1, col=1)))
 @
 
 We can still use \code{predict()} to see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
 
 <<plot_tri_growth, echo=FALSE, fig.cap="Growth curves using parameters simulated from a multivariate triangle distribution.">>=
-df0 <- melt(predict(vbNorm, t=0:50+0.5))
-bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
+#df0 <- melt(predict(vbTri, t=0:50+0.5))
+bwplot(value~factor(Var1), data=melt(predict(vbTri, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.2, col="gray50"), box.umbrella=list(col="gray40"), box.rectangle=list(col="gray30")), ylab="length (cm)", xlab="age (years)", scales=list(x=list(rot=90)))
 #boxplot(t(predict(vbTri, t=0:20+0.5)))
 @
 
@@ -204,13 +224,13 @@ vbCop <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2,
 The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
 
 <<plot_cop_tri_scatter, echo=FALSE, fig.cap="Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.">>=
-splom(data.frame(t(params(vbCop)@.Data)), pch=".")
+splom(data.frame(t(params(vbCop)@.Data)), par.settings=list(plot.symbol=list(pch=19, cex=0.1, col=1)))
 @
 
-<<plot_cop_tri_growth, echo=FALSE, fig.cap="Growth curves from the using an archmCopula copula with triangle margins.">>=
+<<plot_cop_tri_growth, fig.cap="Growth curves from the using an archmCopula copula with triangle margins.", echo=FALSE>>=
 #boxplot(t(predict(vbCop, t=0:20+0.5)))
-df0 <- melt(predict(vbCop, t=0:50+0.5))
-bwplot(value~factor(Var1), data=melt(predict(vbNorm, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.5)), ylab="length (cm)", xlab="age (years)")
+#df0 <- melt(predict(vbCop, t=0:50+0.5))
+bwplot(value~factor(Var1), data=melt(predict(vbCop, t=0:50+0.5)), par.settings=list(plot.symbol=list(cex=0.2, col="gray50"), box.umbrella=list(col="gray40"), box.rectangle=list(col="gray30")), ylab="length (cm)", xlab="age (years)", scales=list(x=list(rot=90)))
 
 @
 
@@ -224,7 +244,7 @@ If the values are abundances then the values should be summed. Summing other typ
 
 We demonstrate the method by converting a catch-at-length \class{FLQuant} to a catch-at-age \class{FLQuant}. First we make an \class{a4aGr} object with a multivariate triangle distribution (using the parameters we set above). We use 10 iterations as an example. And call \code{l2a()} by passing in the length-based \class{FLQuant} and the \class{a4aGr} object.
 
-<<FLQ_l2a, message=FALSE, warning=FALSE>>=
+<<FLQ_l2a, message=FALSE>>=
 vbTriSmall <- mvrtriangle(10, vbObj, paramMargins=triPars)
 cth.n <- l2a(catch.n(rfLen.stk), vbTriSmall)
 @
@@ -239,7 +259,7 @@ As well as converting one \class{FLQuant} at a time, we can convert entire \clas
 
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
 
-<<FLS_FLI_l2a, message=FALSE, warning=FALSE>>=
+<<FLS_FLI_l2a, message=FALSE, warning=TRUE>>=
 aStk <- l2a(rfLen.stk, vbTriSmall, plusgroup=14)
 aIdx <- l2a(rfTrawl.idx, vbTriSmall)
 @

@@ -7,7 +7,7 @@
 - Bug reports: <https://github.com/flr/FLa4a/issues>
 
 ## Overview
-FLa4a implements the Assesment For All (A4A) initiative stock assessment model, a simple and robust statistical catch at age model. For further information about rhe A4A initiative, please visit <https://fishreg.jrc.ec.europa.eu/web/a4a>.
+FLa4a implements the Assesment For All (A4A) initiative stock assessment model, a simple and robust statistical catch-at-age model. For further information about the A4A initiative, please visit <https://fishreg.jrc.ec.europa.eu/web/a4a>.
 
 To install this package, start R and enter:
 
@@ -22,7 +22,7 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 ## Documentation
 - [Help pages](http://flr-project.org/FLa4a)
 
-## Papers
+## References
 - [Jardim, et.al, 2014](http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract)
 - [Millar, et.al, 2014](http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract) 
 - [Scott, et.al, 2016](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0154922)
@@ -35,7 +35,7 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 - [All releases](https://github.com/flr/FLCore/releases/)
 
 ## License
-Copyright (c) 2012-2016 European Union. European Commission Joint Research Centre G.03. Released under the [EUPL 1.1](https://joinup.ec.europa.eu/community/eupl/home).
+Copyright (c) 2012-2016 European Union. European Commission Joint Research Centre D.02. Released under the [EUPL 1.1](https://joinup.ec.europa.eu/community/eupl/home).
 
 ## Contact
 You are welcome to:
