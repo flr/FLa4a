@@ -6,6 +6,7 @@ tests
 gh-pages/
 man-roxygen
 Makefile
+tests/wcsam.R
 .git
 .gitignore
 ^.*\.Rproj$
