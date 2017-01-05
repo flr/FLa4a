@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>qqplot of standardized log residuals — qqmath plot of residuals • FLa4a</title>
+<title>qqplot of standardized log residuals — qqplot of residuals • FLa4a</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -79,9 +79,7 @@
     <p>Method to produce qqplots of standardized residuals</p>
     
 
-    <pre><span class='fu'>qqmath</span>(<span class='no'>x</span>, <span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S4 method for a4aFitResiduals,missing</span>
+    <pre><span class='co'># S4 method for a4aFitResiduals,missing</span>
 <span class='fu'>qqmath</span>(<span class='no'>x</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>missing</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -102,9 +100,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>ple4</span>)
 <span class='fu'>data</span>(<span class='no'>ple4.index</span>)
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
-<span class='no'>flqs</span> <span class='kw'>&lt;-</span> <span class='fu'>residuals</span>(<span class='no'>obj</span>, <span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='kw'>idx</span><span class='kw'>=</span><span class='no'>ple4.index</span>))
-<span class='fu'>qqmath</span>(<span class='no'>flqs</span>)</div><img src='qqmath plot of residuals-2.png' alt='' width='540' height='400' /></pre>
+<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='no'>flqs</span> <span class='kw'>&lt;-</span> <span class='fu'>residuals</span>(<span class='no'>obj</span>, <span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='kw'>idx</span><span class='kw'>=</span><span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in residuals(obj, ple4, FLIndices(idx = ple4.index)): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'>qqmath</span>(<span class='no'>flqs</span>)</div><div class='output co'>#&gt; <span class='error'>Error in qqmath(flqs): object &#39;flqs&#39; not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
