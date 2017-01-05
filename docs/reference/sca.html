@@ -54,6 +54,9 @@
 <li>
   <a href="../articles/index.html">Articles</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -116,51 +119,21 @@
 <span class='fu'>data</span>(<span class='no'>ple4.index</span>)
 
 <span class='co'># fit using the default submodels</span>
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
-<span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit1</span>)</div><img src='sca-2.png' alt='' width='540' height='400' /><div class='input'>
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(ple4 + fit1): object &#39;fit1&#39; not found</span></div><div class='input'>
 <span class='co'># see default submodels (set through automated procedure)</span>
-<span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fit</span><span class='kw'>=</span><span class='st'>'assessment'</span>)</div><div class='output co'>#&gt; a4a model fit for: Plaice in IV 
-#&gt; 
-#&gt; Call:
-#&gt; .local(stock = stock, indices = indices, fmodel = ..1, qmodel = ..2, 
-#&gt;     srmodel = ..3, n1model = ..4, vmodel = ..5, fit = ..6)
-#&gt; 
-#&gt; Time used:
-#&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.5788181       4.8364680       0.1468840       5.5621700 
-#&gt; 
-#&gt; Submodels:
-#&gt; 	 fmodel: ~te(age, year, k = c(4, 26), bs = &quot;tp&quot;) + s(age, k = 8)
-#&gt; 	srmodel: ~factor(year)
-#&gt; 	n1model: ~factor(age)
-#&gt; 	 qmodel:
-#&gt; 	   BTS-Isis: ~s(age, k = 5)
-#&gt; 	 vmodel:
-#&gt; 	   catch:    ~s(age, k = 3)
-#&gt; 	   BTS-Isis: ~1</div><div class='input'>
+<span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fit</span><span class='kw'>=</span><span class='st'>'assessment'</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
 <span class='co'># fishing mortality by age and year (separable)</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fmodel</span><span class='kw'>=</span>~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>))
-<span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit2</span>)</div><img src='sca-6.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>wireframe</span>(<span class='no'>data</span>~<span class='no'>year</span>*<span class='no'>age</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fu'>harvest</span>(<span class='no'>fit2</span>), <span class='kw'>zlab</span><span class='kw'>=</span><span class='st'>"F"</span>)</div><img src='sca-8.png' alt='' width='540' height='400' /><div class='input'>
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fmodel</span><span class='kw'>=</span>~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(ple4 + fit2): object &#39;fit2&#39; not found</span></div><div class='input'><span class='fu'>wireframe</span>(<span class='no'>data</span>~<span class='no'>year</span>*<span class='no'>age</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fu'>harvest</span>(<span class='no'>fit2</span>), <span class='kw'>zlab</span><span class='kw'>=</span><span class='st'>"F"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in harvest(fit2): object &#39;fit2&#39; not found</span></div><div class='input'>
 <span class='co'># fit2 + catcability as a smoother by age without year trend</span>
 <span class='no'>fmod</span> <span class='kw'>&lt;-</span> ~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>)
 <span class='no'>qmod</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>))
-<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>)
-<span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit3</span>)</div><img src='sca-10.png' alt='' width='540' height='400' /><div class='input'>
+<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(ple4 + fit3): object &#39;fit3&#39; not found</span></div><div class='input'>
 <span class='co'># fit3 + srmodel as a smoother by year</span>
 <span class='no'>fmod</span> <span class='kw'>&lt;-</span> ~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>)
 <span class='no'>qmod</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>))
 <span class='no'>srmod</span> <span class='kw'>&lt;-</span> ~<span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>45</span>)
-<span class='no'>fit4</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>, <span class='kw'>srmodel</span><span class='kw'>=</span><span class='no'>srmod</span>)
-<span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit4</span>)</div><img src='sca-12.png' alt='' width='540' height='400' /><div class='input'>
-<span class='fu'>AIC</span>(<span class='no'>fit1</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>, <span class='no'>fit4</span>)</div><div class='output co'>#&gt;       df      AIC
-#&gt; fit1 178 200.5728
-#&gt; fit2 131 255.7221
-#&gt; fit3 130 254.6063
-#&gt; fit4 123 508.3260</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>fit1</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>, <span class='no'>fit4</span>)</div><div class='output co'>#&gt;       df       BIC
-#&gt; fit1 178 1013.1900
-#&gt; fit2 131  853.7718
-#&gt; fit3 130  848.0908
-#&gt; fit4 123 1069.8536</div></pre>
+<span class='no'>fit4</span> <span class='kw'>&lt;-</span> <span class='fu'>sca</span>(<span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>, <span class='kw'>srmodel</span><span class='kw'>=</span><span class='no'>srmod</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>ple4</span> + <span class='no'>fit4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(ple4 + fit4): object &#39;fit4&#39; not found</span></div><div class='input'>
+<span class='fu'>AIC</span>(<span class='no'>fit1</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>, <span class='no'>fit4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in AIC(fit1, fit2, fit3, fit4): object &#39;fit1&#39; not found</span></div><div class='input'><span class='fu'>BIC</span>(<span class='no'>fit1</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>, <span class='no'>fit4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in BIC(fit1, fit2, fit3, fit4): object &#39;fit1&#39; not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -6,6 +6,7 @@ gh-pages/
 man-roxygen
 Makefile
 template.Rnw
+tests/wcsam.R
 .git
 .gitignore
 ^.*\.Rproj$
