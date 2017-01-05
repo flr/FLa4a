@@ -5,6 +5,7 @@ man-experimental
 gh-pages/
 man-roxygen
 Makefile
+template.Rnw
 .git
 .gitignore
 ^.*\.Rproj$

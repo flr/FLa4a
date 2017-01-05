@@ -1,0 +1,37 @@
+\documentclass[a4paper,english,10pt]{article}
+\usepackage{a4a}
+%\VignetteIndexEntry{Stock Assessment}
+%\VignetteEngine{knitr::knitr}
+\begin{document}
+
+\title{Assessment for All initiative(a4a) \\ [TEXT]}
+
+\input{authors}
+
+\maketitle
+
+\abstract{[TEXT]. The document explains the approach being developed by a4a for [TEXT]. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided.}
+
+\newpage
+\tableofcontents
+\newpage
+
+<<knitr_opts2, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(knitr)
+library(formatR)
+thm = knit_theme$get("bclear") #moe, bclear
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=70, tidy=TRUE, out.width='.9\\linewidth')
+@
+
+\section{Background}
+
+\input{formoreinfo}
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
+
+\end{document}
+

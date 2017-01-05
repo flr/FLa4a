@@ -9,12 +9,19 @@
 \input{authors}
 
 \maketitle
+
+\abstract{The document explains the approach being developed by a4a to integrate uncertainty in individual growth into stock assessment and advice. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided.}
+
+\newpage
 \tableofcontents
 \newpage
 
-%% ======================================
-%% Call child document with libs and data
-<<libs, child='libsanddata.sub'>>=
+<<knitr_opts2, echo=FALSE, message=FALSE, warning=FALSE>>=
+library(knitr)
+library(formatR)
+thm = knit_theme$get("bclear") #moe, bclear
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H", width=70, tidy=TRUE, out.width='.9\\linewidth')
 @
 
 \section{Backround}
@@ -22,6 +29,13 @@
 The \aFa stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth model and the uncertainty about the model parameters.
 
 Within the \aFa framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
+
+\input{formoreinfo}
+
+%% ======================================
+%% Call child document with libs and data
+<<libs, child='libsanddata.sub'>>=
+@
 
 \section{a4aGr - The growth class}
 
