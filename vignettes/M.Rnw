@@ -187,7 +187,7 @@ mgis2
 The resulting parameter estimates and marginal distributions can be seen in Figure~\ref{fig:plot_tri_gis_m} and \ref{fig:plot_tri_gis_m_hist}.
 
 <<plot_tri_gis_m, echo=FALSE, fig.cap="Parameter estimates for Gislason's second natural mortality model from using a triangle distribution.">>=
-splom(t(params(mgis2)@.Data))
+splom(t(params(mgis2)@.Data), par.settings=list(plot.symbol=list(pch=19, cex=0.1, col=1)))
 @
 
 <<plot_tri_gis_m_hist, echo=FALSE, fig.cap="Marginal distributions of the parameters for Gislason's second natural mortality model using a triangle distribution.">>=
@@ -330,7 +330,7 @@ dim(flq)
 @
 
 <<uncertain_m, echo=FALSE, fig.cap="Natural mortality with age and year trend.">>=
-bwplot(data~factor(age)|year, data=flq, ylab="M", xlab="age")
+bwplot(data~factor(age)|year, data=flq, par.settings=list(plot.symbol=list(cex=0.2, col="gray50"), box.umbrella=list(col="gray40"), box.rectangle=list(col="gray30")), ylab="M", xlab="age (years)", scales=list(x=list(rot=90)))
 @
 
 \end{document}

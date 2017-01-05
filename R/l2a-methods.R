@@ -121,16 +121,16 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 
 #' @rdname l2a 
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
-	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
+	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths,\n harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
     # Use the catch.n slot to build the resulting FLStock
-    catch.n <- l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+    catch.n <- suppressWarnings(l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
     stk <- FLStock(catch.n=catch.n)
     # Abundance slots - sum these up
     sum_slots_names <- c("discards.n","landings.n","stock.n")
     for(slot_counter in sum_slots_names){
         # Only slice if there are some values in there
         if(!all(is.na(slot(object,slot_counter)))){
-            slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+            slot(stk,slot_counter) <- suppressWarnings(l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
         }
     }
     # Weight slots - weighted means
@@ -139,7 +139,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
         total_quant <- slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep=""))
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
         if(!all(is.na(total_quant))){
-            total_slice <- l2a(total_quant, model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+            total_slice <- suppressWarnings(l2a(total_quant, model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
             slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
             # Replace any NAs with zeros
             slot(stk,paste(slot_counter,".wt",sep=""))[is.na(slot(stk,paste(slot_counter,".wt",sep="")))] <- 0
@@ -150,14 +150,14 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
     for(slot_counter in mean_slots_names){
         if(!all(is.na(slot(object,slot_counter)))){
-            slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...)
+            slot(stk,slot_counter) <- suppressWarnings(l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...))
         }
     }
 
     # Check for ages < 0; report problem and trim
     if(range(stk)["min"] < 0){
-        print("Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)")
-        print("Trimming age range to a minimum of 0")
+        warning("Some ages are less than 0, indicating a mismatch between input data lengths\n and growth parameters (possibly t0)")
+        warning("Trimming age range to a minimum of 0")
         stk <- trim(stk, age=0:range(stk)["max"])
     }
     # washing up
@@ -185,7 +185,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	args <- list(...)
 
     # Start with index - most likely to not be empty
-    index <- l2a(index(object), model, stat="sum", ...)
+    index <- suppressWarnings(l2a(index(object), model, stat="sum", ...))
     idx <- FLIndex(index=index)
 
 
@@ -193,7 +193,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     for(slot_counter in sum_slots_names){
         # Only slice if there are some values in there
         if(all(!is.na(slot(object,slot_counter)))){
-            slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
+            slot(idx,slot_counter) <- suppressWarnings(l2a(slot(object,slot_counter), model, stat="sum", ...))
         }
     }
 
@@ -202,15 +202,15 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
         total_quant <- slot(object,slot_counter) * slot(object,"catch.n")
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
         if(all(!is.na(total_quant))){
-            total_slice <- l2a(total_quant, model, stat="sum", ...)
+            total_slice <- suppressWarnings(l2a(total_quant, model, stat="sum", ...))
             slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
         }
     }
 
     # Check for ages < 0; report problem and trim
     if(range(idx)["min"] < 0){
-        print("Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)")
-        print("Trimming age range to a minimum of 0")
+        warning("Some ages are less than 0, indicating a mismatch between input data lengths\n and growth parameters (possibly t0)")
+        warning("Trimming age range to a minimum of 0")
         idx <- trim(idx, age=0:range(idx)["max"])
     }
 

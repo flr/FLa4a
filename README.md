@@ -22,6 +22,11 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 ## Documentation
 - [Help pages](http://flr-project.org/FLa4a)
 
+## Papers
+- [Jardim, et.al, 2014](http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract)
+- [Millar, et.al, 2014](http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract) 
+- [Scott, et.al, 2016](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0154922)
+
 ## Build Status
 [![Travis Build Status](https://travis-ci.org/flr/FLa4a.svg?branch=master)](https://travis-ci.org/flr/FLa4a)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/flr/FLa4a?branch=master&svg=true)](https://ci.appveyor.com/project/flr/FLa4)

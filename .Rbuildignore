@@ -11,3 +11,5 @@ tests/wcsam.R
 .gitignore
 ^.*\.Rproj$
 ^\.Rproj\.user$
+docs/
+
