@@ -1,6 +1,6 @@
 \section{Installing and loading libraries}
 
-To run the \pkg{FLa4a} methods the reader will need to install the package and its dependencies and load them. Some datsets are distributed with the package and as such need to be loaded too.
+To run the \pkg{FLa4a} methods the reader will need to install the package and its dependencies and load them. Some datasets are distributed with the package and as such need to be loaded too.
 
 <<eval=FALSE>>=
 # from CRAN
