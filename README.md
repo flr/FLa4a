@@ -7,7 +7,9 @@
 - Bug reports: <https://github.com/flr/FLa4a/issues>
 
 ## Overview
-FLa4a implements the Assesment For All (A4A) initiative stock assessment model, a simple and robust statistical catch-at-age model. For further information about the A4A initiative, please visit <https://fishreg.jrc.ec.europa.eu/web/a4a>.
+FLa4a implements the Assesment For All (A4A) initiative stock assessment model, a simple and robust statistical catch-at-age model.
+
+For further information about the A4A initiative, please visit <https://fishreg.jrc.ec.europa.eu/web/a4a>.
 
 To install this package, start R and enter:
 
