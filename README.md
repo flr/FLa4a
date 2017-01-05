@@ -11,9 +11,10 @@ FLa4a implements the Assesment For All (A4A) initiative stock assessment model, 
 
 For further information about the A4A initiative, please visit <https://fishreg.jrc.ec.europa.eu/web/a4a>.
 
+## Installation
 To install this package, start R and enter:
 
-	install.packages(c("copula", "mgcv", "triangle", "coda"))
+  install.packages(c("copula","triangle", "coda"))
 
 followed by
 
