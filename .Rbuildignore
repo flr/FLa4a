@@ -12,4 +12,4 @@ tests/wcsam.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
 docs/
-
+vignettes/sca.Rnw
