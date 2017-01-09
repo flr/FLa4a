@@ -948,67 +948,67 @@ plot(stks3, key=TRUE)
 %wireframe(data ~ age + year, data = harvest(fit),  screen = list(x = -90, y=-45), zlab="F")
 %@
 
-\section{Model averaging}
+%\section{Model averaging}
 
-To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods. The major arguments of the \code{ma} method are the \code{a4aFitSAs} object (a list of \code{a4aFitSA} objects) and the function to compute the weights, which must return a named vector with weights. Note the weights will be normalized to sum 1 by \code{ma()}. 
+%To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods. The major arguments of the \code{ma} method are the \code{a4aFitSAs} object (a list of \code{a4aFitSA} objects) and the function to compute the weights, which must return a named vector with weights. Note the weights will be normalized to sum 1 by \code{ma()}. 
 
-Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results using AIC weights.
+%Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results using AIC weights.
 
-<<>>=
-data(ple4)
-data(ple4.indices)
+%<<>>=
+%data(ple4)
+%data(ple4.indices)
 
-aicwt <- function(object){
-	ICs <- -1 * sapply(object, AIC)
-	exp( 0.5 * (ICs - max(ICs)))
-}
+%aicwt <- function(object){
+%	ICs <- -1 * sapply(object, AIC)
+%	exp( 0.5 * (ICs - max(ICs)))
+%}
 
-qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
+%qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
 
-f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=qmod, fit = "assessment")
+%f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=qmod, fit = "assessment")
 
-f2 <- sca(ple4, ple4.indices, fmodel=~ te(age, year, k=c(4,21)), qmodel=qmod, fit = "assessment")
+%f2 <- sca(ple4, ple4.indices, fmodel=~ te(age, year, k=c(4,21)), qmodel=qmod, fit = "assessment")
 
-stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, aicwt, nsim = 100)
+%stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, aicwt, nsim = 100)
 
-stks <- FLStocks(separable=ple4+f1, interaction=ple4+f2, "model average"=stock.sim)
-@
+%stks <- FLStocks(separable=ple4+f1, interaction=ple4+f2, "model average"=stock.sim)
+%@
 
-<<ssbmodav, echo=FALSE, fig.cap="SSB of the two models and their average">>=
-flqs <- lapply(stks, ssb)
-flqs <- lapply(flqs, iterMedians)
-xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="", par.settings=list(superpose.line=list(col=c("gray35", "gray35", "black"), lwd=c(1,1,2))))
-@
+%<<ssbmodav, echo=FALSE, fig.cap="SSB of the two models and their average">>=
+%flqs <- lapply(stks, ssb)
+%flqs <- lapply(flqs, iterMedians)
+%xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="", par.settings=list(superpose.line=list(col=c("gray35", "gray35", "black"), lwd=c(1,1,2))))
+%@
 
-<<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average", fig.width=8, fig.height=10>>=
-plot(stks, key=TRUE)
-@
+%<<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average", fig.width=8, fig.height=10>>=
+%plot(stks, key=TRUE)
+%@
 
-Figure~\ref{fig:ssbmodav2} shows the results using equal weights.
+%Figure~\ref{fig:ssbmodav2} shows the results using equal weights.
 
-<<>>=
-eqwt <- function(object){
-	v <- rep(1, length(object))
-	names(v) <- names(object)
-	v
-}
+%<<>>=
+%eqwt <- function(object){
+%	v <- rep(1, length(object))
+%	names(v) <- names(object)
+%	v
+%}
 
-qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
+%qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
 
-f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=qmod, fit = "assessment")
+%f1 <- sca(ple4, ple4.indices, fmodel=~ factor(age) + s(year, k=20), qmodel=qmod, fit = "assessment")
 
-f2 <- sca(ple4, ple4.indices, fmodel=~ te(age, year, k=c(4,21)), qmodel=qmod, fit = "assessment")
+%f2 <- sca(ple4, ple4.indices, fmodel=~ te(age, year, k=c(4,21)), qmodel=qmod, fit = "assessment")
 
-stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, eqwt, nsim = 100)
+%stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, eqwt, nsim = 100)
 
-stks <- FLStocks(separable=ple4+f1, interaction=ple4+f2, "model average"=stock.sim)
-@
+%stks <- FLStocks(separable=ple4+f1, interaction=ple4+f2, "model average"=stock.sim)
+%@
 
-<<ssbmodav2, echo=FALSE, fig.cap="SSB of the two models and their average">>=
-flqs <- lapply(stks, ssb)
-flqs <- lapply(flqs, iterMedians)
-xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="", par.settings=list(superpose.line=list(col=c("gray35", "gray35", "black"), lwd=c(1,1,2))))
-@
+%<<ssbmodav2, echo=FALSE, fig.cap="SSB of the two models and their average">>=
+%flqs <- lapply(stks, ssb)
+%flqs <- lapply(flqs, iterMedians)
+%xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="", par.settings=list(superpose.line=list(col=c("gray35", "gray35", "black"), lwd=c(1,1,2))))
+%@
 
 \end{document}
 
