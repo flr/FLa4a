@@ -2,6 +2,6 @@ a4a.sty
 authors.tex
 formoreinfo.tex
 inout.png
-.install_extras
+vignettes/.install_extras
 template.Rnw
 
