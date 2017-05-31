@@ -1,3 +1,10 @@
+ FLa4a 1.1.x:
+
+ NEW FEATURES:
+
+	BUG FIXES:
+- indices names with ':' were crashing the qmodel, now fixed
+
  FLa4a 1.0.0:
 
  NEW FEATURES:

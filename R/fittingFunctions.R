@@ -535,6 +535,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 	# check survey names
 	if (length(names(indices)) == 0) {
+		# check that survey names don't use ':'
+		if(sum(grepl(':', names(indices)))>0) stop('Indices names can\'t use the character \':\'')
 		snames <- make.unique(rep("survey", length(indices)))
 	} else {
 		snames <- make.unique(names(indices))
