@@ -23,7 +23,8 @@ followed by
 or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases/latest)
 
 ## Documentation
-- [Help pages](http://flr-project.org/FLa4a)
+- [Help pages](http://www.flr-project.org/FLa4a/reference/index.html)
+- [Vignettes](http://www.flr-project.org/FLa4a/articles/index.html)
 
 ## References
 - [Jardim, et.al, 2014](http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract)
