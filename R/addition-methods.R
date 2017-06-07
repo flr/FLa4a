@@ -22,11 +22,15 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   }
 
   stock.n(e1) <- stock.n(e2)
+  landings.n(e1) <- landings.n(e1)*catch.n(e2)/catch.n(e1)
+  discards.n(e1) <- discards.n(e1)*catch.n(e2)/catch.n(e1)
   catch.n(e1) <- catch.n(e2)
   harvest(e1) <- harvest(e2)
   
   catch(e1) <- computeCatch(e1, na.rm=FALSE)
   stock(e1) <- computeStock(e1, na.rm=FALSE)
+  landings(e1) <- computeLandings(e1, na.rm=FALSE)
+  discards(e1) <- computeDiscards(e1, na.rm=FALSE)
   
   e1
 })
