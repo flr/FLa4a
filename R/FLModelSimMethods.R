@@ -39,6 +39,8 @@
 #' splom(data.frame(t(params(vbSim)@@.Data)), pch=".")
 #' splom(data.frame(t(params(vbSim1)@@.Data)), pch=".")
 #' splom(data.frame(t(params(vbSim2)@@.Data)), pch=".")
+
+
 setGeneric("mvrtriangle", function(n, object, ...) standardGeneric("mvrtriangle"))
 #' @rdname mvrtriangle
 setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, object, ...) {
@@ -85,7 +87,7 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 		}
 
 		lst <- args[names(args) %in% names(formals(mvdc))]
-		mvobj <- do.call("mvdc", lst)		
+		mvobj <- do.call("mvdc", lst)	
 		res <- rMvdc(n, mvobj)		
 
 		#--------------------------------------------------
@@ -150,7 +152,7 @@ setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula
 		#--------------------------------------------------
 		lst <- args[names(args) %in% names(formals(mvdc))]
 		if(length(lst$margins)==1) lst$margins <- rep(lst$margins, args$dim)
-		mvobj <- do.call("mvdc", lst)		
+		mvobj <- do.call("mvdc", lst)	
 		res <- rMvdc(n, mvobj)		
 
 		#--------------------------------------------------

@@ -4,6 +4,7 @@
 
 	BUG FIXES:
 - indices names with ':' were crashing the qmodel, now fixed
+- minor fixes in documentation
 
  FLa4a 1.0.0:
 

@@ -1,11 +1,11 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 1.1.0
+Version: 1.1.1
 Date: 2016-12-21
 Authors@R: c(
   person("Colin P.", "Millar", email = "colinpmillar@googlemail.com", role = "aut"),
-  person("Ernesto", "Jardim", email = "ernesto.jardim@jrc.ec.europa.eu", role = c("aut", "cre")))
+  person("Ernesto", "Jardim", email = "ernesto.jardim@ec.europa.eu", role = c("aut", "cre")))
 Description: A simple and robust statistical Catch at Age model that is
     specifically designed for stocks with intermediate levels of data quantity and
     quality.
@@ -23,7 +23,12 @@ Imports:
     mgcv
 Additional_repositories: http://flr-project.org/R
 Suggests:
-    latticeExtra, knitr, formatR, XML, reshape2, testthat
+    latticeExtra,
+    knitr,
+    formatR,
+    XML,
+    reshape2,
+    testthat
 LazyLoad: yes
 LazyData: yes
 VignetteBuilder: knitr
@@ -58,4 +63,4 @@ Collate:
     'ma-methods.R'
     'utilities.R'
     'southern_hake-data.R'
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1

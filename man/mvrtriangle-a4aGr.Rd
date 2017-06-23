@@ -35,12 +35,12 @@ prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
 vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=0.086), list(a=0, b=0.005, c=0.001))
 
-# Apply mvrtriangle...
-  vbObj1 <- mvrtriangle(10000, vbObj, paramMargins=pars)
-  splom(data.frame(t(params(vbObj1)@.Data)), pch=".")
-#...and compare with mvrcop
-  vbObj2 <- mvrcop(10000, vbObj, copula="ellipCopula", family="t", param=0, 
-     margins="triangle", paramMargins=pars)
-  splom(data.frame(t(params(vbObj2)@.Data)), pch=".")
+# Note that mvrtriangle is a special case of mvrcop
+set.seed(1)
+vbObj1 <- mvrtriangle(10000, vbObj, paramMargins=pars, dispstr="ex", param=0)
+set.seed(1)
+vbObj2 <- mvrcop(10000, vbObj, copula="ellipCopula", family="t", 
+	param=0, margins="triangle", paramMargins=pars)
+all.equal(vbObj2, vbObj1)
 }
 
