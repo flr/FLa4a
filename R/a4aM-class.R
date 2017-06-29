@@ -10,6 +10,9 @@ valida4aM <- function(object){
 	v2 <- v2==1 | v2==max(v2)
 	df0 <- data.frame(dim2iter=v1,iter1orn=v2)
 	if(sum(!df0)>0) return("Object is not valid. Check that all params have 2 dimensions with the second being named \"iter\" and that the number of iters in all models are 1 or N")
+
+	if(range(object)["minmbar"]<range(object)["min"]) return("Youngest age in Mbar range can't be smaller than minimum age")
+	if(range(object)["maxmbar"]>range(object)["max"]) return("Oldest age in Mbar range can't be larger than maximum age")
 	return(TRUE)
 }
 
@@ -135,20 +138,22 @@ setReplaceMethod("trend", "a4aM", function(object, value){
 #' m1 <- a4aM(shape=mod1, level=mod2)
 #' rngmbar(m1)<-c(1,5)
 #' rngmbar(m1)
-setGeneric("rngmbar", function(object, ...) standardGeneric("rngmbar"))
-#' @rdname rngmbar
-setMethod("rngmbar", "a4aM", function(object){
-	object@range[c("minmbar","maxmbar")]
-})
+#setGeneric("rngmbar", function(object, ...) standardGeneric("rngmbar"))
+##' @rdname rngmbar
+#setMethod("rngmbar", "a4aM", function(object){
+#	object@range[c("minmbar","maxmbar")]
+#})
 
-#' @rdname rngmbar
-#' @aliases rngmbar<- rngmbar<--methods
-setGeneric("rngmbar<-", function(object,value) standardGeneric("rngmbar<-"))
-#' @rdname rngmbar
-setReplaceMethod("rngmbar", "a4aM", function(object, value){
-	object@range[c("minmbar","maxmbar")] <- value
-	object
-})
+##' @rdname rngmbar
+##' @aliases rngmbar<- rngmbar<--methods
+#setGeneric("rngmbar<-", function(object,value) standardGeneric("rngmbar<-"))
+##' @rdname rngmbar
+#setReplaceMethod("rngmbar", "a4aM", function(object, value){
+#	if(range(object)["min"]>min(value)) range(object)["min"] <- min(value)
+#	if(range(object)["max"]<max(value)) range(object)["max"] <- max(value)
+#	object@range[c("minmbar","maxmbar")] <- sort(value)
+#	new("a4aM", object)
+#})
 
 #' @name vecmbar
 #' @rdname vecmbar
@@ -163,11 +168,11 @@ setReplaceMethod("rngmbar", "a4aM", function(object, value){
 #' m1 <- a4aM(shape=mod1, level=mod2)
 #' rngmbar(m1)<-c(1,5)
 #' vecmbar(m1)
-setGeneric("vecmbar", function(object, ...) standardGeneric("vecmbar"))
-#' @rdname vecmbar
-setMethod("vecmbar", "a4aM", function(object){
-	rng <- object@range[c("minmbar","maxmbar")]
-	rng[1]:rng[2]
-})
+#setGeneric("vecmbar", function(object, ...) standardGeneric("vecmbar"))
+##' @rdname vecmbar
+#setMethod("vecmbar", "a4aM", function(object){
+#	rng <- object@range[c("minmbar","maxmbar")]
+#	rng[1]:rng[2]
+#})
 
 

@@ -15,6 +15,7 @@
 \alias{fitSumm-methods}
 \alias{harvest,a4aFit,ANY-method}
 \alias{index,a4aFit-method}
+\alias{iter,a4aFit-method}
 \alias{logLik,a4aFit-method}
 \alias{show,a4aFit-method}
 \alias{stock.n,a4aFit-method}
@@ -43,11 +44,17 @@ fitSumm(object, ...)
 \S4method{show}{a4aFit}(object)
 
 \S4method{logLik}{a4aFit}(object, ...)
+
+\S4method{iter}{a4aFit}(obj, it)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
 
 \item{...}{additional argument list that might never be used}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 The \code{a4aFit} class was built to store the a4a stock assessment fits.

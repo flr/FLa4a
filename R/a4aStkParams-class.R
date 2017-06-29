@@ -151,3 +151,45 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
     object
 })
 
+#' @rdname a4aStkParams-class
+#' @param obj the object to be subset
+#' @param it iteration to be extracted 
+setMethod("iter", "a4aStkParams", function(obj, it){
+	obj@vcov <- obj@vcov[,,it, drop=FALSE]
+	obj@params <- iter(obj@params, it)
+	obj@m <- iter(obj@m, it)
+	obj@wt <- iter(obj@wt, it)
+	obj@centering <- obj@centering[it]
+	obj
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

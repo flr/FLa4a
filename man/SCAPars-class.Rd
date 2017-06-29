@@ -18,6 +18,7 @@
 \alias{fmodel}
 \alias{fmodel,SCAPars-method}
 \alias{fmodel-methods}
+\alias{iter,SCAPars-method}
 \alias{m,SCAPars-method}
 \alias{n1model}
 \alias{n1model,SCAPars-method}
@@ -143,11 +144,17 @@ vFrml(object, ...)
 \S4method{m}{SCAPars}(object)
 
 \S4method{wt}{SCAPars}(object)
+
+\S4method{iter}{SCAPars}(obj, it)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
 
 \item{...}{additional argument list that might never be used}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

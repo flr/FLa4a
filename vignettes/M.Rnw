@@ -241,8 +241,8 @@ m(m1)
 Set the quant and year ranges:
 
 <<simple_m3>>=
-rngquant(m1) <- c(0,7)			# set the quant range
-rngyear(m1) <- c(2000, 2010)	# set the year range
+range(m1, c("min","max")) <- c(0,7) # set the quant range
+range(m1, c("minyear","maxyear")) <- c(2000, 2010) # set the year range
 range(m1)
 @
 
@@ -258,8 +258,8 @@ Check the model and set the ranges:
 
 <<m2>>=
 m2
-rngquant(m2) <- c(0,7)
-rngyear(m2) <- c(2000, 2003)
+range(m2, c("min","max")) <- c(0,7) # set the quant range
+range(m2, c("minyear","maxyear")) <- c(2000, 2003) # set the year range
 range(m2)
 m(m2)
 @
@@ -281,7 +281,7 @@ This is because the mbar range is currently set to "0" and "0" (see above) and t
 We can change the \code{mbar} range:
 
 <<m2_3>>=
-rngmbar(m2)<- c(0,5)
+range(m2, c("minmbar","maxmbar")) <- c(0,5)
 range(m2)
 @
 
@@ -308,22 +308,22 @@ m(m3, nao=1)
 Set ages:
 
 <<m3_trend1>>=
-rngquant(m3) <- c(0,7)
+range(m3, c("min","max")) <- c(0,7)
 m(m3, nao=0)
 @
 
 With ages and years - passing in the NAO data as numeric (1,0,1,0)
 
 <<m3_trend2>>=
-rngyear(m3) <- c(2000, 2003)
+range(m3, c("minyear","maxyear")) <- c(2000, 2003)
 m(m3, nao=as.numeric(nao[,as.character(2000:2003)]))
 @
 
 The final example show how \code{m()} can be used to make an \class{FLQuant} with uncertainty (see Figure~\ref{fig:uncertain_m}). We use the \code{m4} object from earlier with uncertainty on the \code{level} and \code{trend} parameters.
 
 <<m4_uncertainty_m>>=
-rngquant(m4) <- c(0,7)
-rngyear(m4) <- c(2000, 2003)
+range(m4, c("min","max")) <- c(0,7)
+range(m4, c("minyear","maxyear")) <- c(2000, 2003)
 flq <- m(m4, nao=as.numeric(nao[,as.character(2000:2003)]))
 flq
 dim(flq)

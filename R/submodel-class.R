@@ -75,6 +75,14 @@ setMethod("model", "submodel", function(object) object@model)
 #' @rdname submodel-class
 setMethod("covar", "submodel", function(object) object@covar)
 
+#' @rdname submodel-class
+#' @param obj the object to be subset
+#' @param it iteration to be extracted 
+setMethod("iter", "submodel", function(obj, it){
+	obj@vcov <- obj@vcov[,,it, drop=FALSE]
+	obj@params <- iter(obj@params, it)
+	obj
+})
 
 
 

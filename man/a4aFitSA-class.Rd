@@ -14,6 +14,7 @@
 \alias{a4aFitSAs,missing-method}
 \alias{a4aFitSAs-class}
 \alias{a4aFitSAs-methods}
+\alias{iter,a4aFitSA-method}
 \alias{m,a4aFitSA-method}
 \alias{pars}
 \alias{pars,a4aFitSA-method}
@@ -43,6 +44,8 @@ pars(object)
 
 \S4method{wt}{a4aFitSA}(object)
 
+\S4method{iter}{a4aFitSA}(obj, it)
+
 a4aFitSAs(object, ...)
 
 \S4method{a4aFitSAs}{list}(object, ...)
@@ -55,6 +58,10 @@ a4aFitSAs(object, ...)
 \item{object}{object of relevant class (see signature of method)}
 
 \item{...}{additional argument list that might never be used}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 The \code{a4aFitSA} class extends \code{a4aFit} to store information about the parameters of the model.

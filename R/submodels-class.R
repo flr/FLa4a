@@ -79,3 +79,12 @@ setMethod("submodels", signature(object="list"),
 
 }) # }}}
 
+#' @rdname submodels-class
+#' @param obj the object to be subset
+#' @param it iteration to be extracted 
+setMethod("iter", "submodels", function(obj, it){
+	out <- submodels(lapply(obj, iter, it))
+	names(out) <- names(obj)
+	out
+})
+

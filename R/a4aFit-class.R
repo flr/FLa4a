@@ -139,4 +139,19 @@ setMethod("logLik", signature(object = "a4aFit"),
     val
  })
 
+#' @rdname a4aFit-class
+#' @param obj the object to be subset
+#' @param it iteration to be extracted 
+setMethod("iter", "a4aFit", function(obj, it){
+	obj@fitSumm <- obj@fitSumm[,it, drop=FALSE] 
+	obj@harvest <- iter(obj@harvest, it)
+	obj@stock.n <- iter(obj@stock.n, it)
+	obj@catch.n <- iter(obj@catch.n, it)
+	obj@index <- iter(obj@index, it)
+	obj
+})
+
+
+
+
 

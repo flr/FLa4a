@@ -589,3 +589,45 @@ fit22 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 identical(fit11@stock.n, fit22@stock.n)
 
 
+#====================================================================
+# iter
+#====================================================================
+
+data(ple4)
+data(ple4.index)
+stk <- propagate(ple4, 2)
+
+# iter a4aFitSA
+fit0 <- a4aSCA(ple4, FLIndices(a=ple4.index))
+fit <- a4aSCA(stk, FLIndices(a=ple4.index))
+fit1 <- iter(fit, 1)
+identical(fit1@harvest, fit0@harvest)
+identical(fit1@stock.n, fit0@stock.n)
+identical(fit1@catch.n, fit0@catch.n)
+identical(fit1@index, fit0@index)
+all.equal(fit1@pars, fit0@pars)
+
+# iter a4aFitSA
+fit0 <- sca(ple4, FLIndices(a=ple4.index))
+fit <- sca(stk, FLIndices(a=ple4.index))
+fit1 <- iter(fit, 1)
+identical(fit1@harvest, fit0@harvest)
+identical(fit1@stock.n, fit0@stock.n)
+identical(fit1@catch.n, fit0@catch.n)
+identical(fit1@index, fit0@index)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

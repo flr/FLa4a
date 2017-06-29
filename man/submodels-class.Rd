@@ -2,6 +2,7 @@
 % Please edit documentation in R/submodels-class.R
 \docType{class}
 \name{submodels}
+\alias{iter,submodels-method}
 \alias{submodels}
 \alias{submodels,list-method}
 \alias{submodels,missing-method}
@@ -17,11 +18,17 @@ submodels(object, ...)
 \S4method{submodels}{submodel}(object, ...)
 
 \S4method{submodels}{list}(object, ...)
+
+\S4method{iter}{submodels}(obj, it)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
 
 \item{...}{additional argument list that might never be used}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

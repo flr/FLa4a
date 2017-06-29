@@ -3,6 +3,7 @@
 \docType{class}
 \name{submodel}
 \alias{covar,submodel-method}
+\alias{iter,submodel-method}
 \alias{model,submodel-method}
 \alias{params,submodel-method}
 \alias{submodel}
@@ -20,11 +21,17 @@ submodel(object, ...)
 \S4method{model}{submodel}(object)
 
 \S4method{covar}{submodel}(object)
+
+\S4method{iter}{submodel}(obj, it)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
 
 \item{...}{additional argument list that might never be used}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

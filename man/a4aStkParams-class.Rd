@@ -14,6 +14,7 @@
 \alias{fMod<-}
 \alias{fMod<-,a4aStkParams,formula-method}
 \alias{fMod<--methods}
+\alias{iter,a4aStkParams-method}
 \alias{m,a4aStkParams-method}
 \alias{n1Mod}
 \alias{n1Mod,a4aStkParams-method}
@@ -77,6 +78,8 @@ rMod(object) <- value
 \S4method{vcov}{a4aStkParams}(object)
 
 \S4method{vcov}{a4aStkParams,array}(object) <- value
+
+\S4method{iter}{a4aStkParams}(obj, it)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
@@ -84,6 +87,10 @@ rMod(object) <- value
 \item{...}{additional argument list that might never be used}
 
 \item{value}{the new object}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

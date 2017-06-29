@@ -826,8 +826,8 @@ trend <- FLModelSim(model=~b, params=FLPar(b=0.5), vcov=matrix(0.02))
 
 m4 <- a4aM(shape=shape, level=level, trend=trend)
 m4 <- mvrnorm(nits, m4)
-range(m4)[] <- range(ple4)[]
-range(m4)[c("minmbar","maxmbar")]<-c(1,1)
+range(m4, c("min","max","minyear","maxyear")) <- range(ple4, c("min","max","minyear","maxyear"))
+range(m4, c("minmbar","maxmbar"))<-c(1,1)
 flq <- m(m4)[]
 quant(flq) <- "age"
 stk <- propagate(ple4, nits)

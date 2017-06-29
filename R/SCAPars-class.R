@@ -158,4 +158,13 @@ setMethod("m", signature(object="SCAPars"), function(object) m(stkmodel(object))
 #' @rdname SCAPars-class
 setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object)))
 
+#' @rdname SCAPars-class
+#' @param obj the object to be subset
+#' @param it iteration to be extracted 
+setMethod("iter", "SCAPars", function(obj, it){
+	obj@stkmodel <- iter(obj@stkmodel, it)
+	obj@qmodel <- iter(obj@qmodel, it)
+	obj@vmodel <- iter(obj@vmodel, it)
+	obj
+})
 
