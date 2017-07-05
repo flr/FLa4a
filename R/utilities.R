@@ -205,6 +205,11 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 #' plot(obj, FLIndices(ple4.index))
 
 setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
+	v <- unlist(lapply(y, is, "FLIndexBiomass"))
+	if(sum(v)>0){
+		warning("Biomass indices will be removed, can't plot age based estimates.")
+		y <- y[!v]
+	}	
 	args <- list()
 	dfx <- as.data.frame(index(x))
 	dfy <- as.data.frame(lapply(y, index))
