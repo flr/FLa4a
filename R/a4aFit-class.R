@@ -39,8 +39,8 @@
 #' BIC(obj)
 
 setClass("a4aFit",
-        representation(
-                "FLComp",
+         contains = "FLComp",
+         slots = c(
                 call         = "call",
                 clock        = "numeric",
                 fitSumm      = "array",
@@ -49,21 +49,32 @@ setClass("a4aFit",
                 catch.n      = "FLQuant",
                 index        = "FLQuants"),
         prototype = prototype(
-                call         = new('call'),
-                clock        = new('numeric'),
-                fitSumm      = new('array'),
-                stock.n      = new('FLQuant'),
-                harvest      = new('FLQuant'),
-                catch.n      = new('FLQuant'),
-                index        = new('FLQuants')),
-        validity = function(object) {
-			# All FLQuant objects must have same dimensions
-			Dim <- dim(object@stock.n)
-			if ((sum(dim(object@harvest) != Dim) + sum(dim(object@catch.n) != Dim))>=1)
-				return("stock.n, catch.n and harvest slots must have same dimensions")
-			# Everything is fine
-			return(TRUE)}
+                )
 )
+
+setMethod("initialize", "a4aFit", 
+    function(.Object, ...) {
+      .Object <- callNextMethod(...)
+      .Object@call    <- new('call')
+      .Object@clock   <- new('numeric')
+      .Object@fitSumm <- new('array')
+      .Object@stock.n <- new('FLQuant')
+      .Object@harvest <- new('FLQuant')
+      .Object@catch.n <- new('FLQuant')
+      .Object@index   <- new('FLQuants')
+      .Object
+    })
+
+setValidity("a4aFit", 
+  function(object) {
+    # All FLQuant objects must have same dimensions
+    if (any(dim(object@harvest) != dim(object@stock.n)) || 
+        any(dim(object@catch.n) != dim(object@stock.n)))
+      "stock.n, catch.n and harvest slots must have same dimensions"
+    else # Everything is fine
+      TRUE
+})
+
 
 #' @rdname a4aFit-class
 #' @template bothargs
@@ -78,7 +89,7 @@ setMethod("a4aFit", signature(object="missing"),
     # or not
   	} else {
       args <- list(...)
-	  args$Class <- 'a4aFit'
+	    args$Class <- 'a4aFit'
       do.call("new", args)
 	  }
   }
