@@ -43,4 +43,3 @@ vbObj2 <- mvrcop(10000, vbObj, copula="ellipCopula", family="t",
 	param=0, margins="triangle", paramMargins=pars)
 all.equal(vbObj2, vbObj1)
 }
-

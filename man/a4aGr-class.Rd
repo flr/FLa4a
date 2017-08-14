@@ -3,25 +3,26 @@
 \docType{class}
 \name{a4aGr}
 \alias{a4aGr}
-\alias{a4aGr,missing-method}
 \alias{a4aGr-class}
+\alias{a4aGr}
 \alias{a4aGr-methods}
-\alias{distr,a4aGr-method}
-\alias{distr<-,a4aGr,character-method}
-\alias{grInvMod}
-\alias{grInvMod,a4aGr-method}
-\alias{grInvMod-methods}
-\alias{grInvMod<-}
-\alias{grInvMod<-,a4aGr,formula-method}
-\alias{grInvMod<--methods}
+\alias{a4aGr,missing-method}
 \alias{grMod}
-\alias{grMod,a4aGr-method}
 \alias{grMod-methods}
+\alias{grMod,a4aGr-method}
 \alias{grMod<-}
-\alias{grMod<-,a4aGr,formula-method}
 \alias{grMod<--methods}
+\alias{grMod<-,a4aGr,formula-method}
+\alias{grInvMod}
+\alias{grInvMod-methods}
+\alias{grInvMod,a4aGr-method}
+\alias{grInvMod<-}
+\alias{grInvMod<--methods}
+\alias{grInvMod<-,a4aGr,formula-method}
 \alias{params,a4aGr-method}
 \alias{params<-,a4aGr,FLPar-method}
+\alias{distr,a4aGr-method}
+\alias{distr<-,a4aGr,character-method}
 \alias{vcov,a4aGr-method}
 \alias{vcov<-,a4aGr,numeric-method}
 \title{Individual growth class}
@@ -97,6 +98,7 @@ any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
 for sizing, but not for populating any slot.
 }
+
 \examples{
 mm <- matrix(NA, ncol=3, nrow=3)
 diag(mm) <- c(50, 0.001,0.001)
@@ -106,4 +108,3 @@ imd <- ~t0-1/k*log(1-len/linf)
 prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
 vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 }
-

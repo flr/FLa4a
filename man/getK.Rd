@@ -3,8 +3,8 @@
 \docType{methods}
 \name{getK}
 \alias{getK}
-\alias{getK,a4aGr-method}
 \alias{getK-methods}
+\alias{getK,a4aGr-method}
 \title{Get K}
 \usage{
 getK(object, ...)
@@ -33,4 +33,3 @@ vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 vbObj <- mvrnorm(100,vbObj)
 getK(vbObj)
 }
-

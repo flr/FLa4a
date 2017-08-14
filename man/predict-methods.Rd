@@ -3,8 +3,8 @@
 \docType{methods}
 \name{predict for sca}
 \alias{predict for sca}
-\alias{predict,SCAPars-method}
 \alias{predict,a4aFitSA-method}
+\alias{predict,SCAPars-method}
 \title{Predict methods for SCA}
 \usage{
 \S4method{predict}{a4aFitSA}(object)
@@ -25,4 +25,3 @@ qmodel <- list(~factor(age))
 fit1 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 flqs <- predict(fit1)
 }
-

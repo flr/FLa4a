@@ -3,9 +3,9 @@
 \docType{methods}
 \name{pars2dim}
 \alias{pars2dim}
+\alias{pars2dim-methods}
 \alias{pars2dim,FLModelSim-method}
 \alias{pars2dim,FLPar-method}
-\alias{pars2dim-methods}
 \title{Check that the second dimension in params is "iter"}
 \usage{
 pars2dim(object)
@@ -24,10 +24,10 @@ Checks that the name of the second dimension in params is "iter". For internal u
 
 Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
 }
+
 \examples{
 pars2dim(FLModelSim())
 #Example use of pars2dim:
 pars2dim(FLPar())
 pars2dim(FLPar(array(dim=c(1,1,1))))
 }
-

@@ -27,4 +27,3 @@ data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
 plot(obj, ple4)
 }
-

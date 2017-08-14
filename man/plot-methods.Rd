@@ -28,4 +28,3 @@ obj <- sca(ple4, FLIndices(ple4.index))
 flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 plot(flqs)
 }
-

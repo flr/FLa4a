@@ -3,11 +3,11 @@
 \docType{methods}
 \name{simulate}
 \alias{simulate}
-\alias{simulate,SCAPars-method}
 \alias{simulate,a4aFitSA-method}
+\alias{simulate,SCAPars-method}
 \alias{simulate,a4aStkParams-method}
-\alias{simulate,submodel-method}
 \alias{simulate,submodels-method}
+\alias{simulate,submodel-method}
 \title{Simulation methods for SCA}
 \usage{
 simulate(object, nsim = 1, seed = NULL, ...)
@@ -51,4 +51,3 @@ fit1
 summary(fit1)
 stock.n(fit1)
 }
-

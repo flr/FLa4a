@@ -14,4 +14,3 @@ Simulated stock based on red fish.
 \author{
 Daniel Howell
 }
-

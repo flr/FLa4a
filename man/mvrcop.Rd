@@ -38,4 +38,3 @@ vbSim <- mvrcop(10000, vb, copula="archmCopula", family="clayton", param=2,
 boxplot(t(predict(vbSim, t=0:20+0.5)))
 splom(data.frame(t(params(vbSim)@.Data)), pch=".")
 }
-

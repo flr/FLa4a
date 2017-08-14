@@ -3,8 +3,8 @@
 \docType{methods}
 \name{a4aSCA}
 \alias{a4aSCA}
-\alias{a4aSCA,FLStock,FLIndices-method}
 \alias{a4aSCA-methods}
+\alias{a4aSCA,FLStock,FLIndices-method}
 \title{Statistical catch-at-age advanced method}
 \usage{
 a4aSCA(stock, indices, ...)
@@ -98,4 +98,3 @@ fit6 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(pl
 rmodel <- ~ bevholt(CV=0.05)
 fit7 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
 }
-

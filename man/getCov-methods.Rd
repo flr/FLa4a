@@ -19,4 +19,3 @@ a covariance matrix
 \description{
 Returns the covariance matrix of the specified Gaussian markov random field model.
 }
-

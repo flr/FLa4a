@@ -3,8 +3,8 @@
 \docType{methods}
 \name{mvrnorm for a4aGR}
 \alias{mvrnorm for a4aGR}
-\alias{mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method}
 \alias{mvrnorm,numeric,a4aGr-method}
+\alias{mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method}
 \title{mvrnorm}
 \usage{
 \S4method{mvrnorm}{numeric,a4aGr,ANY,ANY,ANY,ANY}(n = 1, mu)
@@ -30,4 +30,3 @@ prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
 vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 vbObj <- mvrnorm(100,vbObj)
 }
-

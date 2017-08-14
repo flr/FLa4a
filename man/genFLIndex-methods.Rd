@@ -3,8 +3,8 @@
 \docType{methods}
 \name{genFLIndex}
 \alias{genFLIndex}
-\alias{genFLIndex,FLQuant-method}
 \alias{genFLIndex-methods}
+\alias{genFLIndex,FLQuant-method}
 \title{Methods to generate FLIndex objects}
 \usage{
 genFLIndex(object, ...)
@@ -26,4 +26,3 @@ an FLIndex
 \description{
 This method produces an \code{FLIndex} object by using the \code{genFLQuant} method.
 }
-

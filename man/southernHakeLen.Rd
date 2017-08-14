@@ -17,4 +17,3 @@ Length based stock and three indices data for Southern hake.
 \author{
 Finlay Scott
 }
-

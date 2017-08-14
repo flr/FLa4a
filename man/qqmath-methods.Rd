@@ -2,8 +2,8 @@
 % Please edit documentation in R/a4aFitresiduals-class.R
 \docType{methods}
 \name{qqplot of residuals}
-\alias{qqmath,a4aFitResiduals,missing-method}
 \alias{qqplot of residuals}
+\alias{qqmath,a4aFitResiduals,missing-method}
 \title{qqplot of standardized log residuals}
 \usage{
 \S4method{qqmath}{a4aFitResiduals,missing}(x, data = missing, ...)
@@ -28,4 +28,3 @@ obj <- sca(ple4, FLIndices(ple4.index))
 flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 qqmath(flqs)
 }
-

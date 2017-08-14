@@ -17,4 +17,3 @@
 \description{
 Range method for a4aM objects
 }
-

@@ -3,8 +3,8 @@
 \docType{methods}
 \name{breakpts}
 \alias{breakpts}
-\alias{breakpts,numeric-method}
 \alias{breakpts-methods}
+\alias{breakpts,numeric-method}
 \title{Breakpoints}
 \usage{
 breakpts(var, ...)
@@ -24,4 +24,3 @@ a \code{factor} with levels according to the defined breaks
 \description{
 Method to set breakpoints in submodels
 }
-

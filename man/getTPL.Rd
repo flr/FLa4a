@@ -19,4 +19,3 @@ Function to get the a4a TPL file with ADMB code and copy into a specific folder.
 \examples{
 getTPL("myfolder")
 }
-
