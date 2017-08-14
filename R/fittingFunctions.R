@@ -8,7 +8,10 @@ globalVariables(c("obs", "year", "age", "fleet"))
 #' @description This was the old stock assessment framework user's interface. It was replaced by \code{sca} or the advanced version \code{a4aSCA}.    
 #' @aliases a4a
 a4a <- function(...){
-  warning('The a4a function has been renamed: please use the function a4aSCA in place of a4a.')
+  .Deprecated(a4aSCA, 
+              package=NULL, 
+              msg = 'The a4a function has been renamed: please use the function a4aSCA in place of a4a.',
+              old = as.character(sys.call(sys.parent()))[1L])
 }
 
 #' @title Collapse seasons
