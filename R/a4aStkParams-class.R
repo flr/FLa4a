@@ -81,8 +81,8 @@ setMethod("initialize", "a4aStkParams",
       .Object@wt <- if (missing(wt)) flq else wt
       # throw error if range from FLComp doesn't match FLQuants 
       # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
-      if (abs(as.numeric(dimnames(object@m)$year[1]) - object@range["minyear"]) > 1e-9 ||
-          abs(as.numeric(dimnames(object@m)$year[dim(object@m)[2]]) - object@range["maxyear"]) > 1e-9) {
+      if (abs(as.numeric(dimnames(.Object@m)$year[1]) - .Object@range["minyear"]) > 1e-9 ||
+          abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) - .Object@range["maxyear"]) > 1e-9) {
             stop("range does not match supplied m and wt dimensions")
       }
       .Object@units <- units
