@@ -3,7 +3,7 @@
 #' @name a4aStkParams
 #' @rdname a4aStkParams-class
 #' @template ClassDescription
-#' @section Slot: 
+#' @section Slot:
 #' \describe{
 #'	\item{\code{fMod}}{F submodel \code{formula}}
 #'	\item{\code{n1Mod}}{first year N \code{formula}}
@@ -18,9 +18,9 @@
 #' @aliases a4aStkParams-class
 
 setClass("a4aStkParams",
-  representation = 
-    representation(
-      "FLComp",
+  contains = "FLComp",
+  slots =
+    c(
       fMod      = "formula",
       n1Mod     = "formula",
       srMod     = "formula",
@@ -31,24 +31,68 @@ setClass("a4aStkParams",
       m         = "FLQuant",
       wt         = "FLQuant",
       units     = "character"
-    ),
-  prototype = 
-    prototype(
-      name      = character(0),
-      desc      = character(0),
-      range     = c(min=0, max=0, plusgroup=0, minyear=0, maxyear=0),
-      fMod      = ~1,
-      n1Mod     = ~1,
-      srMod     = ~1,
-      params    = FLPar(),
-      vcov      = array(),
-      centering = 0,
-      distr     = "lnorm",
-      m         = FLQuant(),
-      wt         = FLQuant(),
-      units     = "NA"
     )
 )
+
+setValidity("a4aStkParams",
+  function(object) {
+    # check dimensions of m and wt are the same
+    if (!identical(unlist(dimnames(object@m)[2:5]),
+                   unlist(dimnames(object@wt)[2:5]))) {
+      "m and wt elements must share dimensions 2 to 5"
+    } else {
+      TRUE
+    }
+})
+
+setMethod("initialize", "a4aStkParams",
+    function(.Object,
+              fMod      = ~ 1,
+              n1Mod     = ~ 1,
+              srMod     = ~ 1,
+              params    = FLPar(),
+              vcov      = array(),
+              centering = 0,
+              distr     = "lnorm",
+              m         = FLQuant(),
+              wt        = FLQuant(),
+              units     = "NA",
+              ...) {
+      # initialize FLComp slots
+      .Object <- callNextMethod(.Object, ...)
+      # initialize remaining slots
+      .Object@fMod  <- fMod
+      .Object@n1Mod <- n1Mod
+      .Object@srMod <- srMod
+      .Object@params <- params
+      .Object@vcov <- vcov
+      .Object@centering <- centering
+      .Object@distr <- distr
+      # if missing set dimensions of of m and wt based on range
+      if (missing(m) || missing(wt))
+        flq <- FLQuant(
+                  matrix(NA,
+                     nrow = .Object@range["max"] - .Object@range["min"] + 1,
+                     ncol = .Object@range["maxyear"] - .Object@range["minyear"] + 1),
+                     dimnames = list(age = .Object@range["min"]:.Object@range["max"],
+                                     year = .Object@range["minyear"]:.Object@range["maxyear"])
+                  )
+      .Object@m <- if (missing(m)) flq else m
+      .Object@wt <- if (missing(wt)) flq else wt
+      # throw error if range from FLComp doesn't match FLQuants 
+      # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
+      if (abs(as.numeric(dimnames(object@m)$year[1]) - object@range["minyear"]) > 1e-9 ||
+          abs(as.numeric(dimnames(object@m)$year[dim(object@m)[2]]) - object@range["maxyear"]) > 1e-9) {
+            stop("range does not match supplied m and wt dimensions")
+      }
+      .Object@units <- units
+      .Object
+    })
+
+
+
+
+
 
 #' @rdname a4aStkParams-class
 #' @template bothargs
@@ -153,7 +197,7 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
 
 #' @rdname a4aStkParams-class
 #' @param obj the object to be subset
-#' @param it iteration to be extracted 
+#' @param it iteration to be extracted
 setMethod("iter", "a4aStkParams", function(obj, it){
 	obj@vcov <- obj@vcov[,,it, drop=FALSE]
 	obj@params <- iter(obj@params, it)
