@@ -21,12 +21,12 @@
 \alias{n1Mod<-}
 \alias{n1Mod<--methods}
 \alias{n1Mod<-,a4aStkParams,formula-method}
-\alias{rMod}
+\alias{srMod}
 \alias{rMod-methods}
-\alias{rMod,a4aStkParams-method}
-\alias{rMod<-}
-\alias{rMod<--methods}
-\alias{rMod<-,a4aStkParams,formula-method}
+\alias{srMod,a4aStkParams-method}
+\alias{srMod<-}
+\alias{srMod<--methods}
+\alias{srMod<-,a4aStkParams,formula-method}
 \alias{params,a4aStkParams-method}
 \alias{params<-,a4aStkParams,FLPar-method}
 \alias{distr,a4aStkParams-method}
@@ -60,13 +60,13 @@ n1Mod(object) <- value
 
 \S4method{n1Mod}{a4aStkParams,formula}(object) <- value
 
-rMod(object, ...)
+srMod(object, ...)
 
-\S4method{rMod}{a4aStkParams}(object)
+\S4method{srMod}{a4aStkParams}(object)
 
-rMod(object) <- value
+srMod(object) <- value
 
-\S4method{rMod}{a4aStkParams,formula}(object) <- value
+\S4method{srMod}{a4aStkParams,formula}(object) <- value
 
 \S4method{params}{a4aStkParams}(object)
 
@@ -97,7 +97,7 @@ rMod(object) <- value
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.
 }
 \section{Slot}{
- 
+
 \describe{
 \item{\code{fMod}}{F submodel \code{formula}}
 \item{\code{n1Mod}}{first year N \code{formula}}

@@ -154,17 +154,17 @@ setReplaceMethod("n1Mod", signature("a4aStkParams","formula"), function(object, 
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases rMod rMod-methods
-setGeneric("rMod", function(object, ...) standardGeneric("rMod"))
+#' @aliases srMod rMod-methods
+setGeneric("srMod", function(object, ...) standardGeneric("srMod"))
 #' @rdname a4aStkParams-class
-setMethod("rMod", "a4aStkParams", function(object) object@rMod)
+setMethod("srMod", "a4aStkParams", function(object) object@srMod)
 
 #' @rdname a4aStkParams-class
-#' @aliases rMod<- rMod<--methods
-setGeneric("rMod<-", function(object,value) standardGeneric("rMod<-"))
+#' @aliases srMod<- srMod<--methods
+setGeneric("srMod<-", function(object,value) standardGeneric("srMod<-"))
 #' @rdname a4aStkParams-class
-setReplaceMethod("rMod", signature("a4aStkParams","formula"), function(object, value){
-    if(all.equal(is(value), is(object@rMod))) object@rMod <- value
+setReplaceMethod("srMod", signature("a4aStkParams","formula"), function(object, value){
+    if(all.equal(is(value), is(object@srMod))) object@srMod <- value
     object
 })
 
