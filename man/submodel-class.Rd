@@ -8,8 +8,8 @@
 \alias{submodel-methods}
 \alias{submodel,missing-method}
 \alias{params,submodel-method}
-\alias{model,submodel-method}
-\alias{covar,submodel-method}
+\alias{Mod,submodel-method}
+\alias{vcov,submodel-method}
 \alias{iter,submodel-method}
 \title{Submodel class}
 \usage{
@@ -19,9 +19,9 @@ submodel(object, ...)
 
 \S4method{params}{submodel}(object)
 
-\S4method{model}{submodel}(object)
+\S4method{Mod}{submodel}(z)
 
-\S4method{covar}{submodel}(object)
+\S4method{vcov}{submodel}(object)
 
 \S4method{iter}{submodel}(obj, it)
 }
@@ -41,15 +41,15 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
  
 \describe{
 
-\item{\code{Mod}}{\code{formula} describing the model}
+ \item{\code{Mod}}{\code{formula} describing the model}
 
-\item{\code{params}}{\code{FLPar} with model parameters}
+ \item{\code{params}}{\code{FLPar} with model parameters}
 
-\item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
+ \item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
 
-\item{\code{centering}}{\code{numeric} value used for centering the data}
+ \item{\code{centering}}{\code{numeric} value used for centering the data}
 
-\item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
+ \item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
 }
 }
 

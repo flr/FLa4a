@@ -35,7 +35,7 @@ setValidity("submodel",
       # Everything is fine
       TRUE
     }
-)
+})
 
 setMethod("initialize", "submodel",
   function(.Object, 
@@ -54,7 +54,7 @@ setMethod("initialize", "submodel",
       .Object@centering <- centering
       .Object@distr <- distr
       .Object
-  } 
+}) 
 
 
 
