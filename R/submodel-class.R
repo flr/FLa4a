@@ -6,42 +6,57 @@
 #' @section Slot: 
 #' \describe{
 #'
-#'	\item{\code{Mod}}{\code{formula} describing the model}
+#'  \item{\code{Mod}}{\code{formula} describing the model}
 #'
-#'	\item{\code{params}}{\code{FLPar} with model parameters}
+#'  \item{\code{params}}{\code{FLPar} with model parameters}
 #'
-#'	\item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
+#'  \item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
 #'
-#'	\item{\code{centering}}{\code{numeric} value used for centering the data}
+#'  \item{\code{centering}}{\code{numeric} value used for centering the data}
 #'
-#'	\item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
+#'  \item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
 #' }
 #' @aliases submodel-class
 setClass("submodel",
-        representation(
-				"FLComp",
-        Mod       = "formula",
-				params    = "FLPar",
-				vcov      = "array",
-				centering = "numeric",
-				distr     = "character"),
-        prototype = prototype(
-				name	= character(0),
-				desc	= character(0),
-				range	= c(min=0, max=0, plusgroup=0, minyear=0, maxyear=0),
-        Mod = ~1,
-				params = FLPar(),
-				vcov = array(),
-				centering = 0,
-				distr = "lnorm",
-		validity=function(object) {
-			# no unit, area, season fits
-			if(length(dim(object@params)) > 2 | length(dim(object@vcov)) > 3){
-				return("Params or vcov have unit, area or season. Can't work with that!")
-			}
-			# Everything is fine
-			return(TRUE)})
+  contains = "FLComp",
+  slots = c(Mod       = "formula",
+            params    = "FLPar",
+            vcov      = "array",
+            centering = "numeric",
+            distr     = "character")
 )
+
+setValidity("submodel",
+  function(object) {
+    # no unit, area, season fits
+    if (length(dim(object@params)) > 2 | length(dim(object@vcov)) > 3) {
+      "Params or vcov have unit, area or season. Can't work with that!"
+    } else {
+      # Everything is fine
+      TRUE
+    }
+)
+
+setMethod("initialize", "submodel",
+  function(.Object, 
+           Mod = ~ 1,
+           params = FLPar(),
+           vcov = array(),
+           centering = 0,
+           distr = "lnorm", 
+           ...) {
+      # initialize FLComp slots
+      .Object <- callNextMethod(.Object, ...)
+      # initialize remaining slots
+      .Object@Mod <- Mod
+      .Object@params <- params
+      .Object@vcov <- vcov
+      .Object@centering <- centering
+      .Object@distr <- distr
+      .Object
+  } 
+
+
 
 
 #' @rdname submodel-class
@@ -50,19 +65,19 @@ setClass("submodel",
 #' @template bothargs
 #' @aliases submodel submodel-methods
 setGeneric("submodel", function(object, ...)
-	standardGeneric("submodel"))
+  standardGeneric("submodel"))
 #' @rdname submodel-class
 setMethod("submodel", signature(object="missing"),
   function(...) {
     # empty
-  	if(missing(...)){
-	  	new("submodel")
+    if(missing(...)){
+      new("submodel")
     # or not
-  	} else {
+    } else {
       args <- list(...)
-	  args$Class <- 'submodel'
+    args$Class <- 'submodel'
       do.call("new", args)
-	  }
+    }
   }
 )
 
@@ -70,19 +85,17 @@ setMethod("submodel", signature(object="missing"),
 setMethod("params", "submodel", function(object) object@params)
 
 #' @rdname submodel-class
-setMethod("model", "submodel", function(object) object@model)
+setMethod("Mod", "submodel", function(object) object@Mod)
 
 #' @rdname submodel-class
-setMethod("covar", "submodel", function(object) object@covar)
+setMethod("vcov", "submodel", function(object) object@vcov)
 
 #' @rdname submodel-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted 
 setMethod("iter", "submodel", function(obj, it){
-	obj@vcov <- obj@vcov[,,it, drop=FALSE]
-	obj@params <- iter(obj@params, it)
-	obj
+  obj@vcov <- obj@vcov[,,it, drop=FALSE]
+  obj@params <- iter(obj@params, it)
+  obj
 })
-
-
 
