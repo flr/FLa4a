@@ -11,15 +11,37 @@
 #' }
 #' @aliases SCAPars-class
 setClass("SCAPars",
-        representation(
-               stkmodel    = "a4aStkParams",
-                 qmodel    = "submodels",
-                 vmodel    = "submodels"),
-        prototype = prototype(
-               stkmodel    = new("a4aStkParams"),
-                 qmodel    = new("submodels"),
-                 vmodel    = new("submodels"))
+        slots = c(stkmodel  = "a4aStkParams",
+                  qmodel    = "submodels",
+                  vmodel    = "submodels")
 )
+
+setValidity("SCAPars", 
+  function(object) {
+    # vmodel should be 1 longer than qmodel
+    if(length(object@qmodel) + 1 != length(object@vmodel)) {
+      "vmodel should be 1 longer than qmodel"
+    } else {
+      TRUE
+    }
+})
+
+setMethod("initialize", "SCAPars",
+  function(.Object, 
+           stkmodel = new("a4aStkParams"),
+           qmodel = new("submodels"),
+           vmodel = new("submodels")) {
+      # initialize FLComp slots
+      .Object <- callNextMethod()
+      # initialize remaining slots
+      .Object@stkmodel <- stkmodel
+      .Object@qmodel <- qmodel
+      .Object@vmodel <- vmodel
+      .Object
+}) 
+
+
+
 
 #' @rdname SCAPars-class
 #' @template Accessors
