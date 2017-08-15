@@ -1,11 +1,3 @@
-vsmods <- function(object){
-	
-  # All items are FLStock
-  if(!all(unlist(lapply(object, is, 'submodel'))))
-      return("Components must be submodel")	
-	
-	return(TRUE)
-}
 
 #' @title Submodels class
 #' @docType class
@@ -14,9 +6,20 @@ vsmods <- function(object){
 #' @template ClassDescription
 #' @note This class is similar to other 'plural' calsses in \code{FLR}. It is a list constrained to having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
 #' @aliases submodels-class
-setClass("submodels", contains="FLComps",
-	validity=vsmods
-)
+setClass("submodels", contains = "FLComps")
+
+setValidity("submodels", 
+  function(object) {
+    # All items are submodel-class
+    if(!all(sapply(object, is, 'submodel'))) {
+      "Components must be submodel"
+    } else {
+      TRUE
+    }
+})
+
+
+
 
 #' @rdname submodels-class
 #' @template Constructors
