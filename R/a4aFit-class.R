@@ -41,27 +41,32 @@
 setClass("a4aFit",
          contains = "FLComp",
          slots = c(
-                call         = "call",
-                clock        = "numeric",
-                fitSumm      = "array",
-                stock.n      = "FLQuant",
-                harvest      = "FLQuant",
-                catch.n      = "FLQuant",
-                index        = "FLQuants"),
-        prototype = prototype(
-                )
+                   call    = "call",
+                   clock   = "numeric",
+                   fitSumm = "array",
+                   stock.n = "FLQuant",
+                   harvest = "FLQuant",
+                   catch.n = "FLQuant",
+                   index   = "FLQuants")
 )
 
 setMethod("initialize", "a4aFit", 
-    function(.Object, ...) {
-      .Object <- callNextMethod(...)
-      .Object@call    <- new('call')
-      .Object@clock   <- new('numeric')
-      .Object@fitSumm <- new('array')
-      .Object@stock.n <- new('FLQuant')
-      .Object@harvest <- new('FLQuant')
-      .Object@catch.n <- new('FLQuant')
-      .Object@index   <- new('FLQuants')
+    function(.Object, 
+             call = new('call'), 
+             clock = new('numeric'), 
+             fitSumm = new('array'), 
+             stock.n = new('FLQuant'),
+             harvest = new('FLQuant'), 
+             catch.n = new('FLQuant'),
+             index = new('FLQuants'), ...) {
+      .Object <- callNextMethod(.Object, ...)
+      .Object@call    <- call
+      .Object@clock   <- clock
+      .Object@fitSumm <- fitSumm
+      .Object@stock.n <- stock.n
+      .Object@harvest <- harvest
+      .Object@catch.n <- catch.n
+      .Object@index   <- index
       .Object
     })
 
