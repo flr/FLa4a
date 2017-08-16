@@ -47,6 +47,7 @@ Collate:
     'SCAMCMC-class.R'
     'a4aFit-class.R'
     'a4aFitSA-class.R'
+    'a4aFitSAs-class.R'
     'a4aFitMCMC-class.R'
     'a4aFitresiduals-class.R'
     'coef-methods.R'
