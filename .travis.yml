@@ -6,6 +6,7 @@ os:
   - linux
 
 language: r
+
 r:
   - release
   - devel
@@ -34,3 +35,8 @@ branches:
 
 r_build_args: --no-build-vignettes --no-manual --no-resave-data
 r_check_args: --no-build-vignettes --no-manual
+
+script: 
+  - |
+    R CMD build .
+    travis_wait 20 R CMD check FLa4a*tar.gz
