@@ -9,6 +9,9 @@
 \alias{submodels,missing-method}
 \alias{submodels,submodel-method}
 \alias{submodels,list-method}
+\alias{params,submodels-method}
+\alias{sMod,submodels-method}
+\alias{vcov,submodels-method}
 \alias{iter,submodels-method}
 \title{Submodels class}
 \usage{
@@ -19,6 +22,12 @@ submodels(object, ...)
 \S4method{submodels}{submodel}(object, ...)
 
 \S4method{submodels}{list}(object, ...)
+
+\S4method{params}{submodels}(object)
+
+\S4method{sMod}{submodels}(object)
+
+\S4method{vcov}{submodels}(object)
 
 \S4method{iter}{submodels}(obj, it)
 }
