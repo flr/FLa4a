@@ -101,8 +101,8 @@ setMethod("show", "a4aFitSA",
 
 #' @rdname a4aFitSA-class
 # THIS IS A SHOW METHOD - NEED TO THINK ABOUT THIS ONE...
-setMethod("submodels", signature(object = "a4aFitSA"),
-  function(object)
+setMethod("submodels", "a4aFitSA",
+  function(object, ...)
   {
     cat("\t fmodel: "); print( fmodel(pars(object)), showEnv = FALSE)
     cat("\tsrmodel: "); print(srmodel(pars(object)), showEnv = FALSE)
