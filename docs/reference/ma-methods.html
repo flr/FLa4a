@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -49,6 +49,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="http://github.com/flr/FLa4a">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -60,7 +67,9 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://flr-project.org/">FLR</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -108,19 +117,27 @@
 <span class='fu'>data</span>(<span class='no'>ple4.indices</span>)
 <span class='no'>fmod</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>20</span>)
 <span class='no'>qmod</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>), ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>), ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>))
-<span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='no'>ple4</span>, <span class='no'>ple4.indices</span>, <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>, <span class='kw'>fit</span> <span class='kw'>=</span> <span class='st'>"assessment"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='no'>qmod</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>)+<span class='no'>year</span>, ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>), ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>))
-<span class='no'>f2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='no'>ple4</span>, <span class='no'>ple4.indices</span>, <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>, <span class='kw'>fit</span> <span class='kw'>=</span> <span class='st'>"assessment"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='co'># AIC weighting</span>
+<span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='no'>ple4</span>, <span class='no'>ple4.indices</span>, <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>, <span class='kw'>fit</span> <span class='kw'>=</span> <span class='st'>"assessment"</span>)
+<span class='no'>qmod</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>)+<span class='no'>year</span>, ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>4</span>), ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>))
+<span class='no'>f2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='no'>ple4</span>, <span class='no'>ple4.indices</span>, <span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmod</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmod</span>, <span class='kw'>fit</span> <span class='kw'>=</span> <span class='st'>"assessment"</span>)
+<span class='co'># AIC weighting</span>
 <span class='no'>aicwt</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>object</span>){
  <span class='no'>ICs</span> <span class='kw'>&lt;-</span> -<span class='fl'>1</span> * <span class='fu'>sapply</span>(<span class='no'>object</span>, <span class='no'>AIC</span>)
  <span class='fu'>exp</span>( <span class='fl'>0.5</span> * (<span class='no'>ICs</span> - <span class='fu'>max</span>(<span class='no'>ICs</span>)))
 }
-<span class='no'>stock.sim</span> <span class='kw'>&lt;-</span> <span class='fu'>ma</span>(<span class='fu'><a href='a4aFitSA-class.html'>a4aFitSAs</a></span>(<span class='fu'>list</span>(<span class='kw'>f1</span><span class='kw'>=</span><span class='no'>f1</span>, <span class='kw'>f2</span><span class='kw'>=</span><span class='no'>f2</span>)), <span class='no'>ple4</span>, <span class='no'>aicwt</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; <span class='error'>Error in a4aFitSAs(list(f1 = f1, f2 = f2)): object &#39;f1&#39; not found</span></div><div class='input'><span class='co'># equal weighting</span>
+<span class='no'>stock.sim</span> <span class='kw'>&lt;-</span> <span class='fu'>ma</span>(<span class='fu'><a href='a4aFitSA-class.html'>a4aFitSAs</a></span>(<span class='fu'>list</span>(<span class='kw'>f1</span><span class='kw'>=</span><span class='no'>f1</span>, <span class='kw'>f2</span><span class='kw'>=</span><span class='no'>f2</span>)), <span class='no'>ple4</span>, <span class='no'>aicwt</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: This method is experimental, use at your own risk ! </span></div><div class='output co'>#&gt; <span class='message'>model weights are </span>
+#&gt; <span class='message'>	   weight..perc.</span>
+#&gt; <span class='message'>	f1        28.151</span>
+#&gt; <span class='message'>	f2        71.849</span></div><div class='input'><span class='co'># equal weighting</span>
 <span class='no'>eqwt</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>object</span>){
  <span class='no'>v</span> <span class='kw'>&lt;-</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fu'>length</span>(<span class='no'>object</span>))
  <span class='fu'>names</span>(<span class='no'>v</span>) <span class='kw'>&lt;-</span> <span class='fu'>names</span>(<span class='no'>object</span>)
  <span class='no'>v</span>
 }
-<span class='no'>stock.sim</span> <span class='kw'>&lt;-</span> <span class='fu'>ma</span>(<span class='fu'><a href='a4aFitSA-class.html'>a4aFitSAs</a></span>(<span class='fu'>list</span>(<span class='kw'>f1</span><span class='kw'>=</span><span class='no'>f1</span>, <span class='kw'>f2</span><span class='kw'>=</span><span class='no'>f2</span>)), <span class='no'>ple4</span>, <span class='no'>eqwt</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; <span class='error'>Error in a4aFitSAs(list(f1 = f1, f2 = f2)): object &#39;f1&#39; not found</span></div></pre>
+<span class='no'>stock.sim</span> <span class='kw'>&lt;-</span> <span class='fu'>ma</span>(<span class='fu'><a href='a4aFitSA-class.html'>a4aFitSAs</a></span>(<span class='fu'>list</span>(<span class='kw'>f1</span><span class='kw'>=</span><span class='no'>f1</span>, <span class='kw'>f2</span><span class='kw'>=</span><span class='no'>f2</span>)), <span class='no'>ple4</span>, <span class='no'>eqwt</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: This method is experimental, use at your own risk ! </span></div><div class='output co'>#&gt; <span class='message'>model weights are </span>
+#&gt; <span class='message'>	   weight..perc.</span>
+#&gt; <span class='message'>	f1            50</span>
+#&gt; <span class='message'>	f2            50</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
