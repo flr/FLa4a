@@ -102,3 +102,9 @@ setMethod("iter", "submodel", function(obj, it){
   obj
 })
 
+#
+#  duplicate accessors to help link with existing functions
+#
+
+#' @rdname submodel-class
+setMethod("formula", "submodel", function(x) x@sMod)
