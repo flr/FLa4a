@@ -47,11 +47,17 @@ a4aFitSA <-
            contains = "a4aFit",
            slots = c(pars = "SCAPars"))
 
-setValidity("a4aFitSA",
-  function(object) {
-    # no validation at present
-    TRUE
-})
+#' @rdname a4aFitSA-class
+#' @template bothargs
+#' @aliases a4aFitSA a4aFitSA-methods
+setGeneric("a4aFitSA")
+
+#' @rdname a4aFitSA-class
+setMethod("a4aFit", "a4aFitSA",
+  function(object, ...) {
+    as(object, "a4aFit")
+  }
+)
 
 setMethod("initialize", "a4aFitSA",
     function(.Object, ..., pars) {
@@ -59,6 +65,29 @@ setMethod("initialize", "a4aFitSA",
       .Object <- callNextMethod(.Object, ...)
       .Object
 })
+
+setValidity("a4aFitSA",
+  function(object) {
+    # no validation at present
+    TRUE
+})
+
+#
+#  accessor methods
+#
+
+#' @rdname a4aFitSA-class
+#' @aliases pars pars-methods
+setGeneric("pars", function(object) standardGeneric("pars"))
+#' @rdname a4aFitSA-class
+setMethod("pars", "a4aFitSA", function(object) object@pars)
+
+#' @rdname a4aFitSA-class
+setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
+
+#' @rdname a4aFitSA-class
+setMethod("wt", signature(object="a4aFitSA"), function(object) wt(pars(object)))
+
 
 #' @rdname a4aFitSA-class
 setMethod("show", "a4aFitSA",
@@ -70,8 +99,8 @@ setMethod("show", "a4aFitSA",
     submodels(object)
  })
 
-
 #' @rdname a4aFitSA-class
+# THIS IS A SHOW METHOD - NEED TO THINK ABOUT THIS ONE...
 setMethod("submodels", signature(object = "a4aFitSA"),
   function(object)
   {
@@ -98,30 +127,11 @@ setMethod("submodels", signature(object = "a4aFitSA"),
  })
 
 
-#' @rdname a4aFitSA-class
-#' @template bothargs
-#' @aliases a4aFitSA a4aFitSA-methods
-setGeneric("a4aFitSA")
 
-#' @rdname a4aFitSA-class
-setMethod("a4aFit", "a4aFitSA",
-  function(object, ...) {
-    as(object, "a4aFit")
-  }
-)
+#
+#  other methods
+#
 
-
-#' @rdname a4aFitSA-class
-#' @aliases pars pars-methods
-setGeneric("pars", function(object) standardGeneric("pars"))
-#' @rdname a4aFitSA-class
-setMethod("pars", "a4aFitSA", function(object) object@pars)
-
-#' @rdname a4aFitSA-class
-setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
-
-#' @rdname a4aFitSA-class
-setMethod("wt", signature(object="a4aFitSA"), function(object) wt(pars(object)))
 
 #' @rdname a4aFitSA-class
 #' @param obj the object to be subset
@@ -135,79 +145,3 @@ setMethod("iter", "a4aFitSA", function(obj, it){
 	obj@pars <- iter(obj@pars, 1)
 	obj
 })
-
-
-#====================================================================
-# plural class for a4aFitSA (used for model averaging)
-#====================================================================
-
-#' @rdname a4aFitSA-class
-#' @aliases a4aFitSAs-class
-
-setClass("a4aFitSAs",
-	contains="FLComps",
-	validity=function(object){
-		if(!all(unlist(lapply(object, is, 'a4aFitSA'))))
-			return("Components must be a4aFitSA")
-		return(TRUE)}
-)
-
-#' @rdname a4aFitSA-class
-#' @aliases a4aFitSAs a4aFitSAs-methods
-setGeneric("a4aFitSAs", function(object, ...) standardGeneric("a4aFitSAs"))
-#' @rdname a4aFitSA-class
-setMethod("a4aFitSAs", signature(object="list"),
-  function(object, ...) {
-    args <- list(...)
-
-    # names in args, ...
-    if("names" %in% names(args)) {
-      names <- args[['names']]
-    } else {
-    # ... or in object,
-      if(!is.null(names(object))) {
-        names <- names(object)
-    # ... or in elements, ...
-      } else {
-        names <- unlist(lapply(object, name))
-        # ... or 1:n
-        idx <- names == "NA" | names == ""
-        if(any(idx))
-          names[idx] <- as.character(length(names))[idx]
-      }
-    }
-
-    # desc & lock
-    args <- c(list(Class="a4aFitSAs", .Data=object, names=names),
-      args[!names(args)%in%'names'])
-
-    return(
-      do.call('new', args)
-      )
-
-})
-
-#' @rdname a4aFitSA-class
-setMethod("a4aFitSAs", signature(object="a4aFitSA"), function(object, ...) {
-    lst <- c(object, list(...))
-    a4aFitSAs(lst)
-})
-
-#' @rdname a4aFitSA-class
-setMethod("a4aFitSAs", signature(object="missing"),
-  function(...) {
-    # empty
-  	if(missing(...)){
-	  	new("a4aFitSAs")
-    # or not
-  	} else {
-      args <- list(...)
-      object <- args[!names(args)%in%c('names', 'desc', 'lock')]
-      args <- args[!names(args)%in%names(object)]
-      do.call('a4aFitSAs',  c(list(object=object), args))
-	  }
-  }
-)
-
-
-

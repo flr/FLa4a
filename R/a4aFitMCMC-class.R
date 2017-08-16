@@ -29,13 +29,6 @@ a4aFitMCMC <-
            contains = "a4aFitSA",
            slots = c(mcmc = "SCAMCMC"))
 
-setMethod("initialize", "a4aFitSA",
-    function(.Object, ..., pars) {
-      if (!missing(pars)) .Object@pars <- pars
-      .Object <- callNextMethod(.Object, ...)
-      .Object
-})
-
 #' @rdname a4aFitMCMC-class
 #' @template bothargs
 #' @aliases a4aFitMCMC a4aFitMCMC-methods
@@ -54,6 +47,14 @@ setMethod("a4aFit", "a4aFitMCMC",
     as(object, "a4aFit")
   }
 )
+
+setMethod("initialize", "a4aFitMCMC",
+    function(.Object, ..., mcmc) {
+      if (!missing(mcmc)) .Object@mcmc <- mcmc
+      .Object <- callNextMethod(.Object, ...)
+      .Object
+})
+
 
 
 

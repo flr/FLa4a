@@ -49,7 +49,11 @@ a4aFit <-
                      catch.n = "FLQuant",
                      index   = "FLQuants"))
 
-
+#' @rdname a4aFit-class
+#' @template bothargs
+#' @aliases a4aFit a4aFit-methods
+setGeneric("a4aFit")
+ 
 setMethod("initialize", "a4aFit",
     function(.Object,
              ...,
@@ -77,10 +81,9 @@ setValidity("a4aFit",
 })
 
 
-#' @rdname a4aFit-class
-#' @template bothargs
-#' @aliases a4aFit a4aFit-methods
-setGeneric("a4aFit")
+#
+#  accessor methods
+#
 
 #' @rdname a4aFit-class
 #' @aliases clock clock-methods
@@ -106,6 +109,7 @@ setMethod("catch.n", "a4aFit", function(object) object@catch.n)
 #' @rdname a4aFit-class
 setMethod("index", "a4aFit", function(object) object@index)
 
+
 #' @rdname a4aFit-class
 setMethod("show", signature(object = "a4aFit"),
   function(object)
@@ -118,6 +122,11 @@ setMethod("show", signature(object = "a4aFit"),
     print(object @ clock)
 
  })
+
+
+#
+# Other methods
+#
 
 #' @rdname a4aFit-class
 setMethod("logLik", signature(object = "a4aFit"),
