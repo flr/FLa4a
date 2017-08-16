@@ -62,10 +62,9 @@ setMethod("initialize", "a4aFitSA",
 })
 
 #' @rdname a4aFitSA-class
-setMethod("show", signature(object = "a4aFitSA"),
+setMethod("show", "a4aFitSA",
   function(object) 
   {
-
     show(a4aFit(object))
     
     cat("\nSubmodels:\n")  
