@@ -83,6 +83,15 @@ setMethod("submodels", signature(object="list"),
 }) # }}}
 
 #' @rdname submodels-class
+setMethod("params", "submodels", function(object) lapply(object, params))
+
+#' @rdname submodels-class
+setMethod("sMod", "submodels", function(object) lapply(object, sMod))
+
+#' @rdname submodels-class
+setMethod("vcov", "submodels", function(object) lapply(object, vcov))
+
+#' @rdname submodels-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted 
 setMethod("iter", "submodels", function(obj, it){
