@@ -8,7 +8,9 @@
 \alias{submodel-methods}
 \alias{submodel,missing-method}
 \alias{params,submodel-method}
-\alias{Mod,submodel-method}
+\alias{sMod}
+\alias{sMod-methods}
+\alias{sMod,submodel-method}
 \alias{vcov,submodel-method}
 \alias{iter,submodel-method}
 \title{Submodel class}
@@ -19,7 +21,9 @@ submodel(object, ...)
 
 \S4method{params}{submodel}(object)
 
-\S4method{Mod}{submodel}(z)
+sMod(object, ...)
+
+\S4method{sMod}{submodel}(object)
 
 \S4method{vcov}{submodel}(object)
 
