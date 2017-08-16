@@ -40,8 +40,7 @@
 
 setClass("a4aFit",
          contains = "FLComp",
-         slots = c(
-                   call    = "call",
+         slots = c(call    = "call",
                    clock   = "numeric",
                    fitSumm = "array",
                    stock.n = "FLQuant",
@@ -88,15 +87,8 @@ setGeneric("a4aFit", function(object, ...) standardGeneric("a4aFit"))
 #' @rdname a4aFit-class
 setMethod("a4aFit", signature(object="missing"),
   function(...) {
-    # empty
-  	if(missing(...)){
-	  	new("a4aFit")
-    # or not
-  	} else {
-      args <- list(...)
-	    args$Class <- 'a4aFit'
-      do.call("new", args)
-	  }
+    # simply call initialize with supplied arguments
+    new("a4aFit", ...)
   }
 )
 
