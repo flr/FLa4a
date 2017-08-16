@@ -71,24 +71,24 @@ setMethod("submodels", signature(object = "a4aFitSA"),
     cat("\tsrmodel: "); print(srmodel(pars(object)), showEnv = FALSE)
     cat("\tn1model: "); print(n1model(pars(object)), showEnv = FALSE)
 
-    # something to format the qmodel and vmodel    
-    printFormList <- function(frmL) {
-      if (length(frmL) == 0) return(invisible(NA))
-      mods <- lapply(frmL, slot, "Mod")
+    # something to format the qmodel and vmodel formulas   
+    printFormulaList <- function(mods) {
+      if (length(mods) == 0) return(invisible(NA))
       mnames <- names(mods)
       maxname <- max(sapply(mnames, nchar))
-      for (i in seq(length(mods))) {
+      for (i in seq_along(mods)) {
         cat("\t   ", mnames[i], ": ", rep(" ", maxname - nchar(mnames[i])), sep = "")
         print(mods[[i]], showEnv = FALSE)
       }
     }
 
     cat("\t qmodel:\n")
-    printFormList(qmodel(pars(object)))
+    printFormulaList(sMod(qmodel(pars(object))))
     cat("\t vmodel:\n")
-    printFormList(vmodel(pars(object)))
+    printFormulaList(sMod(vmodel(pars(object))))
    
  })
+
 
 #' @rdname a4aFitSA-class
 #' @template bothargs
