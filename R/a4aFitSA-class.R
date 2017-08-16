@@ -43,13 +43,23 @@
 #' is(pars(obj))
 
 setClass("a4aFitSA",
-        representation(
-                "a4aFit",
-                pars    = "SCAPars"
-                ),
-        prototype = prototype(
-                pars    = new('SCAPars'))
+         contains = "a4aFit",
+         slots = c(pars = "SCAPars")
 )
+
+setValidity("a4aFitSA", 
+  function(object) {
+    # no validation at present
+    TRUE
+})
+
+setMethod("initialize", "a4aFitSA", 
+    function(.Object, ...,
+             pars = new('SCAPars')) {
+      .Object <- callNextMethod(.Object, ...)
+      .Object@pars <- pars
+      .Object
+})
 
 #' @rdname a4aFitSA-class
 setMethod("show", signature(object = "a4aFitSA"),
@@ -98,53 +108,31 @@ setGeneric("a4aFitSA", function(object, ...) standardGeneric("a4aFitSA"))
 #' @rdname a4aFitSA-class
 setMethod("a4aFitSA", signature(object="missing"),
   function(...) {
-    # empty
-  	if(missing(...)){
-	  	new("a4aFitSA")
-    # or not
-  	} else {
-      args <- list(...)
-	  args$Class <- 'a4aFitSA'
-      do.call("new", args)
-	  }
+    # simply call initialize with supplied arguments
+    new("a4aFitSA", ...)
   }
 )
 
 #' @rdname a4aFitSA-class
 setMethod("a4aFit", signature(object="a4aFitSA"),
   function(object, ...) {
-    out <- a4aFit()
-    out @ name    <- object @ name
-    out @ desc    <- object @ desc
-    out @ range   <- object @ range
-    out @ call    <- object @ call
-    out @ clock   <- object @ clock
-    out @ stock.n <- object @ stock.n
-    out @ harvest <- object @ harvest
-    out @ catch.n <- object @ catch.n
-    out @ index   <- object @ index
-    out @ fitSumm <- object @ fitSumm
-    out
+    # effectively a wrapper for as(...)
+    if (length(list(...)) > 0) {
+      warning("Additional arguments are being ignored!")
+    }
+    as(object, "a4aFit")
   }
 )
 
 #' @rdname a4aFitSA-class
 setMethod("a4aFitSA", signature(object="a4aFit"),
   function(object, ...) {
-    out <- a4aFitSA()
-    out @ name    <- object @ name
-    out @ desc    <- object @ desc
-    out @ range   <- object @ range
-    out @ call    <- object @ call
-    out @ clock   <- object @ clock
-    out @ stock.n <- object @ stock.n
-    out @ harvest <- object @ harvest
-    out @ catch.n <- object @ catch.n
-    out @ index   <- object @ index
-    out @ fitSumm <- object @ fitSumm
-    out
+    # simply call initialize with supplied arguments
+    new("a4aFitSA", object, ...)
   }
 )
+
+
 
 #' @rdname a4aFitSA-class
 #' @aliases pars pars-methods
