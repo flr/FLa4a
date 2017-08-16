@@ -19,7 +19,7 @@
 #' @aliases submodel-class
 setClass("submodel",
   contains = "FLComp",
-  slots = c(Mod       = "formula",
+  slots = c(sMod      = "formula",
             params    = "FLPar",
             vcov      = "array",
             centering = "numeric",
@@ -39,7 +39,7 @@ setValidity("submodel",
 
 setMethod("initialize", "submodel",
   function(.Object, 
-           Mod = ~ 1,
+           sMod = ~ 1,
            params = FLPar(),
            vcov = array(),
            centering = 0,
@@ -48,7 +48,7 @@ setMethod("initialize", "submodel",
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
       # initialize remaining slots
-      .Object@Mod <- Mod
+      .Object@sMod <- sMod
       .Object@params <- params
       .Object@vcov <- vcov
       .Object@centering <- centering
@@ -85,7 +85,10 @@ setMethod("submodel", signature(object="missing"),
 setMethod("params", "submodel", function(object) object@params)
 
 #' @rdname submodel-class
-setMethod("Mod", "submodel", function(object) object@Mod)
+#' @aliases sMod sMod-methods
+setGeneric("sMod", function(object, ...) standardGeneric("sMod"))
+#' @rdname submodel-class
+setMethod("sMod", "submodel", function(object) object@sMod)
 
 #' @rdname submodel-class
 setMethod("vcov", "submodel", function(object) object@vcov)
