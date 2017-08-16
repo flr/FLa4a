@@ -50,14 +50,14 @@ setClass("a4aFit",
 )
 
 setMethod("initialize", "a4aFit", 
-    function(.Object, 
+    function(.Object, ...,
              call = new('call'), 
              clock = new('numeric'), 
              fitSumm = new('array'), 
              stock.n = new('FLQuant'),
              harvest = new('FLQuant'), 
              catch.n = new('FLQuant'),
-             index = new('FLQuants'), ...) {
+             index = new('FLQuants')) {
       .Object <- callNextMethod(.Object, ...)
       .Object@call    <- call
       .Object@clock   <- clock
