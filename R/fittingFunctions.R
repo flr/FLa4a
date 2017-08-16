@@ -1151,14 +1151,14 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		# fill up qmodel
 		qmodels <- lapply(seq_along(indices), function(i){
 			which <- sapply(strsplit(pnames[[2]], split=":"), "[[", 2) %in% fleet.names[i+1]
-			submodel(Mod = qmodel[[i]],
-				params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
-				vcov = out$cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
-				distr = "norm",
-				centering = center.log[i+1],
-				name = fleet.names[i+1],
-				desc = indices[[i]]@desc,
-				range = indices[[i]]@range
+			submodel(sMod = qmodel[[i]],
+				       params = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
+				       vcov = out$cov[pnames[[2]][which],pnames[[2]][which], drop = FALSE],
+				       distr = "norm",
+				       centering = center.log[i+1],
+				       name = fleet.names[i+1],
+				       desc = indices[[i]]@desc,
+				       range = indices[[i]]@range
 			)
 		})
 		  
@@ -1168,14 +1168,14 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		# fill up vmodel
 		vmodels <- lapply(seq_along(fleet.names), function(i){
 			which <- sapply(strsplit(pnames[[3]], split=":"), "[[", 2) %in% fleet.names[i]
-			submodel(Mod = vmodel[[i]],
-				params = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
-				vcov = out$cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
-				distr = "norm",
-				centering = 0,
-				name = fleet.names[i],
-				desc = "",
-				range = if (i==1) stock@range else indices[[i-1]]@range
+			submodel(sMod = vmodel[[i]],
+				       params = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
+				       vcov = out$cov[pnames[[3]][which],pnames[[3]][which], drop = FALSE],
+				       distr = "norm",
+				       centering = 0,
+				       name = fleet.names[i],
+				       desc = "",
+				       range = if (i==1) stock@range else indices[[i-1]]@range
 			)
 		})
 		  
