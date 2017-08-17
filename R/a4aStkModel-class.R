@@ -17,8 +17,7 @@
 a4aStkModel <-
   setClass("a4aStkModel",
     contains = c("FLComp", "submodels"),
-    slots = c(vcov = "array",
-              m = "FLQuant",
+    slots = c(m = "FLQuant",
               wt = "FLQuant",
               units = "character"))
 
