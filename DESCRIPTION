@@ -35,7 +35,6 @@ VignetteBuilder: knitr
 Collate:
     'FLCompMethods.R'
     'FLModelSimMethods.R'
-    'gen-methods.R'
     'a4aM-class.R'
     'a4aM-methods.R'
     'a4aGr-class.R'
@@ -63,5 +62,6 @@ Collate:
     'l2a-methods.R'
     'ma-methods.R'
     'utilities.R'
+    'gen-methods.R'
     'southern_hake-data.R'
 RoxygenNote: 6.0.1

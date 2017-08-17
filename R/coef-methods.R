@@ -43,9 +43,9 @@ setMethod("coef", signature(object = "submodels"),
 
 
 #' @rdname coef-methods
-setMethod("coef", signature(object = "submodel"),
+setMethod("coef", "submodel",
   function(object) {
-      object @ params
+      object@coefficients
   })
 
 #==================================================================== 
@@ -103,7 +103,17 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
 #' @rdname coef-methods
 setMethod("coef<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
-      object @ params[] <- value
+      object@coefficients[] <- value
       object
   })
+
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "submodel", value = "FLPar"),
+  function(object, ..., value) {
+      object@coefficients <- value
+      object
+  })
+
+
+
 

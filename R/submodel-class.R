@@ -19,18 +19,23 @@
 #' @aliases submodel-class
 setClass("submodel",
   contains = "FLComp",
-  slots = c(sMod      = "formula",
-            params    = "FLPar",
-            vcov      = "array",
-            centering = "numeric",
-            distr     = "character")
+  slots = c(formula      = "formula",
+            coefficients = "FLPar",
+            vcov         = "array",
+            centering    = "numeric",
+            distr        = "character",
+            link         = "function",
+            linkinv      = "function")
 )
 
 setValidity("submodel",
   function(object) {
     # no unit, area, season fits
-    if (length(dim(object@params)) > 2 | length(dim(object@vcov)) > 3) {
+    if (length(dim(coef(object))) > 2 | length(dim(object@vcov)) > 3) {
       "Params or vcov have unit, area or season. Can't work with that!"
+    } else 
+    if (FALSE) {
+      "coefficients do not match formula"    
     } else {
       # Everything is fine
       TRUE
@@ -39,20 +44,41 @@ setValidity("submodel",
 
 setMethod("initialize", "submodel",
   function(.Object, 
-           sMod = ~ 1,
-           params = FLPar(),
-           vcov = array(),
+           ...,
+           formula = ~ 1,
+           coefficients,
+           vcov,
            centering = 0,
-           distr = "lnorm", 
-           ...) {
+           distr = "norm",
+           link = log,
+           linkinv = exp
+           ) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
-      # initialize remaining slots
-      .Object@sMod <- sMod
-      .Object@params <- params
-      .Object@vcov <- vcov
+       # initialize remaining slots
+      .Object@formula <- formula
+      if (!missing(coefficients)) {
+        .Object@coefficients <- coefficients
+      } else {
+        flq <- FLQuant(
+                  matrix(NA,
+                     nrow = .Object@range["max"] - .Object@range["min"] + 1,
+                     ncol = .Object@range["maxyear"] - .Object@range["minyear"] + 1),
+                     dimnames = list(age = .Object@range["min"]:.Object@range["max"],
+                                     year = .Object@range["minyear"]:.Object@range["maxyear"])
+                     )
+        Xmat <- model.matrix(.Object@formula, as.data.frame(flq))
+        .Object@coefficients <- FLPar(structure(rep(0, ncol(Xmat)), names = colnames(Xmat)))
+      }
+      if (!missing(vcov)) {
+        .Object@vcov <- vcov
+      } else {
+        .Object@vcov <- diag(length(coef(.Object)))
+      }
       .Object@centering <- centering
       .Object@distr <- distr
+      .Object@link <- link
+      .Object@linkinv <- linkinv
       .Object
 }) 
 
@@ -88,7 +114,7 @@ setMethod("params", "submodel", function(object) object@params)
 #' @aliases sMod sMod-methods
 setGeneric("sMod", function(object, ...) standardGeneric("sMod"))
 #' @rdname submodel-class
-setMethod("sMod", "submodel", function(object) object@sMod)
+setMethod("sMod", "submodel", function(object) object@formula)
 
 #' @rdname submodel-class
 setMethod("vcov", "submodel", function(object) object@vcov)
@@ -107,7 +133,7 @@ setMethod("iter", "submodel", function(obj, it){
 #
 
 #' @rdname submodel-class
-setMethod("formula", "submodel", function(x) x@sMod)
+setMethod("formula", "submodel", function(x) x@formula)
 
 #' @rdname coef-methods
 #' @param value the new object
@@ -115,8 +141,8 @@ setMethod("formula", "submodel", function(x) x@sMod)
 setGeneric("formula<-", function(object, value) standardGeneric("formula<-"))
 
 #' @rdname coef-methods
-setMethod("formula<-", c("submodels", "formula"),
+setMethod("formula<-", c("submodel", "formula"),
   function(object, value) {
-    object@sMod <- value
+    object@formula <- value
     object
   })

@@ -116,7 +116,8 @@ setMethod("getAcor", c("FLQuant"), function(object, ...) {
 setGeneric("genFLQuant", function(object, ...) standardGeneric("genFLQuant"))
 
 #' @rdname genFLQuant-methods
-setMethod("genFLQuant", c("FLQuant"), function(object, cv = 0.2, method = "ac", niter = 250) {
+setMethod("genFLQuant", "FLQuant", 
+	function(object, cv = 0.2, method = "ac", niter = 250) {
   # use log transform, to be expanded on later versions
 	mu <- log(object)
 	if(method == "ac") {
@@ -129,6 +130,44 @@ setMethod("genFLQuant", c("FLQuant"), function(object, cv = 0.2, method = "ac", 
 	units(flq) <- units(object)
 	return(flq)
 })
+
+#' @rdname genFLQuant-methods
+# if nsim > 0 the simulate nsim times
+setMethod("genFLQuant", "submodel", 
+	function(object, type = c("link", "response"), nsim = 0) {
+	  type <- match.arg(type)
+      # make empty FLQuant
+      flq <- FLQuant(
+                  matrix(NA,
+                     nrow = object@range["max"] - object@range["min"] + 1,
+                     ncol = object@range["maxyear"] - object@range["minyear"] + 1),
+                     dimnames = list(age = object@range["min"]:object@range["max"],
+                                     year = object@range["minyear"]:object@range["maxyear"])
+                  )
+      df <- as.data.frame(flq)
+      # simulate from submodel?
+      if (nsim > 0) {
+        object <- simulate(object, nsim = nsim)
+      }
+      # this should have 2 dimensions!
+      b <- as(coef(object), "matrix")
+      # get design matrix
+      X <- model.matrix(formula(object), df)
+      # predict accross all iters (if dimensions don't match then coefs are the wrong length!)
+      pred <- X %*% b      
+      # add into flq
+      flq <- propagate(flq, max(1, nsim))
+      flq[] <- as(pred, "vector")
+      # transform if asked
+      if (type == "response") {
+      	object@linkinv(flq)
+      } else {
+        flq
+      }
+    }
+ )
+
+
 
 #' Methods to generate FLIndex objects
 #' @description This method produces an \code{FLIndex} object by using the \code{genFLQuant} method.
