@@ -6,7 +6,10 @@
 #' @template ClassDescription
 #' @note This class is similar to other 'plural' calsses in \code{FLR}. It is a list constrained to having all elements of the same class, in this case \code{submodel}. Otherwise it works exacly as any other list.
 #' @aliases submodels-class
-submodels <- setClass("submodels", contains = "FLComps")
+submodels <- 
+  setClass("submodels", 
+    contains = "FLComps",
+    slots = c("corBlocks" = "list"))
 
 #' @rdname submodels-class
 #' @template Constructors
@@ -14,54 +17,50 @@ submodels <- setClass("submodels", contains = "FLComps")
 #' @aliases submodels submodels-methods
 setGeneric("submodels")
 
-#' @rdname submodels-class
-setMethod("submodels", "missing",
-  function(...) {
-    # empty
-    if(missing(...)){
-      new("submodels")
-    # or not
-    } else {
-      args <- list(...)
-      object <- args[!names(args)%in%c('names', 'desc', 'lock')]
-      args <- args[!names(args)%in%names(object)]
-      do.call('submodels',  c(list(object=object), args))
-    }
-  }
-)
-
-
-#' @rdname submodels-class
-setMethod("submodels", "list",
-  function(object, ...) {
-    
-    args <- list(...)
-    
-    # names in args, ... 
-    if("names" %in% names(args)) {
-      names <- args[['names']]
-    } else {
-    # ... or in object,
-      if(!is.null(names(object))) {
-        names <- names(object)
-    # ... or in elements, ...
-      } else {
-        names <- unlist(lapply(object, name))
-        # ... or 1:n
-        idx <- names == "NA" | names == ""
-        if(any(idx))
-          names[idx] <- as.character(length(names))[idx]
+setMethod("initialize", "submodels",
+  function(.Object, 
+           ...,
+           corBlocks,
+           names) {
+      .Object <- callNextMethod(.Object, ...)
+      if (!missing(names)) {
+        # need to apply new() recursively to maintain a valid object
+        asListObject <- as(.Object, "list")
+        names(asListObject) <- names
+        for (i in seq_along(asListObject)) name(asListObject[[i]]) <- names[i]
+        .Object <- new("submodels", asListObject, corBlocks = corBlocks)
       }
-    }
-
-    # desc & lock
-    args <- c(list(Class="submodels", .Data=object, names=names),
-      args[!names(args) %in% 'names'])
-
-    return(
-      do.call('new', args)
-      )
-}) 
+      # this is needed to avoid attempted evaluation of names argument
+      # when calling the names function in following if statment
+      names <- ""
+      if (any(is.na(names(.Object)) | names(.Object) == "")) {
+        names(.Object) <- unname(sapply(.Object, name))
+      }
+      # finally check for corrupt submodels and apply a simple naming scheme
+      if (any(names(.Object) == "")) {
+        names <- names(.Object)
+        names[names == ""] <- letters[1:sum(names == "")]
+        .Object <- new("submodels", as(.Object, "list"), corBlocks = corBlocks, names = make.unique(names))
+      }
+      if (!missing(corBlocks)) {
+        .Object@corBlocks <- corBlocks
+      } else {
+        # generate from submodel dimensions
+        nmodels <- length(.Object)
+        npar <- sapply(.Object, function(x) length(coef(x)))
+        parnames <- sapply(.Object, function(x) dimnames(coef(x))$params)
+        modelpairs <- combn(seq(nmodels), 2)
+        .Object@corBlocks <- 
+          lapply(seq(nmodels), 
+                 function(i) 
+                   matrix(0, 
+                          nrow = npar[modelpairs[1,i]], 
+                          ncol = npar[modelpairs[2,i]],
+                          dimnames = parnames[modelpairs[,i]]))
+        names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(names(.Object)[x], collapse = "."))
+      }
+      .Object
+})
 
 
 setValidity("submodels", 
