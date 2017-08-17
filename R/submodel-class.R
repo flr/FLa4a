@@ -108,3 +108,15 @@ setMethod("iter", "submodel", function(obj, it){
 
 #' @rdname submodel-class
 setMethod("formula", "submodel", function(x) x@sMod)
+
+#' @rdname coef-methods
+#' @param value the new object
+#' @aliases coef<-,a4aFitSA-methods
+setGeneric("formula<-", function(object, value) standardGeneric("formula<-"))
+
+#' @rdname coef-methods
+setMethod("formula<-", c("submodels", "formula"),
+  function(object, value) {
+    object@sMod <- value
+    object
+  })
