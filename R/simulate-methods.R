@@ -163,14 +163,79 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodels"),
-  function(object, nsim = 1, seed=NULL, empirical=TRUE) {
-    out <- lapply(object, simulate, nsim = nsim, seed=seed, empirical=empirical)
-    submodels(out)
+  function(object, nsim = 1, seed = NULL) {
+    # get the joined up coefficients
+    blist <- lapply(object, coef)
+
+    # get parameter variance matrices
+    V <- vcov(object)
+
+    # iters and objects
+    pitr <- sapply(blist, function(x) dims(x)$iter)
+    if (!all(pitr[1] == pitr)) stop("Not valid object, all submodels should have the same iterations!")
+    pitr <- unique(pitr)
+    if (length(dim(V)) == 2) dim(V) <- c(dim(V), 1)
+    vitr <- dim(V)[3]
+    mitr <- max(c(nsim, pitr, vitr))
+
+    # sanity checks - must be 1 or nsim
+    if (!((nsim == 1 || nsim == mitr) &
+          (pitr == 1 || pitr == mitr) &
+          (vitr == 1 || vitr == mitr))) {
+      stop("The number of iters and simulations must be 1 or nsim.")
+    }
+
+    if (!is.null(seed)) set.seed(seed)
+    # get the random generator from the dist slot
+    distr <- unique(sapply(object, slot, "distr"))
+    if (length(distr) > 1) stop("For now all submodels must have the same distribution")
+    simfunc <- match.fun(paste0("mvr", distr))
+
+    # combine blist into a single FLPar
+    b <- do.call(rbind, blist)
+
+    # if there are iters in pars or vcov simulation must be done by iter
+    if (pitr != 1 || vitr != 1) {
+      # expand objects as needed
+      if (pitr == mitr & vitr == 1) {
+        V <- V[,, rep(1,mitr), drop=FALSE]
+        dimnames(V)$iters <- seq(mitr)
+      } else
+        if(pitr == 1 & vitr == mitr) {
+          b <- propagate(b, mitr)
+        }
+      # run simulations along iters
+      parsim <-
+        sapply(seq(mitr),
+               function(i) {
+                 simfunc(1, as(b[,i], "vector"), V[,,i])
+                })
+    } else
+    if (nsim > 1) {
+      # for mvrnorm at least samples are in rows,
+      # so transform is required for FLPar
+      parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1]))
+    } else {
+      parsim <- simfunc(1, as(b, "vector"), V[,,1])
+      dim(parsim) <- c(length(parsim), 1)
+    }
+
+    # add to object and return
+    if (mitr > pitr) {
+      for (i in seq_along(object)) {
+        coef(object[[i]]) <- propagate(coef(object)[[i]], mitr)
+      }
+    }
+    npar <- c(0, sapply(object, function(x) nrow(coef(x))))
+    for (i in seq_along(object)) {
+      coef(object[[i]]) <- as(parsim[sum(npar[1:i]) + 1:npar[i+1],], "vector")
+    }
+    object
   })
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodel"),
-  function(object, nsim = 1, seed = NULL, empirical = TRUE) {
+  function(object, nsim = 1, seed = NULL) {
     # get parameter estimates
     b <- coef(object)
 

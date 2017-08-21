@@ -136,6 +136,18 @@ setMethod("[[<-",
   }
 )
 
+setMethod("[[<-",
+  c("submodels", "numeric", "missing"),
+  function (x, i, j, ..., value) 
+  {
+    lst <- as(x, "list")
+    names(lst) <- names(x)
+    lst[[i]] <- value
+    new("submodels", lst, corBlocks = x@corBlocks)
+  }
+)
+
+
 #
 #  show methods
 #
@@ -151,6 +163,21 @@ setMethod("show", "submodels",
  })
 
 
+
+#
+# Coersion methods
+#
+
+# method.skeleton("coerce", "submodels",  file = stdout())
+
+setMethod("coerce",
+  signature(from = "submodels", to = "submodel"),
+  function (from, to, strict = TRUE) 
+  {
+    stop("No method described yet.")
+  }
+)
+
 #
 # Other methods
 #
@@ -163,3 +190,5 @@ setMethod("iter", "submodels", function(obj, it){
   names(out) <- names(obj)
   out
 })
+
+

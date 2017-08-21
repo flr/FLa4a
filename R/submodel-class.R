@@ -56,9 +56,9 @@ setMethod("initialize", "submodel",
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
        # initialize remaining slots
-      .Object@formula <- formula
+      formula(.Object) <- formula
       if (!missing(coefficients)) {
-        .Object@coefficients <- coefficients
+        coef(.Object) <- coefficients
       } else {
         flq <- FLQuant(
                   matrix(NA,
@@ -67,14 +67,13 @@ setMethod("initialize", "submodel",
                      dimnames = list(age = .Object@range["min"]:.Object@range["max"],
                                      year = .Object@range["minyear"]:.Object@range["maxyear"])
                      )
-        Xmat <- model.matrix(.Object@formula, as.data.frame(flq))
-        .Object@coefficients <- FLPar(structure(rep(0, ncol(Xmat)), names = colnames(Xmat)))
+        Xmat <- model.matrix(formula(.Object), as.data.frame(flq))
+        coef(.Object) <- FLPar(structure(rep(0, ncol(Xmat)), names = colnames(Xmat)))
       }
-      if (!missing(vcov)) {
-        .Object@vcov <- vcov
-      } else {
-        .Object@vcov <- diag(length(coef(.Object)))
-      }
+      # need hard assignent first time round
+      .Object@vcov <- diag(length(coef(.Object)))
+      rownames(.Object@vcov) <- colnames(.Object@vcov) <- rownames(coef(.Object))
+      if (!missing(vcov)) vcov(.Object) <- vcov
       .Object@centering <- centering
       .Object@distr <- distr
       .Object@link <- link
