@@ -42,6 +42,7 @@ Collate:
     'a4aStkParams-class.R'
     'submodel-class.R'
     'submodels-class.R'
+    'a4aStkModel-class.R'
     'SCAPars-class.R'
     'SCAMCMC-class.R'
     'a4aFit-class.R'
