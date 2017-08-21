@@ -48,13 +48,13 @@ setMethod("initialize", "submodels",
         # generate from submodel dimensions
         nmodels <- length(.Object)
         npar <- sapply(.Object, function(x) length(coef(x)))
-        parnames <- sapply(.Object, function(x) dimnames(coef(x))$params)
+        parnames <- lapply(.Object, function(x) dimnames(coef(x))$params)
         modelpairs <- combn(seq(nmodels), 2)
         .Object@corBlocks <- 
-          lapply(seq(nmodels), 
+          lapply(seq(ncol(modelpairs)), 
                  function(i) 
                    matrix(0, 
-                          nrow = npar[modelpairs[1,i]], 
+                          nrow = npar[modelpairs[1,i]],
                           ncol = npar[modelpairs[2,i]],
                           dimnames = parnames[modelpairs[,i]]))
         names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(names(.Object)[x], collapse = "."))
@@ -79,9 +79,15 @@ setValidity("submodels",
 #  accessor methods
 #
 
+#' @rdname submodels-class
+#' @aliases corBlocks corBlock-methods
+setGeneric("corBlocks", function(object, ...) standardGeneric("corBlocks"))
+#' @rdname submodels-class
+setMethod("corBlocks", "submodels", function(object) object@corBlocks)
+
 
 #' @rdname submodels-class
-setMethod("params", "submodels", function(object) lapply(object, params))
+setMethod("params", "submodels", function(object) lapply(object, coef))
 
 #' @rdname submodels-class
 setMethod("sMod", "submodels", function(object) lapply(object, sMod))
@@ -93,6 +99,42 @@ setMethod("vcov", "submodels", function(object) lapply(object, vcov))
 setMethod("formula", "submodels", function(x) lapply(x, formula))
 
 
+#
+#  assignment methods
+#
+
+#' @rdname submodels-class
+#' @value value the new object
+#' @aliases corBlocks<-
+setGeneric("corBlocks<-", function(object, ..., value) standardGeneric("corBlocks<-"))
+
+#' @rdname vcov-methods
+#' @value value the new object
+setMethod("corBlocks<-", signature(object = "submodels", value = "list"),
+  function(object, ..., value) {
+    object@corBlocks[] <- value
+    object
+  })
+
+# method.skeleton("$<-", signature(object = "submodels", value = "submodel"),  file = stdout())
+
+setMethod("$<-", 
+  signature(x = "submodels", value = "submodel"),
+  function(x, name, value) {
+    x[[name]] <- value
+    x
+  })  
+
+setMethod("[[<-",
+  c("submodels", "character", "missing"),
+  function (x, i, j, ..., value) 
+  {
+    lst <- as(x, "list")
+    names(lst) <- names(x)
+    lst[[i]] <- value
+    new("submodels", lst, corBlocks = x@corBlocks)
+  }
+)
 
 #
 #  show methods

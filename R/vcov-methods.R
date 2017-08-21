@@ -27,14 +27,42 @@ setMethod("vcov", signature(object = "SCAPars"),
 #' @rdname vcov-methods
 setMethod("vcov", signature(object = "submodels"),
   function(object) {
-      lapply(object, vcov)
+    nmodels <- length(object)
+    corblocks <- corBlocks(object)
+    
+    cormat <-
+      do.call(rbind, 
+        lapply(1:nmodels, function(i) {
+          do.call(cbind,
+            lapply(1:nmodels, function(j) {
+              if (i == j) {
+                # return correlation matrix
+                cov2cor(vcov(object[[i]]))
+              } else {
+                out <- corblocks[[paste(names(object)[sort(c(i, j))], collapse = ".")]]
+                if (i > j) {
+                  t(out)
+                } else {
+                  out
+                }
+              }
+            }))
+          })
+      )
+    vardiag <- unlist(lapply(object, function(x) diag(vcov(x))))
+    V <- diag(sqrt(vardiag)) %*% cormat %*% diag(sqrt(vardiag))
+    # add names in?
+    npar <- sapply(object, function(x) length(coef(x)))
+    parnames <- lapply(object, function(x) dimnames(coef(x))$params)
+    colnames(V) <- rownames(V) <- paste(rep(names(object), npar), unlist(parnames), sep = ":")
+    V
   })
 
 
 #' @rdname vcov-methods
 setMethod("vcov", signature(object = "submodel"),
   function(object) {
-      object @ vcov
+      object@vcov
   })
 
 #==================================================================== 
@@ -73,22 +101,18 @@ setMethod("vcov<-", signature(object = "a4aStkParams", value = "numeric"),
   })
 
 #' @rdname vcov-methods
-setMethod("vcov<-", signature(object = "submodels", value = "numeric"),
-  function(object, ..., value) {
-    v <- vcov(object)
-    old <- unlist(v)
-    new <- rep_len(unlist(value), length.out = length(old))
-    
-    for (i in seq_along(object)) {
-      object[[i]] @ vcov[] <- new[grep(object[[i]] @ name, names(old))]  
-    }
-    object
-  })
-
-#' @rdname vcov-methods
 setMethod("vcov<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
       object @ vcov[] <- value
       object
   })
+
+#' @rdname vcov-methods
+setMethod("vcov<-", signature(object = "submodel", value = "matrix"),
+  function(object, ..., value) {
+      object @ vcov[] <- value
+      object
+  })
+
+
 
