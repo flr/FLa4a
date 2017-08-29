@@ -9,7 +9,6 @@ language: r
 
 r:
   - release
-  - devel
 
 sudo: false
 
@@ -39,4 +38,4 @@ r_check_args: --no-build-vignettes --no-manual
 script: 
   - |
     R CMD build .
-    travis_wait 20 R CMD check FLa4a*tar.gz
+    travis_wait 30 R CMD check FLa4a*tar.gz
