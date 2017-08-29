@@ -16,6 +16,10 @@
   msg <- paste0("This is FLa4a ", version,". For overview type \'help(package=\"FLa4a\")\'\n")
   packageStartupMessage(msg)
 
+  # check 64 bit platform in windows
+  if(os.type("windows") && !grep("64-bit", sessionInfo()$platform))
+    stop("a4a executable in this package has been compiled for a 64 bit OS")
+  
   #
   check.executable()
 }
