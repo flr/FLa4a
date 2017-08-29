@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -49,6 +49,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="http://github.com/flr/FLa4a">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -60,7 +67,9 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://flr-project.org/">FLR</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -145,7 +154,8 @@ for sizing, but not for populating any slot.</p>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>ple4</span>)
 <span class='fu'>data</span>(<span class='no'>ple4.index</span>)
 
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fit</span><span class='kw'>=</span><span class='st'>"assessment"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='no'>obj</span></div><div class='output co'>#&gt; a4a model fit for: Plaice in IV 
+<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fit</span><span class='kw'>=</span><span class='st'>"assessment"</span>)
+<span class='no'>obj</span></div><div class='output co'>#&gt; a4a model fit for: Plaice in IV 
 #&gt; 
 #&gt; Call:
 #&gt; .local(stock = stock, indices = indices, fmodel = ..1, qmodel = ..2, 
@@ -153,23 +163,33 @@ for sizing, but not for populating any slot.</p>
 #&gt; 
 #&gt; Time used:
 #&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;          0.3736          0.9653          0.2319          1.5707 </div><div class='input'>
-<span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  [1] &quot;call&quot;    &quot;clock&quot;   &quot;fitSumm&quot; &quot;stock.n&quot; &quot;harvest&quot; &quot;catch.n&quot; &quot;index&quot;  
-#&gt;  [8] &quot;name&quot;    &quot;desc&quot;    &quot;range&quot;  </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>clock</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;          0.3736          0.9653          0.2319          1.5707 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
-#&gt;                        1
-#&gt;   nopar        1.780e+02
-#&gt;   nlogl       -7.771e+01
-#&gt;   maxgrad      5.430e-06
-#&gt;   nobs         7.100e+02
-#&gt;   gcv          4.824e-02
-#&gt;   convergence         NA
-#&gt;   accrate             NA</div><div class='input'>
+#&gt;      0.38524342      2.71543217      0.09206915      3.19274473 
+#&gt; 
+#&gt; Submodels:
+#&gt; 	 fmodel: ~te(age, year, k = c(4, 26), bs = &quot;tp&quot;) + s(age, k = 8)
+#&gt; 	srmodel: ~factor(year)
+#&gt; 	n1model: ~factor(age)
+#&gt; 	 qmodel:
+#&gt; 	   BTS-Isis: ~s(age, k = 5)
+#&gt; 	 vmodel:
+#&gt; 	   catch:    ~s(age, k = 3)
+#&gt; 	   BTS-Isis: ~1</div><div class='input'>
+<span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  [1] &quot;pars&quot;    &quot;call&quot;    &quot;clock&quot;   &quot;fitSumm&quot; &quot;stock.n&quot; &quot;harvest&quot; &quot;catch.n&quot;
+#&gt;  [8] &quot;index&quot;   &quot;name&quot;    &quot;desc&quot;    &quot;range&quot;  </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>clock</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  Pre-processing     Running a4a Post-processing           Total 
+#&gt;      0.38524342      2.71543217      0.09206915      3.19274473 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
+#&gt;                           1
+#&gt;   nopar        1.780000e+02
+#&gt;   nlogl       -7.771360e+01
+#&gt;   maxgrad      5.430380e-06
+#&gt;   nobs         7.100000e+02
+#&gt;   gcv          4.824039e-02
+#&gt;   convergence  0.000000e+00
+#&gt;   accrate                NA</div><div class='input'>
 <span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>stock.n</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] &quot;FLQuant&quot;   &quot;FLArray&quot;   &quot;array&quot;     &quot;structure&quot; &quot;vector&quot;   </div><div class='input'><span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>index</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] &quot;FLQuants&quot; &quot;FLlst&quot;    &quot;list&quot;     &quot;vector&quot;  </div><div class='input'>
-<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; &#39;log Lik.&#39; 77.71 (df=178)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] 200.6</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] 1013</div><div class='input'>
-<span class='fu'>is</span>(<span class='fu'><a href='a4aFitSA-class.html'>pars</a></span>(<span class='no'>obj</span>))</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0(&quot;\&quot;&quot;, vapply(classes, as.character,             &quot;&quot;), &quot;\&quot;&quot;, collapse = &quot;, &quot;)        stop(gettextf(&quot;unable to find an inherited method for function %s for signature %s&quot;,             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop(&quot;Internal error in finding inherited methods; didn&#39;t return a unique method&quot;,         domain = NA)})(list(structure(&quot;a4aFit&quot;, package = &quot;FLa4a32&quot;)), structure(function (object) standardGeneric(&quot;pars&quot;), generic = structure(&quot;pars&quot;, package = &quot;FLa4a&quot;), package = &quot;FLa4a&quot;, group = list(), valueClass = character(0), signature = &quot;object&quot;, default = `\001NULL\001`, skeleton = (function (object) stop(&quot;invalid call in method dispatch to &#39;pars&#39; (no default method)&quot;,     domain = NA))(object), class = structure(&quot;standardGeneric&quot;, package = &quot;methods&quot;)),     &lt;environment&gt;): unable to find an inherited method for function ‘pars’ for signature ‘&quot;a4aFit&quot;’</span></div></pre>
+<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; &#39;log Lik.&#39; 77.7136 (df=178)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] 200.5728</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] 1013.19</div><div class='input'>
+<span class='fu'>is</span>(<span class='fu'><a href='a4aFitSA-class.html'>pars</a></span>(<span class='no'>obj</span>))</div><div class='output co'>#&gt; [1] &quot;SCAPars&quot;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

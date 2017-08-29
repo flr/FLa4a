@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -49,6 +49,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="http://github.com/flr/FLa4a">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -60,7 +67,9 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://flr-project.org/">FLR</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -135,37 +144,47 @@
 <span class='co'># fishing mortality by age and year (separable) AND catchability at age without year trend</span>
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>factor</span>(<span class='no'>age</span>))
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+
 <span class='co'># fishing mortality as a smoother by age and year (but still separable) AND </span>
 <span class='co'># catchability at age without year trend</span>
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>) + <span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>10</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>factor</span>(<span class='no'>age</span>))
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+
 <span class='co'># fishing mortality as a smoother by age and year (but still separable) AND </span>
 <span class='co'># catchability as a smoother by age without year trend</span>
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>) + <span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>10</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>))
-<span class='no'>fit3</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
+<span class='no'>fit3</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+
 <span class='co'># fishing mortality as a smoother by age and year (but still separable) AND </span>
 <span class='co'># catchability as a smoother by age with year trend</span>
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>) + <span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>10</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>) + <span class='no'>year</span>)
-<span class='no'>fit4</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
+<span class='no'>fit4</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+
 <span class='co'># It's a statistical model</span>
-<span class='fu'>BIC</span>(<span class='no'>fit1</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>, <span class='no'>fit4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in BIC(fit1, fit2, fit3, fit4): object &#39;fit1&#39; not found</span></div><div class='input'>
+<span class='fu'>BIC</span>(<span class='no'>fit1</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>, <span class='no'>fit4</span>)</div><div class='output co'>#&gt;       df      BIC
+#&gt; fit1 134 872.5778
+#&gt; fit2  86 794.7788
+#&gt; fit3  82 770.6797
+#&gt; fit4  83 766.8430</div><div class='input'>
 <span class='co'># fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND </span>
 <span class='co'># catchability as a smoother by age without year trend</span>
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>te</span>(<span class='no'>age</span>, <span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>4</span>, <span class='fl'>10</span>))
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>))
-<span class='no'>fit5</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
+<span class='no'>fit5</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+
 <span class='co'># fit3 + smoother in recruitment</span>
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>) + <span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>20</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>4</span>))
 <span class='no'>rmodel</span> <span class='kw'>&lt;-</span> ~<span class='fu'>s</span>(<span class='no'>year</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>20</span>)
-<span class='no'>fit6</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>srmodel</span><span class='kw'>=</span><span class='no'>rmodel</span>, <span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'>
+<span class='no'>fit6</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>srmodel</span><span class='kw'>=</span><span class='no'>rmodel</span>, <span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+
 <span class='co'># fit3 + bevholt</span>
 <span class='no'>rmodel</span> <span class='kw'>&lt;-</span> ~ <span class='fu'>bevholt</span>(<span class='kw'>CV</span><span class='kw'>=</span><span class='fl'>0.05</span>)
-<span class='no'>fit7</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>srmodel</span><span class='kw'>=</span><span class='no'>rmodel</span>, <span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div></pre>
+<span class='no'>fit7</span> <span class='kw'>&lt;-</span>  <span class='fu'>a4aSCA</span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>srmodel</span><span class='kw'>=</span><span class='no'>rmodel</span>, <span class='no'>ple4</span>, <span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

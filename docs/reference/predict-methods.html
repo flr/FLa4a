@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -49,6 +49,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="http://github.com/flr/FLa4a">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -60,7 +67,9 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://flr-project.org/">FLR</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -97,7 +106,8 @@
 <span class='fu'>data</span>(<span class='no'>ple4.index</span>)
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>factor</span>(<span class='no'>age</span>))
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='a4aSCA.html'>a4aSCA</a></span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='no'>flqs</span> <span class='kw'>&lt;-</span> <span class='fu'>predict</span>(<span class='no'>fit1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in predict(fit1): object &#39;fit1&#39; not found</span></div></pre>
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='a4aSCA.html'>a4aSCA</a></span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+<span class='no'>flqs</span> <span class='kw'>&lt;-</span> <span class='fu'>predict</span>(<span class='no'>fit1</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

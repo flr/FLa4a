@@ -1,5 +1,6 @@
 .travis.yml
 appveyor.yml
+^_pkgdown.yml$
 code-experimental
 man-experimental
 gh-pages/
