@@ -15,6 +15,11 @@
   version <- gsub(" |[a-zA-z]|:", "", tbl[grep("Version:",tbl)])
   msg <- paste0("This is FLa4a ", version,". For overview type \'help(package=\"FLa4a\")\'\n")
   packageStartupMessage(msg)
+  
+  # check 32 bit platform in windows
+  if(os.type("windows") && !grep("32-bit", sessionInfo()$platform))
+    stop("This is the 32 bit version of FLa4a but you are running a 64 bit OS.
+      Please install the FLa4a package from https://github.com/flr/FLa4a/releases")
 
   #
   check.executable()
