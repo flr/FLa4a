@@ -17,7 +17,7 @@
   packageStartupMessage(msg)
 
   # check 64 bit platform in windows
-  if(os.type("windows") && !grep("64-bit", sessionInfo()$platform))
+  if(os.type("windows") && !grep("x86", sessionInfo()$running))
     stop("a4a executable in this package has been compiled for a 64 bit OS,
       please get the i386 version on the FLa4a release page at
       https://github.com/flr/FLa4a/releases")

@@ -63,4 +63,4 @@ Collate:
     'ma-methods.R'
     'utilities.R'
     'southern_hake-data.R'
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1
