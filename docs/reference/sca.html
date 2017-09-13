@@ -90,6 +90,9 @@
 
     <pre><span class='fu'>sca</span>(<span class='no'>stock</span>, <span class='no'>indices</span>, <span class='no'>...</span>)
 
+<span class='co'># S4 method for FLStock,FLIndex</span>
+<span class='fu'>sca</span>(<span class='no'>stock</span>, <span class='no'>indices</span>, <span class='no'>...</span>)
+
 <span class='co'># S4 method for FLStock,FLIndices</span>
 <span class='fu'>sca</span>(<span class='no'>stock</span>, <span class='no'>indices</span>, <span class='no'>fmodel</span>, <span class='no'>qmodel</span>,
   <span class='kw'>srmodel</span> <span class='kw'>=</span> ~<span class='fu'>factor</span>(<span class='no'>year</span>), <span class='kw'>fit</span> <span class='kw'>=</span> <span class='st'>"MP"</span>, <span class='kw'>mcmc</span> <span class='kw'>=</span> <span class='no'>missing</span>)</pre>
@@ -139,7 +142,7 @@
 #&gt; 
 #&gt; Time used:
 #&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;      0.34735823      2.82412076      0.09177208      3.26325107 
+#&gt;       0.3377771       2.8992119       0.0989790       3.3359680 
 #&gt; 
 #&gt; Submodels:
 #&gt; 	 fmodel: ~te(age, year, k = c(4, 26), bs = &quot;tp&quot;) + s(age, k = 8)
