@@ -3,8 +3,8 @@
 \docType{methods}
 \name{wireframe plot for FLQuant}
 \alias{wireframe plot for FLQuant}
-\alias{wireframe,FLQuant,missing-method}
 \alias{wireframe,FLQuant-method}
+\alias{wireframe,FLQuant,missing-method}
 \title{wireframe plot for FLQuant}
 \usage{
 \S4method{wireframe}{FLQuant,missing}(x, y, screen = list(x = -90, y = -45),
@@ -29,4 +29,3 @@ Method to 3D plot \code{FLQuant} objects.
 data(ple4)
 wireframe(harvest(ple4))
 }
-

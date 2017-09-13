@@ -14,4 +14,3 @@ FLR stock object for southern hake.
 \author{
 Santiago Cervi\~no
 }
-

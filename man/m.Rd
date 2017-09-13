@@ -66,4 +66,3 @@ mObj <- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3,
   range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
 m(mObj, v=1:4)
 }
-

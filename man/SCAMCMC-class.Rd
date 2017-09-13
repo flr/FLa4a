@@ -3,17 +3,18 @@
 \docType{class}
 \name{SCAMCMC}
 \alias{SCAMCMC}
-\alias{SCAMCMC,missing-method}
 \alias{SCAMCMC-class}
+\alias{SCAMCMC}
 \alias{SCAMCMC-methods}
+\alias{SCAMCMC,missing-method}
 \alias{getADMBCallArgs}
+\alias{mcmc}
+\alias{mcmc-methods}
+\alias{mcmc,SCAMCMC-method}
 \alias{getADMBCallArgs,SCAMCMC-method}
 \alias{getN}
-\alias{getN,SCAMCMC-method}
 \alias{getN-methods}
-\alias{mcmc}
-\alias{mcmc,SCAMCMC-method}
-\alias{mcmc-methods}
+\alias{getN,SCAMCMC-method}
 \title{MCMC settings class}
 \usage{
 SCAMCMC(object, ...)

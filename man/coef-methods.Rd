@@ -3,19 +3,19 @@
 \docType{methods}
 \name{coef}
 \alias{coef}
-\alias{coef,SCAPars-method}
-\alias{coef,a4aFitSA-method}
 \alias{coef,a4aFitSA-methods}
+\alias{coef,a4aFitSA-method}
+\alias{coef,SCAPars-method}
 \alias{coef,a4aStkParams-method}
-\alias{coef,submodel-method}
 \alias{coef,submodels-method}
+\alias{coef,submodel-method}
 \alias{coef<-}
-\alias{coef<-,SCAPars,numeric-method}
-\alias{coef<-,a4aFitSA,numeric-method}
 \alias{coef<-,a4aFitSA-methods}
+\alias{coef<-,a4aFitSA,numeric-method}
+\alias{coef<-,SCAPars,numeric-method}
 \alias{coef<-,a4aStkParams,numeric-method}
-\alias{coef<-,submodel,numeric-method}
 \alias{coef<-,submodels,numeric-method}
+\alias{coef<-,submodel,numeric-method}
 \title{coefficients extract and replacement}
 \usage{
 coef(object, ...)
@@ -52,4 +52,3 @@ coef(object, ...) <- value
 \description{
 Methods to extract and replace the model coefficients.
 }
-

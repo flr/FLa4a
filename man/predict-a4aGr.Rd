@@ -31,4 +31,3 @@ vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 predict(vbObj, len=1:50+0.5)
 predict(vbObj, t=1:20+0.5)
 }
-

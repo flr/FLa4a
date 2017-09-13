@@ -3,15 +3,15 @@
 \docType{methods}
 \name{vcov}
 \alias{vcov}
-\alias{vcov,SCAPars-method}
 \alias{vcov,a4aFitSA-method}
-\alias{vcov,submodel-method}
+\alias{vcov,SCAPars-method}
 \alias{vcov,submodels-method}
-\alias{vcov<-,SCAPars,numeric-method}
+\alias{vcov,submodel-method}
 \alias{vcov<-,a4aFitSA,numeric-method}
+\alias{vcov<-,SCAPars,numeric-method}
 \alias{vcov<-,a4aStkParams,numeric-method}
-\alias{vcov<-,submodel,numeric-method}
 \alias{vcov<-,submodels,numeric-method}
+\alias{vcov<-,submodel,numeric-method}
 \title{Variance-covariance matrix}
 \usage{
 \S4method{vcov}{a4aFitSA}(object)
@@ -42,4 +42,3 @@
 \description{
 Methods to extract and replace the variance-covariance matrix.
 }
-

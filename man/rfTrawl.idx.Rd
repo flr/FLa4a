@@ -14,4 +14,3 @@ Trawl survey index for red fish.
 \author{
 Daniel Howell
 }
-

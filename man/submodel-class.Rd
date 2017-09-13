@@ -2,14 +2,15 @@
 % Please edit documentation in R/submodel-class.R
 \docType{class}
 \name{submodel}
+\alias{submodel}
+\alias{submodel-class}
+\alias{submodel}
+\alias{submodel-methods}
+\alias{submodel,missing-method}
+\alias{params,submodel-method}
+\alias{model,submodel-method}
 \alias{covar,submodel-method}
 \alias{iter,submodel-method}
-\alias{model,submodel-method}
-\alias{params,submodel-method}
-\alias{submodel}
-\alias{submodel,missing-method}
-\alias{submodel-class}
-\alias{submodel-methods}
 \title{Submodel class}
 \usage{
 submodel(object, ...)

@@ -17,4 +17,3 @@ Simulated length data for redfish.  Simulations were done using GADGET.
 \author{
 Ernesto Jardim
 }
-

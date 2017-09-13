@@ -45,4 +45,3 @@ an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessme
 \description{
 The advanced user interface to the a4a fitting routine.
 }
-

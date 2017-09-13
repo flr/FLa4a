@@ -36,4 +36,3 @@ vbObj <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2,
    margins="triangle", paramMargins=pars)
 splom(data.frame(t(params(vbObj)@.Data)), pch=".")
 }
-

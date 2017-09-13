@@ -3,9 +3,9 @@
 \docType{methods}
 \name{sca}
 \alias{sca}
+\alias{sca-methods}
 \alias{sca,FLStock,FLIndex-method}
 \alias{sca,FLStock,FLIndices-method}
-\alias{sca-methods}
 \title{Statistical catch-at-age method}
 \usage{
 sca(stock, indices, ...)
@@ -73,4 +73,3 @@ plot(ple4 + fit4)
 AIC(fit1, fit2, fit3, fit4)
 BIC(fit1, fit2, fit3, fit4)
 }
-

@@ -3,8 +3,8 @@
 \docType{methods}
 \name{genFLQuant}
 \alias{genFLQuant}
-\alias{genFLQuant,FLQuant-method}
 \alias{genFLQuant-methods}
+\alias{genFLQuant,FLQuant-method}
 \title{Methods to generate FLQuant objects}
 \usage{
 genFLQuant(object, ...)
@@ -33,4 +33,3 @@ This method uses the quant log-correlation matrix of the \code{FLQuant} object a
 data(ple4)
 sim.F <- genFLQuant(harvest(ple4))
 }
-

@@ -3,10 +3,10 @@
 \docType{methods}
 \name{l2a}
 \alias{l2a}
-\alias{l2a,FLIndex,a4aGr-method}
+\alias{l2a-methods}
 \alias{l2a,FLQuant,a4aGr-method}
 \alias{l2a,FLStockLen,a4aGr-method}
-\alias{l2a-methods}
+\alias{l2a,FLIndex,a4aGr-method}
 \title{Method to convert length-based data to age-based}
 \usage{
 l2a(object, model, ...)
@@ -88,4 +88,3 @@ index_pt_age <- l2a(index_pt_len, vbObj)
 index_pt_age <- l2a(index_pt_len, mvrnorm(10, vbObj))
 index_pt_age <- l2a(propagate(index_pt_len, 10), vbObj)
 }
-

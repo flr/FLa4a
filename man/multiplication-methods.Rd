@@ -3,10 +3,11 @@
 \docType{methods}
 \name{*}
 \alias{*}
-\alias{*,FLIndices,SCAPars-method}
+\alias{*,FLStock,a4aFitSA-method}
 \alias{*,FLIndices,a4aFitSA-method}
 \alias{*,FLStock,SCAPars-method}
-\alias{*,FLStock,a4aFitSA-method}
+\alias{*,FLIndices,a4aFitSA-method}
+\alias{*,FLIndices,SCAPars-method}
 \title{* methods}
 \usage{
 \S4method{*}{FLStock,a4aFitSA}(e1, e2)
@@ -25,4 +26,3 @@
 \description{
 Update \code{FLStock} and \code{FLIndex} objects with simulations from stock assessment fits.
 }
-

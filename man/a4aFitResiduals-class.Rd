@@ -2,10 +2,10 @@
 % Please edit documentation in R/a4aFitresiduals-class.R
 \docType{class}
 \name{a4aFitResiduals-class}
-\alias{a4aFitResiduals}
 \alias{a4aFitResiduals-class}
-\alias{a4aFitResiduals-methods}
 \alias{residuals,a4aFit-method}
+\alias{a4aFitResiduals}
+\alias{a4aFitResiduals-methods}
 \title{S4 class \code{a4aFitResiduals}}
 \usage{
 \S4method{residuals}{a4aFit}(object, stock, indices, ...)
@@ -28,4 +28,3 @@ data(ple4.index)
 obj <- sca(ple4, FLIndices(ple4.index))
 flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 }
-

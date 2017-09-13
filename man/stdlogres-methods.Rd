@@ -3,8 +3,9 @@
 \docType{methods}
 \name{stdlogres}
 \alias{stdlogres}
-\alias{stdlogres,FLQuant,FLQuant-method}
 \alias{stdlogres-methods}
+\alias{stdlogres,FLQuant,FLQuant-method}
+\alias{stdlogres,FLQuant,FLQuant-method}
 \title{Standardized log residuals}
 \usage{
 stdlogres(obs, fit, ...)
@@ -36,4 +37,3 @@ flqs$catch.n
 # check:
 stdlogres(catch.n(ple4),catch.n(obj)) - flqs$catch.n
 }
-
