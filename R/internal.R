@@ -21,6 +21,12 @@
     stop("This is the 32 bit version of FLa4a but you are running a 64 bit OS.
       Please install the FLa4a package from https://github.com/flr/FLa4a/releases")
 
+  # check 64 bit platform in windows
+  if(os.type("windows") && grepl("x86", sessionInfo()$running))
+    stop("a4a executable in this package has been compiled for a 64 bit OS,
+      please get the i386 version on the FLa4a release page at
+      https://github.com/flr/FLa4a/releases")
+  
   #
   check.executable()
 }

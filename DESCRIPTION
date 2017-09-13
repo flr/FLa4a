@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 1.1.2
+Version: 1.1.3
 Date: 2016-12-21
 Authors@R: c(
   person("Colin P.", "Millar", email = "colinpmillar@googlemail.com", role = "aut"),
@@ -9,10 +9,10 @@ Authors@R: c(
 Description: A simple and robust statistical Catch at Age model that is
     specifically designed for stocks with intermediate levels of data quantity and
     quality.
-License: file LICENSE
+License: EUPL
 Depends:
     R (>= 3.2.0),
-    FLCore (>= 2.6.0.20161214),
+    FLCore (>= 2.6.4),
     triangle,
     copula,
     coda
@@ -63,4 +63,4 @@ Collate:
     'ma-methods.R'
     'utilities.R'
     'southern_hake-data.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

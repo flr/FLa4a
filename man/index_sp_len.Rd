@@ -14,4 +14,3 @@ Survey abundance index for hake in Northwest Spanish waters. Lenth frequencies.
 \author{
 Santiago Cervi\~no
 }
-

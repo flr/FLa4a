@@ -3,15 +3,15 @@
 \docType{methods}
 \name{assorted methods}
 \alias{assorted methods}
-\alias{dims,a4aStkParams-method}
 \alias{getYidx}
-\alias{getYidx,FLQuant-method}
 \alias{getYidx-methods}
+\alias{getYidx,FLQuant-method}
 \alias{is.empty}
 \alias{niters}
+\alias{niters-methods}
 \alias{niters,FLModelSim-method}
 \alias{niters,a4aGr-method}
-\alias{niters-methods}
+\alias{dims,a4aStkParams-method}
 \title{Assorted methods needed by FLa4a}
 \usage{
 getYidx(object, ...)
@@ -59,6 +59,7 @@ Compute number of iterations. Takes an object of any \code{FLR} class and return
 
 Extracts the dims of the parameters.
 }
+
 \examples{
 #Example use of getYidx:
 data(ple4)
@@ -82,4 +83,3 @@ niters(vbObj)
 #Example use of dims:
 dims(FLPar())
 }
-

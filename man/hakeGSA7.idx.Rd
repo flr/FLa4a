@@ -17,4 +17,3 @@ Survey index for the Gulf of Lions Hake stock.
 \author{
 Chato Osio
 }
-

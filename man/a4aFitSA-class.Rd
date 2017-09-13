@@ -2,26 +2,26 @@
 % Please edit documentation in R/a4aFitSA-class.R
 \docType{class}
 \name{a4aFitSA-class}
-\alias{a4aFit,a4aFitSA-method}
-\alias{a4aFitSA}
-\alias{a4aFitSA,a4aFit-method}
-\alias{a4aFitSA,missing-method}
 \alias{a4aFitSA-class}
-\alias{a4aFitSA-methods}
-\alias{a4aFitSAs}
-\alias{a4aFitSAs,a4aFitSA-method}
-\alias{a4aFitSAs,list-method}
-\alias{a4aFitSAs,missing-method}
-\alias{a4aFitSAs-class}
-\alias{a4aFitSAs-methods}
-\alias{iter,a4aFitSA-method}
-\alias{m,a4aFitSA-method}
-\alias{pars}
-\alias{pars,a4aFitSA-method}
-\alias{pars-methods}
 \alias{show,a4aFitSA-method}
 \alias{submodels,a4aFitSA-method}
+\alias{a4aFitSA}
+\alias{a4aFitSA-methods}
+\alias{a4aFitSA,missing-method}
+\alias{a4aFit,a4aFitSA-method}
+\alias{a4aFitSA,a4aFit-method}
+\alias{pars}
+\alias{pars-methods}
+\alias{pars,a4aFitSA-method}
+\alias{m,a4aFitSA-method}
 \alias{wt,a4aFitSA-method}
+\alias{iter,a4aFitSA-method}
+\alias{a4aFitSAs-class}
+\alias{a4aFitSAs}
+\alias{a4aFitSAs-methods}
+\alias{a4aFitSAs,list-method}
+\alias{a4aFitSAs,a4aFitSA-method}
+\alias{a4aFitSAs,missing-method}
 \title{S4 class \code{a4aFitSA}}
 \usage{
 \S4method{show}{a4aFitSA}(object)
@@ -98,6 +98,7 @@ any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
 for sizing, but not for populating any slot.
 }
+
 \examples{
 data(ple4)
 data(ple4.index)
@@ -120,4 +121,3 @@ BIC(obj)
 
 is(pars(obj))
 }
-

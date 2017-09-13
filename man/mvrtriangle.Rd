@@ -58,4 +58,3 @@ splom(data.frame(t(params(vbSim)@.Data)), pch=".")
 splom(data.frame(t(params(vbSim1)@.Data)), pch=".")
 splom(data.frame(t(params(vbSim2)@.Data)), pch=".")
 }
-

@@ -16,4 +16,3 @@ a FLStock object
 \description{
 Method to collapse seasons of \code{FLStock} objects. M and catch-at-age are summed while mean weights at age, maturity at age and mortalities before spawning are averaged.
 }
-

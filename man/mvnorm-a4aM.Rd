@@ -42,4 +42,3 @@ mObj <- mvrnorm(100, mObj)
   m2<-mvrnorm(2,mod2)
   c(params(m2))
 }
-

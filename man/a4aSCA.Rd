@@ -3,11 +3,14 @@
 \docType{methods}
 \name{a4aSCA}
 \alias{a4aSCA}
-\alias{a4aSCA,FLStock,FLIndices-method}
 \alias{a4aSCA-methods}
+\alias{a4aSCA,FLStock,FLIndex-method}
+\alias{a4aSCA,FLStock,FLIndices-method}
 \title{Statistical catch-at-age advanced method}
 \usage{
 a4aSCA(stock, indices, ...)
+
+\S4method{a4aSCA}{FLStock,FLIndex}(stock, indices, ...)
 
 \S4method{a4aSCA}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
   srmodel = ~factor(year), n1model, vmodel, covar = missing,
@@ -98,4 +101,3 @@ fit6 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(pl
 rmodel <- ~ bevholt(CV=0.05)
 fit7 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
 }
-

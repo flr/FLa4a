@@ -2,15 +2,15 @@
 % Please edit documentation in R/a4aFitMCMC-class.R
 \docType{class}
 \name{a4aFitMCMC-class}
-\alias{a4aFitMCMC}
-\alias{a4aFitMCMC,a4aFitSA-method}
-\alias{a4aFitMCMC,missing-method}
 \alias{a4aFitMCMC-class}
+\alias{a4aFitMCMC}
 \alias{a4aFitMCMC-methods}
+\alias{a4aFitMCMC,missing-method}
 \alias{a4aFitSA,a4aFitMCMC-method}
+\alias{a4aFitMCMC,a4aFitSA-method}
 \alias{as.mcmc}
-\alias{as.mcmc,a4aFitMCMC-method}
 \alias{as.mcmc-methods}
+\alias{as.mcmc,a4aFitMCMC-method}
 \title{S4 class \code{a4aFitMCMC}}
 \usage{
 a4aFitMCMC(object, ...)
@@ -70,6 +70,7 @@ any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
 for sizing, but not for populating any slot.
 }
+
 \examples{
 data(ple4)
 data(ple4.index)
@@ -92,4 +93,3 @@ BIC(obj)
 
 is(pars(obj))
 }
-

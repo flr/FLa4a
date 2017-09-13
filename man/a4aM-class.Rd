@@ -3,28 +3,29 @@
 \docType{class}
 \name{a4aM}
 \alias{a4aM}
-\alias{a4aM,missing-method}
 \alias{a4aM-class}
+\alias{a4aM}
 \alias{a4aM-methods}
-\alias{level}
-\alias{level,a4aM-method}
-\alias{level-methods}
-\alias{level<-}
-\alias{level<-,a4aM-method}
-\alias{level<--methods}
-\alias{shape}
-\alias{shape,a4aM-method}
-\alias{shape-methods}
-\alias{shape<-}
-\alias{shape<-,a4aM-method}
-\alias{shape<--methods}
+\alias{a4aM,missing-method}
 \alias{show,a4aM-method}
+\alias{shape}
+\alias{shape-methods}
+\alias{shape,a4aM-method}
+\alias{shape<-}
+\alias{shape<--methods}
+\alias{shape<-,a4aM-method}
+\alias{level}
+\alias{level-methods}
+\alias{level,a4aM-method}
+\alias{level<-}
+\alias{level<--methods}
+\alias{level<-,a4aM-method}
 \alias{trend}
-\alias{trend,a4aM-method}
 \alias{trend-methods}
+\alias{trend,a4aM-method}
 \alias{trend<-}
-\alias{trend<-,a4aM-method}
 \alias{trend<--methods}
+\alias{trend<-,a4aM-method}
 \title{Natural mortality class}
 \usage{
 a4aM(object, ...)
@@ -94,9 +95,9 @@ any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
 for sizing, but not for populating any slot.
 }
+
 \examples{
 mod1 <- FLModelSim(model=~exp(-age-0.5))
 mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 m1 <- a4aM(shape=mod1, level=mod2)
 }
-

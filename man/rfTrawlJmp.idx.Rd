@@ -14,4 +14,3 @@ Trawl survey index for red fish, with a jump in catchability.
 \author{
 Daniel Howell
 }
-

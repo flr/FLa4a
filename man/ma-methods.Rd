@@ -3,8 +3,8 @@
 \docType{methods}
 \name{ma}
 \alias{ma}
-\alias{ma,a4aFitSAs-method}
 \alias{ma-methods}
+\alias{ma,a4aFitSAs-method}
 \title{Model averaging (experimental)}
 \usage{
 ma(object, ...)
@@ -50,4 +50,3 @@ eqwt <- function(object){
 }
 stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, eqwt, nsim = 100)
 }
-

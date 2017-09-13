@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -49,6 +49,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="http://github.com/flr/FLa4a">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -60,7 +67,9 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://flr-project.org/">FLR</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -107,6 +116,9 @@
 <span class='co'># S4 method for a4aFitSA</span>
 <span class='fu'>wt</span>(<span class='no'>object</span>)
 
+<span class='co'># S4 method for a4aFitSA</span>
+<span class='fu'>iter</span>(<span class='no'>obj</span>, <span class='no'>it</span>)
+
 <span class='fu'>a4aFitSAs</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for list</span>
@@ -124,6 +136,10 @@
       <dd>object of relevant class (see signature of method)</dd>
       <dt>...</dt>
       <dd>additional argument list that might never be used</dd>
+      <dt>obj</dt>
+      <dd>the object to be subset</dd>
+      <dt>it</dt>
+      <dd>iteration to be extracted</dd>
     </dl>
     
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
@@ -163,13 +179,42 @@ for sizing, but not for populating any slot.</p>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>ple4</span>)
 <span class='fu'>data</span>(<span class='no'>ple4.index</span>)
 
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fit</span><span class='kw'>=</span><span class='st'>"assessment"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='no'>obj</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object &#39;obj&#39; not found</span></div><div class='input'>
-<span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in is(x, &quot;classRepresentation&quot;): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'><a href='a4aFit-class.html'>clock</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in clock(obj): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in fitSumm(obj): object &#39;obj&#39; not found</span></div><div class='input'>
-<span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>stock.n</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in stock.n(obj): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] &quot;standardGeneric&quot;  &quot;genericFunction&quot;  &quot;function&quot;         &quot;OptionalFunction&quot;
-#&gt; [5] &quot;PossibleMethod&quot;   &quot;optionalMethod&quot;  </div><div class='input'><span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>index</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in index(obj): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] &quot;standardGeneric&quot;  &quot;genericFunction&quot;  &quot;function&quot;         &quot;OptionalFunction&quot;
-#&gt; [5] &quot;PossibleMethod&quot;   &quot;optionalMethod&quot;  </div><div class='input'>
-<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in logLik(obj): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in AIC(obj): object &#39;obj&#39; not found</span></div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in BIC(obj): object &#39;obj&#39; not found</span></div><div class='input'>
-<span class='fu'>is</span>(<span class='fu'>pars</span>(<span class='no'>obj</span>))</div><div class='output co'>#&gt; <span class='error'>Error in pars(obj): object &#39;obj&#39; not found</span></div></pre>
+<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>), <span class='kw'>fit</span><span class='kw'>=</span><span class='st'>"assessment"</span>)
+<span class='no'>obj</span></div><div class='output co'>#&gt; a4a model fit for: Plaice in IV 
+#&gt; 
+#&gt; Call:
+#&gt; .local(stock = stock, indices = indices, fmodel = ..1, qmodel = ..2, 
+#&gt;     srmodel = ..3, n1model = ..4, vmodel = ..5, fit = ..6)
+#&gt; 
+#&gt; Time used:
+#&gt;  Pre-processing     Running a4a Post-processing           Total 
+#&gt;      0.30665326      2.68362570      0.09029579      3.08057475 
+#&gt; 
+#&gt; Submodels:
+#&gt; 	 fmodel: ~te(age, year, k = c(4, 26), bs = &quot;tp&quot;) + s(age, k = 8)
+#&gt; 	srmodel: ~factor(year)
+#&gt; 	n1model: ~factor(age)
+#&gt; 	 qmodel:
+#&gt; 	   BTS-Isis: ~s(age, k = 5)
+#&gt; 	 vmodel:
+#&gt; 	   catch:    ~s(age, k = 3)
+#&gt; 	   BTS-Isis: ~1</div><div class='input'>
+<span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  [1] &quot;pars&quot;    &quot;call&quot;    &quot;clock&quot;   &quot;fitSumm&quot; &quot;stock.n&quot; &quot;harvest&quot; &quot;catch.n&quot;
+#&gt;  [8] &quot;index&quot;   &quot;name&quot;    &quot;desc&quot;    &quot;range&quot;  </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>clock</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  Pre-processing     Running a4a Post-processing           Total 
+#&gt;      0.30665326      2.68362570      0.09029579      3.08057475 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
+#&gt;                           1
+#&gt;   nopar        1.780000e+02
+#&gt;   nlogl       -7.771360e+01
+#&gt;   maxgrad      5.430380e-06
+#&gt;   nobs         7.100000e+02
+#&gt;   gcv          4.824039e-02
+#&gt;   convergence  0.000000e+00
+#&gt;   accrate                NA</div><div class='input'>
+<span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>stock.n</span>(<span class='no'>obj</span>)
+<span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] &quot;FLQuant&quot;   &quot;FLArray&quot;   &quot;array&quot;     &quot;structure&quot; &quot;vector&quot;   </div><div class='input'><span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>index</span>(<span class='no'>obj</span>)
+<span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] &quot;FLQuants&quot; &quot;FLlst&quot;    &quot;list&quot;     &quot;vector&quot;  </div><div class='input'>
+<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; &#39;log Lik.&#39; 77.7136 (df=178)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] 200.5728</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] 1013.19</div><div class='input'>
+<span class='fu'>is</span>(<span class='fu'>pars</span>(<span class='no'>obj</span>))</div><div class='output co'>#&gt; [1] &quot;SCAPars&quot;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

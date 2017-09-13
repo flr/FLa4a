@@ -3,8 +3,8 @@
 \docType{methods}
 \name{getAcor}
 \alias{getAcor}
-\alias{getAcor,FLQuant-method}
 \alias{getAcor-methods}
+\alias{getAcor,FLQuant-method}
 \title{compute log-correlation matrix}
 \usage{
 getAcor(object, ...)
@@ -26,4 +26,3 @@ Method to compute the log-correlation matrix for the first dimension (\code{quan
 data(ple4)
 getAcor(harvest(ple4))
 }
-

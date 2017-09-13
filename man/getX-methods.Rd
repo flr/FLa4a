@@ -3,8 +3,8 @@
 \docType{methods}
 \name{getX}
 \alias{getX}
-\alias{getX,formula-method}
 \alias{getX-methods}
+\alias{getX,formula-method}
 \title{Get model matrix}
 \usage{
 getX(object, ...)
@@ -29,4 +29,3 @@ Uses the user-specified formula to build a model matrix.
 \note{
 \code{getX} is intended to be used internally
 }
-

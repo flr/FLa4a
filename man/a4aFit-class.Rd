@@ -2,23 +2,23 @@
 % Please edit documentation in R/a4aFit-class.R
 \docType{class}
 \name{a4aFit-class}
-\alias{a4aFit}
-\alias{a4aFit,missing-method}
 \alias{a4aFit-class}
+\alias{a4aFit}
 \alias{a4aFit-methods}
-\alias{catch.n,a4aFit-method}
+\alias{a4aFit,missing-method}
 \alias{clock}
-\alias{clock,a4aFit-method}
 \alias{clock-methods}
+\alias{clock,a4aFit-method}
 \alias{fitSumm}
-\alias{fitSumm,a4aFit-method}
 \alias{fitSumm-methods}
-\alias{harvest,a4aFit,ANY-method}
-\alias{index,a4aFit-method}
-\alias{iter,a4aFit-method}
-\alias{logLik,a4aFit-method}
-\alias{show,a4aFit-method}
+\alias{fitSumm,a4aFit-method}
 \alias{stock.n,a4aFit-method}
+\alias{harvest,a4aFit,ANY-method}
+\alias{catch.n,a4aFit-method}
+\alias{index,a4aFit-method}
+\alias{show,a4aFit-method}
+\alias{logLik,a4aFit-method}
+\alias{iter,a4aFit-method}
 \title{S4 class \code{a4aFit}}
 \usage{
 a4aFit(object, ...)
@@ -90,6 +90,7 @@ any of its slots. All slots are then created to match the requirements of the
 class validity. If an unnamed \code{FLQuant} object is provided, this is used
 for sizing, but not for populating any slot.
 }
+
 \examples{
 data(ple4)
 data(ple4.index)
@@ -110,4 +111,3 @@ logLik(obj)
 AIC(obj)
 BIC(obj)
 }
-

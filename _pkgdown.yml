@@ -15,3 +15,9 @@ navbar:
     href: articles/index.html
   - text: News
     href: news/index.html
+articles:
+  - title: FLa4a
+    contents:
+    - introduction
+    - growth
+
