@@ -17,7 +17,7 @@
   packageStartupMessage(msg)
   
   # check 32 bit platform in windows
-  if(os.type("windows") && !grep("32-bit", sessionInfo()$platform))
+  if(os.type("windows") && !grep("x86", sessionInfo()$running))
     stop("This is the 32 bit version of FLa4a but you are running a 64 bit OS.
       Please install the FLa4a package from https://github.com/flr/FLa4a/releases")
 
