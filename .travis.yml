@@ -4,6 +4,7 @@ warnings_are_errors: false
 
 os:
   - linux
+  - osx
 
 language: r
 
@@ -20,6 +21,8 @@ addons:
 repos:
   CRAN: https://cloud.r-project.org
   flr: http://flr-project.org/R
+
+r_github_packages: flr/FLCore
 
 cache: packages
 
