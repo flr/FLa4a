@@ -6,7 +6,7 @@
 .onAttach <- function(libname, pkgname)
 {
   ## TODO find out sep char for environment vars on macs
-  sep <- if (os.type("linux")) ":" else if (os.type("windows")) ";" else ","
+  sep <- if (os.type("linux") | os.type("osx")) ":" else if (os.type("windows")) ";" else ","
   path <- paste0(a4a.dir(), sep, Sys.getenv("PATH"))
   Sys.setenv(PATH=path)
 
