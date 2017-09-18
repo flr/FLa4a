@@ -948,6 +948,13 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 			echoc <- system(paste0("cd ", shQuote(wkdir), ";a4a ", args, " > logfile.txt"))
 		}
 		if(fit=="MCMC") system(paste0("cd ", shQuote(wkdir), ";a4a -mceval"))
+  } else if (os.type("osx")) {
+		if (verbose) {
+			echoc <- system(paste0("cd ", shQuote(wkdir), ";a4a ", args))
+		} else {
+			echoc <- system(paste0("cd ", shQuote(wkdir), ";a4a ", args, " > logfile.txt"))
+		}
+		if(fit=="MCMC") system(paste0("cd ", shQuote(wkdir), ";a4a -mceval"))
 	} else if (os.type("windows")) {
 		if (verbose) {
 			echoc <- shell(paste0("cd /D", shQuote(wkdir), " & a4a", args))
@@ -955,8 +962,6 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 			echoc <- shell(paste0("cd /D", shQuote(wkdir), " & a4a ", args, " > logfile.txt"))
 		}
 		if(fit=="MCMC") shell(paste0("cd /D", shQuote(wkdir), " & a4a -mceval"))
-	} else if (os.type("mac")) {
-		stop("The FLa4a package is not developed for Macs yet...  Sorry!")
 	}
 
 	#========================================================================
