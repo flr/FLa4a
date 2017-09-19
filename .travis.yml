@@ -1,5 +1,4 @@
 # .travis.yml for FLa4a
-
 warnings_are_errors: false
 
 os:
