@@ -60,7 +60,7 @@ setMethod("vcov", signature(object = "submodels"),
                       vardiag <- unlist(lapply(object, function(x) diag(as.matrix(vcov(x)[,,it]))))
                       diag(sqrt(vardiag)) %*% cormat %*% diag(sqrt(vardiag))
                     })
-    npar <- sapply(object, function(x) length(coef(x)))
+    npar <- sapply(object, function(x) dim(coef(x))[1])
     V <- array(unlist(V.lst), dim = c(sum(npar), sum(npar), niters))
     # add names in?
     parnames <- lapply(object, function(x) dimnames(coef(x))$params)
