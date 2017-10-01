@@ -20,6 +20,8 @@
 \alias{coef<-,submodels,numeric-method}
 \alias{coef<-,submodel,numeric-method}
 \alias{coef<-,submodel,FLPar-method}
+\alias{coef<-,a4aStkParams,FLPar-method}
+\alias{coef<-,a4aStkParams,matrix-method}
 \title{coefficients extract and replacement}
 \usage{
 formula(object) <- value
@@ -51,6 +53,10 @@ coef(object, ...) <- value
 \S4method{coef}{submodel,numeric}(object, ...) <- value
 
 \S4method{coef}{submodel,FLPar}(object, ...) <- value
+
+\S4method{coef}{a4aStkParams,FLPar}(object, ...) <- value
+
+\S4method{coef}{a4aStkParams,matrix}(object, ...) <- value
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}

@@ -9,6 +9,7 @@
 \alias{a4aStkParams,missing-method}
 \alias{m,a4aStkParams-method}
 \alias{wt,a4aStkParams-method}
+\alias{mat,a4aStkParams-method}
 \alias{fMod}
 \alias{fMod-methods}
 \alias{fMod,a4aStkParams-method}
@@ -45,6 +46,8 @@ a4aStkParams(object, ...)
 \S4method{m}{a4aStkParams}(object)
 
 \S4method{wt}{a4aStkParams}(object)
+
+\S4method{mat}{a4aStkParams}(object)
 
 fMod(object, ...)
 

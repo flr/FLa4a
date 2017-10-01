@@ -7,6 +7,7 @@
 \alias{genFLQuant,FLQuant-method}
 \alias{genFLQuant,submodel-method}
 \alias{genFLQuant,submodels-method}
+\alias{genFLQuant,a4aStkParams-method}
 \title{Methods to generate FLQuant objects}
 \usage{
 genFLQuant(object, ...)
@@ -18,6 +19,9 @@ genFLQuant(object, ...)
   nsim = 0, seed = NULL)
 
 \S4method{genFLQuant}{submodels}(object, type = c("link", "response"),
+  nsim = 0, seed = NULL)
+
+\S4method{genFLQuant}{a4aStkParams}(object, type = c("link", "response"),
   nsim = 0, seed = NULL)
 }
 \arguments{
