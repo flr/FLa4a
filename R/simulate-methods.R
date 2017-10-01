@@ -155,15 +155,15 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 	}
 
 	# add to object and return
-	if(mitr > pitr) object@params <- propagate(object@params, mitr)
-	object@params[] <- parsim
+	if(mitr > pitr) coef(object) <- propagate(coef(object), mitr)
+	coef(object) <- parsim
 	return(object)
 
 })
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodels"),
-  function(object, nsim = 1, seed = NULL) {
+  function(object, nsim = 1, seed = NULL, ...) {
     # get the joined up coefficients
     blist <- lapply(object, coef)
 
@@ -212,7 +212,7 @@ setMethod("simulate", signature(object = "submodels"),
       parsim <-
         sapply(seq(mitr),
                function(i) {
-                 simfunc(1, as(b[,i], "vector"), V[,,i])
+                 simfunc(1, as(b[,i], "vector"), V[,,i], ...)
                 })
     } else
     if (nsim > 1) {
@@ -239,7 +239,7 @@ setMethod("simulate", signature(object = "submodels"),
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodel"),
-  function(object, nsim = 1, seed = NULL) {
+  function(object, nsim = 1, seed = NULL, ...) {
     # get parameter estimates
     b <- coef(object)
 
@@ -277,7 +277,7 @@ setMethod("simulate", signature(object = "submodel"),
       parsim <-
         sapply(seq(mitr),
                function(i) {
-                 simfunc(1, as(b[,i], "vector"), V[,,i])
+                 simfunc(1, as(b[,i], "vector"), V[,,i], ...)
                 })
     } else
     if (nsim > 1) {
