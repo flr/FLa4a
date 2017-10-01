@@ -19,6 +19,7 @@ a4aStkModel <-
     contains = c("FLComp", "submodels"),
     slots = c(m = "FLQuant",
               wt = "FLQuant",
+              mat = "FLQuant",
               units = "character"))
 
 #' @rdname a4aStkModel-class

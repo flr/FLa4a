@@ -408,6 +408,8 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
         out@pars@stkmodel@coefficients[,i]   <- outi@pars@stkmodel@coefficients
         out@pars@stkmodel@vcov[,,i]    <- outi@pars@stkmodel@vcov
         out@pars@stkmodel@m[,,,,,i]    <- outi@pars@stkmodel@m
+        out@pars@stkmodel@wt[,,,,,i]    <- outi@pars@stkmodel@wt
+        out@pars@stkmodel@mat[,,,,,i]    <- outi@pars@stkmodel@mat
         # qmodel
         for (j in seq_along(indices)) {
           out@pars@qmodel[[j]]@coefficients[,i] <- outi@pars@qmodel[[j]]@coefficients
@@ -1116,6 +1118,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		a4aout@pars@stkmodel@srMod     <- srmodel
 		a4aout@pars@stkmodel@m         <- m(stock)
 		a4aout@pars@stkmodel@wt        <- stock.wt(stock)
+    a4aout@pars@stkmodel@mat       <- mat(stock)
 		a4aout@pars@stkmodel@link      <- log
 		a4aout@pars@stkmodel@linkinv   <- exp
 		pars <- out$par.est

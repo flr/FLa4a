@@ -30,6 +30,7 @@ setClass("a4aStkParams",
       distr        = "character",
       m            = "FLQuant",
       wt           = "FLQuant",
+      mat          = "FLQuant",
       units        = "character",
       link         = "function",
       linkinv      = "function"
@@ -59,9 +60,10 @@ setMethod("initialize", "a4aStkParams",
               distr        = "norm",
               m            = FLQuant(),
               wt           = FLQuant(),
+              mat          = FLQuant(),
               units        = "NA",
-              ink = log,
-              linkinv = exp,
+              ink          = log,
+              linkinv      = exp,
               ...) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
@@ -85,6 +87,7 @@ setMethod("initialize", "a4aStkParams",
                   )
       .Object@m <- if (missing(m)) flq else m
       .Object@wt <- if (missing(wt)) flq else wt
+      .Object@wt <- if (missing(mat)) flq else mat
       # throw error if range from FLComp doesn't match FLQuants 
       # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
       if (abs(as.numeric(dimnames(.Object@m)$year[1]) - .Object@range["minyear"]) > 1e-9 ||
@@ -123,10 +126,13 @@ setMethod("a4aStkParams", signature(object="missing"),
 
 
 #' @rdname a4aStkParams-class
-setMethod("m", signature(object="a4aStkParams"), function(object) object @ m)
+setMethod("m", signature(object="a4aStkParams"), function(object) object@m)
 
 #' @rdname a4aStkParams-class
-setMethod("wt", signature(object="a4aStkParams"), function(object) object @ wt)
+setMethod("wt", signature(object="a4aStkParams"), function(object) object@wt)
+
+#' @rdname a4aStkParams-class
+setMethod("mat", signature(object="a4aStkParams"), function(object) object@mat)
 
 #' @rdname a4aStkParams-class
 #' @aliases fMod fMod-methods
@@ -213,9 +219,10 @@ setMethod("propagate", signature(object="a4aStkParams"),
 
     # propagate coefs, centering, m and wt
     object@coefficients <- propagate(object@coefficients, iter, fill.iter = fill.iter)
-    object@centering <- propagate(object@centering, iter, fill.iter = fill.iter)
-    object@m         <- propagate(object@m, iter, fill.iter = fill.iter)
-    object@wt        <- propagate(object@wt, iter, fill.iter = fill.iter)
+    object@centering    <- propagate(object@centering, iter, fill.iter = fill.iter)
+    object@m            <- propagate(object@m, iter, fill.iter = fill.iter)
+    object@wt           <- propagate(object@wt, iter, fill.iter = fill.iter)
+    object@mat          <- propagate(object@mat, iter, fill.iter = fill.iter)
 
     # now propagate vcov
     vcov.iter <- vcov(object)
@@ -246,37 +253,8 @@ setMethod("iter", "a4aStkParams", function(obj, it){
 	obj@params <- iter(obj@params, it)
 	obj@m <- iter(obj@m, it)
 	obj@wt <- iter(obj@wt, it)
+  bj@mat <- iter(obj@mat, it)
 	obj@centering <- obj@centering[it]
 	obj
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
