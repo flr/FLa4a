@@ -42,12 +42,12 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   nyrs <- dms$year
   niters <- dim(R)[6]
   flq <- FLQuant(dimnames=dimnames(F))
-  
+
   # compute cumulative Z
   Z <- FLCohort(F + m(object))
   Z[] <- apply(Z, c(2:6), cumsum)
 
-  # expand variability into [N] by R*[F] 
+  # expand variability into [N] by R*[F]
   Ns <- FLCohort(R[rep(1,nages)])
   Ns <- Ns*exp(-Z)
   Ns <- as(Ns, "FLQuant")
@@ -57,7 +57,7 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   # [R]
   stock.n(object)[1] <- R
   # [N]
-  stock.n(object)[-1,-1] <- Ns[-nages,-nyrs] 
+  stock.n(object)[-1,-1] <- Ns[-nages,-nyrs]
   # plus group
   stock.n(object)[nages,-1] <- Ns[nages,-1] + stock.n(object)[nages,-1]
   stock(object) <- computeStock(object)
@@ -65,7 +65,7 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   harvest(object) <- F
   # [C]
   Z <- harvest(object) + m(object)
-  Cs <- harvest(object)/Z*(1-exp(-Z))*stock.n(object) 
+  Cs <- harvest(object)/Z*(1-exp(-Z))*stock.n(object)
   catch.n(object) <- Cs
   catch(object) <- computeCatch(object)
   # [L] & [D] rebuilt from C
@@ -116,7 +116,7 @@ setMethod("getAcor", c("FLQuant"), function(object, ...) {
 setGeneric("genFLQuant", function(object, ...) standardGeneric("genFLQuant"))
 
 #' @rdname genFLQuant-methods
-setMethod("genFLQuant", "FLQuant", 
+setMethod("genFLQuant", "FLQuant",
   function(object, cv = 0.2, method = "ac", niter = 250) {
   # use log transform, to be expanded on later versions
   mu <- log(object)
@@ -133,7 +133,7 @@ setMethod("genFLQuant", "FLQuant",
 
 #' @rdname genFLQuant-methods
 # if nsim > 0 the simulate nsim times
-setMethod("genFLQuant", "submodel", 
+setMethod("genFLQuant", "submodel",
   function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
       type <- match.arg(type)
       # simulate from submodel?
@@ -141,20 +141,14 @@ setMethod("genFLQuant", "submodel",
         object <- simulate(object, nsim = nsim, seed = seed)
       }
       # make empty FLQuant
-      flq <- FLQuant(
-                  matrix(NA,
-                     nrow = object@range["max"] - object@range["min"] + 1,
-                     ncol = object@range["maxyear"] - object@range["minyear"] + 1),
-                     dimnames = list(age = object@range["min"]:object@range["max"],
-                                     year = object@range["minyear"]:object@range["maxyear"])
-                  )
+      flq <- flqFromRange(object)
       df <- as.data.frame(flq)
       # this should have 2 dimensions!
       b <- coef(object)
       # get design matrix
       X <- getX(formula(object), df)
       # predict accross all iters (if dimensions don't match then coefs are the wrong length!)
-      pred <- X %*% as(b, "matrix")      
+      pred <- X %*% as(b, "matrix")
       # add into flq
       flq <- propagate(flq, dims(b)$iter)
       flq[] <- as(pred, "vector")
@@ -169,7 +163,7 @@ setMethod("genFLQuant", "submodel",
 
 #' @rdname genFLQuant-methods
 # if nsim > 0 the simulate nsim times
-setMethod("genFLQuant", "submodels", 
+setMethod("genFLQuant", "submodels",
   function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
       type <- match.arg(type)
       # simulate from submodels?
