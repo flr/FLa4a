@@ -22,7 +22,7 @@ setClass("submodel",
   slots = c(formula      = "formula",
             coefficients = "FLPar",
             vcov         = "array",
-            centering    = "numeric",
+            centering    = "FLPar",
             distr        = "character",
             link         = "function",
             linkinv      = "function")
@@ -48,7 +48,7 @@ setMethod("initialize", "submodel",
            formula = ~ 1,
            coefficients,
            vcov,
-           centering = 0,
+           centering = FLPar(centering = 0),
            distr = "norm",
            link = log,
            linkinv = exp
@@ -70,9 +70,13 @@ setMethod("initialize", "submodel",
         Xmat <- model.matrix(formula(.Object), as.data.frame(flq))
         coef(.Object) <- FLPar(structure(rep(0, ncol(Xmat)), names = colnames(Xmat)))
       }
-      # need hard assignent first time round
-      .Object@vcov <- diag(length(coef(.Object)))
-      rownames(.Object@vcov) <- colnames(.Object@vcov) <- rownames(coef(.Object))
+      # need hard assignment first time round
+      npar <- length(coef(.Object))
+      parnames <- rownames(coef(.Object))
+      .Object@vcov <- array(NA, dim = c(npar, npar, 1), dimnames = list(parnames, parnames, 1))
+      .Object@vcov[] <- diag(npar)
+
+      # check dims in the following?
       if (!missing(vcov)) vcov(.Object) <- vcov
       .Object@centering <- centering
       .Object@distr <- distr
@@ -122,10 +126,51 @@ setMethod("vcov", "submodel", function(object) object@vcov)
 #' @param obj the object to be subset
 #' @param it iteration to be extracted 
 setMethod("iter", "submodel", function(obj, it){
-  obj@vcov <- obj@vcov[,,it, drop=FALSE]
-  obj@params <- iter(obj@params, it)
+  niters <- dim(vcov(obj))[3]
+  # follow behaviour of iter see 
+  # showMethods(iter, classes = "FLPar", includeDefs = TRUE)
+  if (niters == 1) {
+    obj@vcov <- obj@vcov  
+  } else {
+    obj@vcov <- obj@vcov[,,it, drop=FALSE]  
+  }
+  obj@coefficients <- iter(obj@coefficients, it)
+  obj@centering <- iter(obj@centering, it)
   obj
 })
+
+
+#' @rdname submodel-class
+#' @param object the object to be extended
+#' @param iter the number of iterations to create
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
+setMethod("propagate", signature(object="submodel"),
+  function(object, iter, fill.iter = TRUE)
+  {
+
+    # propagate coefs and centering
+    object@coefficients <- propagate(object@coefficients, iter, fill.iter = fill.iter)
+    object@centering <- propagate(object@centering, iter, fill.iter = fill.iter)
+
+    # now propagate vcov
+    vcov.iter <- vcov(object)
+    dob <- dim(vcov.iter)
+
+    if (iter != dob[3]) {
+      # CHECK no iters in object
+      if(dob[3] > 1) stop("propagate can only extend objects with no iters")
+
+      object@vcov <- array(NA, dim = c(dob[1:2], iter), dimnames = c(dimnames(vcov.iter)[1:2], list(1:iter)))
+      if (fill.iter) {
+        object@vcov[] <- as.vector(vcov.iter)
+      } else {
+        object@vcov[,,1] <- as.vector(vcov.iter)
+      }
+    }
+
+    object
+  }
+)
 
 #
 #  duplicate accessors to help link with existing functions
