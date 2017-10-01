@@ -13,6 +13,8 @@
 \alias{sMod,submodel-method}
 \alias{vcov,submodel-method}
 \alias{iter,submodel-method}
+\alias{propagate,submodel-method}
+\alias{formula,submodel-method}
 \title{Submodel class}
 \usage{
 submodel(object, ...)
@@ -28,6 +30,10 @@ sMod(object, ...)
 \S4method{vcov}{submodel}(object)
 
 \S4method{iter}{submodel}(obj, it)
+
+\S4method{propagate}{submodel}(object, iter, fill.iter = TRUE)
+
+\S4method{formula}{submodel}(x)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
@@ -37,6 +43,12 @@ sMod(object, ...)
 \item{obj}{the object to be subset}
 
 \item{it}{iteration to be extracted}
+
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
+
+\item{object}{the object to be extended}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

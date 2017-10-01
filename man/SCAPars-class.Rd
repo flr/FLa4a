@@ -63,6 +63,7 @@
 \alias{vFrml,SCAPars-method}
 \alias{m,SCAPars-method}
 \alias{wt,SCAPars-method}
+\alias{propagate,SCAPars-method}
 \alias{iter,SCAPars-method}
 \title{Model parameters class}
 \usage{
@@ -145,6 +146,8 @@ vFrml(object, ...)
 \S4method{m}{SCAPars}(object)
 
 \S4method{wt}{SCAPars}(object)
+
+\S4method{propagate}{SCAPars}(object, iter, fill.iter = TRUE)
 
 \S4method{iter}{SCAPars}(obj, it)
 }

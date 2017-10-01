@@ -39,7 +39,7 @@ pars(object)
 
 \S4method{show}{a4aFitSA}(object)
 
-\S4method{submodels}{a4aFitSA}(object)
+\S4method{submodels}{a4aFitSA}(object, ...)
 
 \S4method{iter}{a4aFitSA}(obj, it)
 

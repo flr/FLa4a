@@ -6,22 +6,25 @@
 \alias{submodels-class}
 \alias{submodels}
 \alias{submodels-methods}
-\alias{submodels,missing-method}
-\alias{submodels,submodel-method}
-\alias{submodels,list-method}
+\alias{corBlocks}
+\alias{corBlock-methods}
+\alias{corBlocks,submodels-method}
 \alias{params,submodels-method}
 \alias{sMod,submodels-method}
 \alias{vcov,submodels-method}
+\alias{formula,submodels-method}
+\alias{corBlocks<-}
+\alias{propagate,submodels-method}
 \alias{iter,submodels-method}
 \title{Submodels class}
 \usage{
-submodels(object, ...)
+submodels(...)
 
-\S4method{submodels}{missing}(object, ...)
+submodels(...)
 
-\S4method{submodels}{submodel}(object, ...)
+corBlocks(object, ...)
 
-\S4method{submodels}{list}(object, ...)
+\S4method{corBlocks}{submodels}(object)
 
 \S4method{params}{submodels}(object)
 
@@ -29,12 +32,20 @@ submodels(object, ...)
 
 \S4method{vcov}{submodels}(object)
 
+\S4method{formula}{submodels}(x)
+
+corBlocks(object, ...) <- value
+
+\S4method{propagate}{submodels}(object, iter, fill.iter = TRUE)
+
 \S4method{iter}{submodels}(obj, it)
 }
 \arguments{
+\item{...}{additional argument list that might never be used}
+
 \item{object}{object of relevant class (see signature of method)}
 
-\item{...}{additional argument list that might never be used}
+\item{value}{value the new object}
 
 \item{obj}{the object to be subset}
 
