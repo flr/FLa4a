@@ -60,13 +60,7 @@ setMethod("initialize", "submodel",
       if (!missing(coefficients)) {
         coef(.Object) <- coefficients
       } else {
-        flq <- FLQuant(
-                  matrix(NA,
-                     nrow = .Object@range["max"] - .Object@range["min"] + 1,
-                     ncol = .Object@range["maxyear"] - .Object@range["minyear"] + 1),
-                     dimnames = list(age = .Object@range["min"]:.Object@range["max"],
-                                     year = .Object@range["minyear"]:.Object@range["maxyear"])
-                     )
+        flq <- flqFromRange(.Object)
         Xmat <- model.matrix(formula(.Object), as.data.frame(flq))
         coef(.Object) <- FLPar(structure(rep(0, ncol(Xmat)), names = colnames(Xmat)))
       }
