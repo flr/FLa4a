@@ -33,7 +33,6 @@ setMethod("vcov", signature(object = "submodels"),
     }
     corblocks <- corBlocks(object)
     niters <- unique(sapply(coef(object), function(x) dim(x)["iter"]))
-
     V.lst <- lapply(1:niters,
                     function(it) {
                       cormat <-
@@ -43,19 +42,22 @@ setMethod("vcov", signature(object = "submodels"),
                                           lapply(1:nmodels, function(j) {
                                             if (i == j) {
                                               # return correlation matrix
-                                              cov2cor(vcov(object[[i]])[,,it])
+                                              out <- vcov(object[[i]])
+                                              cov2cor(dropMatrixIter(out, iter = it))
                                             } else {
-                                              out <- corblocks[[paste(names(object)[sort(c(i, j))], collapse = ".")]][,,it]
+                                              out <- corblocks[[paste(names(object)[sort(c(i, j))], collapse = ".")]]
+                                              out <- dropMatrixIter(out, it)
                                               if (i > j) {
                                                 t(out)
                                               } else {
                                                 out
                                               }
                                             }
-                                          }))
+                                          })
+                                   )
                                 })
                         )
-                      vardiag <- unlist(lapply(object, function(x) diag(vcov(x)[,,it])))
+                      vardiag <- unlist(lapply(object, function(x) diag(as.matrix(vcov(x)[,,it]))))
                       diag(sqrt(vardiag)) %*% cormat %*% diag(sqrt(vardiag))
                     })
     npar <- sapply(object, function(x) length(coef(x)))
