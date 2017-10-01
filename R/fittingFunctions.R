@@ -404,7 +404,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
       } else {
         # fill in 2nd, 3rd iterations etc.
         # now the a4aFitSA bits
-        out@pars@stkmodel@centering[i] <- outi@pars@stkmodel@centering
+        out@pars@stkmodel@centering[,i] <- outi@pars@stkmodel@centering
         out@pars@stkmodel@coefficients[,i]   <- outi@pars@stkmodel@coefficients
         out@pars@stkmodel@vcov[,,i]    <- outi@pars@stkmodel@vcov
         out@pars@stkmodel@m[,,,,,i]    <- outi@pars@stkmodel@m
@@ -416,7 +416,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
           out@pars@qmodel[[j]]@vcov[,,i]  <- outi@pars@qmodel[[j]]@vcov
         }
         for (j in seq_along(outi@pars@qmodel@corBlocks)) {
-          out@pars@qmodel@corBlocks[[j]][,,i]  <- out@pars@qmodel@corBlocks[[j]]
+          out@pars@qmodel@corBlocks[[j]][,,i]  <- outi@pars@qmodel@corBlocks[[j]]
         }
 
         # vmodel
