@@ -152,7 +152,7 @@ setMethod("genFLQuant", "submodel",
       # this should have 2 dimensions!
       b <- coef(object)
       # get design matrix
-      X <- model.matrix(formula(object), df)
+      X <- getX(formula(object), df)
       # predict accross all iters (if dimensions don't match then coefs are the wrong length!)
       pred <- X %*% as(b, "matrix")      
       # add into flq
