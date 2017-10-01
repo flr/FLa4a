@@ -192,7 +192,11 @@ setMethod("simulate", signature(object = "submodels"),
     simfunc <- match.fun(paste0("mvr", distr))
 
     # combine blist into a single FLPar
-    b <- do.call(rbind, blist)
+    if (length(blist) == 1) {
+      b <- blist[[1]]
+    } else {
+      b <- do.call(rbind, blist)
+    }
 
     # if there are iters in pars or vcov simulation must be done by iter
     if (pitr != 1 || vitr != 1) {
