@@ -132,18 +132,11 @@ predict.stkpars <- function(object) {
       FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
 }
 
+
 predict.submods <- function(object, ...) {
-	lst <- lapply(object, function(x){
-		if(isTRUE(attr(x, "FLIndexBiomass"))) ages <- "all" else ages <- range(x)["min"]:range(x)["max"]
-		years <- try(range(x)["minyear"]:range(x)["maxyear"], silent=TRUE)
-		if(is(years, "try-error")) years <- 1
-		df <- expand.grid(age = ages, year = years)
-		X <- getX(x @ Mod, df)
-		b <- coef(x)
-		niter <- dim(b)[2]
-		fit <- exp(c(X %*% b) + x @ centering)
-		FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), dimnames = list(age = ages, year = years, unit = "unique", season = "all", area = "unique", iter = seq(niter))))
-	})
-	lst
+	genFLQuant(object, ...)
 }
 
+predict.submod <- function(object, ...) {
+	genFLQuant(object, ...)
+}
