@@ -105,7 +105,7 @@ setMethod("submodel", signature(object="missing"),
 )
 
 #' @rdname submodel-class
-setMethod("params", "submodel", function(object) object@params)
+setMethod("params", "submodel", function(object) object@coefficients)
 
 #' @rdname submodel-class
 #' @aliases sMod sMod-methods
