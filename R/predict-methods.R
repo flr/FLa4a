@@ -51,10 +51,13 @@ predict.stkpars <- function(object) {
       cnames <- rownames(coef(object))
       df <- expand.grid(age = ages,
                         year = years)
+      niter <- dim(coef(object))[2] # reuse this for the others
+      niter.centering <- propagate(niter.centering, niter)
+     
+      # predict F
       X <- getX(object @ fMod, df)
       b <- coef(object)[grep("fMod", cnames)]
-      niter <- dim(b)[2] # reuse this for the others
-      fit <- exp(c(X %*% b))
+      fit <- object@linkinv(X %*% b)
       harvest <- 
         FLQuant(array(fit, dim = c(length(ages), length(years), 1, 1, 1, niter), 
                       dimnames = list(age = ages, year = years, 
@@ -62,24 +65,25 @@ predict.stkpars <- function(object) {
                                          iter = seq(niter))),
                 units = "f")
 
-
+      # predict N in first year
       X <- getX(object @ n1Mod, data.frame(age = ages[-1]))
       b <- coef(object)[grep("n1Mod", cnames)]
-      fit <- exp(c(rbind(NA, X %*% b)) + object @ centering)
+      fit <- rbind(NA, object@linkinv(sweep(X %*% b, 2, object @ centering, "+")))
       ny1 <-       
         FLQuant(array(fit, dim = c(length(ages), 1, 1, 1, 1, niter), 
                       dimnames = list(age = ages, year = years[1], 
                                          unit = "unique", season = "all", area = "unique",
                                          iter = seq(niter))))
 
+      # predict Recruitment
 	  # check if internal S/R was used
 	  facs <- strsplit(as.character(object @ srMod)[length(object @ srMod)], "[+]")[[1]]
 	  facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
 	  a4as <- grepl(paste("(^",c("bevholt", "bevholtSV", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
-	  if(a4as){
+	  if (a4as) {
 	      X <- getX(~factor(year), data.frame(year = years))
 	      b <- coef(object)[grep("rMod", cnames)]
-	      fit <- c(exp(c(X %*% b) + object @ centering))
+	      fit <- object@linkinv(sweep(X %*% b, 2, object @ centering, "+"))
 	      rec <- FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter),
 	      		dimnames = list(age = ages[1], year = years,
 	      		unit = "unique", season = "all", area = "unique",
@@ -123,7 +127,7 @@ predict.stkpars <- function(object) {
 	  } else {
 	      X <- getX(object @ srMod, data.frame(year = years))
 	      b <- coef(object)[grep("rMod", cnames)]
-	      fit <- c(exp(c(X %*% b) + object @ centering))
+	      fit <- object@linkinv(sweep(X %*% b, 2, object @ centering, "+"))
 	      rec <- FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter),
 	      		dimnames = list(age = ages[1], year = years,
 	      		unit = "unique", season = "all", area = "unique",
