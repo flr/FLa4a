@@ -94,7 +94,7 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
     new <- rep_len(unlist(value), length.out = length(old))
     
     for (i in seq_along(object)) {
-      object[[i]] @ params[] <- new[grep(object[[i]] @ name, names(old))]  
+      object[[i]] @ coefficients[] <- new[grep(object[[i]] @ name, names(old))]  
     }
     object
   })
