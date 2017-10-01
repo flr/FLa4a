@@ -412,6 +412,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
         out@pars@stkmodel@mat[,,,,,i]    <- outi@pars@stkmodel@mat
         # qmodel
         for (j in seq_along(indices)) {
+          out@pars@qmodel[[j]]@centering[,i] <- outi@pars@qmodel[[j]]@centering
           out@pars@qmodel[[j]]@coefficients[,i] <- outi@pars@qmodel[[j]]@coefficients
           out@pars@qmodel[[j]]@vcov[,,i]  <- outi@pars@qmodel[[j]]@vcov
         }
@@ -421,6 +422,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
 
         # vmodel
         for (j in seq_along(out@pars@vmodel)) {
+          out@pars@vmodel[[j]]@centering[,i] <- outi@pars@vmodel[[j]]@centering
           out@pars@vmodel[[j]]@coefficients[,i] <- outi@pars@vmodel[[j]]@coefficients
           out@pars@vmodel[[j]]@vcov[,,i]   <- outi@pars@vmodel[[j]]@vcov
         }
