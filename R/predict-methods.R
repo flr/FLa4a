@@ -52,7 +52,9 @@ predict.stkpars <- function(object) {
       df <- expand.grid(age = ages,
                         year = years)
       niter <- dim(coef(object))[2] # reuse this for the others
-      niter.centering <- propagate(niter.centering, niter)
+      if (dim(object@centering)[2] == 1) {
+        object@centering <- propagate(object@centering, niter)
+      } # otherwise rely on propagates error message
      
       # predict F
       X <- getX(object @ fMod, df)
