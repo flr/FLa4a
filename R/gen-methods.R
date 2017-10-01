@@ -148,7 +148,7 @@ setMethod("genFLQuant", "submodel",
       # get design matrix
       X <- getX(formula(object), df)
       # predict accross all iters (if dimensions don't match then coefs are the wrong length!)
-      pred <- X %*% as(b, "matrix")
+      pred <- sweep(X %*% as(b, "matrix"), 2, object@centering, "+")
       # add into flq
       flq <- propagate(flq, dims(b)$iter)
       flq[] <- as(pred, "vector")
