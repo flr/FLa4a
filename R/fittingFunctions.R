@@ -1148,7 +1148,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 				       coefficients = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
 				       vcov = out$cov[pnames[[2]][which], pnames[[2]][which], 1, drop = FALSE],
 				       distr = "norm",
-				       centering = FLPar(centering = center.log[i+1]),
+				       centering = FLPar(centering = center.log[i+1] - center.log[1]), # must also subtract catch scaling
 				       name = fleet.names[i+1],
 				       desc = indices[[i]]@desc,
 				       range = indices[[i]]@range,
