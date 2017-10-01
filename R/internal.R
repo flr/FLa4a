@@ -187,3 +187,37 @@ par2mat <- function(object){
 
 
 
+flqFromRange <- function(object) {
+  range <- range(object)
+  if (all(is.na(range[c("min", "max")]))) {
+    # fix for biomass indices or any quant that has "all" for the first dim
+    FLQuant(
+      matrix(NA,
+        nrow = 1,
+        ncol = range["maxyear"] - range["minyear"] + 1),
+        dimnames = list(age = "all",
+                        year = range["minyear"]:range["maxyear"]
+      )
+    ) 
+  } else {
+    # the normal case
+    FLQuant(
+      matrix(NA,
+        nrow = range["max"] - range["min"] + 1,
+        ncol = range["maxyear"] - range["minyear"] + 1),
+        dimnames = list(age = range["min"]:range["max"],
+                        year = range["minyear"]:range["maxyear"]
+      )
+    )      
+  }
+}
+
+
+dropMatrixIter <- function(object, iter = 1) {
+  dims <- dim(object)
+  if (!inherits(object, "array") || length(dims) != 3) stop("object must be an array")
+  out <- object[,, iter]
+  dim(out) <- dim(object)[1:2]
+  dimnames(out) <- dimnames(object)[1:2]
+  out
+}
