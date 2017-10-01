@@ -16,8 +16,8 @@ fit <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=li
 # replicate with set.seed
 stkm <- stkmodel(pars(fit))
 obj <- simulate(stkm, seed=1234)
-identical(dim(obj@params), dim(stkm@params))
-identical(dim(obj@vcov), dim(stkm@vcov))
+identical(dim(params(obj)), dim(params(stkm)))
+identical(dim(vcov(obj)), dim(vcov(stkm)))
 
 # empirical is different
 obj1 <- simulate(stkm, empirical=FALSE, seed=1234)
@@ -29,14 +29,14 @@ identical(obj1, obj)
 
 # vcov should be the same ...
 obj <- simulate(stkm, nits, seed=1234)
-dim(obj@params)["iter"] == nits
-identical(dim(obj@vcov), dim(stkm@vcov))
-rat <- cov(t(obj@params))/stkm@vcov[,,1,drop=T]
+dim(params(obj))["iter"] == nits
+identical(dim(vcov(obj)), dim(vcov(stkm)))
+rat <- cov(t(params(obj)))/vcov(stkm)[,,1,drop=T]
 max(rat) - min(rat) < err/10
 
 # while here it shouldn't ...
 obj <- simulate(stkm, nits, empirical = FALSE)
-rat <- cov(t(obj@params))/stkm@vcov[,,1,drop=T]
+rat <- cov(t(params(obj)))/vcov(stkm)[,,1,drop=T]
 max(rat) - min(rat) > err*4
 
 #====================================================================
