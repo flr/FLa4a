@@ -177,6 +177,74 @@ setMethod("genFLQuant", "submodels",
 
 
 
+#' @rdname genFLQuant-methods
+# if nsim > 0 the simulate nsim times
+setMethod("genFLQuant", "a4aStkParams",
+  function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
+
+      #fMod         = "formula",
+      #n1Mod        = "formula",
+      #srMod        = "formula",
+      #coefficients = "FLPar",
+      #vcov         = "array",
+      #centering    = "FLPar",
+      #distr        = "character",
+      #m            = "FLQuant",
+      #wt           = "FLQuant",
+      #units        = "character",
+      #link         = "function",
+      #linkinv      = "function"
+
+  # here we simulate a time series of F and N
+  # conditional on the wt, m and mat contained in the stkParams object
+
+  # get dims and set flq
+  dms <- dims(object)
+  nages <- dms$age
+  nyrs <- dms$year
+  niters <- dim(R)[6]
+  flq <- FLQuant(dimnames=dimnames(F))
+
+  # compute cumulative Z
+  Z <- FLCohort(F + m(object))
+  Z[] <- apply(Z, c(2:6), cumsum)
+
+  # expand variability into [N] by R*[F]
+  Ns <- FLCohort(R[rep(1,nages)])
+  Ns <- Ns*exp(-Z)
+  Ns <- as(Ns, "FLQuant")
+
+  # Update object
+  stock.n(object) <- flq
+  # [R]
+  stock.n(object)[1] <- R
+  # [N]
+  stock.n(object)[-1,-1] <- Ns[-nages,-nyrs]
+  # plus group
+  stock.n(object)[nages,-1] <- Ns[nages,-1] + stock.n(object)[nages,-1]
+  stock(object) <- computeStock(object)
+  # [F]
+  harvest(object) <- F
+  # [C]
+  Z <- harvest(object) + m(object)
+  Cs <- harvest(object)/Z*(1-exp(-Z))*stock.n(object)
+  catch.n(object) <- Cs
+  catch(object) <- computeCatch(object)
+  # [L] & [D] rebuilt from C
+  # Ds=D/(D+L)*Cs where Cs is the simulated catch
+  D <- discards.n(object)
+  L <- landings.n(object)
+  discards.n(object) <- D/(D+L)*Cs
+  discards(object) <- computeDiscards(object)
+  landings.n(object) <- Cs - discards.n(object)
+  landings(object) <- computeLandings(object)
+  # out
+  object
+    }
+ )
+
+
+
 
 #' Methods to generate FLIndex objects
 #' @description This method produces an \code{FLIndex} object by using the \code{genFLQuant} method.
@@ -195,7 +263,7 @@ setGeneric("genFLIndex", function(object, ...) standardGeneric("genFLIndex"))
 setMethod("genFLIndex", c("FLQuant"), function(object, cv = 0.2, niter = 250) {
       # use log transform, to be expanded on later versions
       mu <- log(object)
-      
+
 #      if(method == "ac") {
         Rho <- cor(t(mu[drop = TRUE]))
         flq <- mvrnorm(niter * dim(mu)[2], rep(0, nrow(Rho)), log(cv^2+1) * Rho)
