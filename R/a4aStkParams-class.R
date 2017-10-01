@@ -21,16 +21,18 @@ setClass("a4aStkParams",
   contains = "FLComp",
   slots =
     c(
-      fMod      = "formula",
-      n1Mod     = "formula",
-      srMod     = "formula",
-      params    = "FLPar",
-      vcov      = "array",
-      centering = "numeric",
-      distr     = "character",
-      m         = "FLQuant",
-      wt         = "FLQuant",
-      units     = "character"
+      fMod         = "formula",
+      n1Mod        = "formula",
+      srMod        = "formula",
+      coefficients = "FLPar",
+      vcov         = "array",
+      centering    = "FLPar",
+      distr        = "character",
+      m            = "FLQuant",
+      wt           = "FLQuant",
+      units        = "character",
+      link         = "function",
+      linkinv      = "function"
     )
 )
 
@@ -40,6 +42,7 @@ setValidity("a4aStkParams",
     if (!identical(unlist(dimnames(object@m)[2:5]),
                    unlist(dimnames(object@wt)[2:5]))) {
       "m and wt elements must share dimensions 2 to 5"
+      # can also check against range slot here...
     } else {
       TRUE
     }
@@ -47,16 +50,18 @@ setValidity("a4aStkParams",
 
 setMethod("initialize", "a4aStkParams",
     function(.Object,
-              fMod      = ~ 1,
-              n1Mod     = ~ 1,
-              srMod     = ~ 1,
-              params    = FLPar(),
-              vcov      = array(),
-              centering = 0,
-              distr     = "lnorm",
-              m         = FLQuant(),
-              wt        = FLQuant(),
-              units     = "NA",
+              fMod         = ~ 1,
+              n1Mod        = ~ 1,
+              srMod        = ~ 1,
+              coefficients = FLPar(),
+              vcov         = array(),
+              centering    = FLPar(centering = 0),
+              distr        = "norm",
+              m            = FLQuant(),
+              wt           = FLQuant(),
+              units        = "NA",
+              ink = log,
+              linkinv = exp,
               ...) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
@@ -66,6 +71,7 @@ setMethod("initialize", "a4aStkParams",
       .Object@srMod <- srMod
       .Object@params <- params
       .Object@vcov <- vcov
+      if (length(dim(vcov)) == 2) dim(.Object@vcov) <- c(dim(vcov), 1)
       .Object@centering <- centering
       .Object@distr <- distr
       # if missing set dimensions of of m and wt based on range
@@ -169,11 +175,11 @@ setReplaceMethod("srMod", signature("a4aStkParams","formula"), function(object, 
 })
 
 #' @rdname a4aStkParams-class
-setMethod("params", "a4aStkParams", function(object) object@params)
+setMethod("params", "a4aStkParams", function(object) object@coefficients)
 
 #' @rdname a4aStkParams-class
 setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){
-    if(all.equal(is(value), is(object@params))) object@params <- value
+    if (all.equal(is(value), is(params(object)))) object@coefficients <- value
     object
 })
 
@@ -194,6 +200,43 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
     if(all.equal(is(value), is(object@vcov))) object@vcov <- value
     object
 })
+
+
+
+#' @rdname a4aStkParams-class
+#' @param object the object to be extended
+#' @param iter the number of iterations to create
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
+setMethod("propagate", signature(object="a4aStkParams"),
+  function(object, iter, fill.iter = TRUE)
+  {
+
+    # propagate coefs, centering, m and wt
+    object@coefficients <- propagate(object@coefficients, iter, fill.iter = fill.iter)
+    object@centering <- propagate(object@centering, iter, fill.iter = fill.iter)
+    object@m         <- propagate(object@m, iter, fill.iter = fill.iter)
+    object@wt        <- propagate(object@wt, iter, fill.iter = fill.iter)
+
+    # now propagate vcov
+    vcov.iter <- vcov(object)
+    dob <- dim(vcov.iter)
+
+    if (iter != dob[3]) {
+      # CHECK no iters in object
+      if(dob[3] > 1) stop("propagate can only extend objects with no iters")
+
+      object@vcov <- array(NA, dim = c(dob[1:2], iter), dimnames = c(dimnames(vcov.iter)[1:2], list(1:iter)))
+      if (fill.iter) {
+        object@vcov[] <- as.vector(vcov.iter)
+      } else {
+        object@vcov[,,1] <- as.vector(vcov.iter)
+      }
+    }
+
+    object
+  }
+)
+
 
 #' @rdname a4aStkParams-class
 #' @param obj the object to be subset
