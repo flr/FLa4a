@@ -32,7 +32,7 @@ setMethod("coef", signature(object = "SCAPars"),
 #' @rdname coef-methods
 setMethod("coef", signature(object = "a4aStkParams"),
   function(object) {
-      object @ params
+      object @ coefficients
   })
 
 #' @rdname coef-methods
@@ -82,7 +82,7 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
 #' @rdname coef-methods
 setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
   function(object, ..., value) {    
-    object @ params[] <- value
+    object @ coefficients[] <- value
     object
   })
 
@@ -115,5 +115,16 @@ setMethod("coef<-", signature(object = "submodel", value = "FLPar"),
   })
 
 
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "a4aStkParams", value = "FLPar"),
+  function(object, ..., value) {
+      object@coefficients <- value
+      object
+  })
 
-
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "a4aStkParams", value = "matrix"),
+  function(object, ..., value) {
+      object@coefficients[] <- value
+      object
+  })
