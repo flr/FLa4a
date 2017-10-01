@@ -88,6 +88,9 @@ setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
 #' @rdname a4aFitSA-class
 setMethod("wt", signature(object="a4aFitSA"), function(object) wt(pars(object)))
 
+#' @rdname a4aFitSA-class
+setMethod("qmodel", signature(object="a4aFitSA"), function(object) qmodel(pars(object)))
+
 
 #' @rdname a4aFitSA-class
 setMethod("show", "a4aFitSA",
