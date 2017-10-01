@@ -12,6 +12,7 @@
 \alias{pars,a4aFitSA-method}
 \alias{m,a4aFitSA-method}
 \alias{wt,a4aFitSA-method}
+\alias{qmodel,a4aFitSA-method}
 \alias{show,a4aFitSA-method}
 \alias{submodels,a4aFitSA-method}
 \alias{iter,a4aFitSA-method}
@@ -36,6 +37,8 @@ pars(object)
 \S4method{m}{a4aFitSA}(object)
 
 \S4method{wt}{a4aFitSA}(object)
+
+\S4method{qmodel}{a4aFitSA}(object)
 
 \S4method{show}{a4aFitSA}(object)
 
