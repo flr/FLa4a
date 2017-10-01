@@ -21,9 +21,11 @@ simulate(object, nsim = 1, seed = NULL, ...)
 \S4method{simulate}{a4aStkParams}(object, nsim = 1, seed = NULL,
   empirical = TRUE)
 
-\S4method{simulate}{submodels}(object, nsim = 1, seed = NULL, ...)
+\S4method{simulate}{submodels}(object, nsim = 1, seed = NULL,
+  empirical = TRUE)
 
-\S4method{simulate}{submodel}(object, nsim = 1, seed = NULL, ...)
+\S4method{simulate}{submodel}(object, nsim = 1, seed = NULL,
+  empirical = TRUE)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}

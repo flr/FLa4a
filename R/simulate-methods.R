@@ -134,7 +134,7 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 		# expand objects is needed
 		if(pitr==mitr & vitr==1){
 			V <- V[,,rep(1,mitr), drop=FALSE]
-			dimnames(V)$iters <- it
+			dimnames(V)[[3]] <- it
 		} else if(pitr==1 & vitr==mitr){
 			b <- propagate(b, mitr)
 		}
@@ -163,7 +163,7 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodels"),
-  function(object, nsim = 1, seed = NULL, ...) {
+  function(object, nsim = 1, seed = NULL, empirical = TRUE) {
     # get the joined up coefficients
     blist <- lapply(object, coef)
 
@@ -203,7 +203,7 @@ setMethod("simulate", signature(object = "submodels"),
       # expand objects as needed
       if (pitr == mitr & vitr == 1) {
         V <- V[,, rep(1,mitr), drop=FALSE]
-        dimnames(V)$iters <- seq(mitr)
+        dimnames(V)[[3]] <- seq(mitr)
       } else
         if(pitr == 1 & vitr == mitr) {
           b <- propagate(b, mitr)
@@ -212,15 +212,23 @@ setMethod("simulate", signature(object = "submodels"),
       parsim <-
         sapply(seq(mitr),
                function(i) {
-                 simfunc(1, as(b[,i], "vector"), V[,,i], ...)
+                 ## empirical must be set to FALSE for one iteration
+                 ## it only makes sense to use empirical=TRUE when there are more samples than dimensions
+                 simfunc(1, as(b[,i], "vector"), V[,,i], empirical = FALSE)
                 })
     } else
     if (nsim > 1) {
       # for mvrnorm at least samples are in rows,
       # so transform is required for FLPar
-      parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1]))
+      if (nsim < dim(V)[1]) {
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = FALSE))
+      } else {
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = empirical))
+      }
     } else {
-      parsim <- simfunc(1, as(b, "vector"), V[,,1])
+      ## empirical must be set to FALSE for one iteration
+      ## it only makes sense to use empirical=TRUE when there are more samples than dimensions
+      parsim <- simfunc(1, as(b, "vector"), V[,,1], empirical = FALSE)
       dim(parsim) <- c(length(parsim), 1)
     }
 
@@ -239,7 +247,7 @@ setMethod("simulate", signature(object = "submodels"),
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodel"),
-  function(object, nsim = 1, seed = NULL, ...) {
+  function(object, nsim = 1, seed = NULL, empirical = TRUE) {
     # get parameter estimates
     b <- coef(object)
 
@@ -268,7 +276,7 @@ setMethod("simulate", signature(object = "submodel"),
       # expand objects as needed
       if (pitr == mitr & vitr == 1) {
         V <- V[,, rep(1,mitr), drop=FALSE]
-        dimnames(V)$iters <- seq(mitr)
+        dimnames(V)[[3]] <- seq(mitr)
       } else
         if(pitr == 1 & vitr == mitr) {
           b <- propagate(b, mitr)
@@ -277,15 +285,23 @@ setMethod("simulate", signature(object = "submodel"),
       parsim <-
         sapply(seq(mitr),
                function(i) {
-                 simfunc(1, as(b[,i], "vector"), V[,,i], ...)
+                 ## empirical must be set to FALSE for one iteration
+                 ## it only makes sense to use empirical=TRUE when there are multiple samples
+                 simfunc(1, as(b[,i], "vector"), V[,,i], empirical = FALSE)
                 })
     } else
     if (nsim > 1) {
       # for mvrnorm at least samples are in rows,
       # so transform is required for FLPar
-      parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1]))
+      if (nsim < dim(V)[1]) {
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = FALSE))
+      } else {
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = empirical))
+      }
     } else {
-      parsim <- simfunc(1, as(b, "vector"), V[,,1])
+      ## empirical must be set to FALSE for one iteration
+      ## it only makes sense to use empirical=TRUE when there are multiple samples
+      parsim <- simfunc(1, as(b, "vector"), V[,,1], empirical = FALSE)
     }
 
     # add to object and return
