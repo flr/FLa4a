@@ -21,8 +21,8 @@ genFLQuant(object, ...)
 \S4method{genFLQuant}{submodels}(object, type = c("link", "response"),
   nsim = 0, seed = NULL)
 
-\S4method{genFLQuant}{a4aStkParams}(object, type = c("link", "response"),
-  nsim = 0, seed = NULL)
+\S4method{genFLQuant}{a4aStkParams}(object, type = "response", nsim = 0,
+  seed = NULL)
 }
 \arguments{
 \item{object}{an FLQuant}
