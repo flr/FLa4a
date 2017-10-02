@@ -273,7 +273,7 @@ dropMatrixIter <- function(object, iter = 1) {
     if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
     list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
   }
-  none <- function() geomean(CV = -1)
+  none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
 
 a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker","hockey","geomean")
 
