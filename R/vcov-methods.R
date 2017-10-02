@@ -32,7 +32,7 @@ setMethod("vcov", signature(object = "submodels"),
       return(vcov(object[[1]]))
     }
     corblocks <- corBlocks(object)
-    niters <- unique(sapply(coef(object), function(x) dim(x)["iter"]))
+    niters <- unique(sapply(object, function(x) dim(vcov(x))[3]))
     V.lst <- lapply(1:niters,
                     function(it) {
                       cormat <-

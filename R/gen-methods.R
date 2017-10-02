@@ -140,6 +140,12 @@ setMethod("genFLQuant", "submodel",
       if (nsim > 0) {
         object <- simulate(object, nsim = nsim, seed = seed)
       }
+      niter <- dim(coef(object))[2]
+      # are there iters in centering?
+      if (dim(object@centering)[2] == 1) {
+        object@centering <- propagate(object@centering, niter)
+      } # otherwise rely on propagates error message
+
       # make empty FLQuant
       flq <- flqFromRange(object)
       df <- as.data.frame(flq)
