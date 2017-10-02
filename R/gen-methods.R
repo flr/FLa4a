@@ -186,68 +186,53 @@ setMethod("genFLQuant", "submodels",
 #' @rdname genFLQuant-methods
 # if nsim > 0 the simulate nsim times
 setMethod("genFLQuant", "a4aStkParams",
-  function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
-
-      #fMod         = "formula",
-      #n1Mod        = "formula",
-      #srMod        = "formula",
-      #coefficients = "FLPar",
-      #vcov         = "array",
-      #centering    = "FLPar",
-      #distr        = "character",
-      #m            = "FLQuant",
-      #wt           = "FLQuant",
-      #units        = "character",
-      #link         = "function",
-      #linkinv      = "function"
-
-  # here we simulate a time series of F and N
-  # conditional on the wt, m and mat contained in the stkParams object
-
-  # get dims and set flq
-  dms <- dims(object)
-  nages <- dms$age
-  nyrs <- dms$year
-  niters <- dim(R)[6]
-  flq <- FLQuant(dimnames=dimnames(F))
-
-  # compute cumulative Z
-  Z <- FLCohort(F + m(object))
-  Z[] <- apply(Z, c(2:6), cumsum)
-
-  # expand variability into [N] by R*[F]
-  Ns <- FLCohort(R[rep(1,nages)])
-  Ns <- Ns*exp(-Z)
-  Ns <- as(Ns, "FLQuant")
-
-  # Update object
-  stock.n(object) <- flq
-  # [R]
-  stock.n(object)[1] <- R
-  # [N]
-  stock.n(object)[-1,-1] <- Ns[-nages,-nyrs]
-  # plus group
-  stock.n(object)[nages,-1] <- Ns[nages,-1] + stock.n(object)[nages,-1]
-  stock(object) <- computeStock(object)
-  # [F]
-  harvest(object) <- F
-  # [C]
-  Z <- harvest(object) + m(object)
-  Cs <- harvest(object)/Z*(1-exp(-Z))*stock.n(object)
-  catch.n(object) <- Cs
-  catch(object) <- computeCatch(object)
-  # [L] & [D] rebuilt from C
-  # Ds=D/(D+L)*Cs where Cs is the simulated catch
-  D <- discards.n(object)
-  L <- landings.n(object)
-  discards.n(object) <- D/(D+L)*Cs
-  discards(object) <- computeDiscards(object)
-  landings.n(object) <- Cs - discards.n(object)
-  landings(object) <- computeLandings(object)
-  # out
-  object
+  function(object, type = "response", nsim = 0, seed = NULL) {
+    # type is always response for a stock model...
+    type <- "response"
+    # simulate from submodels?
+    if (nsim > 0) {
+      object <- simulate(object, nsim = nsim, seed = seed)
     }
- )
+    # predict F, rec, and ny1
+    flqs <- predict.stkpars(object)
+
+    # get dims
+    dms <- dims(flqs$harvest)
+
+    # compute cumulative Z
+    cumsumNA <- function(x) {
+      x[!is.na(x)] <- cumsum(x[!is.na(x)])
+      x
+    }
+    Z <- FLCohort(flqs$harvest + m(object))
+    Z[] <- apply(Z, c(2:6), cumsumNA)
+
+    # expand variability into [N] by R*[F]
+
+    Ns <- FLCohort(flqs$harvest)
+    Ns[,-(1:(dms$age-1))] <- flqs$rec[rep(1,dms$age)]
+    Ns[,1:(dms$age-1)] <- apply(FLCohort(flqs$ny1), 2:6, sum, na.rm = TRUE)[rep(1,dms$age),1:(dms$age-1)]
+    Ns <- Ns*exp(-Z)
+    # convert back from cohort shape
+    Ns <- as(Ns, "FLQuant")
+
+    # add in recruits and initial age
+    N <- Ns
+    # [R]
+    N[1] <- flqs$rec
+    # [N]
+    N[-1,-1] <- Ns[-dms$age,-dms$year]
+    # plus group
+    N[nages,-1] <- Ns[dms$age,-1] + N[dms$age,-1]
+
+    # [C]
+    Z <- flqs$harvest + m(object)
+    C <- flqs$harvest/Z*(1-exp(-Z))*Ns
+
+    # out
+    FLQuants(stock.n = N, catch.n = C)
+  }
+)
 
 
 
