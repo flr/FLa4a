@@ -601,7 +601,6 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 		full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
 	}
 	#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 	# add in data
 	full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
 	# put biomass surveys in min age position
@@ -681,42 +680,12 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	Xny1 <- getX(n1model, subset(full.df, year == min(year) & age > min(age) & fleet == "catch"))
 
 	#-------------------------------------------------------------------------
-	# NOTE: move to internal funs ?? map with FLSR !?
-	#-------------------------------------------------------------------------
-	# process recruitment formula:
-	# builder functions - could be more hadley...
-	bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-		if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-		list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
-	}
-	bevholtSV <- function(h = ~ 1, v = ~ 1, SPR0 = 1, CV = 0.5) {
-		if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-		list(srr = "bevholtSV", a = h, b = v, SPR0 = SPR0, srrCV = CV, ID = 5)
-	}
-	ricker <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-		if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-		list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
-	}
-	hockey <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-		if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-		list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
-	}
-	geomean <- function(a = ~ 1, CV = 0.5) {
-		if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-		list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
-	}
-	none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, srrCV = -1, ID = 4)
-	#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-	#-------------------------------------------------------------------------
 	# NOTE: how are covars being passed ?
 	#-------------------------------------------------------------------------
 	# now separate model elements, find SR models, stop if more than one specified
-	facs <- strsplit(as.character(srmodel)[length(srmodel)], "[+]")[[1]]
-	facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
-	a4as <- grepl(paste("(^",c("bevholt", "bevholtSV", "ricker","hockey","geomean"),"[(])", collapse = "|", sep = ""), facs)
+	a4as <- isPresenta4aSRmodel(srmodel)
 	if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
-	srrmod <- if (sum(a4as) == 0) "none()" else facs[a4as]
+	srrmod <- geta4aSRmodel(srmodel)
 	if (sum(a4as) == 0 && max(full.df$year) > max(df.data$year)) stop("you need to specify a stock recruitment relationship to forecast with out survey information.")
 
 	# extract a and b model formulas and add on any extra bits to amodel.
@@ -733,10 +702,11 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	# can we do a quick check for identifiability of the srr model? ...
 	if (ncol(Xsra) + ncol(Xsrb) > dims(stock)$year) stop("Stock recruitment model is over parameterised, please reduce the number parameters")
 
-	# internal r model matrix (this if is doing nothing) - ! it is - it is setting the X model for the recruitments, it is not the same as the sr model which is the model for the relationship between the recruitments and SSB
+	# internal r model matrix - this is setting the X model for the recruitments,
+	# it is not the same as the sr model which is the model for the relationship
+	# between the recruitments and SSB
 	if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year)
 	Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
-	#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 	#========================================================================
 	# Create the directory where to store model config, data and results files
