@@ -172,19 +172,6 @@ setMethod("show", "submodels",
 
 
 
-#
-# Coersion methods
-#
-
-# method.skeleton("coerce", "submodels",  file = stdout())
-
-setMethod("coerce",
-  signature(from = "submodels", to = "submodel"),
-  function (from, to, strict = TRUE)
-  {
-    stop("No method described yet.")
-  }
-)
 
 #
 # Other methods
