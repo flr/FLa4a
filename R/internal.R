@@ -250,6 +250,9 @@ dropMatrixIter <- function(object, iter = 1) {
 #
 #  bevholt, ricker, geomean share definitions with FLSR
 #  the others need to be defined by the FLa4a package
+#  
+#  It is the responsibility of FLa4a to maintain the defninition of
+#  these SR functoions in the tpl file to match the definition in FLCore
 #
 # ----------------------------------------------
 
@@ -275,13 +278,33 @@ dropMatrixIter <- function(object, iter = 1) {
   }
   none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
 
-a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker","hockey","geomean")
+
+a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
+flcSRmodelList <- c("bevholt", "ricker", "geomean")
+
+
+a4aSRmodelDefinitions <- function(srmodel) {
+  srmodelName <- gsub("[()]", "", srmodel)
+  if (srmodelName %in% flcSRmodelList) {
+    # get FLSR definition
+    eval(parse(text=paste0("FLCore::", srmodel)))$model[[3]]
+  } else {
+    # use a4a definition
+    switch(srmodelName,
+      bevholtSV = (~ (6*h*b*ssb) / (spr0* (((a/(1+a)*0.8 + 0.2) + 1)*b + (5*(a/(1+a)*0.8 + 0.2) - 1)*ssb) ))[[2]], # spr0 is provided by user,
+      hockey = (~ a * (ssb + sqrt(b^2 + 0.0025) - sqrt((ssb - b)^2 + 0.0025)))[[2]],
+      stop("unknown SR model")
+    )
+  }
+}
+
 
 isPresenta4aSRmodel <- function(srMod) {
   facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
   facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
   grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
 }
+
 
 geta4aSRmodel <- function(srMod) {
   facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
@@ -290,3 +313,5 @@ geta4aSRmodel <- function(srMod) {
   if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
   if (sum(a4as) == 0) "none()" else facs[a4as]
 }
+
+
