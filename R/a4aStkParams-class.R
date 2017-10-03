@@ -88,7 +88,7 @@ setMethod("initialize", "a4aStkParams",
       .Object@m <- if (missing(m)) flq else m
       .Object@wt <- if (missing(wt)) flq else wt
       .Object@wt <- if (missing(mat)) flq else mat
-      # throw error if range from FLComp doesn't match FLQuants 
+      # throw error if range from FLComp doesn't match FLQuants
       # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
       if (abs(as.numeric(dimnames(.Object@m)$year[1]) - .Object@range["minyear"]) > 1e-9 ||
           abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) - .Object@range["maxyear"]) > 1e-9) {
@@ -209,10 +209,55 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
 
 
 
+
+#
+# Coersion methods
+#
+
+# method.skeleton("coerce", "a4aStkParams",  file = stdout())
+
+setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
+  function (from, to, strict = TRUE)
+  {
+    # get SR model formula
+    srmodel <- geta4aSRmodel(srMod(from))
+    # get FLSR definition
+    expr_model <- a4aSRmodelDefinitions(srmodel)
+
+    # build skeleton FLSR
+    flsr <- FLSR(formula(paste("rec ~ (", deparse(expr_model, width.cutoff = 500), ") *", exp(from@centering))))
+
+    # get SR pars
+    cnames <- rownames(coef(from))
+    params(flsr) <- FLPar(a = exp(coef(from)[grep("sraMod", cnames)]),
+                          b = exp(coef(from)[grep("srbMod", cnames)]))
+
+    which <- c(grep("sraMod", cnames), grep("srbMod", cnames)) 
+    vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
+    dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
+
+    flqs <- genFLQuant(from)
+
+    rec(flsr) <- flqs$stock.n[1,]
+    ssb <- quantSums(flqs$stock.n * mat(from) * wt(from))
+    ssb(flsr) <- ssb
+    fitted(flsr) <- ssb/ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
+    residuals(flsr) <- log(rec(flsr)) - log(fitted(flsr))
+
+    range(flsr) <- range(from)[c("min", "max", "minyear", "maxyear")]
+    name(flsr) <- name(from)
+    desc(flsr) <- desc(from)
+
+    flsr
+  }
+)
+
+
+
 #' @rdname a4aStkParams-class
 #' @param object the object to be extended
 #' @param iter the number of iterations to create
-#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
 setMethod("propagate", signature(object="a4aStkParams"),
   function(object, iter, fill.iter = TRUE)
   {
