@@ -290,7 +290,7 @@ setMethod("genFLQuant", "a4aStkParams",
     if (type == "response") {
       FLQuants(harvest = flqs$harvest, stock.n = N, catch.n = C)  
     } else {
-      FLQuants(harvest = object@link(flqs$harvest), stock.n = stkmodel@link(N), catch.n = stkmodel@link(C))  
+      FLQuants(harvest = object@link(flqs$harvest), stock.n = object@link(N), catch.n = object@link(C))  
     }
     
   }
