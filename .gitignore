@@ -7,3 +7,9 @@
 # gedit backup files
 *~
 .Rproj.user
+
+# built source files
+src-*/
+
+# docs?
+inst/doc
