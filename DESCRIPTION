@@ -56,3 +56,4 @@ Collate:
     'ma-methods.R'
     'southern_hake-data.R'
     'a4aTMB.R'
+RoxygenNote: 6.0.1
