@@ -13,5 +13,9 @@ src-*/
 src/FLa4a.dll
 src/a4a.o
 
-# docs?
-inst/doc
+# rstudio files
+*.Rproj
+
+# built vignettes
+inst/doc/*
+
