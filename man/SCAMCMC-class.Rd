@@ -11,17 +11,28 @@
 \alias{mcmc}
 \alias{mcmc-methods}
 \alias{mcmc,SCAMCMC-method}
+\alias{getADMBCallArgs,SCAMCMC-method}
 \alias{getN}
-\alias{getADMBCallArgs}
-\alias{getADMBCallArgs-methods}
-\alias{SCAMCMC,missing-method}
+\alias{getN-methods}
+\alias{getN,SCAMCMC-method}
 \title{MCMC settings class}
 \usage{
 SCAMCMC(object, ...)
 
+\S4method{SCAMCMC}{missing}(object, ...)
+
 getADMBCallArgs(object, ...)
 
+\S4method{getADMBCallArgs}{SCAMCMC}(object, ...)
+
 getN(object, ...)
+
+\S4method{getN}{SCAMCMC}(object, ...)
+}
+\arguments{
+\item{object}{a \code{SCAMCMC} object}
+
+\item{...}{extra arguments}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

@@ -11,9 +11,13 @@ nits <- 2
 # run sca
 #====================================================================
 fit0 <-  sca(ple4, FLIndices(ple4.index))
+is(fit0, "a4aFit")
 
-# check that indices have attr biomass
+# check that indices have attr biomass, set to FALSE
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
+!attr(index(fit0)[[1]], "FLIndexBiomass")
+
+# check that indices have attr range 
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
 # check convergence info
@@ -60,22 +64,29 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 # check qmodel defaults
 #--------------------------------------------------------------------
 fit <- sca(ple4, FLIndices(ple4.index[1]), fit="assessment")
-all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~1"))
+all.equal(formula(qmodel(pars(fit))[[1]]), formula("~1"))
 fit <- sca(ple4, FLIndices(ple4.index[1:2]), fit="assessment")
-all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~age"))
+all.equal(formula(qmodel(pars(fit))[[1]]), formula("~age"))
 fit <- sca(ple4, FLIndices(ple4.index[1:3]), fit="assessment")
-all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~age"))
+all.equal(formula(qmodel(pars(fit))[[1]]), formula("~age"))
 fit <- sca(ple4, FLIndices(ple4.index[1:4]), fit="assessment")
-all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=3)"))
+all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=3)"))
 fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
-all.equal(qmodel(pars(fit))[[1]]@Mod, formula("~s(age, k=5)"))
+all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=5)"))
 
 #====================================================================
 # run a4aSCA
 #====================================================================
+
+# run
 fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
-# check that indices have attr biomass
+is(fit0, "a4aFitSA")
+
+# check that indices have attr biomass, set to FALSE
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
+!attr(index(fit0)[[1]], "FLIndexBiomass")
+
+# check that indices have attr range 
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
 # check convergence info
@@ -89,7 +100,7 @@ idx2 <- propagate(ple4.index, nits)
 stk2 <- propagate(ple4, nits)
 
 # Nx1
-fit <- a4aSCA(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), fit = "assessment")
 dims(fit)$iter==nits
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
@@ -99,17 +110,18 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
-dim(fit@pars@stkmodel@vcov)[3]==nits
-dim(fit@pars@stkmodel@params)[2]==nits
-dim(fit@pars@qmodel[[1]]@vcov)[3]==nits
-dim(fit@pars@qmodel[[1]]@params)[2]==nits
-dim(fit@pars@vmodel[[1]]@vcov)[3]==nits
-dim(fit@pars@vmodel[[1]]@params)[2]==nits
-dim(fit@pars@vmodel[[2]]@vcov)[3]==nits
-dim(fit@pars@vmodel[[2]]@params)[2]==nits
+dim(vcov(stkmodel(pars(fit))))[3]==nits
+dim(coef(stkmodel(pars(fit))))[2]==nits
+dim(vcov(qmodel(pars(fit))[[1]]))[3]==nits
+dim(coef(qmodel(pars(fit))[[1]]))[2]==nits
+dim(vcov(vmodel(pars(fit))[[1]]))[3]==nits
+dim(coef(vmodel(pars(fit))[[1]]))[2]==nits
+dim(vcov(vmodel(pars(fit))[[2]]))[3]==nits
+dim(coef(vmodel(pars(fit))[[2]]))[2]==nits
+
 
 # 1xN
-fit <- a4aSCA(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)))
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)), fit = "assessment")
 dims(fit)$iter==nits
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
@@ -119,17 +131,18 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
-dim(fit@pars@stkmodel@vcov)[3]==nits
-dim(fit@pars@stkmodel@params)[2]==nits
-dim(fit@pars@qmodel[[1]]@vcov)[3]==nits
-dim(fit@pars@qmodel[[1]]@params)[2]==nits
-dim(fit@pars@vmodel[[1]]@vcov)[3]==nits
-dim(fit@pars@vmodel[[1]]@params)[2]==nits
-dim(fit@pars@vmodel[[2]]@vcov)[3]==nits
-dim(fit@pars@vmodel[[2]]@params)[2]==nits
+dim(vcov(stkmodel(pars(fit))))[3]==nits
+dim(coef(stkmodel(pars(fit))))[2]==nits
+dim(vcov(qmodel(pars(fit))[[1]]))[3]==nits
+dim(coef(qmodel(pars(fit))[[1]]))[2]==nits
+dim(vcov(vmodel(pars(fit))[[1]]))[3]==nits
+dim(coef(vmodel(pars(fit))[[1]]))[2]==nits
+dim(vcov(vmodel(pars(fit))[[2]]))[3]==nits
+dim(coef(vmodel(pars(fit))[[2]]))[2]==nits
+
 
 # NxN
-fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)), fit = "assessment")
 dims(fit)$iter==nits
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
@@ -139,14 +152,46 @@ identical(catch.n(fit)[,,,,,2, drop=TRUE], catch.n(fit0)[drop=TRUE])
 identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
-dim(fit@pars@stkmodel@vcov)[3]==nits
-dim(fit@pars@stkmodel@params)[2]==nits
-dim(fit@pars@qmodel[[1]]@vcov)[3]==nits
-dim(fit@pars@qmodel[[1]]@params)[2]==nits
-dim(fit@pars@vmodel[[1]]@vcov)[3]==nits
-dim(fit@pars@vmodel[[1]]@params)[2]==nits
-dim(fit@pars@vmodel[[2]]@vcov)[3]==nits
-dim(fit@pars@vmodel[[2]]@params)[2]==nits
+dim(vcov(stkmodel(pars(fit))))[3]==nits
+dim(coef(stkmodel(pars(fit))))[2]==nits
+dim(vcov(qmodel(pars(fit))[[1]]))[3]==nits
+dim(coef(qmodel(pars(fit))[[1]]))[2]==nits
+dim(vcov(vmodel(pars(fit))[[1]]))[3]==nits
+dim(coef(vmodel(pars(fit))[[1]]))[2]==nits
+dim(vcov(vmodel(pars(fit))[[2]]))[3]==nits
+dim(coef(vmodel(pars(fit))[[2]]))[2]==nits
+
+#--------------------------------------------------------------------
+# equal submodels check
+#--------------------------------------------------------------------
+
+# sca defaults
+fit0 <-  sca(ple4, ple4.indices, fit="MP")
+# when fit="MP" class is "a4aFit" instead of "a4aFitSA"
+!is(fit0, "a4aFitSA") 
+
+fit1 <-  sca(ple4, ple4.indices)
+# default is fit="MP" and class "a4aFit"
+!is(fit1, "a4aFitSA") 
+
+all.equal(fitSumm(fit0), fitSumm(fit1))
+all.equal(harvest(fit0), harvest(fit1))
+all.equal(stock.n(fit0), stock.n(fit1))
+all.equal(catch.n(fit0), catch.n(fit1))
+ 
+# a4aSCA defaults
+fit0 <-  a4aSCA(ple4, ple4.indices)
+# default fit is "assessment" class should be "a4aFitSA"
+is(fit0, "a4aFitSA") 
+
+# when fit="assessment" class is "a4aFitSA"
+fit1 <-  sca(ple4, ple4.indices, fit="assessment")
+is(fit1, "a4aFitSA") 
+
+all.equal(fitSumm(fit0), fitSumm(fit1))
+all.equal(harvest(fit0), harvest(fit1))
+all.equal(stock.n(fit0), stock.n(fit1))
+all.equal(catch.n(fit0), catch.n(fit1))
 
 #====================================================================
 # run a4aSCA with simulate
@@ -185,14 +230,15 @@ fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ fa
 sum(stock.n(fit0), na.rm=T)==0
 sum(catch.n(fit0), na.rm=T)==0
 sum(index(fit0)[[1]], na.rm=T)==0
-sum(pars(fit0)@stkmodel@params, na.rm=T)==0
-sum(pars(fit0)@qmodel[[1]]@params, na.rm=T)==0
-sum(pars(fit0)@vmodel[[1]]@params, na.rm=T)==0
-sum(pars(fit0)@vmodel[[2]]@params, na.rm=T)==0
-sum(pars(fit0)@stkmodel@vcov, na.rm=T)==0
-sum(pars(fit0)@qmodel[[1]]@vcov, na.rm=T)==0
-sum(pars(fit0)@vmodel[[1]]@vcov, na.rm=T)==0
-sum(pars(fit0)@vmodel[[2]]@vcov, na.rm=T)==0
+sum(params(stkmodel(pars(fit0))), na.rm=T)==0
+sum(params(qmodel(pars(fit0))[[1]]), na.rm=T)==0
+sum(params(vmodel(pars(fit0))[[1]]), na.rm=T)==0
+sum(params(vmodel(pars(fit0))[[2]]), na.rm=T)==0
+sum(vcov(stkmodel(pars(fit0))), na.rm=T)==0
+sum(vcov(qmodel(pars(fit0))[[1]]), na.rm=T)==0
+sum(vcov(vmodel(pars(fit0))[[1]]), na.rm=T)==0
+sum(vcov(vmodel(pars(fit0))[[2]]), na.rm=T)==0
+
 
 fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
 # check convergence info
@@ -200,27 +246,27 @@ fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
 sum(catch.n(fit), na.rm=T)==0
 sum(index(fit)[[1]], na.rm=T)==0
-sum(pars(fit)@stkmodel@params, na.rm=T)==0
-sum(pars(fit)@qmodel[[1]]@params, na.rm=T)==0
-sum(pars(fit)@vmodel[[1]]@params, na.rm=T)==0
-sum(pars(fit)@vmodel[[2]]@params, na.rm=T)==0
-sum(pars(fit)@stkmodel@vcov, na.rm=T)==0
-sum(pars(fit)@qmodel[[1]]@vcov, na.rm=T)==0
-sum(pars(fit)@vmodel[[1]]@vcov, na.rm=T)==0
-sum(pars(fit)@vmodel[[2]]@vcov, na.rm=T)==0
+sum(params(stkmodel(pars(fit))), na.rm=T)==0
+sum(params(qmodel(pars(fit))[[1]]), na.rm=T)==0
+sum(params(vmodel(pars(fit))[[1]]), na.rm=T)==0
+sum(params(vmodel(pars(fit))[[2]]), na.rm=T)==0
+sum(vcov(stkmodel(pars(fit))), na.rm=T)==0
+sum(vcov(qmodel(pars(fit))[[1]]), na.rm=T)==0
+sum(vcov(vmodel(pars(fit))[[1]]), na.rm=T)==0
+sum(vcov(vmodel(pars(fit))[[2]]), na.rm=T)==0
 
 fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment")
 sum(stock.n(fit1), na.rm=T)==0
 sum(catch.n(fit1), na.rm=T)==0
 sum(index(fit1)[[1]], na.rm=T)==0
-sum(pars(fit1)@stkmodel@params, na.rm=T)==0
-sum(pars(fit1)@qmodel[[1]]@params, na.rm=T)==0
-sum(pars(fit1)@vmodel[[1]]@params, na.rm=T)==0
-sum(pars(fit1)@vmodel[[2]]@params, na.rm=T)==0
-sum(pars(fit1)@stkmodel@vcov, na.rm=T)==0
-sum(pars(fit1)@qmodel[[1]]@vcov, na.rm=T)==0
-sum(pars(fit1)@vmodel[[1]]@vcov, na.rm=T)==0
-sum(pars(fit1)@vmodel[[2]]@vcov, na.rm=T)==0
+sum(params(stkmodel(pars(fit1))), na.rm=T)==0
+sum(params(qmodel(pars(fit1))[[1]]), na.rm=T)==0
+sum(params(vmodel(pars(fit1))[[1]]), na.rm=T)==0
+sum(params(vmodel(pars(fit1))[[2]]), na.rm=T)==0
+sum(vcov(stkmodel(pars(fit1))), na.rm=T)==0
+sum(vcov(qmodel(pars(fit1))[[1]]), na.rm=T)==0
+sum(vcov(vmodel(pars(fit1))[[1]]), na.rm=T)==0
+sum(vcov(vmodel(pars(fit1))[[2]]), na.rm=T)==0
 
 #====================================================================
 # run sca with recruitment index
@@ -477,6 +523,10 @@ identical(fitSumm(fit1)["nlogl",], fitSumm(fit2)["nlogl",])
 # MCMC class and fit
 #====================================================================
 
+if (FALSE) {
+
+## do not run MCMC tests
+
 data(ple4)
 data(ple4.indices)
 
@@ -546,3 +596,31 @@ fit22 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 identical(fit11@stock.n, fit22@stock.n)
 
 
+#====================================================================
+# iter
+#====================================================================
+
+data(ple4)
+data(ple4.index)
+stk <- propagate(ple4, 2)
+
+# iter a4aFitSA
+fit0 <- a4aSCA(ple4, FLIndices(a=ple4.index))
+fit <- a4aSCA(stk, FLIndices(a=ple4.index))
+fit1 <- iter(fit, 1)
+identical(fit1@harvest, fit0@harvest)
+identical(fit1@stock.n, fit0@stock.n)
+identical(fit1@catch.n, fit0@catch.n)
+identical(fit1@index, fit0@index)
+all.equal(fit1@pars, fit0@pars)
+
+# iter a4aFitSA
+fit0 <- sca(ple4, FLIndices(a=ple4.index))
+fit <- sca(stk, FLIndices(a=ple4.index))
+fit1 <- iter(fit, 1)
+identical(fit1@harvest, fit0@harvest)
+identical(fit1@stock.n, fit0@stock.n)
+identical(fit1@catch.n, fit0@catch.n)
+identical(fit1@index, fit0@index)
+
+}

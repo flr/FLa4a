@@ -20,7 +20,14 @@ a \code{matrix} object with lengths or ages
 Predicts ages or lengths using a growth class
 }
 \examples{
-vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")))
+# Set up the a4aGr object and parameters for the marginals
+mm <- matrix(NA, ncol=3, nrow=3)
+diag(mm) <- c(50, 0.001,0.001)
+mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+md <- ~linf*(1-exp(-k*(t-t0)))
+imd <- ~t0-1/k*log(1-len/linf)
+prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 predict(vbObj, len=1:50+0.5)
 predict(vbObj, t=1:20+0.5)
 }

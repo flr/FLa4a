@@ -45,16 +45,20 @@ setClass("a4aGr",
 )
 
 #' @rdname a4aGr-class
-#' @aliases a4aGr a4aGr-methods a4aGr,missing-method
+#' @template bothargs
+#' @aliases a4aGr a4aGr-methods
 #' @template Accessors
 #' @template Constructors
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
-
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 setGeneric("a4aGr", function(object, ...) standardGeneric("a4aGr"))
+#' @rdname a4aGr-class
 setMethod("a4aGr", signature(object="missing"),
   function(...) {
     # empty
@@ -70,85 +74,59 @@ setMethod("a4aGr", signature(object="missing"),
 )
 
 #' @rdname a4aGr-class
-#' @aliases grMod grMod-methods grMod,a4aGr-method
+#' @aliases grMod grMod-methods
 setGeneric("grMod", function(object, ...) standardGeneric("grMod"))
+#' @rdname a4aGr-class
 setMethod("grMod", "a4aGr", function(object) object@grMod)
 
 #' @rdname a4aGr-class
-#' @aliases grMod<- grMod<--methods grMod<-,a4aGr,formula-method
+#' @param value the new object
+#' @aliases grMod<- grMod<--methods
 setGeneric("grMod<-", function(object,value) standardGeneric("grMod<-"))
+#' @rdname a4aGr-class
 setReplaceMethod("grMod", signature("a4aGr","formula"), function(object, value){
 	object@grMod <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @aliases grInvMod grInvMod-methods grInvMod,a4aGr-method
+#' @aliases grInvMod grInvMod-methods
 setGeneric("grInvMod", function(object, ...) standardGeneric("grInvMod"))
+#' @rdname a4aGr-class
 setMethod("grInvMod", "a4aGr", function(object) object@grInvMod)
 
 #' @rdname a4aGr-class
-#' @aliases grInvMod<- grInvMod<--methods grInvMod<-,a4aGr,formula-method
+#' @aliases grInvMod<- grInvMod<--methods
 setGeneric("grInvMod<-", function(object,value) standardGeneric("grInvMod<-"))
+#' @rdname a4aGr-class
 setReplaceMethod("grInvMod", signature("a4aGr","formula"), function(object, value){
 	object@grInvMod <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @aliases params,a4aGr-method
 setMethod("params", "a4aGr", function(object) object@params)
 
-#' @name a4aGr
 #' @rdname a4aGr-class
-#' @aliases params<-,a4aGr,FLPar-method
 setReplaceMethod("params", signature("a4aGr","FLPar"), function(object, value){
 	object@params <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @aliases distr,a4aGr-method
 setMethod("distr", "a4aGr", function(object) object@distr)
 
-#' @name distr<- for a4aGr
 #' @rdname a4aGr-class
-#' @aliases distr<-,a4aGr,character-method
 setReplaceMethod("distr", signature("a4aGr","character"), function(object, value){
 	object@distr <- value
 	object
 })
 
 #' @rdname a4aGr-class
-#' @aliases vcov,a4aGr-method
 setMethod("vcov", "a4aGr", function(object) object@vcov)
 
-#' @name vcov<- for a4aGr
 #' @rdname a4aGr-class
-#' @aliases vcov<-,a4aGr,numeric-method
 setReplaceMethod("vcov", signature(object = "a4aGr", value = "numeric"), function(object, value){
 	object@vcov <- value
 	object
 })
-
-#' @name niters for a4aGr
-#' @rdname niters
-#' @title Number of iterations
-#' @description Method to extract from \code{a4aGr} objects the number of iterations.
-#' @param object a \code{a4aGr} object
-#' @return an \code{numeric} object
-#' @aliases niters,a4aGr-method
-#' @examples
-#' mm <- matrix(NA, ncol=3, nrow=3)
-#' diag(mm) <- c(50, 0.001,0.001)
-#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
-#' # Generate 100 sample sets
-#'   vbObj <- mvrnorm(100,vbObj)
-#' niters(vbObj)
-
-setMethod("niters", "a4aGr", function(object){
-	dim(params(object))[2]
-})
-
-

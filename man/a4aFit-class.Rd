@@ -4,29 +4,34 @@
 \name{a4aFit-class}
 \alias{a4aFit-class}
 \alias{a4aFit}
+\alias{a4aFit}
 \alias{a4aFit-methods}
-\alias{a4aFit,missing-method}
 \alias{clock}
+\alias{clock-methods}
 \alias{clock,a4aFit-method}
 \alias{fitSumm}
 \alias{fitSumm-methods}
 \alias{fitSumm,a4aFit-method}
 \alias{stock.n,a4aFit-method}
 \alias{harvest,a4aFit,ANY-method}
-\alias{harvest,a4aFit-method}
 \alias{catch.n,a4aFit-method}
 \alias{index,a4aFit-method}
 \alias{show,a4aFit-method}
 \alias{logLik,a4aFit-method}
+\alias{iter,a4aFit-method}
 \title{S4 class \code{a4aFit}}
 \usage{
-a4aFit(object, ...)
+a4aFit(...)
 
-\S4method{a4aFit}{missing}(object, ...)
+a4aFit(...)
 
 clock(object, ...)
 
+\S4method{clock}{a4aFit}(object)
+
 fitSumm(object, ...)
+
+\S4method{fitSumm}{a4aFit}(object)
 
 \S4method{stock.n}{a4aFit}(object)
 
@@ -39,6 +44,17 @@ fitSumm(object, ...)
 \S4method{show}{a4aFit}(object)
 
 \S4method{logLik}{a4aFit}(object, ...)
+
+\S4method{iter}{a4aFit}(obj, it)
+}
+\arguments{
+\item{...}{additional argument list that might never be used}
+
+\item{object}{object of relevant class (see signature of method)}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 The \code{a4aFit} class was built to store the a4a stock assessment fits.
@@ -47,19 +63,12 @@ The \code{a4aFit} class was built to store the a4a stock assessment fits.
 
 \describe{
    \item{call}{The function call}
-
    \item{clock}{Information on call duration}
-
    \item{fitSumm}{Fit summary}
-
    \item{stock.n}{Estimates of stock numbers-at-age}
-
    \item{harvest}{Estimates of fishing mortality at age}
-
    \item{catch.n}{Estimates of catch numbers-at-age}
-
    \item{index}{Estimates of survey or CPUE indices-at-age}
-
  }
 }
 

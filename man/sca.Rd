@@ -5,15 +5,19 @@
 \alias{sca}
 \alias{sca-methods}
 \alias{sca,FLStock,FLIndices-method}
-\alias{sca,FLStock,FLIndex-method}
 \title{Statistical catch-at-age method}
 \usage{
 sca(stock, indices, ...)
+
+\S4method{sca}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
+  srmodel = ~factor(year), fit = "MP", mcmc = missing)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object}
 
 \item{indices}{an \code{FLIndices} object}
+
+\item{...}{additional argument list that might never be used}
 
 \item{fmodel}{a formula object depicting the model for log fishing mortality at age}
 
@@ -22,12 +26,17 @@ sca(stock, indices, ...)
 \item{srmodel}{a formula object depicting the model for log recruitment}
 
 \item{fit}{character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.}
+
+\item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
 }
 \value{
 an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
 }
 \description{
 User interface to the statistical catch-at-age method of the a4a stock assessment framework.
+}
+\details{
+This method is the simple method for stock assessment. Some arguments are not accessible to make it simpler for the user. The advanced method is  \code{a4aSCA}. In particular, the default for the \code{fit} argument is 'MP'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}).
 }
 \examples{
 data(ple4)
@@ -46,11 +55,16 @@ plot(ple4 + fit2)
 wireframe(data~year*age, data=harvest(fit2), zlab="F")
 
 # fit2 + catcability as a smoother by age without year trend
-fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)))
+fmod <- ~factor(age) + factor(year)
+qmod <- list(~s(age, k=4))
+fit3 <- sca(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod)
 plot(ple4 + fit3)
 
 # fit3 + srmodel as a smoother by year
-fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age) + factor(year), qmodel=list(~s(age, k=4)), srmodel=~s(year, k=45))
+fmod <- ~factor(age) + factor(year)
+qmod <- list(~s(age, k=4))
+srmod <- ~s(year, k=45)
+fit4 <- sca(ple4, FLIndices(ple4.index), fmodel=fmod, qmodel=qmod, srmodel=srmod)
 plot(ple4 + fit4)
 
 AIC(fit1, fit2, fit3, fit4)

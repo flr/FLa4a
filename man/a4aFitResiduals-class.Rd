@@ -10,6 +10,15 @@
 \usage{
 \S4method{residuals}{a4aFit}(object, stock, indices, ...)
 }
+\arguments{
+\item{object}{object of relevant class (see signature of method)}
+
+\item{stock}{\code{FLStock} object used to fit the model}
+
+\item{indices}{\code{FLIndices} object used to fit the model}
+
+\item{...}{additional argument list that might never be used}
+}
 \description{
 The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default, these should be log residuals of catches and indices.
 }

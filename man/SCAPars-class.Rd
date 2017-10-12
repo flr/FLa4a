@@ -63,49 +63,102 @@
 \alias{vFrml,SCAPars-method}
 \alias{m,SCAPars-method}
 \alias{wt,SCAPars-method}
+\alias{propagate,SCAPars-method}
+\alias{iter,SCAPars-method}
 \title{Model parameters class}
 \usage{
 SCAPars(object, ...)
 
+\S4method{SCAPars}{missing}(object, ...)
+
 stkmodel(object, ...)
+
+\S4method{stkmodel}{SCAPars}(object)
 
 n1model(object, ...)
 
+\S4method{n1model}{SCAPars}(object)
+
 srmodel(object, ...)
+
+\S4method{srmodel}{SCAPars}(object)
 
 fmodel(object, ...)
 
+\S4method{fmodel}{SCAPars}(object)
+
 qmodel(object, ...)
+
+\S4method{qmodel}{SCAPars}(object)
 
 vmodel(object, ...)
 
+\S4method{vmodel}{SCAPars}(object)
+
 srPars(object, ...)
+
+\S4method{srPars}{SCAPars}(object)
 
 srCovar(object, ...)
 
+\S4method{srCovar}{SCAPars}(object)
+
 srFrml(object, ...)
+
+\S4method{srFrml}{SCAPars}(object)
 
 fPars(object, ...)
 
+\S4method{fPars}{SCAPars}(object)
+
 fCovar(object, ...)
+
+\S4method{fCovar}{SCAPars}(object)
 
 fFrml(object, ...)
 
+\S4method{fFrml}{SCAPars}(object)
+
 qPars(object, ...)
+
+\S4method{qPars}{SCAPars}(object)
 
 qCovar(object, ...)
 
+\S4method{qCovar}{SCAPars}(object)
+
 qFrml(object, ...)
+
+\S4method{qFrml}{SCAPars}(object)
 
 vPars(object, ...)
 
+\S4method{vPars}{SCAPars}(object)
+
 vCovar(object, ...)
 
+\S4method{vCovar}{SCAPars}(object)
+
 vFrml(object, ...)
+
+\S4method{vFrml}{SCAPars}(object)
 
 \S4method{m}{SCAPars}(object)
 
 \S4method{wt}{SCAPars}(object)
+
+\S4method{propagate}{SCAPars}(object, iter, fill.iter = TRUE)
+
+\S4method{iter}{SCAPars}(obj, it)
+}
+\arguments{
+\item{object}{object of relevant class (see signature of method)}
+
+\item{...}{additional argument list that might never be used}
+
+\item{obj}{the object to be subset}
+
+\item{it}{iteration to be extracted}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.
@@ -113,13 +166,9 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
 \section{Slot}{
  
 \describe{
-
 \item{\code{stkmodel}}{parameters related to stock dynamics}
-
 \item{\code{qmodel}}{paramaters related to catchability of tunning fleets}
-
 \item{\code{vmodel}}{paramaters related to the variance model}
-
 }
 }
 

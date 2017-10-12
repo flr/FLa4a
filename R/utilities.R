@@ -1,36 +1,11 @@
+globalVariables("qname")
 #' @title Assorted methods needed by FLa4a
 #' @docType methods
-#' @name methods
+#' @name assorted methods
+#' @description Assorted methods needed by FLa4a
 #' @rdname assorted-methods
-#' @aliases is.empty
-#' @section is.empty:
-#' Method \code{is.empty} checks if an object is empty. It takes any object and returns a logical, \code{TRUE}, if the object is of length 0.
-#' @examples
-#' #Example use of is.empty:
-#' is.empty(list())
-#' is.empty(list(a=2))
-
-is.empty <- function(object) {
-	length(object) == 0
-}
-
-#' @rdname assorted-methods
-#' @aliases pars2dim,FLPar-method
-#' @section pars2dim:
-#' Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
-#' @examples
-#' #Example use of pars2dim:
-#' pars2dim(FLPar())
-#' pars2dim(FLPar(array(dim=c(1,1,1))))
-setMethod("pars2dim", "FLPar", function(object) {
-
-	dnm <- dimnames(object)
-	names(dnm)[2]=="iter"
-
-})
-
-#' @rdname assorted-methods
-#' @aliases getYidx getYidx-methods getYidx,FLQuant-method
+#' @aliases getYidx getYidx-methods
+#' @template bothargs
 #' @section getYidx:
 #' Gets an FLQuant's numeric id for a vector of "years". For internal use and not very interesting for users. It takes an \code{FLQuant} object and \code{vector} of years and returns a \code{numeric vector} that can be used to subset the \code{FLQuant}.
 #' @examples
@@ -41,6 +16,8 @@ setMethod("pars2dim", "FLPar", function(object) {
 #' flq[, getYidx(flq, 2000:2004)]
 
 setGeneric("getYidx", function(object, ...) standardGeneric("getYidx"))
+#' @rdname assorted-methods
+#' @param year \code{numeric} with year to be extracted
 setMethod("getYidx", "FLQuant", function(object, year) {
 	yrs <- dimnames(object)[[2]]
 	if(sum(year>0)>0){
@@ -56,8 +33,34 @@ setMethod("getYidx", "FLQuant", function(object, year) {
 
 })
 
+#' @rdname pars2dim-methods
+#' @section pars2dim:
+#' Checks that the name of the second dimension in params is "iter". For internal use and not very interesting for users. It takes an \code{FLPar} object and returns a \code{logical}.
+#' @examples
+#' #Example use of pars2dim:
+#' pars2dim(FLPar())
+#' pars2dim(FLPar(array(dim=c(1,1,1))))
+setMethod("pars2dim", "FLPar", function(object) {
+
+	dnm <- dimnames(object)
+	names(dnm)[2]=="iter"
+
+})
+
 #' @rdname assorted-methods
-#' @aliases niters niters-methods niters,FLModelSim-method
+#' @aliases is.empty
+#' @section is.empty:
+#' Method \code{is.empty} checks if an object is empty. It takes any object and returns a logical, \code{TRUE}, if the object is of length 0.
+#' @examples
+#' #Example use of is.empty:
+#' is.empty(list())
+#' is.empty(list(a=2))
+is.empty <- function(object) {
+	length(object) == 0
+}
+
+#' @rdname assorted-methods
+#' @aliases niters niters-methods
 #' @section niters:
 #' Compute number of iterations. Takes an object of any \code{FLR} class and returns a \code{numeric}.
 #' @examples
@@ -65,13 +68,21 @@ setMethod("getYidx", "FLQuant", function(object, year) {
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' # Generate 100 sample sets
-#'   vbObj <- mvrnorm(100,vbObj)
+#' vbObj <- mvrnorm(100,vbObj)
 #' niters(vbObj)
 
 setGeneric("niters", function(object, ...) standardGeneric("niters"))
+#' @rdname assorted-methods
 setMethod("niters", "FLModelSim", function(object){
+	dim(params(object))[2]
+})
+#' @rdname assorted-methods
+setMethod("niters", "a4aGr", function(object){
 	dim(params(object))[2]
 })
 
@@ -131,7 +142,7 @@ getADMBCovariance <- function(wkdir) {
 }
 
 #' @rdname assorted-methods
-#' @aliases dims,a4aStkParams-method
+#' @param obj an object
 #' @section dims:
 #' Extracts the dims of the parameters.
 #' @examples
@@ -142,12 +153,12 @@ setMethod("dims", "a4aStkParams", function(obj) {
   dim(obj@params)
 })
 
-#' @title plot of fitted catch numbers-at-age
-#' @name plotc
+#' @title plot for fitted catch-at-age
+#' @name plot for fitted catch-at-age
 #' @docType methods
 #' @rdname plotc
 #' @aliases plot,a4aFit,FLStock-method
-#' @description Method to plot fitted versus observed catch numbers-at-age.
+#' @description Method to plot fitted versus observed catch numbers-at-age. Note the yaxis doesn't has a scale. The visual is about the difference between the two lines, not about the value of each line, which in any case would be very difficult to assess visually.
 #' @param x an \code{a4aFit} object with the fitted values
 #' @param y an \code{FLStock} object with the observed values
 #' @param ... additional argument list that might never be used
@@ -167,7 +178,7 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	args$groups <- quote(qname)
 	args$ylab="numbers"
 	args$xlab="age"
-	args$scales=list(y="free")
+	args$scales=list(y=list(relation="free", draw=FALSE))
 	args$auto.key <- list(points=FALSE, lines=TRUE, columns=2)
 	args$par.settings=list(
 		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
@@ -177,13 +188,12 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	do.call("xyplot", args)
 })
 
-#' @title plot of fitted indices-at-age
-#' @name ploti
+##' @title testing
+#' @name plot for fitted indices-at-age
 #' @docType methods
 #' @rdname ploti
 #' @aliases plot,a4aFit,FLIndices-method
-#' @description Method to plot fitted versus observed indices-at-age.
-#'
+#' @description Method to plot fitted versus observed indices-at-age. Note the yaxis doesn't has a scale. The visual is about the difference between the two lines, not about the value of each line, which in any case would be very difficult to assess visually.
 #' @param x an \code{a4aFit} object with the fitted values
 #' @param y an \code{FLIndices} object with the observed values
 #' @param ... additional argument list that might never be used
@@ -195,6 +205,11 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 #' plot(obj, FLIndices(ple4.index))
 
 setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
+	v <- unlist(lapply(y, is, "FLIndexBiomass"))
+	if(sum(v)>0){
+		warning("Biomass indices will be removed, can't plot age based estimates.")
+		y <- y[!v]
+	}	
 	args <- list()
 	dfx <- as.data.frame(index(x))
 	dfy <- as.data.frame(lapply(y, index))
@@ -207,7 +222,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	args$groups <- quote(src)
 	args$ylab="numbers"
 	args$xlab=""
-	args$scales=list(y="free")
+	args$scales=list(y=list(relation="free", draw=FALSE))
 	args$auto.key=list(lines=TRUE, points=FALSE, columns=2)
 	args$par.settings=list(
 		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
@@ -228,9 +243,46 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	}
 })
 
+
+##' @title wireframe plot for FLQuant
+#' @name wireframe plot for FLQuant
+#' @docType methods
+#' @rdname wireframe
+#' @aliases wireframe,FLQuant-method wireframe,FLQuant,missing-method
+#' @description Method to 3D plot \code{FLQuant} objects.
+#' @param x a \code{FLQuant} 
+#' @param y missing
+#' @param screen list with numeric components 'x','y' and 'z' to change the 3D perspective 
+#' @param ... additional argument list for the lattice engine 
+#' @return a 3D surface plot
+#' @examples
+#' data(ple4)
+#' wireframe(harvest(ple4))
+
+setMethod("wireframe", c("FLQuant", "missing"), function(x, y, screen=list(x = -90, y=-45), ...){
+	args <- list()
+	args$data <- as.data.frame(x)
+	args$x <- data~age*year
+	args$screen = screen
+	args$par.settings = list(axis.line = list(col = 'transparent'), box.3d=list(col="transparent")) 
+	args$scales=list(col=1)
+	do.call("wireframe", args)
+})
+
 #====================================================================
 # get tpl
 #====================================================================
+
+#' @title Get TPL with ADMB code 
+#' @name getTPL
+#' @docType methods
+#' @rdname getTPL
+##' @aliases getTPL
+#' @description Function to get the a4a TPL file with ADMB code and copy into a specific folder.
+#' @param dir folder where the a4a.tpl file will be copied to.
+#' @return file a4a.tpl
+#' @examples
+#' getTPL("myfolder")
 
 getTPL <- function(dir){
 	to <- paste0(dir,"/a4a.tpl", sep="")

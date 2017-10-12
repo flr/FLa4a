@@ -3,7 +3,6 @@
 \docType{methods}
 \name{simulate}
 \alias{simulate}
-\alias{simulate-methods}
 \alias{simulate,a4aFitSA-method}
 \alias{simulate,SCAPars-method}
 \alias{simulate,a4aStkParams-method}
@@ -27,6 +26,17 @@ simulate(object, nsim = 1, seed = NULL, ...)
 
 \S4method{simulate}{submodel}(object, nsim = 1, seed = NULL,
   empirical = TRUE)
+}
+\arguments{
+\item{object}{object of relevant class (see signature of method)}
+
+\item{nsim}{number of iterations}
+
+\item{seed}{\code{numeric} with random number seed}
+
+\item{...}{additional argument list that might never be used}
+
+\item{empirical}{logical, shall the empirical method in MASS be used}
 }
 \description{
 Simulation methods for a4a stock assessment fits.

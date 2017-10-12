@@ -5,14 +5,19 @@
 \alias{stdlogres}
 \alias{stdlogres-methods}
 \alias{stdlogres,FLQuant,FLQuant-method}
+\alias{stdlogres,FLQuant,FLQuant-method}
 \title{Standardized log residuals}
 \usage{
 stdlogres(obs, fit, ...)
+
+\S4method{stdlogres}{FLQuant,FLQuant}(obs, fit, ...)
 }
 \arguments{
 \item{obs}{an \code{FLQuant} object with the observations}
 
 \item{fit}{an \code{FLQuant} object with the fitted value}
+
+\item{...}{additional argument list that might never be used}
 }
 \value{
 an \code{FLQuant} with stardardized log residuals

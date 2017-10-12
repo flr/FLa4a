@@ -1,12 +1,15 @@
 .travis.yml
+appveyor.yml
 code-experimental
 man-experimental
-tests
 gh-pages/
 man-roxygen
 Makefile
+template.Rnw
+tests/wcsam.R
 .git
 .gitignore
-
 ^.*\.Rproj$
 ^\.Rproj\.user$
+docs/
+^vignettes/sca.Rnw$

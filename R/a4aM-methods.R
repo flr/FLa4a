@@ -1,13 +1,14 @@
 #' @title natural mortality 
+#' @docType methods
 #' @description Method to compute natural mortality.
-#' @name M 
-#' @rdname M 
-#' @param object an \code{a4aM} object
-#' @param grMod an \code{a4aGr} object from which the growth parameter K can be extracted
+#' @name m 
+#' @rdname m
+#' @aliases m,a4aM-method
+#' @param object a \code{a4aM} object
+#' @param grMod a \code{a4aGr} object from which the growth parameter K can be extracted
 #' @param ... placeholder for covariates of the models. The names must match formula variables (not parameters), with the exception of the \code{a4aGr} individual growth model. To use a growth model, it must be called \code{grMod} and be of class \code{a4aGr}, in which case the parameters will be matched. The main objective is to be able to use \code{K} from von Bertalanffy models in M.
 #' @details The method uses the range slot to define the quant and year dimensions of the resulting \code{M} \code{FLQuant}. The name for the quant dimension is taken as the name of a variable that is present in the \code{shape} formula, but not in the \code{params} slot of the \code{shape} model. If more than one such variable exists, then there is a problem with the \code{shape} model definition.
 #' @return an \code{FLQuant} object
-#' @aliases m,a4aM-method
 #' @examples
 #' age <- 0:15
 #' k <- 0.4
@@ -19,16 +20,16 @@
 #' mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 #' m1 <- a4aM(shape=mod1, level=mod2)
 #'   # set up the age range for the object...
-#'   rngquant(m1) <- c(0,15)
+#'   range(m1, c("min", "max")) <- c(0,15)
 #'   # ...and the age range for mbar
-#'   rngmbar(m1)<-c(0,15)
+#'   range(m1, c("minmbar", "maxmbar")) <- c(0,15)
 #' m(m1)
 #' mean(m(m1)[ac(0:15)])
 #' all.equal(M, c(m(m1)))
 #'
 #' # another example m
-#' rngquant(m1) <- c(2,10)
-#' rngmbar(m1) <- c(2,4)
+#' range(m1, c("min", "max")) <- c(2,15)
+#' range(m1, c("minmbar", "maxmbar")) <- c(2,4)
 #' m(m1)
 #' mean(m(m1)[ac(2:4)])
 #'
@@ -37,11 +38,11 @@
 #'   params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(params=c("k","t"), iter=1:2))),
 #'   vcov=array(c(0.004,0.,0.,0.001,0.006,0.,0.,0.002), dim=c(2,2,2)))
 #' m2 <- a4aM(shape=mod1, level=mod2)
-#' rngquant(m2) <- c(0,10)
+#' range(m2, c("min", "max")) <- c(2,10)
 #' m(m2)
 #' # ...and with randomly generated iters (based on the medians for params(mod2) and vcov(mod2))
 #' m3 <- a4aM(shape=mod1, level=mvrnorm(100, mod2))
-#' rngquant(m3) <- c(0,15)
+#' range(m3, c("min", "max")) <- c(0,15)
 #' m(m3)
 #'
 #' # example with a trend
@@ -49,7 +50,6 @@
 #' mObj <- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mod3,
 #'   range=c(min=0,max=15,minyear=2000,maxyear=2003,minmbar=0,maxmbar=0))
 #' m(mObj, v=1:4)
-
 setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	args <- list(...)
 
@@ -67,8 +67,11 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 
 	allVars <- c(all.vars(model(shape(object))), all.vars(model(level(object))), all.vars(model(trend(object))))
 
-	args[[qname]] <- vecquant(object)
-	args$year <- vecyear(object)
+	#args[[qname]] <- vecquant(object)
+	#args$year <- vecyear(object)
+
+	args[[qname]] <- range(object,"min"):range(object,"max")
+	args$year <- range(object,"minyear"):range(object,"maxyear")
 
 	#if(sum(c("age", "year") %in% allVars)>0){
 	#	if(!("age" %in% names(args))) args$age <- vecage(object)
@@ -103,7 +106,8 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	# a bit spagethi ...
     # if qname is not in shape model, the dimensions of the predicted shape values are not determined by range and we need to blow up dims to match rng
 	if(!(qname %in% allVars)){  
-		v <- vecquant(object)
+		#v <- vecquant(object)
+		v <- range(object,"min"):range(object,"max")
 		mat["shp",1] <- dm[qname] <- length(v)	
 		nms12[[qname]] <- v
 	} else {
@@ -111,7 +115,7 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	}
 
 	if(!("year" %in% allVars)){
-		v <- vecyear(object)
+		v <- range(object, "minyear"):range(object, "maxyear")
 		dm["year"] <- length(v)	
 		nms12$year <- v
 	} else {
@@ -132,18 +136,20 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 	flqt <- aperm(flq, c(2,6,1,3,4,5))
 	flqt[] <- trd
 	flqt <- aperm(flqt, c(3,1,4,5,6,2))
-	m <- flqs*flql*flqt/quantMeans(flqs[as.character(vecmbar(object))])[rep(1,dm[1])]
+
+	v <- ac(range(object, "minmbar"):range(object, "maxmbar"))
+	m <- flqs*flql*flqt/quantMeans(flqs[v])[rep(1,dm[1])]
 	return(FLQuant(m))
 })
 
 #' @title natural mortality 
 #' @description Method to simulate multivariate normal parameters for an \code{a4aM} object.
 #' @name mvnorm 
-#' @rdname mvnorm-a4aM 
+#' @rdname mvnorm-a4aM
+#' @aliases mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
 #' @param n the number of iterations to be generated
 #' @param mu an \code{a4aM} object
 #' @return an \code{a4aM} object with n iterations
-#' @aliases mvrnorm,numeric,a4aM,missing,missing,missing,missing-method
 #' @examples
 #' mod1 <- FLModelSim(model=~exp(-age-0.5))
 #' mod2 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10,0.5,11),
@@ -166,7 +172,6 @@ setMethod("m", "a4aM", function(object, grMod="missing", ...){
 #'   mvrnorm(2,mod2)
 #'   m2<-mvrnorm(2,mod2)
 #'   c(params(m2))
-
 setMethod("mvrnorm", c(n="numeric", mu="a4aM", Sigma="missing",
 	tol="missing", empirical="missing", EISPACK="missing"), function(n=1, mu) {
 	args <- list()
@@ -182,4 +187,53 @@ setMethod("mvrnorm", c(n="numeric", mu="a4aM", Sigma="missing",
 
 	mu	
 })
+
+#' @title range for a4aM objects
+#' @description Range method for a4aM objects
+#' @rdname range-a4aM
+#' @param x an a4aM object
+#' @param i the elements of range to be changed in a character vector 
+#' @param value a numeric vector with values 
+setMethod("range<-", signature(x="a4aM", i="ANY", value="numeric"),
+  function(x, i, value) {
+    # CREATE new full range vector
+    ran <- range(x)
+    names(value) <- i
+    ran[i] <- value
+    
+    # max & maxmbar
+    if(sum(c("max", "maxmbar") %in% i) == 2)
+      if(value["max"] < value["maxmbar"])
+        stop("'maxmbar' cannot be larger than 'max'")
+
+    if('max' %in% i)
+      ran['maxmbar'] <- min(ran['max'], ran['maxmbar'])
+
+    if('maxmbar' %in% i)
+      ran['max'] <- max(ran['max'], ran['maxmbar'])
+
+    # min & minmbar
+    if(sum(c("min", "minmbar") %in% i) == 2)
+      if(value["min"] > value["minmbar"])
+        stop("'minmbar' cannot be smaller than 'min'")
+
+    if('min' %in% i)
+      ran['minmbar'] <- max(ran['min'], ran['minmbar'])
+
+    if('minmbar' %in% i)
+      ran['min'] <- min(ran['min'], ran['minmbar'])
+
+	# final checks
+	if(ran['max']<ran['min']) ran['max']<-ran['maxmbar']<-ran['minmbar']<-ran['min']
+	#if(ran['min']>ran['max']) ran['min']<-ran['maxmbar']<-ran['minmbar']<-ran['max']
+
+	if(ran['maxmbar']<ran['minmbar']) ran['maxmbar']<-ran['minmbar']
+	#if(ran['minmbar']>ran['maxmbar']) ran['minmbar']<-ran['maxmbar']
+
+    value <- ran
+    i <- names(value)
+
+    callNextMethod()
+  }
+)
 

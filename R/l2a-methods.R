@@ -1,4 +1,5 @@
 #' @title Method to convert length-based data to age-based
+#' @description Method to convert length-based data to age-based
 #' @details
 #' A deterministic slicing method converts the length-based data to age-based data, using the supplied growth model (the \code{a4aGr} object).
 #' Each length-based observation is allocated to a corresponding age, based on the growth model, and aggregated accordingly (either the sum or the mean).
@@ -7,13 +8,14 @@
 #' 
 #' @name l2a 
 #' @rdname l2a 
-#' @aliases l2a l2a-methods l2a,FLQuant,a4aGr-method
+#' @aliases l2a l2a-methods
 #' @param object an \code{FLQuant}, or \code{FLStockLen} object. 
 #' @param model an \code{a4aGr} object
-#' @param halfwidth the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an \code{FLStockLen}
+#' @param halfwidth the halfwidths of the length classes; a single numeric or vector the size of the number of length classes; not used if object is an \code{FLStockLen}
 #' @param stat the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.
 #' @param max_age the maximum age in the returned \code{FLQuant}; all ages above this are set to \code{max_age}; only used if object is an \code{FLQuant}
 #' @param plusgroup the plusgroup of the stock; only used if the object is an \code{FLStockLen}.
+#' @template dots
 #' @return an age based \code{FLQuant}, \code{FLStock}
 #' @examples
 #' # Southern hake
@@ -22,13 +24,15 @@
 #' diag(mm) <- c(2310, 0.13, 0.84)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(-7.22,-6.28,0.08)
 #' # Make the von Bertalanffy growth model
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
-#'               params=FLPar(linf=130, k=0.164, t0=-0.092, units=c("cm","ano-1","ano")),
-#'                vcov=mm)
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=130, k=0.164, t0=-0.092, units=c("cm","yr-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' # Make a triangle copula for simulating process error
-#' tri_pars <- list(linf = list(a=104.5, b=155.5, c=130), 
-#'                  k = list(a=0.132, b=0.196, c=0.164), 
-#'                  t0 = list(a=-0.184, b=0, c=-0.092))
+#' linf <- list(a=104.5, b=155.5, c=130) 
+#' k <- list(a=0.132, b=0.196, c=0.164)
+#' t0 <- list(a=-0.184, b=0, c=-0.092)
+#' tri_pars <- list(linf = linf, k = k, t0 = t0)
 #' # Simulate 10 iterations from it
 #' vbObj_tri <- mvrtriangle(10, vbObj, paramMargins=tri_pars)
 #' data(southernHakeLen)
@@ -55,11 +59,15 @@
 #' index_pt_age <- l2a(propagate(index_pt_len, 10), vbObj)
 # l2a
 setGeneric("l2a", function(object, model, ...) standardGeneric("l2a"))
+#' @rdname l2a 
 setMethod("l2a", c("FLQuant", "a4aGr"),
-	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), max_age=NA) {
+	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", max_age=NA) {
+
+# EJ: don't know what weights are doing ...
+#	function(object, model, halfwidth= c(diff(as.numeric(dimnames(object)[[1]])), tail(diff(as.numeric(dimnames(object)[[1]])),1))/2 , stat="sum", weights=FLQuant(1, dimnames=dimnames(object)), max_age=NA) {
 	# constants
 	dnms <- dimnames(object)
-	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
+#	if(!all.equal(dnms, dimnames(weights))) stop("Weights must have the same dimensions as the data.")
 	len <- as.numeric(dnms[[1]]) + halfwidth 
 	mit <- niters(model) # iters in the growth model
 	qit <- length(dnms[[6]])  # iters in the FLQuant
@@ -112,18 +120,17 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 
 
 #' @rdname l2a 
-#' @aliases l2a,FLStockLen,a4aGr-method
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
-	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths, harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
+	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths,\n harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
     # Use the catch.n slot to build the resulting FLStock
-    catch.n <- l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+    catch.n <- suppressWarnings(l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
     stk <- FLStock(catch.n=catch.n)
     # Abundance slots - sum these up
     sum_slots_names <- c("discards.n","landings.n","stock.n")
     for(slot_counter in sum_slots_names){
         # Only slice if there are some values in there
         if(!all(is.na(slot(object,slot_counter)))){
-            slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+            slot(stk,slot_counter) <- suppressWarnings(l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
         }
     }
     # Weight slots - weighted means
@@ -132,7 +139,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
         total_quant <- slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep=""))
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
         if(!all(is.na(total_quant))){
-            total_slice <- l2a(total_quant, model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...)
+            total_slice <- suppressWarnings(l2a(total_quant, model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
             slot(stk,paste(slot_counter,".wt",sep="")) <- total_slice / slot(stk,paste(slot_counter,".n",sep=""))
             # Replace any NAs with zeros
             slot(stk,paste(slot_counter,".wt",sep=""))[is.na(slot(stk,paste(slot_counter,".wt",sep="")))] <- 0
@@ -143,14 +150,14 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
     for(slot_counter in mean_slots_names){
         if(!all(is.na(slot(object,slot_counter)))){
-            slot(stk,slot_counter) <- l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...)
+            slot(stk,slot_counter) <- suppressWarnings(l2a(slot(object,slot_counter), model, halfwidth=halfwidth(object), stat="mean", max_age=plusgroup+1, ...))
         }
     }
 
     # Check for ages < 0; report problem and trim
     if(range(stk)["min"] < 0){
-        print("Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)")
-        print("Trimming age range to a minimum of 0")
+        warning("Some ages are less than 0, indicating a mismatch between input data lengths\n and growth parameters (possibly t0)")
+        warning("Trimming age range to a minimum of 0")
         stk <- trim(stk, age=0:range(stk)["max"])
     }
     # washing up
@@ -170,7 +177,6 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 })
 
 #' @rdname l2a 
-#' @aliases l2a,FLIndex,a4aGr-method
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Slots are treated differently
     # Sum: index, index.var, catch.n
@@ -179,7 +185,7 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
 	args <- list(...)
 
     # Start with index - most likely to not be empty
-    index <- l2a(index(object), model, stat="sum", ...)
+    index <- suppressWarnings(l2a(index(object), model, stat="sum", ...))
     idx <- FLIndex(index=index)
 
 
@@ -187,24 +193,24 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     for(slot_counter in sum_slots_names){
         # Only slice if there are some values in there
         if(all(!is.na(slot(object,slot_counter)))){
-            slot(idx,slot_counter) <- l2a(slot(object,slot_counter), model, stat="sum", ...)
+            slot(idx,slot_counter) <- suppressWarnings(l2a(slot(object,slot_counter), model, stat="sum", ...))
         }
     }
 
-    weighted_means_slots_names <- c("catch.wt","index.q")
+    weighted_means_slots_names <- c("catch.wt","sel.pattern","index.q")
     for(slot_counter in weighted_means_slots_names){
         total_quant <- slot(object,slot_counter) * slot(object,"catch.n")
         # Only slice if not empty (either wt or n can be NA, e.g. stock.n before assessment)
         if(all(!is.na(total_quant))){
-            total_slice <- l2a(total_quant, model, stat="sum", ...)
+            total_slice <- suppressWarnings(l2a(total_quant, model, stat="sum", ...))
             slot(idx, slot_counter) <- total_slice / slot(idx,"catch.n")
         }
     }
 
     # Check for ages < 0; report problem and trim
     if(range(idx)["min"] < 0){
-        print("Some ages are less than 0, indicating a mismatch between input data lengths and growth parameters (possibly t0)")
-        print("Trimming age range to a minimum of 0")
+        warning("Some ages are less than 0, indicating a mismatch between input data lengths\n and growth parameters (possibly t0)")
+        warning("Trimming age range to a minimum of 0")
         idx <- trim(idx, age=0:range(idx)["max"])
     }
 

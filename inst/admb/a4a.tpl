@@ -531,7 +531,7 @@ PROCEDURE_SECTION
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
       for(int y=minYear+minAge; y<=maxYear; ++y){
-        predLogR = ra(y) + log(ssb(y-minAge) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-minAge) - mfexp(2.0*rb(y)), 2.0) + 0.0025));
+        predLogR = ra(y) + log(ssb(y-minAge) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-minAge) - mfexp(rb(y)), 2.0) + 0.0025));
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);    
       }

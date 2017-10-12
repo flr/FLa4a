@@ -5,15 +5,29 @@
 \alias{genFLQuant}
 \alias{genFLQuant-methods}
 \alias{genFLQuant,FLQuant-method}
+\alias{genFLQuant,submodel-method}
+\alias{genFLQuant,submodels-method}
+\alias{genFLQuant,a4aStkParams-method}
 \title{Methods to generate FLQuant objects}
 \usage{
 genFLQuant(object, ...)
 
 \S4method{genFLQuant}{FLQuant}(object, cv = 0.2, method = "ac",
   niter = 250)
+
+\S4method{genFLQuant}{submodel}(object, type = c("link", "response"),
+  nsim = 0, seed = NULL)
+
+\S4method{genFLQuant}{submodels}(object, type = c("link", "response"),
+  nsim = 0, seed = NULL)
+
+\S4method{genFLQuant}{a4aStkParams}(object, type = c("link", "response"),
+  nsim = 0, seed = NULL, simulate.recruitment = FALSE)
 }
 \arguments{
 \item{object}{an FLQuant}
+
+\item{...}{additional argument list that might not ever be used.}
 
 \item{cv}{the coefficient of variation}
 

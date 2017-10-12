@@ -5,12 +5,18 @@
 \alias{addition}
 \alias{+,FLStock,a4aFit-method}
 \alias{+,FLIndices,a4aFit-method}
+\alias{+,FLIndices,a4aFit-method}
 \alias{+,FLStock,a4aFitSA-method}
 \title{+ methods}
 \usage{
 \S4method{+}{FLStock,a4aFit}(e1, e2)
 
 \S4method{+}{FLIndices,a4aFit}(e1, e2)
+}
+\arguments{
+\item{e1}{the original \code{FLStock} or \code{FLIndex} object}
+
+\item{e2}{a \code{a4aFit} object from where the new \code{FLStock} or \code{FLIndex} slots will be extracted.}
 }
 \description{
 Update \code{FLStock} and \code{FLIndex} objects with stock assessment results.

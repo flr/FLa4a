@@ -30,19 +30,40 @@
 \usage{
 a4aM(object, ...)
 
+\S4method{a4aM}{missing}(object, ...)
+
 \S4method{show}{a4aM}(object)
 
 shape(object, ...)
 
+\S4method{shape}{a4aM}(object)
+
 shape(object) <- value
+
+\S4method{shape}{a4aM}(object) <- value
 
 level(object, ...)
 
+\S4method{level}{a4aM}(object)
+
 level(object) <- value
+
+\S4method{level}{a4aM}(object) <- value
 
 trend(object, ...)
 
+\S4method{trend}{a4aM}(object)
+
 trend(object) <- value
+
+\S4method{trend}{a4aM}(object) <- value
+}
+\arguments{
+\item{object}{object of relevant class (see signature of method)}
+
+\item{...}{additional argument list that might never be used}
+
+\item{value}{the new object}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

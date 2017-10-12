@@ -11,6 +11,11 @@
 \usage{
 l2a(object, model, ...)
 
+\S4method{l2a}{FLQuant,a4aGr}(object, model,
+  halfwidth = c(diff(as.numeric(dimnames(object)[[1]])),
+  tail(diff(as.numeric(dimnames(object)[[1]])), 1))/2, stat = "sum",
+  max_age = NA)
+
 \S4method{l2a}{FLStockLen,a4aGr}(object, model, plusgroup = NA, ...)
 
 \S4method{l2a}{FLIndex,a4aGr}(object, model, ...)
@@ -20,16 +25,21 @@ l2a(object, model, ...)
 
 \item{model}{an \code{a4aGr} object}
 
-\item{plusgroup}{the plusgroup of the stock; only used if the object is an \code{FLStockLen}.}
+\item{...}{additional argument list that might never be used}
 
-\item{halfwidth}{the halfwidths of the length classes; a single numeric or vector the size of the number of the number length classes; not used if object is an \code{FLStockLen}}
+\item{halfwidth}{the halfwidths of the length classes; a single numeric or vector the size of the number of length classes; not used if object is an \code{FLStockLen}}
 
 \item{stat}{the aggregation statistic, which must be \code{mean} or \code{sum}; only used if object is an \code{FLQuant}.}
 
 \item{max_age}{the maximum age in the returned \code{FLQuant}; all ages above this are set to \code{max_age}; only used if object is an \code{FLQuant}}
+
+\item{plusgroup}{the plusgroup of the stock; only used if the object is an \code{FLStockLen}.}
 }
 \value{
 an age based \code{FLQuant}, \code{FLStock}
+}
+\description{
+Method to convert length-based data to age-based
 }
 \details{
 A deterministic slicing method converts the length-based data to age-based data, using the supplied growth model (the \code{a4aGr} object).
@@ -44,13 +54,15 @@ mm <- matrix(NA, ncol=3, nrow=3)
 diag(mm) <- c(2310, 0.13, 0.84)
 mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(-7.22,-6.28,0.08)
 # Make the von Bertalanffy growth model
-vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf),
-              params=FLPar(linf=130, k=0.164, t0=-0.092, units=c("cm","ano-1","ano")),
-               vcov=mm)
+md <- ~linf*(1-exp(-k*(t-t0)))
+imd <- ~t0-1/k*log(1-len/linf)
+prs <- FLPar(linf=130, k=0.164, t0=-0.092, units=c("cm","yr-1","yr"))
+vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 # Make a triangle copula for simulating process error
-tri_pars <- list(linf = list(a=104.5, b=155.5, c=130), 
-                 k = list(a=0.132, b=0.196, c=0.164), 
-                 t0 = list(a=-0.184, b=0, c=-0.092))
+linf <- list(a=104.5, b=155.5, c=130) 
+k <- list(a=0.132, b=0.196, c=0.164)
+t0 <- list(a=-0.184, b=0, c=-0.092)
+tri_pars <- list(linf = linf, k = k, t0 = t0)
 # Simulate 10 iterations from it
 vbObj_tri <- mvrtriangle(10, vbObj, paramMargins=tri_pars)
 data(southernHakeLen)

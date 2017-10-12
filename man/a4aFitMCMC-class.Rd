@@ -4,22 +4,33 @@
 \name{a4aFitMCMC-class}
 \alias{a4aFitMCMC-class}
 \alias{a4aFitMCMC}
-\alias{a4aFitMCMC-method}
-\alias{a4aFitMCMC,missing-method}
+\alias{a4aFitMCMC}
+\alias{a4aFitMCMC-methods}
 \alias{a4aFitSA,a4aFitMCMC-method}
-\alias{a4aFitMCMC,a4aFitSA-method}
+\alias{a4aFit,a4aFitMCMC-method}
+\alias{as.mcmc}
+\alias{as.mcmc-methods}
 \alias{as.mcmc,a4aFitMCMC-method}
 \title{S4 class \code{a4aFitMCMC}}
 \usage{
-a4aFitMCMC(object, ...)
+a4aFitMCMC(...)
 
-\S4method{a4aFitMCMC}{missing}(object, ...)
+a4aFitMCMC(...)
 
 \S4method{a4aFitSA}{a4aFitMCMC}(object, ...)
 
-\S4method{a4aFitMCMC}{a4aFitSA}(object, ...)
+\S4method{a4aFit}{a4aFitMCMC}(object, ...)
+
+as.mcmc(x, ...)
 
 \S4method{as.mcmc}{a4aFitMCMC}(x, ...)
+}
+\arguments{
+\item{...}{additional argument list that might never be used}
+
+\item{object}{object of relevant class (see signature of method)}
+
+\item{x}{an object to be coerced into mcmc}
 }
 \description{
 The \code{a4aFitMCMC} class extends \code{a4aFitSA} to store information about the MCMC run.
@@ -27,7 +38,17 @@ The \code{a4aFitMCMC} class extends \code{a4aFitSA} to store information about t
 \section{Slots}{
 
 \describe{
-   \item{SCAMCMC}{An object of class \code{SCAMCMC} with information about the MCMC run}
+   \item{name}{A character vector for the object name.}
+   \item{desc}{A textual description of the object contents.}
+   \item{range}{A named numeric vector with various values of quant and year ranges, plusgroup, fishing mortality ranges, etc.}
+   \item{call}{The function call}
+   \item{clock}{Information on call duration}
+   \item{fitSumm}{Fit summary}
+   \item{stock.n}{Estimates of stock numbers-at-age}
+   \item{harvest}{Estimates of fishing mortality at age}
+   \item{catch.n}{Estimates of catch numbers-at-age}
+   \item{index}{Estimates of survey or CPUE indices-at-age}
+   \item{mcmc}{An object of class \code{SCAMCMC} with information about the MCMC run}
 }
 }
 

@@ -4,6 +4,7 @@
 \name{*}
 \alias{*}
 \alias{*,FLStock,a4aFitSA-method}
+\alias{*,FLIndices,a4aFitSA-method}
 \alias{*,FLStock,SCAPars-method}
 \alias{*,FLIndices,a4aFitSA-method}
 \alias{*,FLIndices,SCAPars-method}
@@ -16,6 +17,11 @@
 \S4method{*}{FLIndices,a4aFitSA}(e1, e2)
 
 \S4method{*}{FLIndices,SCAPars}(e1, e2)
+}
+\arguments{
+\item{e1}{the original \code{FLStock} or \code{FLIndex} object}
+
+\item{e2}{a \code{a4aFit} object from where the new \code{FLStock} or \code{FLIndex} slots will be extracted.}
 }
 \description{
 Update \code{FLStock} and \code{FLIndex} objects with simulations from stock assessment fits.

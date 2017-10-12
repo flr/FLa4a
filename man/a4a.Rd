@@ -7,6 +7,9 @@
 \usage{
 a4a(...)
 }
+\arguments{
+\item{...}{additional argument list that might never be used}
+}
 \description{
 This was the old stock assessment framework user's interface. It was replaced by \code{sca} or the advanced version \code{a4aSCA}.
 }

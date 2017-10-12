@@ -3,36 +3,43 @@
 #' @rdname getK
 #' @description Method to get values of the growth parameter K
 #' @param object an \code{a4aGr} object
+#' @template dots
 #' @return a \code{vector} with K values
-#' @aliases getK getK-methods getK,a4aGr-method
+#' @aliases getK getK-methods
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' vbObj <- mvrnorm(100,vbObj)
 #' getK(vbObj)
 setGeneric("getK", function(object, ...) standardGeneric("getK"))
+#' @rdname getK
 setMethod("getK", "a4aGr", function(object){
 	k <- c("k","K")[c("k","K") %in% dimnames(params(object))$params]
 	if(length(k)==1) params(object)[k]
 }) 
 
 #' @title mvrnorm 
-#' @name mvrnorm for a4aGr
 #' @rdname mvrnorm-a4aGr
+#' @name mvrnorm for a4aGR
+#' @aliases mvrnorm,numeric,a4aGr-method mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method
 #' @description Method to generate multivariate normal parameters for \code{a4aGr} objects.
 #' @param n the number of simulations to be generated
 #' @param mu an \code{a4aGr} object
 #' @return an \code{a4aGr} object with n iterations
-#' @aliases mvrnorm,numeric,a4aGr-method mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' vbObj <- mvrnorm(100,vbObj)
-
 setMethod("mvrnorm", signature("numeric", "a4aGr"), function(n=1, mu) {
 	args <- list()
 	args$mu <- FLModelSim(model=grInvMod(mu), params=params(mu), vcov=vcov(mu), distr=distr(mu))
@@ -45,27 +52,30 @@ setMethod("mvrnorm", signature("numeric", "a4aGr"), function(n=1, mu) {
 #' @title mvrtriangle 
 #' @name mvrtriangle for a4aGr 
 #' @rdname mvrtriangle-a4aGr
+#' @aliases mvrtriangle,numeric,a4aGr-method
 #' @description Method to generate multivariate parameters with elliptical copulas and triangular marginals for \code{a4aGr} objects.
 #' @param n the number of iterations
-#' @param mu an \code{a4aGr} object
+#' @template bothargs
 #' @details The method is essentially a special case of \code{mvrcop}, where the copula is of type "ellipCopula" and family "t", and where the marginals are triangular.
 #' @return an \code{a4aGr} object with n iterations
-#' @aliases mvrtriangle,numeric,a4aGr-method
 #' @examples
 #' # Set up the a4aGr object and parameters for the marginals
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=0.086), list(a=0, b=0.005, c=0.001))
 #'
-#' # Apply mvrtriangle...
-#'   vbObj1 <- mvrtriangle(10000, vbObj, paramMargins=pars)
-#'   splom(data.frame(t(params(vbObj1)@@.Data)), pch=".")
-#' #...and compare with mvrcop
-#'   vbObj2 <- mvrcop(10000, vbObj, copula="ellipCopula", family="t", param=0, margins="triangle", paramMargins=pars)
-#'   splom(data.frame(t(params(vbObj2)@@.Data)), pch=".")
-
+#' # Note that mvrtriangle is a special case of mvrcop
+#' set.seed(1)
+#' vbObj1 <- mvrtriangle(10000, vbObj, paramMargins=pars, dispstr="ex", param=0)
+#' set.seed(1)
+#' vbObj2 <- mvrcop(10000, vbObj, copula="ellipCopula", family="t", 
+#'		param=0, margins="triangle", paramMargins=pars)
+#' all.equal(vbObj2, vbObj1)
 setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ...) {
 	args <- list(...)
 	args$object <- FLModelSim(model=grInvMod(object), params=params(object), vcov=vcov(object), distr=distr(object))
@@ -78,23 +88,26 @@ setMethod("mvrtriangle", signature("numeric", "a4aGr"), function(n=1, object, ..
 #' @title mvrcop 
 #' @name mvrcop for a4aGr
 #' @rdname mvrcop-a4aGr
+#' @aliases mvrcop,numeric,a4aGr-method
 #' @description Method to generate multivariate parameters with user-defined copulas and marginals for \code{a4aGr} objects.
 #' @param n the number of iterations
-#' @param object the \code{FLModelSim} object
+#' @param mvdc the \code{a4aGr} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return an \code{FLModelSim} object with n groups of parameters
-#' @aliases mvrcop,numeric,a4aGr-method
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(50, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=0.086), list(a=0, b=0.005, c=0.001))
 #' #In the following, the third, fourth and fifth arguments refer to the copula,
 #' #  while the final two arguments refer to the marginal distributions:
-#' vbObj <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
+#' vbObj <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, 
+#'    margins="triangle", paramMargins=pars)
 #' splom(data.frame(t(params(vbObj)@@.Data)), pch=".")
-
 setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 	object <- mvdc
 	rm(mvdc)
@@ -106,19 +119,25 @@ setMethod("mvrcop", signature("numeric", "a4aGr"), function(n=1, mvdc, ...) {
 	object	
 })
 
-#' @title predict for \code{a4aGr} 
+##' @title predict for \code{a4aGr} 
 #' @name predict for a4aGr
 #' @rdname predict-a4aGr
+#' @aliases predict,a4aGr-method
 #' @description Predicts ages or lengths using a growth class
 #' @param object the \code{a4aGr} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return a \code{matrix} object with lengths or ages
-#' @aliases predict,a4aGr-method
 #' @examples
-#' vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr")))
+#' # Set up the a4aGr object and parameters for the marginals
+#' mm <- matrix(NA, ncol=3, nrow=3)
+#' diag(mm) <- c(50, 0.001,0.001)
+#' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' imd <- ~t0-1/k*log(1-len/linf)
+#' prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+#' vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
 #' predict(vbObj, len=1:50+0.5)
 #' predict(vbObj, t=1:20+0.5)
-
 setMethod("predict", "a4aGr", function(object, ...){
 	model <- object
 	args <- list(...)

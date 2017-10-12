@@ -4,7 +4,17 @@
 #'
 #' @section Slots:
 #' \describe{
-#'    \item{SCAMCMC}{An object of class \code{SCAMCMC} with information about the MCMC run}
+#'    \item{name}{A character vector for the object name.}
+#'    \item{desc}{A textual description of the object contents.}
+#'    \item{range}{A named numeric vector with various values of quant and year ranges, plusgroup, fishing mortality ranges, etc.}
+#'    \item{call}{The function call}
+#'    \item{clock}{Information on call duration}
+#'    \item{fitSumm}{Fit summary}
+#'    \item{stock.n}{Estimates of stock numbers-at-age}
+#'    \item{harvest}{Estimates of fishing mortality at age}
+#'    \item{catch.n}{Estimates of catch numbers-at-age}
+#'    \item{index}{Estimates of survey or CPUE indices-at-age}
+#'    \item{mcmc}{An object of class \code{SCAMCMC} with information about the MCMC run}
 #' }
 #'
 #' @template Accessors
@@ -14,82 +24,49 @@
 #' @rdname a4aFitMCMC-class
 #' @aliases a4aFitMCMC-class
 #' @template Example-a4aFitSA
-setClass("a4aFitMCMC",
-  representation(
-    "a4aFitSA",
-    mcmc    = "SCAMCMC"
-  ),
-  prototype = prototype(
-    mcmc    = new('SCAMCMC'))
-)
+a4aFitMCMC <-
+  setClass("a4aFitMCMC",
+           contains = "a4aFitSA",
+           slots = c(mcmc = "SCAMCMC"))
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitMCMC a4aFitMCMC-method
-setGeneric("a4aFitMCMC", function(object, ...) standardGeneric("a4aFitMCMC"))
+#' @template bothargs
+#' @aliases a4aFitMCMC a4aFitMCMC-methods
+setGeneric("a4aFitMCMC")
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitMCMC,missing-method
-setMethod("a4aFitMCMC", signature(object="missing"),
-  function(...) {
-    # empty
-  	if(missing(...)){
-	  	new("a4aFitMCMC")
-    # or not
-  	} else {
-      args <- list(...)
-	  args$Class <- 'a4aFitMCMC'
-      do.call("new", args)
-	  }
-  }
-)
-
-#' @rdname a4aFitMCMC-class
-#' @aliases a4aFitSA,a4aFitMCMC-method
-setMethod("a4aFitSA", signature(object="a4aFitMCMC"),
+setMethod("a4aFitSA", "a4aFitMCMC",
   function(object, ...) {
-    out <- a4aFitSA()
-    out @ name    <- object @ name
-    out @ desc    <- object @ desc
-    out @ range   <- object @ range
-    out @ call    <- object @ call
-    out @ clock   <- object @ clock
-    out @ stock.n <- object @ stock.n
-    out @ harvest <- object @ harvest
-    out @ catch.n <- object @ catch.n
-    out @ index   <- object @ index
-    out @ fitSumm <- object @ fitSumm
-    out @ pars    <- object @ pars
-    out
+    as(object, "a4aFitSA")
   }
 )
 
 #' @rdname a4aFitMCMC-class
-#' @aliases a4aFitMCMC,a4aFitSA-method
-setMethod("a4aFitMCMC", signature(object="a4aFitSA"),
+setMethod("a4aFit", "a4aFitMCMC",
   function(object, ...) {
-    out <- a4aFitMCMC()
-    out @ name    <- object @ name
-    out @ desc    <- object @ desc
-    out @ range   <- object @ range
-    out @ call    <- object @ call
-    out @ clock   <- object @ clock
-    out @ stock.n <- object @ stock.n
-    out @ harvest <- object @ harvest
-    out @ catch.n <- object @ catch.n
-    out @ index   <- object @ index
-    out @ fitSumm <- object @ fitSumm
-    out @ pars    <- object @ pars
-    out
+    as(object, "a4aFit")
   }
 )
+
+setMethod("initialize", "a4aFitMCMC",
+    function(.Object, ..., mcmc) {
+      if (!missing(mcmc)) .Object@mcmc <- mcmc
+      .Object <- callNextMethod(.Object, ...)
+      .Object
+})
+
+
+
 
 #====================================================================
 # coerce to coda object
 #====================================================================
-setGeneric("as.mcmc", function(x, ...) standardGeneric("as.mcmc"))
+#' @rdname a4aFitMCMC-class
+#' @param x an object to be coerced into mcmc
+#' @aliases as.mcmc as.mcmc-methods
+setGeneric("as.mcmc", function(x, ...) useAsDefault=coda::as.mcmc)
 
 #' @rdname a4aFitMCMC-class
-#' @aliases as.mcmc,a4aFitMCMC-method
 setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {
 		object <- x
 		df0 <- t(object@pars@stkmodel@params[drop=T])

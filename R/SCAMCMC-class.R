@@ -61,10 +61,13 @@ setClass("SCAMCMC",
 )
 
 #' @rdname SCAMCMC-class
+#' @aliases SCAMCMC SCAMCMC-methods
 #' @template Accessors
 #' @template Constructors
-#' @aliases SCAMCMC SCAMCMC-methods SCAMCMC,missing-method
+#' @param object a \code{SCAMCMC} object 
+#' @param ... extra arguments
 setGeneric("SCAMCMC", function(object, ...) standardGeneric("SCAMCMC"))
+#' @rdname SCAMCMC-class
 setMethod("SCAMCMC", signature(object="missing"),
   function(...) {
     # empty
@@ -87,9 +90,9 @@ setMethod("SCAMCMC", signature(object="missing"),
 #setMethod("mcmc", "SCAMCMC", function(object) object @ mcmc)
 
 #' @rdname SCAMCMC-class
-#' @aliases SCAMCMC SCAMCMC-methods SCAMCMC,missing-method
-
+#' @aliases getADMBCallArgs getADMBCallArgs-methods
 setGeneric("getADMBCallArgs", function(object, ...) standardGeneric("getADMBCallArgs"))
+#' @rdname SCAMCMC-class
 setMethod("getADMBCallArgs", signature(object="SCAMCMC"),
   function(object, ...) {
 	slts <- getSlots("SCAMCMC")
@@ -108,17 +111,14 @@ setMethod("getADMBCallArgs", signature(object="SCAMCMC"),
 )
 
 #' @rdname SCAMCMC-class
-#' @aliases getADMBCallArgs getADMBCallArgs-methods SCAMCMC,missing-method
-
+#' @aliases getN getN-methods
 setGeneric("getN", function(object, ...) standardGeneric("getN"))
+#' @rdname SCAMCMC-class
 setMethod("getN", signature(object="SCAMCMC"),
   function(object, ...) {
 	floor(object@mcmc/object@mcsave)
   }
 )
-
-
-
 
 
 

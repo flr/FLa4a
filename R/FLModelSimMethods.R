@@ -1,17 +1,18 @@
 #' @title Simulation with a copula model and triangular distributions
-#'
 #' @description Simulates model parameters using elliptical copulas and triangular marginals.
 #' @param n the number of iterations
 #' @param object the \code{FLModelSim} object
 #' @param ... arguments to be passed to the rMvdc and copula methods
 #' @return an \code{FLModelSim} object with n sets of parameters
-#' @aliases mvrtriangle,numeric,FLModelSim-method
+#' @rdname mvrtriangle
 #' @examples
 #' # Set up the FLModelSim object
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
-#' vb <- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' prs <- FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr"))
+#' vb <- FLModelSim(model=md, params=prs, vcov=mm, distr="norm")
 #'
 #' # Simulate from a multivariate normal distribution...
 #'   set.seed(1)
@@ -23,7 +24,8 @@
 #'   set.seed(1)
 #'   vbSim1 <- mvrtriangle(10000, vb)
 #'   mm1 <- predict(vbSim1, t=0:20+0.5)
-#' #...and from a multivariate triangular distribution with specified ranges (note if "c" is missing, it will take the average of "a" and "b")
+#' #...and from a multivariate triangular distribution with specified ranges 
+#' #   (note if "c" is missing, it will take the average of "a" and "b")
 #'   set.seed(1)
 #'   pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 #'   vbSim2 <- mvrtriangle(10000, vb, paramMargins=pars)
@@ -38,7 +40,9 @@
 #' splom(data.frame(t(params(vbSim1)@@.Data)), pch=".")
 #' splom(data.frame(t(params(vbSim2)@@.Data)), pch=".")
 
+
 setGeneric("mvrtriangle", function(n, object, ...) standardGeneric("mvrtriangle"))
+#' @rdname mvrtriangle
 setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, object, ...) {
 		args <- list(...)	
 		model <- object
@@ -83,7 +87,7 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 		}
 
 		lst <- args[names(args) %in% names(formals(mvdc))]
-		mvobj <- do.call("mvdc", lst)		
+		mvobj <- do.call("mvdc", lst)	
 		res <- rMvdc(n, mvobj)		
 
 		#--------------------------------------------------
@@ -99,25 +103,27 @@ setMethod("mvrtriangle", signature("numeric", "FLModelSim"), function(n=1, objec
 )
 
 #' @title Simulation using copula models
-#'
 #' @description Simulates model parameters with user-defined copulas and marginals.
-#'
 #' @param n the number of iterations
-#' @param object an \code{FLModelSim} object
-#' @param ... arguments to be passed to the rMvdc and copula methods
+#' @param mvdc an \code{FLModelSim} object
+#' @param copula the name of the copula to be used
+#' @param ... arguments to be passed to the copula methods
 #' @return an \code{FLModelSim} object with n groups of parameters
-#' @aliases mvrcop,numeric,FLModelSim-method
+#' @rdname mvrcop
 #' @examples
 #' mm <- matrix(NA, ncol=3, nrow=3)
 #' diag(mm) <- c(100, 0.001,0.001)
 #' mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
-#' vb <- FLModelSim(model=~linf*(1-exp(-k*(t-t0))), params=FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr")), vcov=mm, distr="norm")
+#' md <- ~linf*(1-exp(-k*(t-t0)))
+#' prs <- FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr"))
+#' vb <- FLModelSim(model=md, params=prs, vcov=mm, distr="norm")
 #' pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
-#' vbSim <- mvrcop(10000, vb, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
+#' vbSim <- mvrcop(10000, vb, copula="archmCopula", family="clayton", param=2, 
+#'    margins="triangle", paramMargins=pars)
 #' boxplot(t(predict(vbSim, t=0:20+0.5)))
 #' splom(data.frame(t(params(vbSim)@@.Data)), pch=".")
-
 setGeneric("mvrcop", function(n, mvdc, ...) standardGeneric("mvrcop"))
+#' @rdname mvrcop
 setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula, ...) {
 
 		args <- list(...)	
@@ -146,7 +152,7 @@ setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula
 		#--------------------------------------------------
 		lst <- args[names(args) %in% names(formals(mvdc))]
 		if(length(lst$margins)==1) lst$margins <- rep(lst$margins, args$dim)
-		mvobj <- do.call("mvdc", lst)		
+		mvobj <- do.call("mvdc", lst)	
 		res <- rMvdc(n, mvobj)		
 
 		#--------------------------------------------------
@@ -165,12 +171,14 @@ setMethod("mvrcop", signature("numeric", "FLModelSim"), function(n, mvdc, copula
 #' @title Check that the second dimension in params is "iter"
 #' @name pars2dim
 #' @rdname pars2dim-methods
-#' @aliases pars2dim pars2dim-methods pars2dim,FLModelSim-method
+#' @template object
+#' @aliases pars2dim pars2dim-methods
 #' @description Checks that the name of the second dimension in params is "iter". For internal use, not very interesting for users. It takes a \code{FLModelSim} object and returns a \code{logical}.
 #' @examples
 #' pars2dim(FLModelSim())
-
 setGeneric("pars2dim", function(object) standardGeneric("pars2dim"))
+#' @rdname pars2dim-methods
+#' @aliases pars2dim,FLModelSim-method
 setMethod("pars2dim", "FLModelSim", function(object) {
 
 	pars <- params(object)
@@ -179,3 +187,5 @@ setMethod("pars2dim", "FLModelSim", function(object) {
 
 
 })
+
+

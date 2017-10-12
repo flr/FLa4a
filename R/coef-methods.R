@@ -6,12 +6,13 @@
 #' @name coef
 #' @docType methods
 #' @rdname coef-methods
+#' @template bothargs
+#' @aliases coef,a4aFitSA-methods
 #' @description Methods to extract and replace the model coefficients.
 
-setGeneric("coef", function(object, ...) standardGeneric("coef"))
+setGeneric("coef", function(object, ...) useAsDefault=stats::coef)
 
 #' @rdname coef-methods
-#' @aliases coef,a4aFitSA-method
 setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
 	  coef(pars(object))
@@ -19,7 +20,6 @@ setMethod("coef", signature(object = "a4aFitSA"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,SCAPars-method
 setMethod("coef", signature(object = "SCAPars"),
   function(object) {
     list(
@@ -30,14 +30,12 @@ setMethod("coef", signature(object = "SCAPars"),
   })
 
 #' @rdname coef-methods
-#' @aliases coef,a4aStkParams-method
 setMethod("coef", signature(object = "a4aStkParams"),
   function(object) {
-      object @ params
+      object @ coefficients
   })
 
 #' @rdname coef-methods
-#' @aliases coef,submodels-method
 setMethod("coef", signature(object = "submodels"),
   function(object) {
       lapply(object, coef)
@@ -45,29 +43,28 @@ setMethod("coef", signature(object = "submodels"),
 
 
 #' @rdname coef-methods
-#' @aliases coef,submodel-method
-setMethod("coef", signature(object = "submodel"),
+setMethod("coef", "submodel",
   function(object) {
-      object @ params
+      object@coefficients
   })
 
 #==================================================================== 
 #    coef<-  methods
 #==================================================================== 
 
+#' @rdname coef-methods
+#' @param value the new object
+#' @aliases coef<-,a4aFitSA-methods
 setGeneric("coef<-", function(object, ..., value) standardGeneric("coef<-"))
 
 #' @rdname coef-methods
-#' @aliases coef<-,a4aFitSA,numeric-method
 setMethod("coef<-", signature(object = "a4aFitSA", value = "numeric"),
   function(object, ..., value) {
     coef(object @ pars) <- value
     object
   })
 
-
 #' @rdname coef-methods
-#' @aliases coef<-,SCAPars,numeric-method
 setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
   function(object, ..., value) {
     v <- coef(object)
@@ -83,15 +80,13 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
 
 
 #' @rdname coef-methods
-#' @aliases coef<-,a4aStkParams,numeric-method
 setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
   function(object, ..., value) {    
-    object @ params[] <- value
+    object @ coefficients[] <- value
     object
   })
 
 #' @rdname coef-methods
-#' @aliases coef<-,submodels,numeric-method
 setMethod("coef<-", signature(object = "submodels", value = "numeric"),
   function(object, ..., value) {
     v <- coef(object)
@@ -99,17 +94,37 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
     new <- rep_len(unlist(value), length.out = length(old))
     
     for (i in seq_along(object)) {
-      object[[i]] @ params[] <- new[grep(object[[i]] @ name, names(old))]  
+      object[[i]] @ coefficients[] <- new[grep(object[[i]] @ name, names(old))]  
     }
     object
   })
 
 
 #' @rdname coef-methods
-#' @aliases coef<-,submodel,numeric-method
 setMethod("coef<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
-      object @ params[] <- value
+      object@coefficients[] <- value
       object
   })
 
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "submodel", value = "FLPar"),
+  function(object, ..., value) {
+      object@coefficients <- value
+      object
+  })
+
+
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "a4aStkParams", value = "FLPar"),
+  function(object, ..., value) {
+      object@coefficients <- value
+      object
+  })
+
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "a4aStkParams", value = "matrix"),
+  function(object, ..., value) {
+      object@coefficients[] <- value
+      object
+  })

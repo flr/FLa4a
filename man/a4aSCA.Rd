@@ -8,11 +8,18 @@
 \title{Statistical catch-at-age advanced method}
 \usage{
 a4aSCA(stock, indices, ...)
+
+\S4method{a4aSCA}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
+  srmodel = ~factor(year), n1model, vmodel, covar = missing,
+  wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE,
+  mcmc = missing)
 }
 \arguments{
-\item{stock}{an FLStock object containing catch and stock information}
+\item{stock}{an \code{FLStock} object containing catch and stock information}
 
-\item{indices}{an FLIndices object containing survey indices}
+\item{indices}{an \code{FLIndices} object containing survey indices}
+
+\item{...}{additional argument list that might never be used}
 
 \item{fmodel}{a formula object depicting the model for log fishing mortality at age}
 
@@ -24,21 +31,26 @@ a4aSCA(stock, indices, ...)
 
 \item{vmodel}{a list of formula objects depicting the model for the variance of fishing mortality and the indices}
 
-\item{covar}{a list with covariates}
+\item{covar}{a list with covariates to be used by the submodels. The formula must have an element with the same name as the list element.}
 
-\item{wkdir}{used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted}
+\item{wkdir}{used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted.}
 
-\item{verbose}{if true, admb fitting information is printed to the screen}
+\item{verbose}{if true, admb fitting information is printed to the screen.}
 
 \item{fit}{character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.}
 
-\item{center}{logical defining if the data should be centered before fitting}
+\item{center, }{logical defining if the data should be centered before fitting.}
+
+\item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 }
 \description{
 Advanced user interface to the statistical catch-at-age method of the a4a stock assessment framework.
+}
+\details{
+This method is the advanced method for stock assessment, it gives the user access to a set of arguments that the \code{sca} method doesn't. In particular, the default for the \code{fit} argument is 'assessment'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}).
 }
 \examples{
 data(ple4)
@@ -49,17 +61,20 @@ fmodel <- ~factor(age) + factor(year)
 qmodel <- list(~factor(age))
 fit1 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 
-# fishing mortality as a smoother by age and year (but still separable) AND catchability at age without year trend
+# fishing mortality as a smoother by age and year (but still separable) AND
+# catchability at age without year trend
 fmodel <- ~ s(age, k=4) + s(year, k=10)
 qmodel <- list(~factor(age))
 fit2 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 
-# fishing mortality as a smoother by age and year (but still separable) AND catchability as a smoother by age without year trend
+# fishing mortality as a smoother by age and year (but still separable) AND
+# catchability as a smoother by age without year trend
 fmodel <- ~ s(age, k=4) + s(year, k=10)
 qmodel <- list(~s(age, k=4))
 fit3 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 
-# fishing mortality as a smoother by age and year (but still separable) AND catchability as a smoother by age with year trend
+# fishing mortality as a smoother by age and year (but still separable) AND
+# catchability as a smoother by age with year trend
 fmodel <- ~ s(age, k=4) + s(year, k=10)
 qmodel <- list(~s(age, k=4) + year)
 fit4 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
@@ -67,7 +82,8 @@ fit4 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4
 # It's a statistical model
 BIC(fit1, fit2, fit3, fit4)
 
-# fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND catchability as a smoother by age without year trend
+# fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND
+# catchability as a smoother by age without year trend
 fmodel <- ~ te(age, year, k=c(4, 10))
 qmodel <- list(~s(age, k=4))
 fit5 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))

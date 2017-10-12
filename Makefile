@@ -9,18 +9,20 @@ GITVERS=$(shell (date -d `git log -1 --date=short --pretty=format:"%ad"` +%Y%m%d
 R_FILES := $(wildcard $(PKGSRC)/R/*.R)
 HELP_FILES := $(wildcard $(PKGSRC)/man/*.Rd)
 
-all: README.md build
+all: build
+
+.PHONY: all
 
 README.md: DESCRIPTION
 	sed -i 's/Version: *\([^ ]*\)/Version: $(PKGVERS)/' README.md
 	sed -i 's/Date: *\([^ ]*\)/Date: $(PKGDATE)/' README.md
 
-gh-pages: $(HELP_FILES) README.md
-	R --vanilla --silent -e "library(staticdocs);" \
-  -e "build_site('../$(PKGNAME)/', site_path='gh-pages', launch=FALSE)"; \
-	rm -rf Rplots.pdf  
-	git subtree push --prefix gh-pages origin gh-pages
-	# git push origin `git subtree split --prefix gh-pages master`:gh-pages --force
+NEWS: NEWS.md
+	sed 's/^# / /' NEWS.md > NEWS
+	sed -i 's/^##//' NEWS
+
+docs: $(HELP_FILES) README.md NEWS
+R --vanilla --silent -e "options(repos='http://cran.r-project.org'); pkgdown::build_site(preview=FALSE)"
 
 roxygen: $(R_FILES)
 	R --vanilla --silent -e "library(devtools);" \
@@ -29,15 +31,23 @@ roxygen: $(R_FILES)
 update:
 	sed -i 's/Date: *\([^ ]*\)/Date: $(GITDATE)/' DESCRIPTION
 
-build:
+build: README.md roxygen NEWS
 	cd ..;\
-	R CMD build $(PKGSRC)
+	R CMD build $(PKGSRC) --compact-vignettes
+
+buildNV: README.md roxygen NEWS
+	cd ..;\
+	R CMD build $(PKGSRC) --no-build-vignettes
 
 install: build
 	cd ..;\
 	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
 
-check: README.md build
+check: roxygen README.md docs build
+	cd ..;\
+	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
+
+checkNV: roxygen README.md docs buildNV
 	cd ..;\
 	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
 
