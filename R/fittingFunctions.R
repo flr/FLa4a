@@ -708,17 +708,73 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year)
 	Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
 
-
   #========================================================================
   # Fit the model and return a list of objects detailing the fit
   #========================================================================
 
+  # change NA to -1 for admb
+  df.data$age <- with(df.data, replace(age, is.na(age), -1))
+
+  # build survey's max and min age vectors
+  # If age is not set (NA) it will take the min and max from catch.n
+  srvRange <- do.call('rbind',lapply(indices, range))
+  srvMinAge <- srvRange[,'min']
+  srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
+  names(srvMinAge) <- names(indices)
+  srvMaxAge <- srvRange[,'max']
+  srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
+  names(srvMaxAge) <- names(indices)
+
+
+
   if (TRUE) { # fit using the ADMB code
-    fitList <- fitADMB(fit, wkdir, df.data, indices, full.df, fbar, plusgroup, df.aux,
+
+    #========================================================================
+    # Create the directory where to store model config, data and results files
+    #========================================================================
+    #-------------------------------------------------------------------------
+    # NOTE: move to internal funs
+    #-------------------------------------------------------------------------
+    if (missing(wkdir)) keep <- FALSE else keep <- TRUE # keep results if wkdir is set by user
+    if (keep) {
+      # create the directory locally - whereever specified by the user
+      wkdir.start <- wkdir
+      # if this directory already exists, try the numbered versions
+      kk <- 1
+      ans <- file.exists(wkdir)
+      while(ans) {
+        wkdir <- paste(wkdir.start,"-", kk, sep = "")
+        kk <- kk + 1
+        ans <- file.exists(wkdir)
+      }
+      # if several a4aFit()'s are run in parallel, we might have a
+      # conflict. if so, create a random name
+      if (file.exists(wkdir)) {
+        wkdir <- paste(wkdir, "-", substring(as.character(runif(1)), 3), sep = "")
+      }
+      cat("Model and results are stored in working directory [", wkdir,"]\n", sep = "")
+    } else {
+      # no wkdir specified by user so create a temporary directory
+      wkdir <- tempfile('file', tempdir())
+    }
+
+    # Create a directory where to store data and results
+    # TODO check if wkdir exists
+    dir.create(wkdir, showWarnings = FALSE)
+    #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    fitList <- fitADMB(fit, wkdir, df.data, indices, full.df, 
+                       fbar, plusgroup, surveytime, fleet.names,
                        Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
-                       my.time.used, mcmc)
+                       my.time.used, mcmc, verbose)
+    if (fit == "setup") return(fitList)
     out <- fitList$out
     my.time.used <- fitList$my.time.used
+    wkdir <- fitList$wkdir
+    convergence <- fitList$convergence
+    pnames <- fitList$pnames
+    ages <- fitList$ages
+    years <- fitList$years
   } else { # fit using the TMB code
     out <- fitTMB(fit)
   }
@@ -988,43 +1044,11 @@ fitTMB <- function(fit)
 }
 
 
-fitADMB <- function(fit, wkdir, df.data, indices, full.df, fbar, plusgroup, df.aux,
+fitADMB <- function(fit, wkdir, df.data, indices, full.df, 
+                    fbar, plusgroup, surveytime, fleet.names,
                     Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
-                    my.time.used, mcmc) 
+                    my.time.used, mcmc, verbose) 
 {  
-  #========================================================================
-  # Create the directory where to store model config, data and results files
-  #========================================================================
-  #-------------------------------------------------------------------------
-  # NOTE: move to internal funs
-  #-------------------------------------------------------------------------
-  if (missing(wkdir)) keep <- FALSE else keep <- TRUE # keep results if wkdir is set by user
-  if (keep) {
-    # create the directory locally - whereever specified by the user
-    wkdir.start <- wkdir
-    # if this directory already exists, try the numbered versions
-    kk <- 1
-    ans <- file.exists(wkdir)
-    while(ans) {
-      wkdir <- paste(wkdir.start,"-", kk, sep = "")
-      kk <- kk + 1
-      ans <- file.exists(wkdir)
-    }
-    # if several a4aFit()'s are run in parallel, we might have a
-    # conflict. if so, create a random name
-    if (file.exists(wkdir)) {
-      wkdir <- paste(wkdir, "-", substring(as.character(runif(1)), 3), sep = "")
-    }
-    cat("Model and results are stored in working directory [", wkdir,"]\n", sep = "")
-  } else {
-    # no wkdir specified by user so create a temporary directory
-    wkdir <- tempfile('file', tempdir())
-  }
-
-  # Create a directory where to store data and results
-  # TODO check if wkdir exists
-  dir.create(wkdir, showWarnings = FALSE)
-  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   #========================================================================
   # Write model matrices and model info to files in wkdir
@@ -1287,6 +1311,8 @@ fitADMB <- function(fit, wkdir, df.data, indices, full.df, fbar, plusgroup, df.a
     }
   }
 
-  list(out = out, my.time.used = my.time.used)
+  list(out = out, my.time.used = my.time.used, wkdir = wkdir, 
+       convergence = convergence, pnames = pnames,
+       ages = ages, years = years)
 }
 
