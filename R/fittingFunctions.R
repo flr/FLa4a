@@ -714,7 +714,11 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   #========================================================================
 
   if (TRUE) { # fit using the ADMB code
-    out <- fitADMB(fit)
+    fitList <- fitADMB(fit, wkdir, df.data, indices, full.df, fbar, plusgroup, df.aux,
+                       Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
+                       my.time.used, mcmc)
+    out <- fitList$out
+    my.time.used <- fitList$my.time.used
   } else { # fit using the TMB code
     out <- fitTMB(fit)
   }
@@ -984,7 +988,9 @@ fitTMB <- function(fit)
 }
 
 
-fitADMB <- function(fit) 
+fitADMB <- function(fit, wkdir, df.data, indices, full.df, fbar, plusgroup, df.aux,
+                    Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
+                    my.time.used, mcmc) 
 {  
   #========================================================================
   # Create the directory where to store model config, data and results files
@@ -1281,6 +1287,6 @@ fitADMB <- function(fit)
     }
   }
 
-  out
+  list(out = out, my.time.used = my.time.used)
 }
 
