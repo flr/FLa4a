@@ -10,7 +10,7 @@ Description: A simple and robust statistical Catch at Age model that is
     specifically designed for stocks with intermediate levels of data quantity and
     quality.
 License: EUPL
-Imports:Imports:
+Imports:
     methods,
     lattice,
     Matrix,
