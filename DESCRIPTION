@@ -14,7 +14,9 @@ Imports:
     methods,
     lattice,
     Matrix,
-    mgcv
+    mgcv,
+    TMB,
+    RcppEigen
 LinkingTo: TMB, RcppEigen
 Depends:
     R (>= 3.2.0),
@@ -66,5 +68,4 @@ Collate:
     'utilities.R'
     'gen-methods.R'
     'southern_hake-data.R'
-    'a4aTMB.R'
 RoxygenNote: 6.0.1
