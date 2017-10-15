@@ -99,7 +99,7 @@ collapseSeasons <- function (stock) {
 setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
 
 #' @rdname sca
-setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing)
+setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing, useADMB = FALSE)
 {
   stkdms <- dims(stock)
   if(stkdms$quant != "age"){
@@ -138,7 +138,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
   vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
   vmodel[[1]] <- ~ s(age, k = 3)
 
-  a4aSCA(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = stock, indices = indices, fit = fit)
+  a4aSCA(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = stock, indices = indices, fit = fit, useADMB = useADMB)
 
 })
 
@@ -232,7 +232,7 @@ setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
 
 setMethod("a4aSCA", signature("FLStock", "FLIndices"),
   function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), n1model, vmodel,
-           covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing)
+           covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing, useADMB = FALSE)
 {
   fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
@@ -361,14 +361,14 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
     # check: do we need indices to have matching units, areas?
     if (!missing(covar) & !missing(wkdir)) {
       icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
     } else if(!missing(covar) & missing(wkdir)){
       icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
     } else if(missing(covar) & !missing(wkdir)){
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
 	  } else {
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
 	  }
     if (i == 1) {
       tmpSumm <- outi@fitSumm
@@ -503,7 +503,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                 n1model = ~ factor(age),
                 vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
                 covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
-                center = TRUE, mcmc=missing)
+                center = TRUE, mcmc=missing, useADMB = FALSE)
 {
 
   # first check permissions of executable
@@ -727,7 +727,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 
 
-  if (TRUE) { # fit using the ADMB code
+  if (useADMB) { # fit using the ADMB code
 
     #========================================================================
     # Create the directory where to store model config, data and results files
@@ -763,10 +763,11 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     dir.create(wkdir, showWarnings = FALSE)
     #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    fitList <- fitADMB(fit, wkdir, df.data, stock, indices, full.df, 
+    fitList <- fitADMB(fit, wkdir, df.data, stock, indices, full.df,
                        fbar, plusgroup, surveytime, fleet.names,
                        Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
                        my.time.used, mcmc, verbose)
+
     if (fit == "setup") return(fitList)
     out <- fitList$out
     my.time.used <- fitList$my.time.used
@@ -775,8 +776,25 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     pnames <- fitList$pnames
     ages <- fitList$ages
     years <- fitList$years
+
+    # remove temporary directory - keep only true when dir is not temp dir
+    if (!keep) unlink(wkdir, recursive=TRUE, force=TRUE)
+
   } else { # fit using the TMB code
-    out <- fitTMB(fit)
+    fitList <- fitTMB(fit, wkdir, df.data, stock, indices, full.df,
+                      fbar, plusgroup, surveytime, fleet.names,
+                      Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
+                      my.time.used, mcmc, verbose)
+
+    if (fit == "setup") return(fitList)
+
+    out <- fitList$out
+    my.time.used <- fitList$my.time.used
+    wkdir <- fitList$wkdir
+    convergence <- fitList$convergence
+    pnames <- fitList$pnames
+    ages <- fitList$ages
+    years <- fitList$years
   }
 
 	#========================================================================
@@ -933,64 +951,50 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	#------------------------------------------------------------------------
 
 	if (fit == "MCMC") {
+
+    if (!useADMB) stop("not implemented in TMB version")
+
 		# coerce into a4aFitMCMC
 		a4aout <- a4aFitMCMC(a4aout, mcmc=mcmc)
-		# get number of iters (CHECK WITH NITERS  which are not being used )
-		nit <- getN(mcmc)
-
-		# read files
-		filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
-		nopar <- readBin(filen, what = integer(), n = 1)
-		mcmcout <- readBin(filen, what = numeric(), n = nopar * nit)# TODO check this line
-		close(filen)
-		mcmcout <- matrix(mcmcout, byrow = TRUE, ncol = nopar)
-		colnames(mcmcout) <- unlist(pnames)
-
-		N <- read.table(paste0(wkdir, "/NMCMCreport.csv"), sep=" ", header=FALSE)[-1]
-		F <- read.table(paste0(wkdir, "/FMCMCreport.csv"), sep=" ", header=FALSE)[-1]
-		QQ <- read.table(paste0(wkdir, "/QMCMCreport.csv"), sep=" ", header=FALSE)[-1]
-		idq <- expand.grid(y=years, s=fleet.names[-1], i=1:nit)
-		V <- read.table(paste0(wkdir, "/VMCMCreport.csv"), sep=" ", header=FALSE)[-1]
-		idv <- expand.grid(y=years, s=fleet.names, i=1:nit)
 
 		# fill parameters
-		a4aout@pars@stkmodel@params <- propagate(a4aout@pars@stkmodel@params, nit)
-		a4aout@pars@stkmodel@params[] <- t(mcmcout[,dimnames(a4aout@pars@stkmodel@params)[[1]]])
-		dimnames(a4aout@pars@stkmodel@params)[[2]] <- 1:nit
+		a4aout@pars@stkmodel@params <- propagate(a4aout@pars@stkmodel@params, out$mcmc$nit)
+		a4aout@pars@stkmodel@params[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@stkmodel@params)[[1]]])
+		dimnames(a4aout@pars@stkmodel@params)[[2]] <- 1:out$mcmc$nit
 		a4aout@pars@stkmodel@vcov[] <- NA
 
 		# fill derived quantities
-		a4aout@stock.n <- propagate(a4aout@stock.n, nit)
-		a4aout@stock.n[] <- c(t(N * exp(center.log[1])))
+		a4aout@stock.n <- propagate(a4aout@stock.n, out$mcmc$nit)
+		a4aout@stock.n[] <- c(t(out$mcmc$N * exp(center.log[1])))
 
-		a4aout@harvest <- propagate(a4aout@harvest, nit)
-		a4aout@harvest[] <- c(t(F))
+		a4aout@harvest <- propagate(a4aout@harvest, out$mcmc$nit)
+		a4aout@harvest[] <- c(t(out$mcmc$F))
 
 		Z <- a4aout@harvest + m(stock)
 		a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
 
 		# fill catchability and variance model
 		for(i in fleet.names){
-			a4aout@pars@vmodel[[i]]@params <- propagate(a4aout@pars@vmodel[[i]]@params, nit)
-			a4aout@pars@vmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@params)[[1]]])
+			a4aout@pars@vmodel[[i]]@params <- propagate(a4aout@pars@vmodel[[i]]@params, out$mcmc$nit)
+			a4aout@pars@vmodel[[i]]@params[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@params)[[1]]])
 			a4aout@pars@vmodel[[i]]@vcov[] <- NA
 
 			if(i!="catch"){
-				a4aout@pars@qmodel[[i]]@params <- propagate(a4aout@pars@qmodel[[i]]@params, nit)
-				a4aout@pars@qmodel[[i]]@params[] <- t(mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@params)[[1]]])
+				a4aout@pars@qmodel[[i]]@params <- propagate(a4aout@pars@qmodel[[i]]@params, out$mcmc$nit)
+				a4aout@pars@qmodel[[i]]@params[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@params)[[1]]])
 				a4aout@pars@qmodel[[i]]@vcov[] <- NA
 				dmns <- dimnames(a4aout@index[[i]])
-				a4aout@index[[i]] <- propagate(a4aout@index[[i]], nit)
+				a4aout@index[[i]] <- propagate(a4aout@index[[i]], out$mcmc$nit)
 			 	if (is(indices[[i]], 'FLIndexBiomass')) {
-					a4aout@index[[i]][] <- t(QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),1, drop=FALSE])
+					a4aout@index[[i]][] <- t(out$mcmc$QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),1, drop=FALSE])
 					dmns[[1]] <- ac(srvMinAge[i]:srvMaxAge[i])
 					a4aout@index[[i]] <- exp(a4aout@index[[i]] - center.log["catch"] + center.log[i])
 					nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
 					zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
-			 		bb <- apply(nn*zz*stock.wt(stock)[dmns[[1]], dmns[[2]]], 2:6, sum, na.rm=T)
+			 		bb <- apply(nn*zz*stock.wt(stock)[dmns[[1]], dmns[[2]]], 2:6, sum, na.rm=TRUE)
 					a4aout@index[[i]] <- a4aout@index[[i]]*bb
 				} else {
-					a4aout@index[[i]][] <- t(QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),ages %in% dmns[[1]]])
+					a4aout@index[[i]][] <- t(out$mcmc$QQ[idq$s==i & idq$y %in% as.numeric(dmns[[2]]),ages %in% dmns[[1]]])
 					a4aout@index[[i]] <- exp(a4aout@index[[i]] - center.log["catch"] + center.log[i])
 					nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
 					zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
@@ -999,8 +1003,8 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 			}
 		}
 
-		logfile <- readLines(paste0(wkdir, "/logfile.txt"))
-		tmpSumm <- with(out, c(nopar, NA, NA, nrow(df.data), NA, NA, as.numeric(logfile[length(logfile)-2])))
+
+		tmpSumm <- with(out, c(nopar, NA, NA, nrow(df.data), NA, NA, as.numeric(mcmc$logfile[length(mcmc$logfile)-2])))
 		a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv", "convergence", "accrate")))
 	}
 
@@ -1014,8 +1018,6 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 	units(a4aout@harvest) <- "f"
 
-	# remove temporary directory - keep only true when dir is not temp dir
-	if (!keep) unlink(wkdir, recursive=TRUE, force=TRUE)
 	return(a4aout)
 }
 
@@ -1038,17 +1040,202 @@ setMethod("breakpts", "numeric", function(var, breaks, ...) {
 })
 
 
-fitTMB <- function(fit) 
+fitTMB <- function(fit, wkdir, df.data, stock, indices, full.df,
+                    fbar, plusgroup, surveytime, fleet.names,
+                    Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
+                    my.time.used, mcmc, verbose)
 {
-  stop("TMB fitting not available in this version of FLa4a.")
+  # not used:
+  # * wkdir
+
+  #========================================================================
+  # Prepare data
+  #========================================================================
+  # change NA to -1 for admb
+  #df.data$age <- with(df.data, replace(age, is.na(age), -1))
+
+  # set up variable names
+  pnames <- list(paste0("fMod:",colnames(Xf)),
+    paste0("qMod:", unlist(sapply(1:length(indices), function(i) paste0(fleet.names[i+1],":",colnames(Xqlist[[i]]))))),
+    paste0("vMod:", unlist(sapply(1:length(fleet.names), function(i) paste0(fleet.names[i],":",colnames(Xvlist[[i]]))))),
+    paste0("n1Mod:",colnames(Xny1)),
+    paste0("rMod:",colnames(Xr)),
+    paste0("sraMod:",colnames(Xsra)),
+    paste0("srbMod:",colnames(Xsrb)))
+
+  if (srr$srrCV < 0) pnames <- pnames[-c(6,7)]
+  if (srr$ID==4) pnames <- pnames[-7]
+
+  # build survey's max and min age vectors
+  # If age is not set (NA) it will take the min and max from catch.n
+  srvRange <- do.call('rbind',lapply(indices, range))
+  srvMinAge <- srvRange[,'min']
+  srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
+  names(srvMinAge) <- names(indices)
+  srvMaxAge <- srvRange[,'max']
+  srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
+  names(srvMaxAge) <- names(indices)
+
+  df.aux <- unique(full.df[c("year","age","m","m.spwn","harvest.spwn","mat.wt","stock.wt")])
+
+  Ldat <- list(
+      ageRange = range(full.df$age),
+      yearRange = range(full.df$year),
+      surveyMinAge = srvMinAge,
+      surveyMaxAge = srvMaxAge,
+      surveyTimes = surveytime,
+      fbarRange = fbar,
+      obs = as.matrix(df.data),
+      aux = as.matrix(df.aux),
+      designF = Xf,
+      designQ = Xq,
+      designV = Xv,
+      designNy1 = Xny1,
+      designR = Xr,
+      designRa = Xsra,
+      designRb = Xsrb,
+      srCV = srr$srrCV, # if (srr$srrCV < 0) 100 else srr$srrCV,
+      spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
+      Rmodel = srr$ID,
+      isPlusGrp = plusgroup
+    )
+
+  Ldat$locFleetVec=Ldat$obs[,1]
+  Ldat$locYearVec=Ldat$obs[,2]
+  Ldat$locAgeVec=Ldat$obs[,3]
+
+  Lpin <- list(
+    fpar = rep(0, ncol(Ldat$designF)),
+    qpar = rep(0, ncol(Ldat$designQ)),
+    vpar = rep(0, ncol(Ldat$designV)),
+    ny1par = rep(0, ncol(Ldat$designNy1)),
+    rpar = rep(0, ncol(Ldat$designR)),
+    rapar = rep(0, ncol(Ldat$designRa)),
+    rbpar = rep(0, ncol(Ldat$designRb))
+  )
+
+
+  res <- list(Ldat=Ldat, Lpin=Lpin)
+
+  #========================================================================
+  # run model
+  #========================================================================
+  # run a4a split
+  my.time.used[2] <- Sys.time()
+
+  if (srr$srrCV < 0) {
+    # we have no SR model
+    map <- list()
+    map$rapar <- factor(NA)
+    map$rbpar <- factor(NA)
+    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose, map = map)
+  } else
+  if (srr$ID == 4) {
+    # its the geomean model
+    map <- list()
+    map$rbpar <- factor(NA)
+    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose, map = map)
+  } else {
+    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose)
+  }
+
+  if (fit == "setup") return(obj)
+
+  opt <- nlminb(obj$par, obj$fn, obj$gr, control = list(iter.max = 10000, eval.max = 10000))
+  newtonsteps <- 3 # fix for now...
+  # this is required, otherwise we do not get the same
+  # accuracy as the ADMB optimiser
+  for (i in seq_len(newtonsteps)) { # Take a few extra newton steps borrowed from Anders/Casper!
+    g <- as.numeric( obj$gr(opt$par) )
+    h <- optimHess(opt$par, obj$fn, obj$gr)
+    opt$par <- opt$par - solve(h, g)
+    opt$objective <- obj$fn(opt$par)
+  }
+
+  #rep <- obj$report()
+  sdrep <- sdreport(obj,opt$par)
+  sdrep$cov <- NULL # this is the cvov of the model predictions
+
+
+  #========================================================================
+  # Post process
+  #========================================================================
+  # post processing split
+  my.time.used[3] <- Sys.time()
+
+  if (fit %in% c("MP","assessment", "MCMC")) {
+
+    # read admb output from file
+    out <- list()
+
+    # get .par file equivalents
+    out$nopar <- length(opt$par)
+    out$nlogl <- opt$objective
+    out$maxgrad <- max(abs(sdrep$gradient.fixed))
+
+    if (srr$srrCV < 0) {
+      # we have no SR model
+      out$par.est <- as.list(sdrep,"Est")[-c(6,7)]
+    } else
+    if (srr$ID == 4) {
+      # geomean
+      out$par.est <- as.list(sdrep,"Est")[-7]
+    } else {
+      out$par.est <- as.list(sdrep,"Est")
+    }
+
+    ages <- sort(unique(full.df$age))
+    years <- sort(unique(full.df$year))
+
+    # set up basic return values
+    convergence <- opt$convergence
+    out$N <- matrix(sdrep$value[names(sdrep$value) == "expn"], length(years), length(ages))
+    out$F <- matrix(sdrep$value[names(sdrep$value) == "expf"], length(years), length(ages))
+    out$Q <- matrix(sdrep$value[names(sdrep$value) == "q"], length(years)*length(indices), length(ages))
+    dim(out$Q) <- c(length(years), length(indices), length(ages))
+    out$Q <- aperm(out$Q, c(3,1,2))
+    colnames(out$N) <- colnames(out$F) <- ages
+    rownames(out$N) <- rownames(out$F) <- years
+    dimnames(out$Q) <- list(ages, years, names(indices))
+
+    if (fit != "MP") {
+      # return hessian and standard errors
+      if (!sdrep$pdHess) {
+        # if model was not identifiable make sure return values are NAs
+        warning("Hessian was not positive definite.")
+        out$N[] <- NA
+        out$F[] <- NA
+        out$Q[] <- NA
+        out$cov <- sdrep$cov.fixed
+        out$cov[] <- NA
+      } else {
+        out$logDetHess <- NA
+        if (srr$srrCV < 0) {
+          # we have no SR model
+          out$par.std <- as.list(sdrep,"Std")[-c(6,7)]
+        } else
+        if (srr$ID == 4) {
+          # geomean
+          out$par.std <- as.list(sdrep,"Std")[-7]
+        } else {
+          out$par.std <- as.list(sdrep,"Std")
+        }
+        out$cov <- sdrep$cov.fixed
+      }
+    }
+  }
+
+  list(out = out, my.time.used = my.time.used, wkdir = NULL,
+       convergence = convergence, pnames = pnames,
+       ages = ages, years = years)
 }
 
 
-fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df, 
+fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
                     fbar, plusgroup, surveytime, fleet.names,
                     Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
-                    my.time.used, mcmc, verbose) 
-{  
+                    my.time.used, mcmc, verbose)
+{
 
   #========================================================================
   # Write model matrices and model info to files in wkdir
@@ -1311,7 +1498,33 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
     }
   }
 
-  list(out = out, my.time.used = my.time.used, wkdir = wkdir, 
+  if (fit == "MCMC") {
+
+    # get number of iters (CHECK WITH NITERS  which are not being used )
+    nit <- getN(mcmc)
+
+    # read files
+    filen <- file(paste0(wkdir, '/a4a.psv'), "rb")
+    nopar <- readBin(filen, what = integer(), n = 1)
+    mcmcout <- readBin(filen, what = numeric(), n = nopar * nit)# TODO check this line
+    close(filen)
+    out$mcmc$mcmcout <- matrix(mcmcout, byrow = TRUE, ncol = nopar)
+    colnames(out$mcmc$mcmcout) <- unlist(pnames)
+
+    out$mcmc <- list()
+
+    out$mcmc$nit <- nit
+    out$mcmc$N <- read.table(paste0(wkdir, "/NMCMCreport.csv"), sep=" ", header=FALSE)[-1]
+    out$mcmc$F <- read.table(paste0(wkdir, "/FMCMCreport.csv"), sep=" ", header=FALSE)[-1]
+    out$mcmc$QQ <- read.table(paste0(wkdir, "/QMCMCreport.csv"), sep=" ", header=FALSE)[-1]
+    out$mcmc$idq <- expand.grid(y=years, s=fleet.names[-1], i=1:nit)
+    out$mcmc$V <- read.table(paste0(wkdir, "/VMCMCreport.csv"), sep=" ", header=FALSE)[-1]
+    out$mcmc$idv <- expand.grid(y=years, s=fleet.names, i=1:nit)
+    out$mcmc$logfile <- readLines(paste0(wkdir, "/logfile.txt"))
+  }
+
+  # return
+  list(out = out, my.time.used = my.time.used, wkdir = wkdir,
        convergence = convergence, pnames = pnames,
        ages = ages, years = years)
 }

@@ -187,6 +187,7 @@ Type objective_function<Type>::operator() ()
 		}
 	}
 
+    if (srCV >= 0) {
 	// stock recruit model
 	vector<Type> expandedRa = designRa*rapar; //+ radev;
 	vector<Type> expandedRb = designRb*rbpar;
@@ -222,7 +223,7 @@ Type objective_function<Type>::operator() ()
 			nll += -dnorm(r(y), predLogR, sqrt(varLogR), true);    
 		}
 	}
-
+    }
 
 
     
