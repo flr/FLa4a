@@ -4,10 +4,13 @@
 \name{sca}
 \alias{sca}
 \alias{sca-methods}
+\alias{sca,FLStock,FLIndex-method}
 \alias{sca,FLStock,FLIndices-method}
 \title{Statistical catch-at-age method}
 \usage{
 sca(stock, indices, ...)
+
+\S4method{sca}{FLStock,FLIndex}(stock, indices, ...)
 
 \S4method{sca}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
   srmodel = ~factor(year), fit = "MP", mcmc = missing, useADMB = FALSE)

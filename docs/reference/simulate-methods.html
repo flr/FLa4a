@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -49,6 +49,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="http://github.com/flr/FLa4a">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -60,7 +67,9 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://flr-project.org/">FLR</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -121,7 +130,138 @@
 <span class='fu'>data</span>(<span class='no'>ple4.index</span>)
 <span class='no'>fmodel</span> <span class='kw'>&lt;-</span> ~<span class='fu'>factor</span>(<span class='no'>age</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>)
 <span class='no'>qmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(~<span class='fu'>factor</span>(<span class='no'>age</span>))
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='a4aSCA.html'>a4aSCA</a></span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))</div><div class='output co'>#&gt; <span class='error'>Error in get(&quot;.Generic&quot;): object &#39;.Generic&#39; not found</span></div><div class='input'><span class='no'>fit1</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object &#39;fit1&#39; not found</span></div><div class='input'><span class='fu'>summary</span>(<span class='no'>fit1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(fit1): object &#39;fit1&#39; not found</span></div><div class='input'><span class='fu'>stock.n</span>(<span class='no'>fit1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in stock.n(fit1): object &#39;fit1&#39; not found</span></div></pre>
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span>  <span class='fu'><a href='a4aSCA.html'>a4aSCA</a></span>(<span class='kw'>fmodel</span><span class='kw'>=</span><span class='no'>fmodel</span>, <span class='kw'>qmodel</span><span class='kw'>=</span><span class='no'>qmodel</span>, <span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>, <span class='kw'>indices</span><span class='kw'>=</span><span class='fu'>FLIndices</span>(<span class='no'>ple4.index</span>))
+<span class='no'>fit1</span></div><div class='output co'>#&gt; a4a model fit for: Plaice in IV 
+#&gt; 
+#&gt; Call:
+#&gt; .local(stock = stock, indices = indices, fmodel = ..1, qmodel = ..2)
+#&gt; 
+#&gt; Time used:
+#&gt;  Pre-processing     Running a4a Post-processing           Total 
+#&gt;      0.23513412      1.86775899      0.06055307      2.16344619 
+#&gt; 
+#&gt; Submodels:
+#&gt; 	 fmodel: ~factor(age) + factor(year)
+#&gt; 	srmodel: ~factor(year)
+#&gt; 	n1model: ~factor(age)
+#&gt; 	 qmodel:
+#&gt; 	   BTS-Isis: ~factor(age)
+#&gt; 	 vmodel:
+#&gt; 	   catch:    ~s(age, k = 3)
+#&gt; 	   BTS-Isis: ~1</div><div class='input'><span class='fu'>summary</span>(<span class='no'>fit1</span>)</div><div class='output co'>#&gt; An object of class &quot;a4aFitSA&quot;
+#&gt; 
+#&gt; Name: Plaice in IV 
+#&gt; Description: Imported from a VPA file. ( N:\Projecten\ICES WG\Demersale werkgroep WGNSS [...] 
+#&gt; Quant: age 
+#&gt; Dims:  age 	year	unit	season	area	iter
+#&gt; 	10	52	1	1	1	1	
+#&gt; 
+#&gt; Range:  min	max	pgroup	minyear	maxyear	minfbar	maxfbar 
+#&gt; 	1	10	10	1957	2008	2	6	
+#&gt; 
+#&gt; stock.n       : [ 10 52 1 1 1 1 ], units =  10^3 
+#&gt; harvest       : [ 10 52 1 1 1 1 ], units =  f 
+#&gt; catch.n       : [ 10 52 1 1 1 1 ], units =  10^3 </div><div class='input'><span class='fu'>stock.n</span>(<span class='no'>fit1</span>)</div><div class='output co'>#&gt; An object of class &quot;FLQuant&quot;
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  1957      1958      1959      1960      1961      1962      1963     
+#&gt;   1   478721.5  704871.1  862042.0  800113.1  858685.7  620885.2  620860.5
+#&gt;   2   268801.7  400557.0  581909.9  701616.3  649950.8  699940.9  502105.6
+#&gt;   3   340467.9  196110.6  281634.8  393446.8  471866.4  441284.4  464970.2
+#&gt;   4   203283.8  241704.6  133545.5  183513.1  254837.6  308912.6  281876.1
+#&gt;   5   133580.6  142130.0  161677.4   85239.6  116389.1  163471.0  193047.7
+#&gt;   6    54182.1   93984.7   95774.2  104077.6   54531.7   75289.0  103083.4
+#&gt;   7    62401.7   39138.8   65315.9   63890.3   69044.0   36536.3   49305.4
+#&gt;   8    55554.2   45952.2   27820.4   44721.5   43523.3   47462.8   24597.3
+#&gt;   9    36150.8   42045.9   33728.7   19768.0   31637.4   31032.7   33234.6
+#&gt;   10  115634.5  122117.2  129309.3  126114.8  113072.1  112100.3  109596.0
+#&gt;     year
+#&gt; age  1964      1965      1966      1967      1968      1969      1970     
+#&gt;   1  2768855.4  743100.6  627087.7  428690.3  384502.3  612116.2  604131.4
+#&gt;   2   494619.8 2198629.4  598597.9  502837.7  343898.2  314204.7  498853.5
+#&gt;   3   320083.6  312477.2 1444950.0  388478.3  326716.6  235100.4  213209.7
+#&gt;   4   283532.2  193206.8  197200.3  899032.1  242028.8  215553.3  153815.2
+#&gt;   5   167670.7  166841.2  119197.8  119839.7  547121.6  156538.9  138179.5
+#&gt;   6   116012.3   99704.4  103897.5   73143.6   73639.1  356774.8  101195.2
+#&gt;   7    64659.5   72084.9   64565.7   66399.8   46803.3   49694.8  238900.9
+#&gt;   8    31910.7   41487.9   48033.9   42507.9   43764.9   32386.5   34143.3
+#&gt;   9    16645.0   21432.8   28793.6   32990.0   29223.3   31383.7   23081.4
+#&gt;   10  106827.3   92640.3   87026.3   87361.6   90661.9   93063.7   96160.5
+#&gt;     year
+#&gt; age  1971      1972      1973      1974      1975      1976      1977     
+#&gt;   1   389002.0  349996.5 1391134.7 1083727.6  731334.5  574618.8  802301.2
+#&gt;   2   475494.1  311303.6  277642.3 1088970.3  841761.9  556450.1  453826.5
+#&gt;   3   307579.9  306894.4  196127.6  168639.2  647439.1  472859.0  346360.6
+#&gt;   4   125217.9  190193.0  184673.5  113255.5   95062.6  342359.9  280688.7
+#&gt;   5    87912.8   75596.6  111549.4  103671.3   61970.3   48598.2  197908.5
+#&gt;   6    79865.7   53601.1   44809.0   63354.0   57426.0   32124.9   28401.8
+#&gt;   7    61298.8   50749.1   33209.6   26720.5   36943.2   31556.5   19653.4
+#&gt;   8   149762.7   40145.6   32477.0   20522.0   16177.5   21184.7   19962.3
+#&gt;   9    22474.5  102390.5   26902.4   21113.3   13106.7    9856.9   14054.6
+#&gt;   10   87888.9   83287.2  134331.4  118180.2  101101.1   80787.9   67636.8
+#&gt;     year
+#&gt; age  1978      1979      1980      1981      1982      1983      1984     
+#&gt;   1   664393.1  683647.7  851433.1  905750.1 1736864.6 1244375.4 1146339.3
+#&gt;   2   621356.8  518925.3  499662.4  651936.1  691714.8 1305276.0  937256.1
+#&gt;   3   267666.5  375110.8  260976.0  285605.2  369969.5  375563.3  713064.3
+#&gt;   4   193490.3  153505.3  175107.4  140731.3  152768.0  188274.1  192448.9
+#&gt;   5   152119.5  107828.5   68736.9   91402.3   72827.7   74978.3   93087.5
+#&gt;   6   108605.0   85780.8   49118.7   36363.5   47948.9   36280.7   37621.3
+#&gt;   7    16423.5   64350.4   41985.8   27486.7   20196.3   25426.7   19363.4
+#&gt;   8    11808.0   10089.8   33194.8   24480.2   15916.3   11210.2   14196.7
+#&gt;   9    12664.8    7637.5    5608.6   20519.3   15042.3    9427.7    6674.1
+#&gt;   10   58927.2   52257.8   39955.6   32492.9   36617.2   35181.2   30764.6
+#&gt;     year
+#&gt; age  1985      1986      1987      1988      1989      1990      1991     
+#&gt;   1  1700129.6 4058655.4 1857067.4 1784079.8 1305569.4 1187804.4  986993.9
+#&gt;   2   862105.1 1299646.6 2974316.4 1354591.6 1298374.3  968317.9  891039.1
+#&gt;   3   509882.0  490558.9  658423.7 1487665.5  673269.1  679871.9  523139.8
+#&gt;   4   363676.5  273559.7  230900.5  305471.3  685306.7  328918.5  344049.0
+#&gt;   5    94677.1  188808.8  123576.3  102717.6  134868.8  322068.8  160475.3
+#&gt;   6    46480.6   49823.1   86747.9   55933.5   46151.0   64403.9  159517.8
+#&gt;   7    19991.4   25888.0   24574.1   42217.0   27041.7   23563.3   33975.5
+#&gt;   8    10768.2   11605.9   13448.2   12610.2   21533.3   14498.6   13017.1
+#&gt;   9     8422.9    6631.5    6490.8    7441.6    6941.5   12377.4    8552.7
+#&gt;   10   25860.2   24078.1   20328.3   17569.9   16206.8   15434.8   18545.3
+#&gt;     year
+#&gt; age  1992      1993      1994      1995      1996      1997      1998     
+#&gt;   1   884044.1  566121.2  586357.5 1079718.7  910751.6 3840032.7 1287436.3
+#&gt;   2   711394.4  635733.4  413491.1  425838.5  786600.3  643375.4 2653826.9
+#&gt;   3   431273.3  342159.8  319134.9  204344.1  212267.8  360240.8  277392.8
+#&gt;   4   233890.7  191452.7  159395.0  146068.7   94441.0   89168.9  141380.6
+#&gt;   5   147149.6   99282.1   85541.2   69894.3   64715.1   37803.4   33204.4
+#&gt;   6    69900.6   63625.2   45128.7   38177.9   31510.1   26424.7   14385.1
+#&gt;   7    75009.6   32652.7   31082.1   21688.0   18513.6   13983.9   11009.6
+#&gt;   8    16895.3   37076.2   16814.3   15767.4   11093.0    8731.9    6225.4
+#&gt;   9     7009.5    9050.3   20578.3    9211.9    8700.3    5705.5    4271.8
+#&gt;   10   17258.0   15460.5   15816.1   22638.8   20694.9   18208.0   14464.9
+#&gt;     year
+#&gt; age  1999      2000      2001      2002      2003      2004      2005     
+#&gt;   1   980999.8 1059718.3  609774.5 1771669.3  461386.3  999936.4  782215.8
+#&gt;   2   896682.2  681552.8  782128.0  431980.7 1276695.8  332897.2  776838.6
+#&gt;   3  1168917.2  392259.5  352096.9  360989.3  208961.7  619700.7  198034.9
+#&gt;   4   111519.5  466322.0  188739.7  149211.0  161288.9   93725.3  349549.6
+#&gt;   5    54011.8   42255.6  215638.3   76257.7   63772.7   69218.9   51318.9
+#&gt;   6    12954.5   20904.3   19862.4   88854.9   33194.0   27870.9   38367.4
+#&gt;   7     6128.9    5480.0   10523.4    8886.8   41756.3   15655.2   16261.9
+#&gt;   8     5002.6    2766.7    2900.4    5000.4    4416.7   20821.2    9483.3
+#&gt;   9     3100.1    2477.0    1572.6    1501.5    2691.4    2384.0   13304.0
+#&gt;   10   11484.7    8929.3    7628.8    5833.7    4744.1    4711.7    5061.2
+#&gt;     year
+#&gt; age  2006      2007      2008     
+#&gt;   1   938838.3 1570181.6 1615831.1
+#&gt;   2   603116.8  756756.0 1308550.0
+#&gt;   3   452614.6  397066.3  546055.0
+#&gt;   4   109116.9  286203.0  278404.6
+#&gt;   5   186686.5   67460.4  197479.4
+#&gt;   6    27762.6  116493.6   46856.2
+#&gt;   7    21904.4   18011.2   83184.4
+#&gt;   8     9656.7   14620.5   13124.2
+#&gt;   9     5955.9    6711.7   10964.7
+#&gt;   10   12435.2   13904.1   16411.3
+#&gt; 
+#&gt; units:  10^3 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

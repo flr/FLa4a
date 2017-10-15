@@ -6,7 +6,7 @@
 .onAttach <- function(libname, pkgname)
 {
   ## TODO find out sep char for environment vars on macs
-  sep <- if (os.type("linux")) ":" else if (os.type("windows")) ";" else ","
+  sep <- if (os.type("linux") | os.type("osx")) ":" else if (os.type("windows")) ";" else ","
   path <- paste0(a4a.dir(), sep, Sys.getenv("PATH"))
   Sys.setenv(PATH=path)
 
@@ -16,6 +16,12 @@
   msg <- paste0("This is FLa4a ", version,". For overview type \'help(package=\"FLa4a\")\'\n")
   packageStartupMessage(msg)
 
+  # check 64 bit platform in windows
+  if(os.type("windows") && grepl("x86", sessionInfo()$running))
+    stop("a4a executable in this package has been compiled for a 64 bit OS,
+      please get the i386 version on the FLa4a release page at
+      https://github.com/flr/FLa4a/releases")
+  
   #
   check.executable()
 }
@@ -23,12 +29,11 @@
 # returns the location on the file system of the ADMB executable
 a4a.dir <- function () 
 {
-#  if (os.type("mac")) {
-#    fnm <- system.file(paste("bin/mac/", os.32or64bit(), "bit", sep = ""), package = "FLa4a")
-#  }
-#  else if (os.type("linux")) {
   if (os.type("linux")) {
     fnm <- system.file("bin/linux", package = "FLa4a")
+  }
+  else if (os.type("osx")) {
+    fnm <- system.file("bin/osx", package = "FLa4a")
   }
   else if (os.type("windows")) {
     fnm <- system.file("bin/windows", package = "FLa4a")
@@ -47,7 +52,7 @@ a4a.dir <- function ()
 
 # returns TRUE if correct operating system is passed as an argument
 #os.type <- function (type = c("linux", "mac", "windows", "else")) 
-os.type <- function (type = c("linux", "windows", "else")) 
+os.type <- function (type = c("linux", "windows", "osx", "else")) 
 {
   type = match.arg(type)
   if (type == "windows") {
@@ -63,6 +68,9 @@ os.type <- function (type = c("linux", "windows", "else"))
   else if (type == "linux") {
 #    return((.Platform$OS.type == "unix") && !os.type("mac"))
     return(.Platform$OS.type == "unix")
+  }
+  else if (type == "osx") {
+    return(grepl("^darwin", R.version$os))
   }
   else if (type == "else") {
     return(TRUE)

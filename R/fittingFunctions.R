@@ -100,6 +100,13 @@ collapseSeasons <- function (stock) {
 setGeneric("sca", function(stock, indices, ...) standardGeneric("sca"))
 
 #' @rdname sca
+setMethod("sca", signature("FLStock", "FLIndex"),
+  function(stock, indices, ...) {
+    sca(stock, FLIndices(IND=indices), ...)
+  }
+)
+
+#' @rdname sca
 setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing, useADMB = FALSE)
 {
   stkdms <- dims(stock)
@@ -228,6 +235,13 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' rmodel <- ~ bevholt(CV=0.05)
 #' fit7 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
 setGeneric("a4aSCA", function(stock, indices, ...) standardGeneric("a4aSCA"))
+
+#' @rdname a4aSCA
+setMethod("a4aSCA", signature("FLStock", "FLIndex"),
+  function(stock, indices, ...) {
+    a4aSCA(stock, FLIndices(IND=indices), ...)
+  }
+)
 
 #' @rdname a4aSCA
 #setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
@@ -444,6 +458,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
       # add indices
       for (j in 1:length(iindices)) {
         out@index[[j]][,, grid$unit[i], grid$area[i], , ] <- index(outi)[[j]]
+        units(out@index[[j]]) <- units(indices[[j]]@index)
       }
 
       # fill up models
@@ -462,8 +477,10 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
     # keep timing info
     time.used[,i] <- outi@clock
   }
-
-  units(out@harvest) <- "f"
+   
+  units(out@harvest) <- "f"  
+  units(out@catch.n) <- units(stock@catch.n)
+  units(out@stock.n) <- units(stock@catch.n)
 
 	# tag biomass indices with attribute
 	for(i in 1:length(indices)){

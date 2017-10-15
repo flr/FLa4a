@@ -36,3 +36,6 @@ artifacts:
 
   - path: '\*_*.zip'
     name: Bits
+
+platform:
+  - x64
