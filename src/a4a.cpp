@@ -163,8 +163,9 @@ Type objective_function<Type>::operator() ()
 		locAge   = locAgeVec(i)-minAge;
 		locObs   = obs(i,3);
 
-		//here we split - if locAge == -1 then we have a biomass index and use add to a different likelihood component.
+		// here we split - if locAge == -1 then we have a biomass index and use add to a different likelihood component.
 		if (locAge >= 0) { // standard observation
+			
 			locZ = exp(f(locYear,locAge)) + exp(m(locYear,locAge));
 			if (locFleet==1) { //    catches predicted 
 				pred(i) = f(locYear,locAge)-log(locZ)+log(Type(1.0)-exp(-locZ))+n(locYear,locAge);
@@ -182,7 +183,7 @@ Type objective_function<Type>::operator() ()
 				locZ     = exp(f(locYear,a)) + exp(m(locYear,a));
 				pred(i) += exp(q(locFleet-2, locYear, a)) * stkWt(locYear, a) * exp(n(locYear,a) - surveyTimes(locFleet-2) * locZ);
 			}
-			locVar = exp(Type(2.0) * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
+			locVar = exp(Type(2.0) * v(locFleet-1, locYear, minAge)); // note variance are stored in the minimum age column
 			nll -= obs(i,4) * dnorm(locObs, log(pred(i)), sqrt(locVar), true); // or do we multiply the variance directly...    
 		}
 	}
