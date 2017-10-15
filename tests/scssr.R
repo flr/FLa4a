@@ -16,7 +16,7 @@ fit0 <-  a4aSCA(ple4, FLIndices(ple4.index))
 #====================================================================
 fitbh <-  a4aSCA(ple4, FLIndices(ple4.index), srmodel=~bevholt(CV=0.1))
 
-fitbhsv <-  a4aSCA(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.1))
+fitbhsv <-  a4aSCA(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.1), useADMB = TRUE)
 
 #====================================================================
 # ricker
@@ -58,7 +58,7 @@ fit00 <-  a4aSCA(stk, FLIndices(ple4.index))
 #====================================================================
 fitbh <-  a4aSCA(stk, FLIndices(ple4.index), srmodel=~bevholt(CV=0.1))
 
-fitbhsv <-  a4aSCA(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.1))
+fitbhsv <-  a4aSCA(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.1), useADMB = TRUE)
 
 #====================================================================
 # ricker
