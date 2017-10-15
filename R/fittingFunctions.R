@@ -763,7 +763,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     dir.create(wkdir, showWarnings = FALSE)
     #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    fitList <- fitADMB(fit, wkdir, df.data, indices, full.df, 
+    fitList <- fitADMB(fit, wkdir, df.data, stock, indices, full.df, 
                        fbar, plusgroup, surveytime, fleet.names,
                        Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
                        my.time.used, mcmc, verbose)
@@ -1044,7 +1044,7 @@ fitTMB <- function(fit)
 }
 
 
-fitADMB <- function(fit, wkdir, df.data, indices, full.df, 
+fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df, 
                     fbar, plusgroup, surveytime, fleet.names,
                     Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
                     my.time.used, mcmc, verbose) 
