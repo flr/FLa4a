@@ -30,7 +30,7 @@ length(res) == 7
 catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
 index.var(ple4.index) <- (0.2/index(ple4.index))^2
 
-fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
+fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1), useADMB = TRUE)
 res <- residuals(fit, ple4, FLIndices(ple4.index))
 length(res) == 3
 
