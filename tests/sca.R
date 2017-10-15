@@ -226,7 +226,7 @@ length(params(vmodel(pars(fit0))[[2]]))==1
 # hessian non-positive definite
 #====================================================================
 
-fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
+fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), useADMB=TRUE)
 sum(stock.n(fit0), na.rm=T)==0
 sum(catch.n(fit0), na.rm=T)==0
 sum(index(fit0)[[1]], na.rm=T)==0
@@ -240,7 +240,7 @@ sum(vcov(vmodel(pars(fit0))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit0))[[2]]), na.rm=T)==0
 
 
-fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
+fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), useADMB=TRUE)
 # check convergence info
 fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
@@ -255,7 +255,7 @@ sum(vcov(qmodel(pars(fit))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit))[[2]]), na.rm=T)==0
 
-fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment")
+fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment", useADMB=TRUE)
 sum(stock.n(fit1), na.rm=T)==0
 sum(catch.n(fit1), na.rm=T)==0
 sum(index(fit1)[[1]], na.rm=T)==0
@@ -318,7 +318,7 @@ data(ple4.index)
 catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
 index.var(ple4.index) <- (0.2/index(ple4.index))^2
 
-fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), useADMB=TRUE)
 
 #--------------------------------------------------------------------
 # iters
@@ -334,7 +334,7 @@ identical(c(catch.n(stk2)[,,,,,1]), c(catch.n(ple4)))
 identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(ple4))))
 
 # Nx1
-fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), useADMB=TRUE)
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -344,7 +344,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # 1xN
-fit <- sca(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)))
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)), useADMB=TRUE)
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -354,7 +354,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # NxN
-fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)), useADMB=TRUE)
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
