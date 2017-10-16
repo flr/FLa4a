@@ -156,6 +156,10 @@ vFrml(object, ...)
 
 \item{...}{additional argument list that might never be used}
 
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
+
 \item{obj}{the object to be subset}
 
 \item{it}{iteration to be extracted}

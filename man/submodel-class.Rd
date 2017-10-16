@@ -46,8 +46,6 @@ sMod(object, ...)
 \item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
 
 \item{x}{the submodel object that is to be modified}
-
-\item{object}{the object to be extended}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.

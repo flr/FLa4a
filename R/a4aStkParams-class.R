@@ -255,7 +255,6 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
 
 
 #' @rdname a4aStkParams-class
-#' @param object the object to be extended
 #' @param iter the number of iterations to create
 #' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
 setMethod("propagate", signature(object="a4aStkParams"),

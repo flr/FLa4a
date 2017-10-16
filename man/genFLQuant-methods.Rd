@@ -34,6 +34,23 @@ genFLQuant(object, ...)
 \item{method}{the method used to compute the correlation matrix; for now only "ac" (autocorrelation) is implemented}
 
 \item{niter}{the number of iterations to be generated}
+
+\item{type}{the type of output required. The default is on the scale of the linear predictors (link); 
+the alternative "response" is on the scale of the response variable. 
+Thus for a model on the log scale the default predictions are of log F (for example) 
+and type = "response" gives the predicted F.}
+
+\item{nsim}{the number of iterations to simulate, if nsim = 0, then deterministic values are returned
+based on the coefficients.  If nsim > 0 then coefficients are simluated using the
+covariance slot and distribution slot.}
+
+\item{seed}{if supplied the random numbers are generate with a fixed seed for repeatablility}
+
+\item{simulate.recruitment}{if FALSE (default) recruitment is simulated from
+the recruitment estimates of recruitment, which may or may not be based on a stock-recruit
+model in the origional fit.  If TRUE, then new recruitments are simulated based on the 
+stock recruitment model and supplied CV used in the fit, rsulting in a completly different
+timeseries of N and Catches.}
 }
 \value{
 an FLQuant

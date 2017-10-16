@@ -55,7 +55,17 @@ corBlocks(object, ...) <- value
 
 \item{object}{object of relevant class (see signature of method)}
 
+\item{x}{object to be modified}
+
 \item{value}{value the new object}
+
+\item{name}{name(s) of entry to be extracted / modified}
+
+\item{i, j}{indices specifying elements to extract or replace.}
+
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
 
 \item{obj}{the object to be subset}
 

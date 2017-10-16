@@ -187,6 +187,8 @@ setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object
 
 
 #' @rdname SCAPars-class
+#' @param iter the number of iterations to create
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
 setMethod("propagate",
   signature(object = "SCAPars"),
   function (object, iter, fill.iter = TRUE) 

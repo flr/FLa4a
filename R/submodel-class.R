@@ -132,7 +132,6 @@ setMethod("iter", "submodel", function(obj, it){
 
 
 #' @rdname submodel-class
-#' @param object the object to be extended
 #' @param iter the number of iterations to create
 #' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
 setMethod("propagate", signature(object="submodel"),

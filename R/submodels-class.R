@@ -120,6 +120,8 @@ setMethod("corBlocks<-", signature(object = "submodels", value = "list"),
 # method.skeleton("$<-", signature(object = "submodels", value = "submodel"),  file = stdout())
 
 #' @rdname submodels-class
+#' @param x object to be modified
+#' @param name name(s) of entry to be extracted / modified
 setMethod("$<-",
   signature(x = "submodels", value = "submodel"),
   function(x, name, value) {
@@ -128,6 +130,7 @@ setMethod("$<-",
   })
 
 #' @rdname submodels-class
+#' @param i,j indices specifying elements to extract or replace.
 setMethod("[[<-",
   c("submodels", "character", "missing"),
   function (x, i, j, ..., value)
@@ -180,6 +183,8 @@ setMethod("show", "submodels",
 
 # method.skeleton("propagate", "submodels",  file = stdout())
 #' @rdname submodels-class
+#' @param iter the number of iterations to create
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
 setMethod("propagate",
   signature(object = "submodels"),
   function (object, iter, fill.iter = TRUE)
