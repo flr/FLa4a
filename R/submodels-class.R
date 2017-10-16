@@ -97,9 +97,6 @@ setMethod("params", "submodels", function(object) lapply(object, coef))
 setMethod("sMod", "submodels", function(object) lapply(object, sMod))
 
 #' @rdname submodels-class
-setMethod("vcov", "submodels", function(object) lapply(object, vcov))
-
-#' @rdname submodels-class
 setMethod("formula", "submodels", function(x) lapply(x, formula))
 
 
@@ -112,8 +109,8 @@ setMethod("formula", "submodels", function(x) lapply(x, formula))
 #' @aliases corBlocks<-
 setGeneric("corBlocks<-", function(object, ..., value) standardGeneric("corBlocks<-"))
 
-#' @rdname vcov-methods
-#' @param value value the new object
+#' @rdname submodels-class
+#' @aliases corBlocks<-
 setMethod("corBlocks<-", signature(object = "submodels", value = "list"),
   function(object, ..., value) {
     object@corBlocks[] <- value
@@ -122,6 +119,7 @@ setMethod("corBlocks<-", signature(object = "submodels", value = "list"),
 
 # method.skeleton("$<-", signature(object = "submodels", value = "submodel"),  file = stdout())
 
+#' @rdname submodels-class
 setMethod("$<-",
   signature(x = "submodels", value = "submodel"),
   function(x, name, value) {
@@ -129,6 +127,7 @@ setMethod("$<-",
     x
   })
 
+#' @rdname submodels-class
 setMethod("[[<-",
   c("submodels", "character", "missing"),
   function (x, i, j, ..., value)
@@ -140,6 +139,7 @@ setMethod("[[<-",
   }
 )
 
+#' @rdname submodels-class
 setMethod("[[<-",
   c("submodels", "numeric", "missing"),
   function (x, i, j, ..., value)

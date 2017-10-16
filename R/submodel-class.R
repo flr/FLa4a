@@ -114,9 +114,6 @@ setGeneric("sMod", function(object, ...) standardGeneric("sMod"))
 setMethod("sMod", "submodel", function(object) object@formula)
 
 #' @rdname submodel-class
-setMethod("vcov", "submodel", function(object) object@vcov)
-
-#' @rdname submodel-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted 
 setMethod("iter", "submodel", function(obj, it){
@@ -171,10 +168,10 @@ setMethod("propagate", signature(object="submodel"),
 #
 
 #' @rdname submodel-class
+#' @param x the submodel object that is to be modified
 setMethod("formula", "submodel", function(x) x@formula)
 
 #' @rdname coef-methods
-#' @param value the new object
 #' @aliases coef<-,a4aFitSA-methods
 setGeneric("formula<-", function(object, value) standardGeneric("formula<-"))
 

@@ -11,9 +11,13 @@
 \alias{corBlocks,submodels-method}
 \alias{params,submodels-method}
 \alias{sMod,submodels-method}
-\alias{vcov,submodels-method}
 \alias{formula,submodels-method}
 \alias{corBlocks<-}
+\alias{corBlocks<-,submodels,list-method}
+\alias{corBlocks<-}
+\alias{$<-,submodels,submodel-method}
+\alias{[[<-,submodels,character,missing-method}
+\alias{[[<-,submodels,numeric,missing-method}
 \alias{propagate,submodels-method}
 \alias{iter,submodels-method}
 \title{Submodels class}
@@ -30,11 +34,17 @@ corBlocks(object, ...)
 
 \S4method{sMod}{submodels}(object)
 
-\S4method{vcov}{submodels}(object)
-
 \S4method{formula}{submodels}(x)
 
 corBlocks(object, ...) <- value
+
+\S4method{corBlocks}{submodels,list}(object, ...) <- value
+
+\S4method{$}{submodels,submodel}(x, name) <- value
+
+\S4method{[[}{submodels,character,missing}(x, i, j, ...) <- value
+
+\S4method{[[}{submodels,numeric,missing}(x, i, j, ...) <- value
 
 \S4method{propagate}{submodels}(object, iter, fill.iter = TRUE)
 

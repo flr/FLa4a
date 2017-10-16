@@ -11,7 +11,6 @@
 \alias{sMod}
 \alias{sMod-methods}
 \alias{sMod,submodel-method}
-\alias{vcov,submodel-method}
 \alias{iter,submodel-method}
 \alias{propagate,submodel-method}
 \alias{formula,submodel-method}
@@ -26,8 +25,6 @@ submodel(object, ...)
 sMod(object, ...)
 
 \S4method{sMod}{submodel}(object)
-
-\S4method{vcov}{submodel}(object)
 
 \S4method{iter}{submodel}(obj, it)
 
@@ -47,6 +44,8 @@ sMod(object, ...)
 \item{iter}{the number of iterations to create}
 
 \item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
+
+\item{x}{the submodel object that is to be modified}
 
 \item{object}{the object to be extended}
 }
