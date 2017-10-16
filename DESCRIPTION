@@ -14,16 +14,15 @@ Imports:
     methods,
     lattice,
     Matrix,
-    mgcv,
-    TMB,
-    RcppEigen
+    mgcv
 LinkingTo: TMB, RcppEigen
 Depends:
     R (>= 3.2.0),
     FLCore (>= 2.6.4),
     triangle,
     copula,
-    coda
+    coda,
+    TMB
 Additional_repositories: http://flr-project.org/R
 Suggests:
     latticeExtra,
