@@ -64,8 +64,6 @@ coef(object, ...) <- value
 \item{value}{the new object}
 
 \item{...}{additional argument list that might never be used}
-
-\item{value}{the new object}
 }
 \description{
 Methods to extract and replace the model coefficients.
