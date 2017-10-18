@@ -3,6 +3,7 @@
  NEW FEATURES:
 
 	BUG FIXES:
+- plot(residuals) has a new argument 'auxline' which allows selecting 'smooth', 'r' or empty for no line.
 - indices names with ':' were crashing the qmodel, now fixed
 - minor fixes in documentation
 - iter new method which subsets indices

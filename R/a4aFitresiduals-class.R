@@ -78,6 +78,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' @description Method to produce scatterplots of standardized residuals
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param y ignored
+#' @param auxline a string defining the type of line to be added, by default uses 'smooth', a common alternative is to use 'r', a regression, or leave it empty ''
 #' @param ... additional argument list that might never be used
 #' @return a \code{plot} with stardardized log residuals
 #' @examples
@@ -87,11 +88,11 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' plot(flqs)
 
-setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
+setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth",...){
 	args <- list()
 	args$data <- as.data.frame(x)
 	args$x <- as.formula("data~year|factor(age)*qname")
-	args$type=c("p", "smooth")
+	args$type=c("p", auxline)
 	args$groups <- quote(qname)
 	args$cex=0.3
 	args$lwd=2
@@ -102,8 +103,8 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, ...){
 		panel.xyplot(x,y,...)
 		}
 	args$par.settings=list(
-		superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
-		superpose.line=list(col=1, lty=1, lwd=2), 
+		superpose.symbol=list(col=1, pch=19, cex=0.2), 
+		superpose.line=list(col="gray75", lty=1, lwd=2), 
 		strip.background=list(col="gray90"), 
 		strip.border=list(col="black"), 
 		box.rectangle=list(col="gray90"))
