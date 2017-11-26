@@ -1216,8 +1216,8 @@ fitTMB <- function(fit, wkdir, df.data, stock, indices, full.df,
     out$N <- matrix(sdrep$value[names(sdrep$value) == "expn"], length(years), length(ages))
     out$F <- matrix(sdrep$value[names(sdrep$value) == "expf"], length(years), length(ages))
     out$Q <- matrix(sdrep$value[names(sdrep$value) == "q"], length(years)*length(indices), length(ages))
-    dim(out$Q) <- c(length(years), length(indices), length(ages))
-    out$Q <- aperm(out$Q, c(3,1,2))
+    dim(out$Q) <- c(length(indices), length(years), length(ages))
+    out$Q <- aperm(out$Q, c(3,2,1))
     colnames(out$N) <- colnames(out$F) <- ages
     rownames(out$N) <- rownames(out$F) <- years
     dimnames(out$Q) <- list(ages, years, names(indices))
