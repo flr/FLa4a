@@ -1162,14 +1162,18 @@ fitTMB <- function(fit, wkdir, df.data, stock, indices, full.df,
   if (fit == "setup") return(obj)
 
   opt <- nlminb(obj$par, obj$fn, obj$gr, control = list(iter.max = 10000, eval.max = 10000))
-  newtonsteps <- 3 # fix for now...
-  # this is required, otherwise we do not get the same
-  # accuracy as the ADMB optimiser
-  for (i in seq_len(newtonsteps)) { # Take a few extra newton steps borrowed from Anders/Casper!
-    g <- as.numeric( obj$gr(opt$par) )
-    h <- optimHess(opt$par, obj$fn, obj$gr)
-    opt$par <- opt$par - solve(h, g)
-    opt$objective <- obj$fn(opt$par)
+  if (fit != "MP") {
+    # The accuracy is good without these steps
+    # but more consistent with these extra iterations
+    newtonsteps <- 3 # fix to 3 for now...
+    # this is required, otherwise we do not get the same
+    # accuracy as the ADMB optimiser
+    for (i in seq_len(newtonsteps)) { # Take a few extra newton steps borrowed from Anders/Casper!
+      g <- as.numeric( obj$gr(opt$par) )
+      h <- optimHess(opt$par, obj$fn, obj$gr)
+      opt$par <- opt$par - solve(h, g)
+      opt$objective <- obj$fn(opt$par)
+    }
   }
 
   #rep <- obj$report()
