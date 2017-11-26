@@ -260,7 +260,8 @@ agerng <- 2:4
 bioidx <- 0.001*quantSums(stock.n(ple4)[agerng]*stock.wt(ple4)[agerng])
 bioidx <- FLIndexBiomass(index=bioidx)
 range(bioidx)[c("startf","endf")] <- c(0,0)
-range(bioidx)[c("min","max")] <- c(2,4)
+range(bioidx)[c("min","max")] <- c(2, 4)
+name(bioidx) <- "bioindex"
 
 # fitting the model
 fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1), fit="assessment")
@@ -276,6 +277,8 @@ lst$x <- quantSums(stock.n(fit)[agerng]*exp(-Z[agerng])*stock.wt(ple4)[agerng])
 stkn <- do.call("trim", lst)
 qhat <- index(fit)[[1]]/stkn
 all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
+# need to deal with biomass indices better...
+all.equal(c(qhat), c(flqs$qmodel[[1]][1,]), tolerance=10e-4)
 all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
 all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
 all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
@@ -292,6 +295,8 @@ lst$x <- quantSums(stock.n(fit)[agerng]*exp(-Z[agerng])*stock.wt(ple4)[agerng])
 stkn <- do.call("trim", lst)
 qhat <- index(fit)[[1]]/stkn
 all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
+# need to deal with biomass indices better...
+all.equal(c(qhat), c(flqs$qmodel[[1]][1,]), tolerance=10e-4)
 all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
 all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
 all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
