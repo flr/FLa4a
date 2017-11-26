@@ -36,8 +36,8 @@ setMethod("predict", signature(object = "SCAPars"),
   # run predict
     lst <- list(
       stkmodel = predict.stkpars(sm),
-      qmodel   = predict.submods(qm),
-      vmodel   = predict.submods(vm)
+      qmodel   = predict.submods(qm, type = "response"),
+      vmodel   = predict.submods(vm, type = "response")
     )
   # rec is being estimated from the srmodel so the n1model doesn't
   # have a recruitment estimate, need to update from rec predictions
