@@ -477,8 +477,8 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
     # keep timing info
     time.used[,i] <- outi@clock
   }
-   
-  units(out@harvest) <- "f"  
+
+  units(out@harvest) <- "f"
   units(out@catch.n) <- units(stock@catch.n)
   units(out@stock.n) <- units(stock@catch.n)
 
@@ -861,7 +861,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 	index <- lapply(1:length(indices), function(i) {
 	 	dmns <- dimnames(logq[[i]])
 	 	if (is(indices[[i]], 'FLIndexBiomass')) {
-		dmns[[1]] <- ac(srvMinAge[i]:srvMaxAge[i])
+		  dmns[[1]] <- ac(srvMinAge[i]:srvMaxAge[i])
 	 		qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
 	 		nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
 	 		zz <- exp(-Z[dmns[[1]], dmns[[2]]]*surveytime[i])
