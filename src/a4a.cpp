@@ -1,4 +1,5 @@
-#include <TMB.hpp>                                
+#define TMB_LIB_INIT R_init_FLa4a
+#include <TMB.hpp>                            
 
 template<class Type>
 Type objective_function<Type>::operator() ()
