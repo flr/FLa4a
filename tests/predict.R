@@ -24,6 +24,8 @@ lst$x <- stock.n(fit)*exp(-Z)
 stkn <- do.call("trim", lst)
 qhat <- index(fit)[[1]]/stkn
 all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
+# because q is small, comparing on the log scale is better....
+all.equal(log(c(qhat)), log(c(flqs$qmodel[[1]])), tolerance=10e-4)
 all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
 all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
 all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
