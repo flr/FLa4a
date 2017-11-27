@@ -17,9 +17,7 @@ index(bioidx2) <- index(bioidx2)*exp(rnorm(index(bioidx2), sd=0.1))
 range(bioidx2)[c("startf","endf")] <- c(0,1)
 
 # FLIndices
-idxs <- ple4.indices
-idxs$b1 <- bioidx
-idxs$b2 <- bioidx2
+idxs <- FLIndices(c(ple4.indices, b1 = bioidx, b2 = bioidx2))
 
 # fitting the model
 fit <- sca(ple4, idxs, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1))
