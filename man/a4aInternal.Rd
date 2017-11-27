@@ -10,7 +10,7 @@ a4aInternal(stock, indices, fmodel = ~s(age, k = 3) + factor(year),
   srmodel = ~factor(year), n1model = ~factor(age),
   vmodel = lapply(seq(length(indices) + 1), function(i) ~1),
   covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment",
-  center = TRUE, mcmc = missing, useADMB = FALSE)
+  center = TRUE, mcmc = missing, useADMB = TRUE)
 }
 \arguments{
 \item{stock}{an FLStock object containing catch and stock information}
@@ -39,7 +39,7 @@ a4aInternal(stock, indices, fmodel = ~s(age, k = 3) + factor(year),
 
 \item{mcmc}{\code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description}
 
-\item{useADMB}{if FALSE (default) use TMB if TRUE use ADMB (note MCMC cannot be used with TMB)}
+\item{useADMB}{if FALSE use TMB if TRUE (deafault) use ADMB (note MCMC cannot be used with TMB)}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"

@@ -15,7 +15,7 @@ a4aSCA(stock, indices, ...)
 \S4method{a4aSCA}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
   srmodel = ~factor(year), n1model, vmodel, covar = missing,
   wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE,
-  mcmc = missing, useADMB = FALSE)
+  mcmc = missing, useADMB = TRUE)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}
@@ -46,7 +46,7 @@ a4aSCA(stock, indices, ...)
 
 \item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
 
-\item{useADMB}{if FALSE (default) use TMB if TRUE use ADMB (note MCMC cannot be used with TMB)}
+\item{useADMB}{if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"

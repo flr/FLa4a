@@ -62,7 +62,7 @@ collapseSeasons <- function (stock) {
 #' @param srmodel a formula object depicting the model for log recruitment
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
 #' @param mcmc an \code{SCAMCMC} object with the arguments to run MCMC
-#' @param useADMB if FALSE (default) use TMB if TRUE use ADMB (note MCMC cannot be used with TMB)
+#' @param useADMB if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)
 #' @template dots
 #' @return an \code{a4aFit} or \code{a4aFitSA} object with the fit results.
 #' @aliases sca sca-methods
@@ -107,7 +107,7 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 )
 
 #' @rdname sca
-setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing, useADMB = FALSE)
+setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), fit = "MP", mcmc=missing, useADMB = TRUE)
 {
   stkdms <- dims(stock)
   if(stkdms$quant != "age"){
@@ -185,7 +185,7 @@ setMethod("sca", signature("FLStock", "FLIndices"), function(stock, indices, fmo
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
 #' @param center, logical defining if the data should be centered before fitting.
 #' @param mcmc an \code{SCAMCMC} object with the arguments to run MCMC
-#' @param useADMB if FALSE (default) use TMB if TRUE use ADMB (note MCMC cannot be used with TMB)
+#' @param useADMB if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)
 #' @template dots
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases a4aSCA a4aSCA-methods
@@ -248,7 +248,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndex"),
 
 setMethod("a4aSCA", signature("FLStock", "FLIndices"),
   function(stock, indices, fmodel, qmodel, srmodel = ~ factor(year), n1model, vmodel,
-           covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing, useADMB = FALSE)
+           covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing, useADMB = TRUE)
 {
   fit <- match.arg(fit, c("MP", "assessment", "MCMC"))
 
@@ -514,7 +514,7 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.
 #' @param center \code{logical} specifying whether data is centered before estimating or not
 #' @param mcmc \code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description
-#' @param useADMB if FALSE (default) use TMB if TRUE use ADMB (note MCMC cannot be used with TMB)
+#' @param useADMB if FALSE use TMB if TRUE (deafault) use ADMB (note MCMC cannot be used with TMB)
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
 a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
@@ -523,7 +523,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
                 n1model = ~ factor(age),
                 vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
                 covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
-                center = TRUE, mcmc=missing, useADMB = FALSE)
+                center = TRUE, mcmc=missing, useADMB = TRUE)
 {
 
   # first check permissions of executable
