@@ -17,7 +17,7 @@ is(fit0, "a4aFit")
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
 !attr(index(fit0)[[1]], "FLIndexBiomass")
 
-# check that indices have attr range 
+# check that indices have attr range
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
 # check convergence info
@@ -86,7 +86,7 @@ is(fit0, "a4aFitSA")
 "FLIndexBiomass" %in%  names(attributes(index(fit0)[[1]]))
 !attr(index(fit0)[[1]], "FLIndexBiomass")
 
-# check that indices have attr range 
+# check that indices have attr range
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
 # check convergence info
@@ -168,25 +168,25 @@ dim(coef(vmodel(pars(fit))[[2]]))[2]==nits
 # sca defaults
 fit0 <-  sca(ple4, ple4.indices, fit="MP")
 # when fit="MP" class is "a4aFit" instead of "a4aFitSA"
-!is(fit0, "a4aFitSA") 
+!is(fit0, "a4aFitSA")
 
 fit1 <-  sca(ple4, ple4.indices)
 # default is fit="MP" and class "a4aFit"
-!is(fit1, "a4aFitSA") 
+!is(fit1, "a4aFitSA")
 
 all.equal(fitSumm(fit0), fitSumm(fit1))
 all.equal(harvest(fit0), harvest(fit1))
 all.equal(stock.n(fit0), stock.n(fit1))
 all.equal(catch.n(fit0), catch.n(fit1))
- 
+
 # a4aSCA defaults
 fit0 <-  a4aSCA(ple4, ple4.indices)
 # default fit is "assessment" class should be "a4aFitSA"
-is(fit0, "a4aFitSA") 
+is(fit0, "a4aFitSA")
 
 # when fit="assessment" class is "a4aFitSA"
 fit1 <-  sca(ple4, ple4.indices, fit="assessment")
-is(fit1, "a4aFitSA") 
+is(fit1, "a4aFitSA")
 
 all.equal(fitSumm(fit0), fitSumm(fit1))
 all.equal(harvest(fit0), harvest(fit1))
@@ -203,7 +203,7 @@ idx2 <- ple4.index
 catch.n(stk2) <- genFLQuant(catch.n(stk2), 0.1, niter=nits)
 index(idx2) <- genFLQuant(index(fit0)[[1]], 0.1, niter=nits)
 
-# check iters match 
+# check iters match
 fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
 fit0a <- a4aSCA(iter(stk2,1), FLIndices(iter(idx2,1)), qmodel=list(~s(age, k=4)))
 fit0b <- a4aSCA(iter(stk2,2), FLIndices(iter(idx2,2)), qmodel=list(~s(age, k=4)))
@@ -326,7 +326,7 @@ fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), useADMB=TRU
 
 idx2 <- propagate(ple4.index, nits)
 stk2 <- propagate(ple4, nits)
-# is propagate working 
+# is propagate working
 is(catch.n(stk2), "FLQuantDistr")
 identical(c(catch.n(stk2)[,,,,,1]), c(catch.n(stk2)[,,,,,2]))
 identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(stk2)[,,,,,2])))
@@ -486,7 +486,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 #====================================================================
-# bug in indices naming 
+# bug in indices naming
 #====================================================================
 data(ple4)
 data(ple4.index)
@@ -498,7 +498,8 @@ fit0 <- sca(ple4, FLIndices(ple4.index, biofull), qmodel=list(~s(age, k=4), ~1))
 fit1 <- sca(ple4, FLIndices(biofull, ple4.index), qmodel=list(~1, ~s(age, k=4)))
 
 identical(stock.n(fit0), stock.n(fit1))
-identical(harvest(fit0), harvest(fit1))
+all.equal(c(harvest(fit0)), c(harvest(fit1)), tolerance = 1e-5)
+
 
 #====================================================================
 # center argument
