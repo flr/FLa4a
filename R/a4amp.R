@@ -184,7 +184,7 @@ mp <- function(opModel, obsModel, impModel, ctrl.mp, mpPars, scenario="test", tr
 
 	#============================================================
     attr(stk.om, "tracking") <- tracking
-    stk.om
+    list(opModel=stk.om, obsModel=obsModel)
 
 }
 
