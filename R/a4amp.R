@@ -1,4 +1,4 @@
-mp <- function(opModel, obsModel, impModel, ctrl.mp, mpPars, scenario="test", tracking){
+mp <- function(opModel, obsModel, impModel=FLiem(), ctrl.mp, mpPars, scenario="test", tracking){
 
 	#============================================================
 	# prepare the om
@@ -145,9 +145,9 @@ mp <- function(opModel, obsModel, impModel, ctrl.mp, mpPars, scenario="test", tr
 		#==========================================================
 		# IEM
 		#----------------------------------------------------------
-		# function l()
-		if (!is.null(ctrl.mp$ctrl.l)){
-			ctrl.l <- ctrl.mp$ctrl.l
+		if (exists(iem)){
+			ctrl.l <- args(iem)
+			ctrl.l$method <- method(iem)
 			ctrl.l$ctrl <- ctrl
 			ctrl.l$tracking <- tracking
 			ctrl.l$ioval <- list(iv=list(t1=flfval), ov=list(t1=flfval))
@@ -184,9 +184,11 @@ mp <- function(opModel, obsModel, impModel, ctrl.mp, mpPars, scenario="test", tr
     cat("\n")
 
 	#============================================================
-    attr(stk.om, "tracking") <- tracking
-    list(opModel=stk.om, obsModel=obsModel)
-
+    mp <- as(opModel, "FLmp")
+    stock(mp) <- stk.om
+    decisionTracking(mp) <- tracking
+    genArgs(mp) <- mpPars
+	mp
 }
 
 # dispatching
