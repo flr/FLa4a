@@ -2,11 +2,11 @@ mp <- function(opModel, obsModel, impModel, ctrl.mp, mpPars, scenario="test", tr
 
 	#============================================================
 	# prepare the om
-	stk.om <- opModel$stk
+	stk.om <- stock(opModel)	
 	name(stk.om) <- scenario
-	sr.om <- opModel$sr
-	sr.om.res <- opModel$sr.res
-	sr.om.res.mult <- opModel$sr.res.mult
+	sr.om <- sr(opModel)
+	sr.om.res <- residuals(sr.om)
+	sr.om.res.mult <- sr.om@logerror
 	fy <- mpPars$fy # final year
 	y0 <- mpPars$y0 # initial data year
 	dy <- mpPars$dy # final data year
@@ -162,10 +162,11 @@ mp <- function(opModel, obsModel, impModel, ctrl.mp, mpPars, scenario="test", tr
 		#----------------------------------------------------------
 		# fleet dynamics/behaviour
 		# function j()
-		if (!is.null(ctrl.mp$ctrl.j)){
-			ctrl.j <- ctrl.mp$ctrl.j
-			ctrl.j$ctrl <- ctrl
+		if (exists(fleetBehaviour(opModel))){
+			ctrl.j <- args(fleetBehaviour(opModel))
+			ctrl.j$method <- method(fleetBehaviour(opModel))
 			ctrl.j$tracking <- tracking
+			ctrl.j$ctrl <- ctrl
 			ctrl.j$ioval <- list(iv=list(t1=flfval), ov=list(t1=flfval))
 			out <- do.call("a4ampDispatch", ctrl.j)
 			ctrl <- out$ctrl
