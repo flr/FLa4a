@@ -313,7 +313,6 @@ isPresenta4aSRmodel <- function(srMod) {
   grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
 }
 
-
 geta4aSRmodel <- function(srMod) {
   facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
   facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
