@@ -209,6 +209,27 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
 
 
 
+#
+#  show methods
+#
+
+setMethod("show", "a4aStkParams",
+  function(object)
+  {
+    cat("stkmodel:\n")
+    if (length(object) == 0) {
+      cat("empty object\n")
+    } else {
+      fmt <- paste0("\t %2smodel: ")
+      cat(sprintf(fmt, "f")); print(fMod(object), showEnv = FALSE)
+      cat(sprintf(fmt, "n1")); print(n1Mod(object), showEnv = FALSE)
+      cat(sprintf(fmt, "sr")); print(srMod(object), showEnv = FALSE)
+    }
+ })
+
+
+
+
 
 #
 # Coersion methods
