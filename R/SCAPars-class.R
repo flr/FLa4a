@@ -148,11 +148,11 @@ setMethod("fPars", "SCAPars", function(object) {
   stkmodel_coefficients[idx,]
 })
 
-##' @rdname SCAPars-class
-##' @aliases fCovar fCovar-methods
-#setGeneric("fCovar", function(object, ...) standardGeneric("fCovar"))
-##' @rdname SCAPars-class
-#setMethod("fCovar", "SCAPars", function(object) object@fmodel@covar)
+#' @rdname SCAPars-class
+#' @aliases fCovar fCovar-methods
+setGeneric("fCovar", function(object, ...) standardGeneric("fCovar"))
+#' @rdname SCAPars-class
+setMethod("fCovar", "SCAPars", function(object) object@fmodel@covar)
 
 #' @rdname SCAPars-class
 #' @aliases fFrml fFrml-methods
