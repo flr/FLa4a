@@ -1,0 +1,30 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Background}{3}{section.1}
+\contentsline {section}{\numberline {2}License, documentation and development status}{3}{section.2}
+\contentsline {section}{\numberline {3}Installing and loading libraries}{3}{section.3}
+\contentsline {section}{\numberline {4}How to read this document}{4}{section.4}
+\contentsline {section}{\numberline {5}Stock assessment model details}{4}{section.5}
+\contentsline {section}{\numberline {6}Quick and dirty}{5}{section.6}
+\contentsline {section}{\numberline {7}Diagnostics}{9}{section.7}
+\contentsline {section}{\numberline {8}The statistical catch-at-age stock assessment framework - the {\texttt {sca}} method}{17}{section.8}
+\contentsline {subsection}{\numberline {8.1}Fishing mortality submodel}{17}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Catchability submodel}{21}{subsection.8.2}
+\contentsline {subsection}{\numberline {8.3}Catchability submodel for age aggregated indices}{25}{subsection.8.3}
+\contentsline {subsection}{\numberline {8.4}Catchability submodel for single age indices}{27}{subsection.8.4}
+\contentsline {subsection}{\numberline {8.5}Stock-recruitment submodel}{28}{subsection.8.5}
+\contentsline {section}{\numberline {9}The major effects - age, year and cohort}{29}{section.9}
+\contentsline {section}{\numberline {10}The statistical catch-at-age stock assessment framework advanced features - the {\texttt {a4aSCA}} method}{32}{section.10}
+\contentsline {subsection}{\numberline {10.1}N1 model}{33}{subsection.10.1}
+\contentsline {subsection}{\numberline {10.2}Variance model}{33}{subsection.10.2}
+\contentsline {subsection}{\numberline {10.3}Working with covariates}{34}{subsection.10.3}
+\contentsline {subsection}{\numberline {10.4}Assessing {\texttt {ADMB}} files}{36}{subsection.10.4}
+\contentsline {section}{\numberline {11}Predict and simulate}{36}{section.11}
+\contentsline {subsection}{\numberline {11.1}Predict}{37}{subsection.11.1}
+\contentsline {subsection}{\numberline {11.2}Simulate}{37}{subsection.11.2}
+\contentsline {section}{\numberline {12}The statistical catch-at-age stock assessment framework with MCMC}{39}{section.12}
+\contentsline {section}{\numberline {13}Geeky stuff}{42}{section.13}
+\contentsline {subsection}{\numberline {13.1}External weigthing of likelihood components}{42}{subsection.13.1}
+\contentsline {subsection}{\numberline {13.2}More models}{43}{subsection.13.2}
+\contentsline {subsection}{\numberline {13.3}Propagate natural mortality uncertainty}{48}{subsection.13.3}
+\contentsline {subsection}{\numberline {13.4}WCSAM exercise - replicating itself}{50}{subsection.13.4}
+\contentsline {subsection}{\numberline {13.5}Parallel computing}{51}{subsection.13.5}

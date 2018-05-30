@@ -1,3 +1,11 @@
+FLa4a 2.0.0:
+
+ NEW FEATURES:
+- new functions to run MSE, these are used as building blocks of each module. The naming convention used to id the blocks is "sa" for estimator/stock assessment, "phcr" for parametrization of the HCR, "hcr" for harvest control rule, "is" for implementation system, "iem" for implementation error system, "fb" for fleet behaviour.
+- new function "mp" to run the management procedure part of the MSE.
+
+ BUG FIXES:
+
  FLa4a 1.1.x:
 
  NEW FEATURES:

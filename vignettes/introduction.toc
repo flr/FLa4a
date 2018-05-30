@@ -1,0 +1,9 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Background}{2}{section.1}
+\contentsline {section}{\numberline {2}License, documentation and development status}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}The moderate data stock}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}The stock assessment framework}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}MSE}{3}{subsection.2.3}
+\contentsline {section}{\numberline {3}The {\texttt {a4a }}{}approach to stock assessment and management advice}{3}{section.3}
+\contentsline {section}{\numberline {4}Installing and loading libraries}{4}{section.4}
+\contentsline {section}{\numberline {5}How to read this document}{5}{section.5}

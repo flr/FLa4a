@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Backround}{}% 1
+\BOOKMARK [1][-]{section.2}{License, documentation and development status}{}% 2
+\BOOKMARK [1][-]{section.3}{Installing and loading libraries}{}% 3
+\BOOKMARK [1][-]{section.4}{How to read this document}{}% 4
+\BOOKMARK [1][-]{section.5}{a4aGr - The growth class}{}% 5
+\BOOKMARK [1][-]{section.6}{Adding uncertainty to growth parameters with a multivariate normal distribution}{}% 6
+\BOOKMARK [1][-]{section.7}{Adding uncertainty to growth parameters with a multivariate triangle distribution}{}% 7
+\BOOKMARK [1][-]{section.8}{Adding uncertainty to growth parameters with statistical copulas}{}% 8
+\BOOKMARK [1][-]{section.9}{Converting from length to age based data - the l2a\(\) method}{}% 9

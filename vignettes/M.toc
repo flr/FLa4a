@@ -1,0 +1,9 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Background}{3}{section.1}
+\contentsline {section}{\numberline {2}License, documentation and development status}{3}{section.2}
+\contentsline {section}{\numberline {3}Installing and loading libraries}{3}{section.3}
+\contentsline {section}{\numberline {4}How to read this document}{4}{section.4}
+\contentsline {section}{\numberline {5}{\texttt {a4aM}} - The M class}{4}{section.5}
+\contentsline {section}{\numberline {6}Adding uncertainty to natural mortality parameters with a multivariate normal distribution}{5}{section.6}
+\contentsline {section}{\numberline {7}Adding uncertainty to natural mortality parameters with statistical copulas}{6}{section.7}
+\contentsline {section}{\numberline {8}Computing natural mortality time series - the "m" method}{9}{section.8}

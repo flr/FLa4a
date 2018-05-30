@@ -13,7 +13,8 @@ Depends:
     FLCore (>= 2.6.4),
     triangle,
     copula,
-    coda
+    coda,
+    mse
 Imports:
     methods,
     lattice,
@@ -61,5 +62,13 @@ Collate:
     'ma-methods.R'
     'utilities.R'
     'southern_hake-data.R'
-    'a4amp.R'
+    'mp-methods.R'
+    'a4amse-hcr.R'
+    'a4amse-iem.R'
+    'a4amse-is.R'
+    'a4amse-tm.R'
+    'a4amse-oem.R'
+    'a4amse-fb.R'
+    'a4amse-phcr.R'
+    'a4amse-sa.R'
 RoxygenNote: 6.0.1
