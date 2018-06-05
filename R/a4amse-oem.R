@@ -21,6 +21,9 @@ sampling.oem <- function(stk, deviances, observations, vy0, ay, tracking, oe=c("
 	assessmentYear <- ac(ay)
 	# dataYears is a position vector, not the years themselves
 
+	# carry on stock information in the observations for "short-cut" approach
+	stock.n(observations$stk)[,assessmentYear] <- stock.n(stk)[,assessmentYear]	
+	
 	# catch.n
 	if(oe %in% c("both","catch")){
 		catch.n(observations$stk)[,max(dataYears)] <- catch.n(stk)[,max(dataYears)]*deviances$stk$catch.n[,max(dataYears)]
