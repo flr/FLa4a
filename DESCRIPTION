@@ -1,8 +1,8 @@
 Package: FLa4a
 Type: Package
 Title: Tools for Management Strategies Evaluation (MSE)  
-Version: 2.0.0
-Date: 2018-05-08
+Version: 2.0.1
+Date: 2020-01-01
 Authors@R: c(
   person("Colin P.", "Millar", email = "colinpmillar@googlemail.com", role = "aut"),
   person("Ernesto", "Jardim", email = "ernesto.jardim@ec.europa.eu", role = c("aut", "cre")))

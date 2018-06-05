@@ -1,6 +1,6 @@
 # FLa4a
-- Version: 2.0.0
-- Date: 2018-05-08
+- Version: 2.0.1
+- Date: 2020-01-01
 - Author: Colin P. Millar and Ernesto Jardim
 - Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>
 - Repository: <https://github.com/flr/FLa4a/>
