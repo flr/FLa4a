@@ -23,6 +23,7 @@ sampling.oem <- function(stk, deviances, observations, vy0, ay, tracking, oe=c("
 
 	# carry on stock information in the observations for "short-cut" approach
 	stock.n(observations$stk)[,assessmentYear] <- stock.n(stk)[,assessmentYear]	
+	harvest(observations$stk)[,assessmentYear] <- harvest(stk)[,assessmentYear]	
 	
 	# catch.n
 	if(oe %in% c("both","catch")){
