@@ -26,8 +26,9 @@ sampling.oem <- function(stk, deviances, observations, vy0, ay, tracking, oe=c("
 	harvest(observations$stk)[,assessmentYear] <- harvest(stk)[,assessmentYear]	
 	
 	# catch.n
+	# note it's adding 1 individual to avoid sca from crashing
 	if(oe %in% c("both","catch")){
-		catch.n(observations$stk)[,max(dataYears)] <- catch.n(stk)[,max(dataYears)]*deviances$stk$catch.n[,max(dataYears)]
+		catch.n(observations$stk)[,max(dataYears)] <- catch.n(stk)[,max(dataYears)]*deviances$stk$catch.n[,max(dataYears)] + 1
 		catch(observations$stk)[,max(dataYears)] <- computeCatch(observations$stk[,max(dataYears)])
 		stk0 <- observations$stk[,dataYears]
 	}
