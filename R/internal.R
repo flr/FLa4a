@@ -292,10 +292,10 @@ flcSRmodelList <- c("bevholt", "ricker", "geomean")
 
 
 a4aSRmodelDefinitions <- function(srmodel) {
-  srmodelName <- gsub("[()]", "", srmodel)
+  srmodelName <- gsub("\\([^()]*\\)", "", srmodel)
   if (srmodelName %in% flcSRmodelList) {
     # get FLSR definition
-    eval(parse(text=paste0("FLCore::", srmodel)))$model[[3]]
+    eval(parse(text=paste0("FLCore::", srmodelName, "()")))$model[[3]]
   } else {
     # use a4a definition
     switch(srmodelName,
