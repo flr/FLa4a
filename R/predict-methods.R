@@ -31,8 +31,6 @@ setMethod("predict", signature(object = "SCAPars"),
   sm <- stkmodel(object)
   qm <- qmodel(object)
   vm <- vmodel(object)
-  # need to update centering to include stock centering
-  for(i in 1:length(qm)) qm[[i]]@centering <- qm[[i]]@centering-sm@centering
   # run predict
     lst <- list(
       stkmodel = predict.stkpars(sm),

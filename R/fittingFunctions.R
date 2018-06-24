@@ -417,6 +417,10 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
       if (i == 1) {
         # on i == 1 do the initial propagation
         out@pars <- propagate(outi@pars, niters)
+        for (j in seq_along(indices)) {
+          # add stock centering to link qmodel back to stock size
+          out@pars@qmodel[[j]]@centering[,1] <- outi@pars@qmodel[[j]]@centering - outi@pars@stkmodel@centering
+        }
       } else {
         # fill in 2nd, 3rd iterations etc.
         # now the a4aFitSA bits
@@ -428,7 +432,8 @@ setMethod("a4aSCA", signature("FLStock", "FLIndices"),
         out@pars@stkmodel@mat[,,,,,i]    <- outi@pars@stkmodel@mat
         # qmodel
         for (j in seq_along(indices)) {
-          out@pars@qmodel[[j]]@centering[,i] <- outi@pars@qmodel[[j]]@centering
+          # add stock centering to link qmodel back to stock size
+          out@pars@qmodel[[j]]@centering[,i] <- outi@pars@qmodel[[j]]@centering - outi@pars@stkmodel@centering
           out@pars@qmodel[[j]]@coefficients[,i] <- outi@pars@qmodel[[j]]@coefficients
           out@pars@qmodel[[j]]@vcov[,,i]  <- outi@pars@qmodel[[j]]@vcov
         }
