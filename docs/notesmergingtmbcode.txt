@@ -1,0 +1,9 @@
+# NOTES ON MERGING COLIN's CODE
+
+- SCAPars-class.R
+	Why setting qMod, vMod, etc ?
+
+- a4aStkParams-class.R
+	Why changing centering from numeric to FLPar ?
+	
+
