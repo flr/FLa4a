@@ -32,7 +32,7 @@ setMethod("coef", signature(object = "SCAPars"),
 #' @rdname coef-methods
 setMethod("coef", signature(object = "a4aStkParams"),
   function(object) {
-      object @ params
+      object @ coefficients
   })
 
 #' @rdname coef-methods
@@ -43,9 +43,9 @@ setMethod("coef", signature(object = "submodels"),
 
 
 #' @rdname coef-methods
-setMethod("coef", signature(object = "submodel"),
+setMethod("coef", "submodel",
   function(object) {
-      object @ params
+      object@coefficients
   })
 
 #==================================================================== 
@@ -82,7 +82,7 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
 #' @rdname coef-methods
 setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
   function(object, ..., value) {    
-    object @ params[] <- value
+    object @ coefficients[] <- value
     object
   })
 
@@ -94,7 +94,7 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
     new <- rep_len(unlist(value), length.out = length(old))
     
     for (i in seq_along(object)) {
-      object[[i]] @ params[] <- new[grep(object[[i]] @ name, names(old))]  
+      object[[i]] @ coefficients[] <- new[grep(object[[i]] @ name, names(old))]  
     }
     object
   })
@@ -103,7 +103,28 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
 #' @rdname coef-methods
 setMethod("coef<-", signature(object = "submodel", value = "numeric"),
   function(object, ..., value) {
-      object @ params[] <- value
+      object@coefficients[] <- value
       object
   })
 
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "submodel", value = "FLPar"),
+  function(object, ..., value) {
+      object@coefficients <- value
+      object
+  })
+
+
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "a4aStkParams", value = "FLPar"),
+  function(object, ..., value) {
+      object@coefficients <- value
+      object
+  })
+
+#' @rdname coef-methods
+setMethod("coef<-", signature(object = "a4aStkParams", value = "matrix"),
+  function(object, ..., value) {
+      object@coefficients[] <- value
+      object
+  })

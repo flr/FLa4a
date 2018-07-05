@@ -10,8 +10,9 @@
 \alias{vcov<-,a4aFitSA,numeric-method}
 \alias{vcov<-,SCAPars,numeric-method}
 \alias{vcov<-,a4aStkParams,numeric-method}
-\alias{vcov<-,submodels,numeric-method}
 \alias{vcov<-,submodel,numeric-method}
+\alias{vcov<-,submodel,matrix-method}
+\alias{vcov<-,submodel,array-method}
 \title{Variance-covariance matrix}
 \usage{
 \S4method{vcov}{a4aFitSA}(object)
@@ -28,9 +29,11 @@
 
 \S4method{vcov}{a4aStkParams,numeric}(object, ...) <- value
 
-\S4method{vcov}{submodels,numeric}(object, ...) <- value
-
 \S4method{vcov}{submodel,numeric}(object, ...) <- value
+
+\S4method{vcov}{submodel,matrix}(object, ...) <- value
+
+\S4method{vcov}{submodel,array}(object, ...) <- value
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}

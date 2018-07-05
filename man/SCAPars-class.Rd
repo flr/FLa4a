@@ -22,9 +22,15 @@
 \alias{qmodel}
 \alias{qmodel-methods}
 \alias{qmodel,SCAPars-method}
+\alias{qMod}
+\alias{qMod-methods}
+\alias{qMod,SCAPars-method}
 \alias{vmodel}
 \alias{vmodel-methods}
 \alias{vmodel,SCAPars-method}
+\alias{vMod}
+\alias{vMod-methods}
+\alias{vMod,SCAPars-method}
 \alias{srPars}
 \alias{srPars-methods}
 \alias{srPars,SCAPars-method}
@@ -63,6 +69,7 @@
 \alias{vFrml,SCAPars-method}
 \alias{m,SCAPars-method}
 \alias{wt,SCAPars-method}
+\alias{propagate,SCAPars-method}
 \alias{iter,SCAPars-method}
 \title{Model parameters class}
 \usage{
@@ -90,9 +97,17 @@ qmodel(object, ...)
 
 \S4method{qmodel}{SCAPars}(object)
 
+qMod(object, ...)
+
+\S4method{qMod}{SCAPars}(object)
+
 vmodel(object, ...)
 
 \S4method{vmodel}{SCAPars}(object)
+
+vMod(object, ...)
+
+\S4method{vMod}{SCAPars}(object)
 
 srPars(object, ...)
 
@@ -146,12 +161,18 @@ vFrml(object, ...)
 
 \S4method{wt}{SCAPars}(object)
 
+\S4method{propagate}{SCAPars}(object, iter, fill.iter = TRUE)
+
 \S4method{iter}{SCAPars}(obj, it)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
 
 \item{...}{additional argument list that might never be used}
+
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
 
 \item{obj}{the object to be subset}
 

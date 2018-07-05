@@ -8,9 +8,12 @@
 \alias{submodel-methods}
 \alias{submodel,missing-method}
 \alias{params,submodel-method}
-\alias{model,submodel-method}
-\alias{covar,submodel-method}
+\alias{sMod}
+\alias{sMod-methods}
+\alias{sMod,submodel-method}
 \alias{iter,submodel-method}
+\alias{propagate,submodel-method}
+\alias{formula,submodel-method}
 \title{Submodel class}
 \usage{
 submodel(object, ...)
@@ -19,11 +22,15 @@ submodel(object, ...)
 
 \S4method{params}{submodel}(object)
 
-\S4method{model}{submodel}(object)
+sMod(object, ...)
 
-\S4method{covar}{submodel}(object)
+\S4method{sMod}{submodel}(object)
 
 \S4method{iter}{submodel}(obj, it)
+
+\S4method{propagate}{submodel}(object, iter, fill.iter = TRUE)
+
+\S4method{formula}{submodel}(x)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
@@ -33,6 +40,12 @@ submodel(object, ...)
 \item{obj}{the object to be subset}
 
 \item{it}{iteration to be extracted}
+
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
+
+\item{x}{the submodel object that is to be modified}
 }
 \description{
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.
@@ -41,15 +54,15 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
  
 \describe{
 
-\item{\code{Mod}}{\code{formula} describing the model}
+ \item{\code{Mod}}{\code{formula} describing the model}
 
-\item{\code{params}}{\code{FLPar} with model parameters}
+ \item{\code{params}}{\code{FLPar} with model parameters}
 
-\item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
+ \item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
 
-\item{\code{centering}}{\code{numeric} value used for centering the data}
+ \item{\code{centering}}{\code{numeric} value used for centering the data}
 
-\item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
+ \item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
 }
 }
 

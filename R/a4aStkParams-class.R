@@ -3,7 +3,7 @@
 #' @name a4aStkParams
 #' @rdname a4aStkParams-class
 #' @template ClassDescription
-#' @section Slot: 
+#' @section Slot:
 #' \describe{
 #'	\item{\code{fMod}}{F submodel \code{formula}}
 #'	\item{\code{n1Mod}}{first year N \code{formula}}
@@ -18,37 +18,90 @@
 #' @aliases a4aStkParams-class
 
 setClass("a4aStkParams",
-  representation = 
-    representation(
-      "FLComp",
-      fMod      = "formula",
-      n1Mod     = "formula",
-      srMod     = "formula",
-      params    = "FLPar",
-      vcov      = "array",
-      centering = "numeric",
-      distr     = "character",
-      m         = "FLQuant",
-      wt         = "FLQuant",
-      units     = "character"
-    ),
-  prototype = 
-    prototype(
-      name      = character(0),
-      desc      = character(0),
-      range     = c(min=0, max=0, plusgroup=0, minyear=0, maxyear=0),
-      fMod      = ~1,
-      n1Mod     = ~1,
-      srMod     = ~1,
-      params    = FLPar(),
-      vcov      = array(),
-      centering = 0,
-      distr     = "lnorm",
-      m         = FLQuant(),
-      wt         = FLQuant(),
-      units     = "NA"
+  contains = "FLComp",
+  slots =
+    c(
+      fMod         = "formula",
+      n1Mod        = "formula",
+      srMod        = "formula",
+      coefficients = "FLPar",
+      vcov         = "array",
+      centering    = "FLPar",
+      distr        = "character",
+      m            = "FLQuant",
+      wt           = "FLQuant",
+      mat          = "FLQuant",
+      units        = "character",
+      link         = "function",
+      linkinv      = "function"
     )
 )
+
+setValidity("a4aStkParams",
+  function(object) {
+    # check dimensions of m and wt are the same
+    if (!identical(unlist(dimnames(object@m)[2:5]),
+                   unlist(dimnames(object@wt)[2:5]))) {
+      "m and wt elements must share dimensions 2 to 5"
+      # can also check against range slot here...
+    } else {
+      TRUE
+    }
+})
+
+setMethod("initialize", "a4aStkParams",
+    function(.Object,
+              fMod         = ~ 1,
+              n1Mod        = ~ 1,
+              srMod        = ~ 1,
+              coefficients = FLPar(),
+              vcov         = array(),
+              centering    = FLPar(centering = 0),
+              distr        = "norm",
+              m            = FLQuant(),
+              wt           = FLQuant(),
+              mat          = FLQuant(),
+              units        = "NA",
+              ink          = log,
+              linkinv      = exp,
+              ...) {
+      # initialize FLComp slots
+      .Object <- callNextMethod(.Object, ...)
+      # initialize remaining slots
+      .Object@fMod  <- fMod
+      .Object@n1Mod <- n1Mod
+      .Object@srMod <- srMod
+      .Object@params <- params
+      .Object@vcov <- vcov
+      if (length(dim(vcov)) == 2) dim(.Object@vcov) <- c(dim(vcov), 1)
+      .Object@centering <- centering
+      .Object@distr <- distr
+      # if missing set dimensions of of m and wt based on range
+      if (missing(m) || missing(wt))
+        flq <- FLQuant(
+                  matrix(NA,
+                     nrow = .Object@range["max"] - .Object@range["min"] + 1,
+                     ncol = .Object@range["maxyear"] - .Object@range["minyear"] + 1),
+                     dimnames = list(age = .Object@range["min"]:.Object@range["max"],
+                                     year = .Object@range["minyear"]:.Object@range["maxyear"])
+                  )
+      .Object@m <- if (missing(m)) flq else m
+      .Object@wt <- if (missing(wt)) flq else wt
+      .Object@wt <- if (missing(mat)) flq else mat
+      # throw error if range from FLComp doesn't match FLQuants
+      # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
+      if (abs(as.numeric(dimnames(.Object@m)$year[1]) - .Object@range["minyear"]) > 1e-9 ||
+          abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) - .Object@range["maxyear"]) > 1e-9) {
+            stop("range does not match supplied m and wt dimensions")
+      }
+      .Object@units <- units
+      .Object
+    })
+
+
+
+
+
 
 #' @rdname a4aStkParams-class
 #' @template bothargs
@@ -73,10 +126,13 @@ setMethod("a4aStkParams", signature(object="missing"),
 
 
 #' @rdname a4aStkParams-class
-setMethod("m", signature(object="a4aStkParams"), function(object) object @ m)
+setMethod("m", signature(object="a4aStkParams"), function(object) object@m)
 
 #' @rdname a4aStkParams-class
-setMethod("wt", signature(object="a4aStkParams"), function(object) object @ wt)
+setMethod("wt", signature(object="a4aStkParams"), function(object) object@wt)
+
+#' @rdname a4aStkParams-class
+setMethod("mat", signature(object="a4aStkParams"), function(object) object@mat)
 
 #' @rdname a4aStkParams-class
 #' @aliases fMod fMod-methods
@@ -110,26 +166,26 @@ setReplaceMethod("n1Mod", signature("a4aStkParams","formula"), function(object, 
 })
 
 #' @rdname a4aStkParams-class
-#' @aliases rMod rMod-methods
-setGeneric("rMod", function(object, ...) standardGeneric("rMod"))
+#' @aliases srMod rMod-methods
+setGeneric("srMod", function(object, ...) standardGeneric("srMod"))
 #' @rdname a4aStkParams-class
-setMethod("rMod", "a4aStkParams", function(object) object@rMod)
+setMethod("srMod", "a4aStkParams", function(object) object@srMod)
 
 #' @rdname a4aStkParams-class
-#' @aliases rMod<- rMod<--methods
-setGeneric("rMod<-", function(object,value) standardGeneric("rMod<-"))
+#' @aliases srMod<- srMod<--methods
+setGeneric("srMod<-", function(object,value) standardGeneric("srMod<-"))
 #' @rdname a4aStkParams-class
-setReplaceMethod("rMod", signature("a4aStkParams","formula"), function(object, value){
-    if(all.equal(is(value), is(object@rMod))) object@rMod <- value
+setReplaceMethod("srMod", signature("a4aStkParams","formula"), function(object, value){
+    if(all.equal(is(value), is(object@srMod))) object@srMod <- value
     object
 })
 
 #' @rdname a4aStkParams-class
-setMethod("params", "a4aStkParams", function(object) object@params)
+setMethod("params", "a4aStkParams", function(object) object@coefficients)
 
 #' @rdname a4aStkParams-class
 setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){
-    if(all.equal(is(value), is(object@params))) object@params <- value
+    if (all.equal(is(value), is(params(object)))) object@coefficients <- value
     object
 })
 
@@ -151,45 +207,119 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
     object
 })
 
+
+
+#
+#  show methods
+#
+
+setMethod("show", "a4aStkParams",
+  function(object)
+  {
+    cat("stkmodel:\n")
+    if (length(object) == 0) {
+      cat("empty object\n")
+    } else {
+      fmt <- paste0("\t %2smodel: ")
+      cat(sprintf(fmt, "f")); print(fMod(object), showEnv = FALSE)
+      cat(sprintf(fmt, "n1")); print(n1Mod(object), showEnv = FALSE)
+      cat(sprintf(fmt, "sr")); print(srMod(object), showEnv = FALSE)
+    }
+ })
+
+
+
+
+
+#
+# Coersion methods
+#
+
+# method.skeleton("coerce", "a4aStkParams",  file = stdout())
+
+setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
+  function (from, to, strict = TRUE)
+  {
+    # get SR model formula
+    srmodel <- geta4aSRmodel(srMod(from))
+    # get FLSR definition
+    expr_model <- a4aSRmodelDefinitions(srmodel)
+
+    # build skeleton FLSR
+    flsr <- FLSR(formula(paste("rec ~ (", deparse(expr_model, width.cutoff = 500), ") *", exp(from@centering))))
+
+    # get SR pars
+    cnames <- rownames(coef(from))
+    params(flsr) <- FLPar(a = exp(coef(from)[grep("sraMod", cnames)]),
+                          b = exp(coef(from)[grep("srbMod", cnames)]))
+
+    which <- c(grep("sraMod", cnames), grep("srbMod", cnames)) 
+    vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
+    dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
+
+    flqs <- genFLQuant(from)
+
+    rec(flsr) <- flqs$stock.n[1,]
+    ssb <- quantSums(flqs$stock.n * mat(from) * wt(from))
+    ssb(flsr) <- ssb
+    fitted(flsr) <- ssb/ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
+    residuals(flsr) <- log(rec(flsr)) - log(fitted(flsr))
+
+    range(flsr) <- range(from)[c("min", "max", "minyear", "maxyear")]
+    name(flsr) <- name(from)
+    desc(flsr) <- desc(from)
+
+    flsr
+  }
+)
+
+
+
+#' @rdname a4aStkParams-class
+#' @param iter the number of iterations to create
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
+setMethod("propagate", signature(object="a4aStkParams"),
+  function(object, iter, fill.iter = TRUE)
+  {
+
+    # propagate coefs, centering, m and wt
+    object@coefficients <- propagate(object@coefficients, iter, fill.iter = fill.iter)
+    object@centering    <- propagate(object@centering, iter, fill.iter = fill.iter)
+    object@m            <- propagate(object@m, iter, fill.iter = fill.iter)
+    object@wt           <- propagate(object@wt, iter, fill.iter = fill.iter)
+    object@mat          <- propagate(object@mat, iter, fill.iter = fill.iter)
+
+    # now propagate vcov
+    vcov.iter <- vcov(object)
+    dob <- dim(vcov.iter)
+
+    if (iter != dob[3]) {
+      # CHECK no iters in object
+      if(dob[3] > 1) stop("propagate can only extend objects with no iters")
+
+      object@vcov <- array(NA, dim = c(dob[1:2], iter), dimnames = c(dimnames(vcov.iter)[1:2], list(1:iter)))
+      if (fill.iter) {
+        object@vcov[] <- as.vector(vcov.iter)
+      } else {
+        object@vcov[,,1] <- as.vector(vcov.iter)
+      }
+    }
+
+    object
+  }
+)
+
+
 #' @rdname a4aStkParams-class
 #' @param obj the object to be subset
-#' @param it iteration to be extracted 
+#' @param it iteration to be extracted
 setMethod("iter", "a4aStkParams", function(obj, it){
 	obj@vcov <- obj@vcov[,,it, drop=FALSE]
 	obj@params <- iter(obj@params, it)
 	obj@m <- iter(obj@m, it)
 	obj@wt <- iter(obj@wt, it)
+  bj@mat <- iter(obj@mat, it)
 	obj@centering <- obj@centering[it]
 	obj
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

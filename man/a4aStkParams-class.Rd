@@ -9,6 +9,7 @@
 \alias{a4aStkParams,missing-method}
 \alias{m,a4aStkParams-method}
 \alias{wt,a4aStkParams-method}
+\alias{mat,a4aStkParams-method}
 \alias{fMod}
 \alias{fMod-methods}
 \alias{fMod,a4aStkParams-method}
@@ -21,18 +22,19 @@
 \alias{n1Mod<-}
 \alias{n1Mod<--methods}
 \alias{n1Mod<-,a4aStkParams,formula-method}
-\alias{rMod}
+\alias{srMod}
 \alias{rMod-methods}
-\alias{rMod,a4aStkParams-method}
-\alias{rMod<-}
-\alias{rMod<--methods}
-\alias{rMod<-,a4aStkParams,formula-method}
+\alias{srMod,a4aStkParams-method}
+\alias{srMod<-}
+\alias{srMod<--methods}
+\alias{srMod<-,a4aStkParams,formula-method}
 \alias{params,a4aStkParams-method}
 \alias{params<-,a4aStkParams,FLPar-method}
 \alias{distr,a4aStkParams-method}
 \alias{distr<-,a4aStkParams,character-method}
 \alias{vcov,a4aStkParams-method}
 \alias{vcov<-,a4aStkParams,array-method}
+\alias{propagate,a4aStkParams-method}
 \alias{iter,a4aStkParams-method}
 \title{Stock parameters class}
 \usage{
@@ -43,6 +45,8 @@ a4aStkParams(object, ...)
 \S4method{m}{a4aStkParams}(object)
 
 \S4method{wt}{a4aStkParams}(object)
+
+\S4method{mat}{a4aStkParams}(object)
 
 fMod(object, ...)
 
@@ -60,13 +64,13 @@ n1Mod(object) <- value
 
 \S4method{n1Mod}{a4aStkParams,formula}(object) <- value
 
-rMod(object, ...)
+srMod(object, ...)
 
-\S4method{rMod}{a4aStkParams}(object)
+\S4method{srMod}{a4aStkParams}(object)
 
-rMod(object) <- value
+srMod(object) <- value
 
-\S4method{rMod}{a4aStkParams,formula}(object) <- value
+\S4method{srMod}{a4aStkParams,formula}(object) <- value
 
 \S4method{params}{a4aStkParams}(object)
 
@@ -80,6 +84,8 @@ rMod(object) <- value
 
 \S4method{vcov}{a4aStkParams,array}(object) <- value
 
+\S4method{propagate}{a4aStkParams}(object, iter, fill.iter = TRUE)
+
 \S4method{iter}{a4aStkParams}(obj, it)
 }
 \arguments{
@@ -89,6 +95,10 @@ rMod(object) <- value
 
 \item{value}{the new object}
 
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
+
 \item{obj}{the object to be subset}
 
 \item{it}{iteration to be extracted}
@@ -97,7 +107,7 @@ rMod(object) <- value
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.
 }
 \section{Slot}{
- 
+
 \describe{
 \item{\code{fMod}}{F submodel \code{formula}}
 \item{\code{n1Mod}}{first year N \code{formula}}

@@ -6,26 +6,66 @@
 \alias{submodels-class}
 \alias{submodels}
 \alias{submodels-methods}
-\alias{submodels,missing-method}
-\alias{submodels,submodel-method}
-\alias{submodels,list-method}
+\alias{corBlocks}
+\alias{corBlock-methods}
+\alias{corBlocks,submodels-method}
+\alias{params,submodels-method}
+\alias{sMod,submodels-method}
+\alias{formula,submodels-method}
+\alias{corBlocks<-}
+\alias{corBlocks<-,submodels,list-method}
+\alias{corBlocks<-}
+\alias{$<-,submodels,submodel-method}
+\alias{[[<-,submodels,character,missing-method}
+\alias{[[<-,submodels,numeric,missing-method}
+\alias{propagate,submodels-method}
 \alias{iter,submodels-method}
 \title{Submodels class}
 \usage{
-submodels(object, ...)
+submodels(...)
 
-\S4method{submodels}{missing}(object, ...)
+submodels(...)
 
-\S4method{submodels}{submodel}(object, ...)
+corBlocks(object, ...)
 
-\S4method{submodels}{list}(object, ...)
+\S4method{corBlocks}{submodels}(object)
+
+\S4method{params}{submodels}(object)
+
+\S4method{sMod}{submodels}(object)
+
+\S4method{formula}{submodels}(x)
+
+corBlocks(object, ...) <- value
+
+\S4method{corBlocks}{submodels,list}(object, ...) <- value
+
+\S4method{$}{submodels,submodel}(x, name) <- value
+
+\S4method{[[}{submodels,character,missing}(x, i, j, ...) <- value
+
+\S4method{[[}{submodels,numeric,missing}(x, i, j, ...) <- value
+
+\S4method{propagate}{submodels}(object, iter, fill.iter = TRUE)
 
 \S4method{iter}{submodels}(obj, it)
 }
 \arguments{
+\item{...}{additional argument list that might never be used}
+
 \item{object}{object of relevant class (see signature of method)}
 
-\item{...}{additional argument list that might never be used}
+\item{x}{object to be modified}
+
+\item{value}{value the new object}
+
+\item{name}{name(s) of entry to be extracted / modified}
+
+\item{i, j}{indices specifying elements to extract or replace.}
+
+\item{iter}{the number of iterations to create}
+
+\item{fill.iter}{should the new iterations be filled with values (TRUE) or NAs (FALSE)}
 
 \item{obj}{the object to be subset}
 

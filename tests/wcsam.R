@@ -12,7 +12,7 @@ idx.sim <- ple4.indices[1]
 index(idx.sim[[1]]) <- index(fit.sim)[[1]]
 stk.sim <- propagate(ple4, nits) + fit.sim 
 
-fit2 <-  a4aSCA(stk.sim, idx.sim, qmodel=list(~s(age, k=4)), fit="MP")
+fit2 <-  a4aSCA(stk.sim, idx.sim, qmodel=list(~s(age, k=4)), fit="MP", useADMB=TRUE)
 
 # are the simulated values unbiased
 stk.fit <- stock.n(fit)

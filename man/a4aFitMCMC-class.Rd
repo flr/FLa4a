@@ -4,31 +4,31 @@
 \name{a4aFitMCMC-class}
 \alias{a4aFitMCMC-class}
 \alias{a4aFitMCMC}
+\alias{a4aFitMCMC}
 \alias{a4aFitMCMC-methods}
-\alias{a4aFitMCMC,missing-method}
 \alias{a4aFitSA,a4aFitMCMC-method}
-\alias{a4aFitMCMC,a4aFitSA-method}
+\alias{a4aFit,a4aFitMCMC-method}
 \alias{as.mcmc}
 \alias{as.mcmc-methods}
 \alias{as.mcmc,a4aFitMCMC-method}
 \title{S4 class \code{a4aFitMCMC}}
 \usage{
-a4aFitMCMC(object, ...)
+a4aFitMCMC(...)
 
-\S4method{a4aFitMCMC}{missing}(object, ...)
+a4aFitMCMC(...)
 
 \S4method{a4aFitSA}{a4aFitMCMC}(object, ...)
 
-\S4method{a4aFitMCMC}{a4aFitSA}(object, ...)
+\S4method{a4aFit}{a4aFitMCMC}(object, ...)
 
 as.mcmc(x, ...)
 
 \S4method{as.mcmc}{a4aFitMCMC}(x, ...)
 }
 \arguments{
-\item{object}{object of relevant class (see signature of method)}
-
 \item{...}{additional argument list that might never be used}
+
+\item{object}{object of relevant class (see signature of method)}
 
 \item{x}{an object to be coerced into mcmc}
 }

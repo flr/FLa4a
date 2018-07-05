@@ -13,7 +13,7 @@ sca(stock, indices, ...)
 \S4method{sca}{FLStock,FLIndex}(stock, indices, ...)
 
 \S4method{sca}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
-  srmodel = ~factor(year), fit = "MP", mcmc = missing)
+  srmodel = ~factor(year), fit = "MP", mcmc = missing, useADMB = TRUE)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object}
@@ -31,6 +31,8 @@ sca(stock, indices, ...)
 \item{fit}{character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.}
 
 \item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
+
+\item{useADMB}{if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)}
 }
 \value{
 an \code{a4aFit} or \code{a4aFitSA} object with the fit results.

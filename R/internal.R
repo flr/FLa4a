@@ -195,3 +195,131 @@ par2mat <- function(object){
 
 
 
+flqFromRange <- function(object) {
+  range <- range(object)
+  if (all(is.na(range[c("min", "max")]))) {
+    # fix for biomass indices or any quant that has "all" for the first dim
+    FLQuant(
+      matrix(NA,
+        nrow = 1,
+        ncol = range["maxyear"] - range["minyear"] + 1),
+        dimnames = list(age = "all",
+                        year = range["minyear"]:range["maxyear"]
+      )
+    ) 
+  } else {
+    # the normal case
+    FLQuant(
+      matrix(NA,
+        nrow = range["max"] - range["min"] + 1,
+        ncol = range["maxyear"] - range["minyear"] + 1),
+        dimnames = list(age = range["min"]:range["max"],
+                        year = range["minyear"]:range["maxyear"]
+      )
+    )      
+  }
+}
+
+
+dropMatrixIter <- function(object, iter = 1) {
+  dims <- dim(object)
+  if (!inherits(object, "array") || length(dims) != 3) stop("object must be an array")
+  out <- object[,, iter]
+  dim(out) <- dim(object)[1:2]
+  dimnames(out) <- dimnames(object)[1:2]
+  out
+}
+
+
+# these are left over from when you could set linear models for SR params 
+  #bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
+  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+  #  list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
+  #}
+  #bevholtSV <- function(h = ~ 1, v = ~ 1, SPR0 = 1, CV = 0.5) {
+  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+  #  list(srr = "bevholtSV", a = h, b = v, SPR0 = SPR0, srrCV = CV, ID = 5)
+  #}
+  #ricker <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
+  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+  #  list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
+  #}
+  #hockey <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
+  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+  #  list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
+  #}
+  #geomean <- function(a = ~ 1, CV = 0.5) {
+  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+  #  list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
+  #}
+  #none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, srrCV = -1, ID = 4)
+
+# ----------------------------------------------
+#
+#  bevholt, ricker, geomean share definitions with FLSR
+#  the others need to be defined by the FLa4a package
+#  
+#  It is the responsibility of FLa4a to maintain the defninition of
+#  these SR functoions in the tpl file to match the definition in FLCore
+#
+# ----------------------------------------------
+
+  bevholt <- function(CV = 0.5) {
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+    list(srr = "bevholt", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 1)
+  }
+  bevholtSV <- function(SPR0 = 1, CV = 0.5) {
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+    list(srr = "bevholtSV", a = ~ 1, b = ~ 1, SPR0 = SPR0, srrCV = CV, ID = 5)
+  }
+  ricker <- function(CV = 0.5) {
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+    list(srr = "ricker", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 2)
+  }
+  hockey <- function(CV = 0.5) {
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+    list(srr = "hockey", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 3)
+  }
+  geomean <- function(CV = 0.5) {
+    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
+    list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
+  }
+  none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+
+
+a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
+flcSRmodelList <- c("bevholt", "ricker", "geomean")
+
+
+a4aSRmodelDefinitions <- function(srmodel) {
+  srmodelName <- gsub("\\([^()]*\\)", "", srmodel)
+  if (srmodelName %in% flcSRmodelList) {
+    # get FLSR definition
+    eval(parse(text=paste0("FLCore::", srmodelName, "()")))$model[[3]]
+  } else {
+    # use a4a definition
+    switch(srmodelName,
+      bevholtSV = (~ (6*h*b*ssb) / (spr0* (((a/(1+a)*0.8 + 0.2) + 1)*b + (5*(a/(1+a)*0.8 + 0.2) - 1)*ssb) ))[[2]], # spr0 is provided by user,
+      hockey = (~ a * (ssb + sqrt(b^2 + 0.0025) - sqrt((ssb - b)^2 + 0.0025)))[[2]],
+      stop("unknown SR model")
+    )
+  }
+}
+
+
+isPresenta4aSRmodel <- function(srMod) {
+  facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+  facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
+  grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
+}
+
+
+geta4aSRmodel <- function(srMod) {
+  facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+  facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
+  a4as <- grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
+  if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
+  if (sum(a4as) == 0) "none()" else facs[a4as]
+}
+
+

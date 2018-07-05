@@ -38,51 +38,52 @@
 #' AIC(obj)
 #' BIC(obj)
 
-setClass("a4aFit",
-        representation(
-                "FLComp",
-                call         = "call",
-                clock        = "numeric",
-                fitSumm      = "array",
-                stock.n      = "FLQuant",
-                harvest      = "FLQuant",
-                catch.n      = "FLQuant",
-                index        = "FLQuants"),
-        prototype = prototype(
-                call         = new('call'),
-                clock        = new('numeric'),
-                fitSumm      = new('array'),
-                stock.n      = new('FLQuant'),
-                harvest      = new('FLQuant'),
-                catch.n      = new('FLQuant'),
-                index        = new('FLQuants')),
-        validity = function(object) {
-			# All FLQuant objects must have same dimensions
-			Dim <- dim(object@stock.n)
-			if ((sum(dim(object@harvest) != Dim) + sum(dim(object@catch.n) != Dim))>=1)
-				return("stock.n, catch.n and harvest slots must have same dimensions")
-			# Everything is fine
-			return(TRUE)}
-)
+a4aFit <-
+  setClass("a4aFit",
+           contains = "FLComp",
+           slots = c(call    = "call",
+                     clock   = "numeric",
+                     fitSumm = "array",
+                     stock.n = "FLQuant",
+                     harvest = "FLQuant",
+                     catch.n = "FLQuant",
+                     index   = "FLQuants"))
 
 #' @rdname a4aFit-class
 #' @template bothargs
 #' @aliases a4aFit a4aFit-methods
-setGeneric("a4aFit", function(object, ...) standardGeneric("a4aFit"))
-#' @rdname a4aFit-class
-setMethod("a4aFit", signature(object="missing"),
-  function(...) {
-    # empty
-  	if(missing(...)){
-	  	new("a4aFit")
-    # or not
-  	} else {
-      args <- list(...)
-	  args$Class <- 'a4aFit'
-      do.call("new", args)
-	  }
-  }
-)
+setGeneric("a4aFit")
+ 
+setMethod("initialize", "a4aFit",
+    function(.Object,
+             ...,
+             call, clock, fitSumm,
+             stock.n, harvest, catch.n, index) {
+      if (!missing(call)) .Object@call <- call
+      if (!missing(clock)) .Object@clock   <- clock
+      if (!missing(fitSumm)) .Object@fitSumm <- fitSumm
+      if (!missing(stock.n)) .Object@stock.n <- stock.n
+      if (!missing(harvest)) .Object@harvest <- harvest
+      if (!missing(catch.n)) .Object@catch.n <- catch.n
+      if (!missing(index)) .Object@index   <- index
+      .Object <- callNextMethod(.Object, ...)
+      .Object
+    })
+
+setValidity("a4aFit",
+  function(object) {
+    # All FLQuant objects must have same dimensions
+    if (any(dim(object@harvest) != dim(object@stock.n)) ||
+        any(dim(object@catch.n) != dim(object@stock.n)))
+      "stock.n, catch.n and harvest slots must have same dimensions"
+    else # Everything is fine
+      TRUE
+})
+
+
+#
+#  accessor methods
+#
 
 #' @rdname a4aFit-class
 #' @aliases clock clock-methods
@@ -108,23 +109,29 @@ setMethod("catch.n", "a4aFit", function(object) object@catch.n)
 #' @rdname a4aFit-class
 setMethod("index", "a4aFit", function(object) object@index)
 
+
 #' @rdname a4aFit-class
 setMethod("show", signature(object = "a4aFit"),
-  function(object) 
+  function(object)
   {
     cat("a4a model fit for:", object@name, "\n")
-    cat("\nCall:\n", paste(deparse(object @ call), sep = "\n", collapse = "\n"), 
+    cat("\nCall:\n", paste(deparse(object @ call), sep = "\n", collapse = "\n"),
         "\n\n", sep = "")
 
     cat("Time used:\n")
     print(object @ clock)
-  
+
  })
+
+
+#
+# Other methods
+#
 
 #' @rdname a4aFit-class
 setMethod("logLik", signature(object = "a4aFit"),
-  function(object, ...) 
-  {  
+  function(object, ...)
+  {
     dim2 <- length(dim(object @ fitSumm))
     if (dim2 == 1) {
       val <- -1 * unname(object @ fitSumm["nlogl"])
@@ -141,9 +148,9 @@ setMethod("logLik", signature(object = "a4aFit"),
 
 #' @rdname a4aFit-class
 #' @param obj the object to be subset
-#' @param it iteration to be extracted 
+#' @param it iteration to be extracted
 setMethod("iter", "a4aFit", function(obj, it){
-	obj@fitSumm <- obj@fitSumm[,it, drop=FALSE] 
+	obj@fitSumm <- obj@fitSumm[,it, drop=FALSE]
 	obj@harvest <- iter(obj@harvest, it)
 	obj@stock.n <- iter(obj@stock.n, it)
 	obj@catch.n <- iter(obj@catch.n, it)

@@ -15,7 +15,7 @@ a4aSCA(stock, indices, ...)
 \S4method{a4aSCA}{FLStock,FLIndices}(stock, indices, fmodel, qmodel,
   srmodel = ~factor(year), n1model, vmodel, covar = missing,
   wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE,
-  mcmc = missing)
+  mcmc = missing, useADMB = TRUE)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}
@@ -45,6 +45,8 @@ a4aSCA(stock, indices, ...)
 \item{center, }{logical defining if the data should be centered before fitting.}
 
 \item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
+
+\item{useADMB}{if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
@@ -64,19 +66,19 @@ fmodel <- ~factor(age) + factor(year)
 qmodel <- list(~factor(age))
 fit1 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 
-# fishing mortality as a smoother by age and year (but still separable) AND 
+# fishing mortality as a smoother by age and year (but still separable) AND
 # catchability at age without year trend
 fmodel <- ~ s(age, k=4) + s(year, k=10)
 qmodel <- list(~factor(age))
 fit2 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 
-# fishing mortality as a smoother by age and year (but still separable) AND 
+# fishing mortality as a smoother by age and year (but still separable) AND
 # catchability as a smoother by age without year trend
 fmodel <- ~ s(age, k=4) + s(year, k=10)
 qmodel <- list(~s(age, k=4))
 fit3 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4.index))
 
-# fishing mortality as a smoother by age and year (but still separable) AND 
+# fishing mortality as a smoother by age and year (but still separable) AND
 # catchability as a smoother by age with year trend
 fmodel <- ~ s(age, k=4) + s(year, k=10)
 qmodel <- list(~s(age, k=4) + year)
@@ -85,7 +87,7 @@ fit4 <-  a4aSCA(fmodel=fmodel, qmodel=qmodel, stock=ple4, indices=FLIndices(ple4
 # It's a statistical model
 BIC(fit1, fit2, fit3, fit4)
 
-# fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND 
+# fishing mortality as a smoother by age and year with interactions (i.e. non-separable) AND
 # catchability as a smoother by age without year trend
 fmodel <- ~ te(age, year, k=c(4, 10))
 qmodel <- list(~s(age, k=4))

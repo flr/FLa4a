@@ -6,12 +6,15 @@
 \alias{plot,a4aFitResiduals,missing-method}
 \title{Plot of standardized log residuals}
 \usage{
-\S4method{plot}{a4aFitResiduals,missing}(x, y = missing, ...)
+\S4method{plot}{a4aFitResiduals,missing}(x, y = missing, auxline = "smooth",
+  ...)
 }
 \arguments{
 \item{x}{an \code{a4aFitResiduals} object with the standardized residuals}
 
 \item{y}{ignored}
+
+\item{auxline}{a string defining the type of line to be added, by default uses 'smooth', a common alternative is to use 'r', a regression, or leave it empty ''}
 
 \item{...}{additional argument list that might never be used}
 }

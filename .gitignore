@@ -8,8 +8,14 @@
 *~
 .Rproj.user
 
+# built source files
+src-*/
+src/FLa4a.dll
+src/a4a.o
+
 # rstudio files
 *.Rproj
 
 # built vignettes
 inst/doc/*
+
