@@ -75,11 +75,11 @@ fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
 all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=5)"))
 
 #====================================================================
-# run a4aSCA
+# run sca
 #====================================================================
 
 # run
-fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 is(fit0, "a4aFitSA")
 
 # check that indices have attr biomass, set to FALSE
@@ -179,8 +179,8 @@ all.equal(harvest(fit0), harvest(fit1))
 all.equal(stock.n(fit0), stock.n(fit1))
 all.equal(catch.n(fit0), catch.n(fit1))
 
-# a4aSCA defaults
-fit0 <-  a4aSCA(ple4, ple4.indices)
+# sca defaults
+fit0 <-  sca(ple4, ple4.indices)
 # default fit is "assessment" class should be "a4aFitSA"
 is(fit0, "a4aFitSA")
 
@@ -194,9 +194,9 @@ all.equal(stock.n(fit0), stock.n(fit1))
 all.equal(catch.n(fit0), catch.n(fit1))
 
 #====================================================================
-# run a4aSCA with simulate
+# run sca with simulate
 #====================================================================
-fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 
 stk2 <- ple4
 idx2 <- ple4.index
@@ -204,9 +204,9 @@ catch.n(stk2) <- genFLQuant(catch.n(stk2), 0.1, niter=nits)
 index(idx2) <- genFLQuant(index(fit0)[[1]], 0.1, niter=nits)
 
 # check iters match
-fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
-fit0a <- a4aSCA(iter(stk2,1), FLIndices(iter(idx2,1)), qmodel=list(~s(age, k=4)))
-fit0b <- a4aSCA(iter(stk2,2), FLIndices(iter(idx2,2)), qmodel=list(~s(age, k=4)))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
+fit0a <- sca(iter(stk2,1), FLIndices(iter(idx2,1)), qmodel=list(~s(age, k=4)))
+fit0b <- sca(iter(stk2,2), FLIndices(iter(idx2,2)), qmodel=list(~s(age, k=4)))
 
 identical(catch.n(fit)[,,,,,1], catch.n(fit0a))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0a))
@@ -218,7 +218,7 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0b)[drop=TRUE])
 #====================================================================
 # bug in name matching between idxs names and pars names
 #====================================================================
-fit0 <-  a4aSCA(ple4, FLIndices(a=ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  sca(ple4, FLIndices(a=ple4.index), qmodel=list(~s(age, k=4)))
 # this bug concatenated catch pars with qpars
 length(params(vmodel(pars(fit0))[[2]]))==1
 
@@ -240,7 +240,7 @@ sum(vcov(vmodel(pars(fit0))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit0))[[2]]), na.rm=T)==0
 
 
-fit <- a4aSCA(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), useADMB=TRUE)
+fit <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), useADMB=TRUE)
 # check convergence info
 fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
@@ -383,7 +383,7 @@ data(ple4)
 data(ple4.index)
 
 #====================================================================
-# run a4aSCA with biomass index
+# run sca with biomass index
 #====================================================================
 data(ple4)
 bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
@@ -392,7 +392,7 @@ index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
 range(bioidx)[c("startf","endf")] <- c(0,0)
 
 # fitting the model
-fit0 <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
+fit0 <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
 
 #--------------------------------------------------------------------
 # iters
@@ -402,7 +402,7 @@ idx2 <- propagate(bioidx, nits)
 stk2 <- propagate(ple4, nits)
 
 # Nx1
-fit <- a4aSCA(stk2, FLIndices(bioidx), qmodel=list(~1))
+fit <- sca(stk2, FLIndices(bioidx), qmodel=list(~1))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -412,7 +412,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # 1xN
-fit <- a4aSCA(ple4, FLIndices(idx2), qmodel=list(~1))
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~1))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -422,7 +422,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # NxN
-fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~1))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~1))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -432,7 +432,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 #====================================================================
-# run a4aSCA with biomass index in specific ages
+# run sca with biomass index in specific ages
 #====================================================================
 bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
 index(bioidx) <- stock(ple4)*0.001
@@ -440,7 +440,7 @@ index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
 range(bioidx)[c("min","max","startf","endf")] <- c(2,5,0,0)
 
 # fitting the model
-fit1 <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
+fit1 <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
 
 # fit1 should be different from fit0
 !identical(fit1,fit0)
@@ -456,7 +456,7 @@ idx2 <- propagate(bioidx, nits)
 stk2 <- propagate(ple4, nits)
 
 # Nx1
-fit <- a4aSCA(stk2, FLIndices(bioidx), qmodel=list(~1))
+fit <- sca(stk2, FLIndices(bioidx), qmodel=list(~1))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -466,7 +466,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # 1xN
-fit <- a4aSCA(ple4, FLIndices(idx2), qmodel=list(~1))
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~1))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -476,7 +476,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # NxN
-fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~1))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~1))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -506,9 +506,9 @@ all.equal(c(harvest(fit0)), c(harvest(fit1)), tolerance = 1e-5)
 #====================================================================
 data(ple4)
 data(ple4.indices)
-fit0 <- a4aSCA(ple4, ple4.indices)
-fit1 <- a4aSCA(ple4, ple4.indices, center=FALSE)
-fit2 <- a4aSCA(ple4, ple4.indices, center=1)
+fit0 <- sca(ple4, ple4.indices)
+fit1 <- sca(ple4, ple4.indices, center=FALSE)
+fit2 <- sca(ple4, ple4.indices, center=1)
 
 # maxgrad is different
 !identical(fitSumm(fit0)["maxgrad",], fitSumm(fit1)["maxgrad",])
@@ -548,7 +548,7 @@ is(slot(obj, "mcmc"), "SCAMCMC")
 
 mc <- SCAMCMC()
 fit0 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-fit00 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit00 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 identical(dimnames(catch.n(fit0))[-6], dimnames(catch.n(fit00))[-6])
 identical(dimnames(stock.n(fit0))[-6], dimnames(stock.n(fit00))[-6])
 dim(catch.n(fit0))[6]==getN(mc)
@@ -562,7 +562,7 @@ sum(unlist(lapply(lapply(lapply(fit00@pars@qmodel, vcov), is.na), "!")))==0
 
 mc <- SCAMCMC(mcmc=as.integer(10000), mcsave=as.integer(200), mcu=TRUE)
 fit1 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", wkdir="mcmcalt2", mcmc=mc)
+fit11 <- sca(ple4, ple4.indices, fit="MCMC", wkdir="mcmcalt2", mcmc=mc)
 identical(dimnames(catch.n(fit1))[-6], dimnames(catch.n(fit11))[-6])
 identical(dimnames(stock.n(fit1))[-6], dimnames(stock.n(fit11))[-6])
 dim(catch.n(fit1))[6]==getN(mc)
@@ -578,7 +578,7 @@ sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
 is(try(SCAMCMC(hybrid=TRUE)), "try-error")
 mc <- SCAMCMC(mcmc=100, mcsave=1, hybrid=TRUE)
 fit1 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit11 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 identical(dimnames(catch.n(fit1))[-6], dimnames(catch.n(fit11))[-6])
 identical(dimnames(stock.n(fit1))[-6], dimnames(stock.n(fit11))[-6])
 dim(catch.n(fit1))[6]==getN(mc)
@@ -592,8 +592,8 @@ sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
 
 # check seed's working
 mc <- SCAMCMC(mcmc=10, mcsave=1, hybrid=TRUE, mcseed=123)
-fit11 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-fit22 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit11 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit22 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 identical(fit11@stock.n, fit22@stock.n)
 
 
@@ -606,8 +606,8 @@ data(ple4.index)
 stk <- propagate(ple4, 2)
 
 # iter a4aFitSA
-fit0 <- a4aSCA(ple4, FLIndices(a=ple4.index))
-fit <- a4aSCA(stk, FLIndices(a=ple4.index))
+fit0 <- sca(ple4, FLIndices(a=ple4.index))
+fit <- sca(stk, FLIndices(a=ple4.index))
 fit1 <- iter(fit, 1)
 identical(fit1@harvest, fit0@harvest)
 identical(fit1@stock.n, fit0@stock.n)

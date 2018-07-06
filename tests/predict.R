@@ -75,7 +75,7 @@ all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
 #--------------------------------------------------------------------
 # N
 #--------------------------------------------------------------------
-fit <- a4aSCA(stk, FLIndices(bioidx), qmodel=list(~1))
+fit <- sca(stk, FLIndices(bioidx), qmodel=list(~1))
 flqs <- predict(fit)
 sum(unlist(lapply(flqs, is, "FLQuants")))==3
 Z <- (m(ple4) + harvest(fit))*sfrac
@@ -239,7 +239,7 @@ all.equal(c(stock.n(fit)[1]), c(flqs$stkmodel$rec), tolerance=10e-4)
 #--------------------------------------------------------------------
 # N
 #--------------------------------------------------------------------
-fit <-  a4aSCA(stk, FLIndices(ple4.index), srmodel=~bevholt(CV=0.1))
+fit <-  sca(stk, FLIndices(ple4.index), srmodel=~bevholt(CV=0.1))
 flqs <- predict(fit)
 sum(unlist(lapply(flqs, is, "FLQuants")))==3
 Z <- (m(ple4) + harvest(fit))*sfrac

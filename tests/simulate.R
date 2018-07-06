@@ -11,7 +11,7 @@ err <- 0.05
 #====================================================================
 # check stkmodel
 #====================================================================
-fit <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
 
 # replicate with set.seed
 stkm <- stkmodel(pars(fit))
@@ -46,7 +46,7 @@ max(rat) - min(rat) > err*4
 #--------------------------------------------------------------------
 # 1
 #--------------------------------------------------------------------
-fit <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
 
 # check it runs
 obj <- simulate(fit)
@@ -137,7 +137,7 @@ max(vrat)-min(vrat) < err/10
 #--------------------------------------------------------------------
 # several
 #--------------------------------------------------------------------
-fit <-  a4aSCA(ple4, ple4.indices, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3)), vmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=4), ~s(age, k=3)))
+fit <-  sca(ple4, ple4.indices, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3)), vmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=4), ~s(age, k=3)))
 
 # check
 obj <- simulate(fit)
@@ -187,7 +187,7 @@ index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
 range(bioidx)[c("startf","endf")] <- c(0,0)
 
 # fitting the model
-fit <- a4aSCA(ple4, FLIndices(bioidx), qmodel=list(~1))
+fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
 
 #--------------------------------------------------------------------
 # check
@@ -292,7 +292,7 @@ max(vrat)-min(vrat) < err
 # more than one iter in vcov, coming from assessments with iters
 #====================================================================
 
-fit0 <-  a4aSCA(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 nits <- 3
 
 stk2 <- ple4
@@ -300,7 +300,7 @@ idx2 <- ple4.index
 catch.n(stk2) <- genFLQuant(catch.n(stk2), 0.1, niter=nits)
 index(idx2) <- genFLQuant(index(fit0)[[1]], 0.1, niter=nits)
 
-fit <- a4aSCA(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
 
 # check it runs
 obj <- simulate(fit)
