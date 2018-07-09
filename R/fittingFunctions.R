@@ -1,28 +1,38 @@
 globalVariables(c("obs", "year", "age", "fleet"))
 
+#' @title Default sub-models
+#' @name defaultSubModels
+#' @docType methods
+#' @rdname defaultsubmodels
+#' @description Methods to create formulas for sub-models. The sub-models are set automagically using defaults.
+#' @param stock an FLStock object
+#' @param indices an FLIndices object
+#' @return a FLStock object
+#' @aliases collapseSeasons
 
 defaultFmod <- function(stock, dfm=c(0.5, 0.5)){
 	dis <- dims(stock)
 	KY=floor(dfm[1] * dis$year)
 	KA=ceiling(dfm[2] *dis$age)
 	if (KA >= 3) {
-		KA <- min(max(3, floor(.4 * KA)), 6)
-		KB <- min(max(3, floor(2 * KA)), 10)
+		KA <- min(max(3, KA), 6)
+		KB <- min(max(3, KA), 10)
 	    fmodel <- formula(paste("~ te(age, year, k = c(", KA,",", KY,"), bs = 'tp') + s(age, k=", KB, ")"))
 	  } else {
-		fmodel <- formula(paste("~ age + s(year, k = ", ky,")"))
+		fmodel <- formula(paste("~ age + s(year, k = ", KY,")"))
 	  }
 	fmodel
 }
 
-
-defaultQmod <- function(indices, dfm=0.7){
+defaultQmod <- function(indices, dfm=0.6){
 	lds <- lapply(indices, dims)
 	lds <- lapply(lds, function(x){
-		if(x$age<=3){
+		if(x$age==1){
+			frm <- ~1
+		} else if(x$age>1 & x$age<=3){
 			frm <- ~factor(age)
 		} else {
-			frm <- substitute(~s(age, k=KA), list(KA=ceiling(dfm * x$age)))
+			frm <- substitute(~s(age, k=KA), list(KA=min(ceiling(dfm * x$age), 6)))
 		}
 		as.formula(frm)
 	})
@@ -31,8 +41,8 @@ defaultQmod <- function(indices, dfm=0.7){
 
 defaultN1mod <- function(stock){
   dis <- dims(stock)
-  if (dis$age > 10) {
-    n1model <- ~ s(age, k = 10)
+  if (dis$age >=6) {
+    n1model <- ~ s(age, k = 6)
   } else {
     n1model <- ~ factor(age)
   }
@@ -160,8 +170,6 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 )
 
 #' @rdname sca
-#setMethod("a4aSCA", signature("FLStock", "FLIndices"), function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year), qmodel  = lapply(seq(length(indices)), function(i) ~ 1), srmodel = ~ factor(year), n1model = ~ factor(age), vmodel  = missing, covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing) {
-
 setMethod("sca", signature("FLStock", "FLIndices"), 
 	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing, useADMB = TRUE) {
 
