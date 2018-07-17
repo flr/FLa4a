@@ -637,7 +637,7 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 
 
-  if (useADMB) { # fit using the ADMB code
+#  if (useADMB) { # fit using the ADMB code
 
     #========================================================================
     # Create the directory where to store model config, data and results files
@@ -690,22 +690,22 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
     # remove temporary directory - keep only true when dir is not temp dir
     if (!keep) unlink(wkdir, recursive=TRUE, force=TRUE)
 
-  } else { # fit using the TMB code
-    fitList <- fitTMB(fit, wkdir, df.data, stock, indices, full.df,
-                      fbar, plusgroup, surveytime, fleet.names,
-                      Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
-                      my.time.used, mcmc, verbose)
+#  } else { # fit using the TMB code
+#    fitList <- fitTMB(fit, wkdir, df.data, stock, indices, full.df,
+#                      fbar, plusgroup, surveytime, fleet.names,
+#                      Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
+#                      my.time.used, mcmc, verbose)
 
-    if (fit == "setup") return(fitList)
+#    if (fit == "setup") return(fitList)
 
-    out <- fitList$out
-    my.time.used <- fitList$my.time.used
-    wkdir <- fitList$wkdir
-    convergence <- fitList$convergence
-    pnames <- fitList$pnames
-    ages <- fitList$ages
-    years <- fitList$years
-  }
+#    out <- fitList$out
+#    my.time.used <- fitList$my.time.used
+#    wkdir <- fitList$wkdir
+#    convergence <- fitList$convergence
+#    pnames <- fitList$pnames
+#    ages <- fitList$ages
+#    years <- fitList$years
+#  }
 
 	#========================================================================
 	# convert into appropriate class
@@ -863,15 +863,14 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 	if (fit == "MCMC") {
 
-    if (!useADMB) stop("not implemented in TMB version")
+    #if (!useADMB) stop("not implemented in TMB version")
 
 		# coerce into a4aFitMCMC
 		a4aout <- a4aFitMCMC(a4aout, mcmc=mcmc)
-
 		# fill parameters
-		a4aout@pars@stkmodel@params <- propagate(a4aout@pars@stkmodel@params, out$mcmc$nit)
-		a4aout@pars@stkmodel@params[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@stkmodel@params)[[1]]])
-		dimnames(a4aout@pars@stkmodel@params)[[2]] <- 1:out$mcmc$nit
+		a4aout@pars@stkmodel@coefficients <- propagate(a4aout@pars@stkmodel@coefficients, out$mcmc$nit)
+		a4aout@pars@stkmodel@coefficients[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@stkmodel@coefficients)[[1]]])
+		dimnames(a4aout@pars@stkmodel@coefficients)[[2]] <- 1:out$mcmc$nit
 		a4aout@pars@stkmodel@vcov[] <- NA
 
 		# fill derived quantities
@@ -886,13 +885,13 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
 
 		# fill catchability and variance model
 		for(i in fleet.names){
-			a4aout@pars@vmodel[[i]]@params <- propagate(a4aout@pars@vmodel[[i]]@params, out$mcmc$nit)
-			a4aout@pars@vmodel[[i]]@params[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@params)[[1]]])
+			a4aout@pars@vmodel[[i]]@coefficients <- propagate(a4aout@pars@vmodel[[i]]@coefficients, out$mcmc$nit)
+			a4aout@pars@vmodel[[i]]@coefficients[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@vmodel[[i]]@coefficients)[[1]]])
 			a4aout@pars@vmodel[[i]]@vcov[] <- NA
 
 			if(i!="catch"){
-				a4aout@pars@qmodel[[i]]@params <- propagate(a4aout@pars@qmodel[[i]]@params, out$mcmc$nit)
-				a4aout@pars@qmodel[[i]]@params[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@params)[[1]]])
+				a4aout@pars@qmodel[[i]]@coefficients <- propagate(a4aout@pars@qmodel[[i]]@coefficients, out$mcmc$nit)
+				a4aout@pars@qmodel[[i]]@coefficients[] <- t(out$mcmc$mcmcout[,dimnames(a4aout@pars@qmodel[[i]]@coefficients)[[1]]])
 				a4aout@pars@qmodel[[i]]@vcov[] <- NA
 				dmns <- dimnames(a4aout@index[[i]])
 				a4aout@index[[i]] <- propagate(a4aout@index[[i]], out$mcmc$nit)
@@ -951,199 +950,199 @@ setMethod("breakpts", "numeric", function(var, breaks, ...) {
 })
 
 
-fitTMB <- function(fit, wkdir, df.data, stock, indices, full.df,
-                    fbar, plusgroup, surveytime, fleet.names,
-                    Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
-                    my.time.used, mcmc, verbose)
-{
-  # not used:
-  # * wkdir
+#fitTMB <- function(fit, wkdir, df.data, stock, indices, full.df,
+#                    fbar, plusgroup, surveytime, fleet.names,
+#                    Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
+#                    my.time.used, mcmc, verbose)
+#{
+#  # not used:
+#  # * wkdir
 
-  #========================================================================
-  # Prepare data
-  #========================================================================
-  # change NA to -1 for admb
-  #df.data$age <- with(df.data, replace(age, is.na(age), -1))
+#  #========================================================================
+#  # Prepare data
+#  #========================================================================
+#  # change NA to -1 for admb
+#  #df.data$age <- with(df.data, replace(age, is.na(age), -1))
 
-  # set up variable names
-  pnames <- list(paste0("fMod:",colnames(Xf)),
-    paste0("qMod:", unlist(sapply(1:length(indices), function(i) paste0(fleet.names[i+1],":",colnames(Xqlist[[i]]))))),
-    paste0("vMod:", unlist(sapply(1:length(fleet.names), function(i) paste0(fleet.names[i],":",colnames(Xvlist[[i]]))))),
-    paste0("n1Mod:",colnames(Xny1)),
-    paste0("rMod:",colnames(Xr)),
-    paste0("sraMod:",colnames(Xsra)),
-    paste0("srbMod:",colnames(Xsrb)))
+#  # set up variable names
+#  pnames <- list(paste0("fMod:",colnames(Xf)),
+#    paste0("qMod:", unlist(sapply(1:length(indices), function(i) paste0(fleet.names[i+1],":",colnames(Xqlist[[i]]))))),
+#    paste0("vMod:", unlist(sapply(1:length(fleet.names), function(i) paste0(fleet.names[i],":",colnames(Xvlist[[i]]))))),
+#    paste0("n1Mod:",colnames(Xny1)),
+#    paste0("rMod:",colnames(Xr)),
+#    paste0("sraMod:",colnames(Xsra)),
+#    paste0("srbMod:",colnames(Xsrb)))
 
-  if (srr$srrCV < 0) pnames <- pnames[-c(6,7)]
-  if (srr$ID==4) pnames <- pnames[-7]
+#  if (srr$srrCV < 0) pnames <- pnames[-c(6,7)]
+#  if (srr$ID==4) pnames <- pnames[-7]
 
-  # build survey's max and min age vectors
-  # If age is not set (NA) it will take the min and max from catch.n
-  srvRange <- do.call('rbind',lapply(indices, range))
-  srvMinAge <- srvRange[,'min']
-  srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
-  names(srvMinAge) <- names(indices)
-  srvMaxAge <- srvRange[,'max']
-  srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
-  names(srvMaxAge) <- names(indices)
+#  # build survey's max and min age vectors
+#  # If age is not set (NA) it will take the min and max from catch.n
+#  srvRange <- do.call('rbind',lapply(indices, range))
+#  srvMinAge <- srvRange[,'min']
+#  srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
+#  names(srvMinAge) <- names(indices)
+#  srvMaxAge <- srvRange[,'max']
+#  srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
+#  names(srvMaxAge) <- names(indices)
 
-  df.aux <- unique(full.df[c("year","age","m","m.spwn","harvest.spwn","mat.wt","stock.wt")])
+#  df.aux <- unique(full.df[c("year","age","m","m.spwn","harvest.spwn","mat.wt","stock.wt")])
 
-  Ldat <- list(
-      ageRange = range(full.df$age),
-      yearRange = range(full.df$year),
-      surveyMinAge = srvMinAge,
-      surveyMaxAge = srvMaxAge,
-      surveyTimes = surveytime,
-      fbarRange = fbar,
-      obs = as.matrix(df.data),
-      aux = as.matrix(df.aux),
-      designF = Xf,
-      designQ = Xq,
-      designV = Xv,
-      designNy1 = Xny1,
-      designR = Xr,
-      designRa = Xsra,
-      designRb = Xsrb,
-      srCV = srr$srrCV, # if (srr$srrCV < 0) 100 else srr$srrCV,
-      spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
-      Rmodel = srr$ID,
-      isPlusGrp = plusgroup
-    )
+#  Ldat <- list(
+#      ageRange = range(full.df$age),
+#      yearRange = range(full.df$year),
+#      surveyMinAge = srvMinAge,
+#      surveyMaxAge = srvMaxAge,
+#      surveyTimes = surveytime,
+#      fbarRange = fbar,
+#      obs = as.matrix(df.data),
+#      aux = as.matrix(df.aux),
+#      designF = Xf,
+#      designQ = Xq,
+#      designV = Xv,
+#      designNy1 = Xny1,
+#      designR = Xr,
+#      designRa = Xsra,
+#      designRb = Xsrb,
+#      srCV = srr$srrCV, # if (srr$srrCV < 0) 100 else srr$srrCV,
+#      spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
+#      Rmodel = srr$ID,
+#      isPlusGrp = plusgroup
+#    )
 
-  Ldat$locFleetVec=Ldat$obs[,1]
-  Ldat$locYearVec=Ldat$obs[,2]
-  Ldat$locAgeVec=Ldat$obs[,3]
+#  Ldat$locFleetVec=Ldat$obs[,1]
+#  Ldat$locYearVec=Ldat$obs[,2]
+#  Ldat$locAgeVec=Ldat$obs[,3]
 
-  Lpin <- list(
-    fpar = rep(0, ncol(Ldat$designF)),
-    qpar = rep(0, ncol(Ldat$designQ)),
-    vpar = rep(0, ncol(Ldat$designV)),
-    ny1par = rep(0, ncol(Ldat$designNy1)),
-    rpar = rep(0, ncol(Ldat$designR)),
-    rapar = rep(0, ncol(Ldat$designRa)),
-    rbpar = rep(0, ncol(Ldat$designRb))
-  )
-
-
-  res <- list(Ldat=Ldat, Lpin=Lpin)
-
-  #========================================================================
-  # run model
-  #========================================================================
-  # run a4a split
-  my.time.used[2] <- Sys.time()
-
-  if (srr$srrCV < 0) {
-    # we have no SR model
-    map <- list()
-    map$rapar <- factor(NA)
-    map$rbpar <- factor(NA)
-    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose, map = map)
-  } else
-  if (srr$ID == 4) {
-    # its the geomean model
-    map <- list()
-    map$rbpar <- factor(NA)
-    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose, map = map)
-  } else {
-    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose)
-  }
-
-  if (fit == "setup") return(obj)
-
-  opt <- nlminb(obj$par, obj$fn, obj$gr, control = list(iter.max = 10000, eval.max = 10000))
-  if (fit != "MP") {
-    # The accuracy is good without these steps
-    # but more consistent with these extra iterations
-    newtonsteps <- 3 # fix to 3 for now...
-    # this is required, otherwise we do not get the same
-    # accuracy as the ADMB optimiser
-    for (i in seq_len(newtonsteps)) { # Take a few extra newton steps borrowed from Anders/Casper!
-      g <- as.numeric( obj$gr(opt$par) )
-      h <- optimHess(opt$par, obj$fn, obj$gr)
-      opt$par <- opt$par - solve(h, g)
-      opt$objective <- obj$fn(opt$par)
-    }
-  }
-
-  #rep <- obj$report()
-  sdrep <- sdreport(obj,opt$par)
-  sdrep$cov <- NULL # this is the cvov of the model predictions
+#  Lpin <- list(
+#    fpar = rep(0, ncol(Ldat$designF)),
+#    qpar = rep(0, ncol(Ldat$designQ)),
+#    vpar = rep(0, ncol(Ldat$designV)),
+#    ny1par = rep(0, ncol(Ldat$designNy1)),
+#    rpar = rep(0, ncol(Ldat$designR)),
+#    rapar = rep(0, ncol(Ldat$designRa)),
+#    rbpar = rep(0, ncol(Ldat$designRb))
+#  )
 
 
-  #========================================================================
-  # Post process
-  #========================================================================
-  # post processing split
-  my.time.used[3] <- Sys.time()
+#  res <- list(Ldat=Ldat, Lpin=Lpin)
 
-  if (fit %in% c("MP","assessment", "MCMC")) {
+#  #========================================================================
+#  # run model
+#  #========================================================================
+#  # run a4a split
+#  my.time.used[2] <- Sys.time()
 
-    # read admb output from file
-    out <- list()
+#  if (srr$srrCV < 0) {
+#    # we have no SR model
+#    map <- list()
+#    map$rapar <- factor(NA)
+#    map$rbpar <- factor(NA)
+#    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose, map = map)
+#  } else
+#  if (srr$ID == 4) {
+#    # its the geomean model
+#    map <- list()
+#    map$rbpar <- factor(NA)
+#    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose, map = map)
+#  } else {
+#    obj <- MakeADFun(res$Ldat, res$Lpin, DLL="FLa4a", silent = !verbose)
+#  }
 
-    # get .par file equivalents
-    out$nopar <- length(opt$par)
-    out$nlogl <- opt$objective
-    out$maxgrad <- max(abs(sdrep$gradient.fixed))
+#  if (fit == "setup") return(obj)
 
-    if (srr$srrCV < 0) {
-      # we have no SR model
-      out$par.est <- as.list(sdrep,"Est")[-c(6,7)]
-    } else
-    if (srr$ID == 4) {
-      # geomean
-      out$par.est <- as.list(sdrep,"Est")[-7]
-    } else {
-      out$par.est <- as.list(sdrep,"Est")
-    }
+#  opt <- nlminb(obj$par, obj$fn, obj$gr, control = list(iter.max = 10000, eval.max = 10000))
+#  if (fit != "MP") {
+#    # The accuracy is good without these steps
+#    # but more consistent with these extra iterations
+#    newtonsteps <- 3 # fix to 3 for now...
+#    # this is required, otherwise we do not get the same
+#    # accuracy as the ADMB optimiser
+#    for (i in seq_len(newtonsteps)) { # Take a few extra newton steps borrowed from Anders/Casper!
+#      g <- as.numeric( obj$gr(opt$par) )
+#      h <- optimHess(opt$par, obj$fn, obj$gr)
+#      opt$par <- opt$par - solve(h, g)
+#      opt$objective <- obj$fn(opt$par)
+#    }
+#  }
 
-    ages <- sort(unique(full.df$age))
-    years <- sort(unique(full.df$year))
+#  #rep <- obj$report()
+#  sdrep <- sdreport(obj,opt$par)
+#  sdrep$cov <- NULL # this is the cvov of the model predictions
 
-    # set up basic return values
-    convergence <- opt$convergence
-    out$N <- matrix(sdrep$value[names(sdrep$value) == "expn"], length(years), length(ages))
-    out$F <- matrix(sdrep$value[names(sdrep$value) == "expf"], length(years), length(ages))
-    out$Q <- matrix(sdrep$value[names(sdrep$value) == "q"], length(years)*length(indices), length(ages))
-    dim(out$Q) <- c(length(indices), length(years), length(ages))
-    out$Q <- aperm(out$Q, c(3,2,1))
-    colnames(out$N) <- colnames(out$F) <- ages
-    rownames(out$N) <- rownames(out$F) <- years
-    dimnames(out$Q) <- list(ages, years, names(indices))
 
-    if (fit != "MP") {
-      # return hessian and standard errors
-      if (!sdrep$pdHess) {
-        # if model was not identifiable make sure return values are NAs
-        warning("Hessian was not positive definite.")
-        out$N[] <- NA
-        out$F[] <- NA
-        out$Q[] <- NA
-        out$cov <- sdrep$cov.fixed
-        out$cov[] <- NA
-      } else {
-        out$logDetHess <- NA
-        if (srr$srrCV < 0) {
-          # we have no SR model
-          out$par.std <- as.list(sdrep,"Std")[-c(6,7)]
-        } else
-        if (srr$ID == 4) {
-          # geomean
-          out$par.std <- as.list(sdrep,"Std")[-7]
-        } else {
-          out$par.std <- as.list(sdrep,"Std")
-        }
-        out$cov <- sdrep$cov.fixed
-      }
-    }
-  }
+#  #========================================================================
+#  # Post process
+#  #========================================================================
+#  # post processing split
+#  my.time.used[3] <- Sys.time()
 
-  list(out = out, my.time.used = my.time.used, wkdir = NULL,
-       convergence = convergence, pnames = pnames,
-       ages = ages, years = years)
-}
+#  if (fit %in% c("MP","assessment", "MCMC")) {
+
+#    # read admb output from file
+#    out <- list()
+
+#    # get .par file equivalents
+#    out$nopar <- length(opt$par)
+#    out$nlogl <- opt$objective
+#    out$maxgrad <- max(abs(sdrep$gradient.fixed))
+
+#    if (srr$srrCV < 0) {
+#      # we have no SR model
+#      out$par.est <- as.list(sdrep,"Est")[-c(6,7)]
+#    } else
+#    if (srr$ID == 4) {
+#      # geomean
+#      out$par.est <- as.list(sdrep,"Est")[-7]
+#    } else {
+#      out$par.est <- as.list(sdrep,"Est")
+#    }
+
+#    ages <- sort(unique(full.df$age))
+#    years <- sort(unique(full.df$year))
+
+#    # set up basic return values
+#    convergence <- opt$convergence
+#    out$N <- matrix(sdrep$value[names(sdrep$value) == "expn"], length(years), length(ages))
+#    out$F <- matrix(sdrep$value[names(sdrep$value) == "expf"], length(years), length(ages))
+#    out$Q <- matrix(sdrep$value[names(sdrep$value) == "q"], length(years)*length(indices), length(ages))
+#    dim(out$Q) <- c(length(indices), length(years), length(ages))
+#    out$Q <- aperm(out$Q, c(3,2,1))
+#    colnames(out$N) <- colnames(out$F) <- ages
+#    rownames(out$N) <- rownames(out$F) <- years
+#    dimnames(out$Q) <- list(ages, years, names(indices))
+
+#    if (fit != "MP") {
+#      # return hessian and standard errors
+#      if (!sdrep$pdHess) {
+#        # if model was not identifiable make sure return values are NAs
+#        warning("Hessian was not positive definite.")
+#        out$N[] <- NA
+#        out$F[] <- NA
+#        out$Q[] <- NA
+#        out$cov <- sdrep$cov.fixed
+#        out$cov[] <- NA
+#      } else {
+#        out$logDetHess <- NA
+#        if (srr$srrCV < 0) {
+#          # we have no SR model
+#          out$par.std <- as.list(sdrep,"Std")[-c(6,7)]
+#        } else
+#        if (srr$ID == 4) {
+#          # geomean
+#          out$par.std <- as.list(sdrep,"Std")[-7]
+#        } else {
+#          out$par.std <- as.list(sdrep,"Std")
+#        }
+#        out$cov <- sdrep$cov.fixed
+#      }
+#    }
+#  }
+
+#  list(out = out, my.time.used = my.time.used, wkdir = NULL,
+#       convergence = convergence, pnames = pnames,
+#       ages = ages, years = years)
+#}
 
 
 fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
@@ -1428,11 +1427,11 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
     nopar <- readBin(filen, what = integer(), n = 1)
     mcmcout <- readBin(filen, what = numeric(), n = nopar * nit)# TODO check this line
     close(filen)
-    out$mcmc$mcmcout <- matrix(mcmcout, byrow = TRUE, ncol = nopar)
-    colnames(out$mcmc$mcmcout) <- unlist(pnames)
 
     out$mcmc <- list()
 
+    out$mcmc$mcmcout <- matrix(mcmcout, byrow = TRUE, ncol = nopar)
+    colnames(out$mcmc$mcmcout) <- unlist(pnames)
     out$mcmc$nit <- nit
     out$mcmc$N <- read.table(paste0(wkdir, "/NMCMCreport.csv"), sep=" ", header=FALSE)[-1]
     out$mcmc$F <- read.table(paste0(wkdir, "/FMCMCreport.csv"), sep=" ", header=FALSE)[-1]

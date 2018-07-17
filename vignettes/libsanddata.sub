@@ -11,7 +11,9 @@ install.packages(c("FLCore", "FLa4a"), repos="http://flr-project.org/R")
 
 <<load_libraries, message=FALSE, warning=FALSE>>=
 # libraries
-library(FLa4a)
+library(devtools)
+load_all("~/jrc/a4a/a4a-dev/FLa4a/")
+#library(FLa4a)
 library(XML)
 library(reshape2)
 library(latticeExtra)

@@ -235,7 +235,7 @@ AIC(fit)
 BIC(fit)
 @
 
-\section{The statistical catch-at-age stock assessment framework - the \code{sca} method}
+\section{The statistical catch-at-age stock assessment framework [NEEDS REVISION]}
 
 The statistical catch at age (\code{sca()}) method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for fishing mortality ($F$), catchability ($Q$) and recruitment ($R$).
 
@@ -244,6 +244,9 @@ An important argument for \code{sca()} is the type of fit, which controls if a f
 We'll start by looking at the submodel for $F$, then $Q$ and finally $R$.
 
 Please note that each of these model \emph{forms} have not been tuned to the data. The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC), etc.
+
+A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
+
 
 \subsection{Fishing mortality submodel}
 
@@ -479,6 +482,47 @@ flqs <- FLQuants(factor=stock.n(fit)[1], smother=stock.n(fit1)[1], ricker=stock.
 xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3), ylab="No. recruits")
 @
 
+
+\subsection{N1 model}
+
+The submodel for the stock number at age in the first year of the time series is set up with the usual linear tools (Figure~\ref{fig:ny1}), but bare in mind that the year effect does not make sense here.
+
+<<>>=
+n1mod <- ~s(age, k=4)
+fit1 <- sca(ple4, ple4.indices[1], n1model=n1mod)
+flqs <- FLQuants(smother=stock.n(fit1)[,1], factor=stock.n(fit)[,1])
+@
+
+<<ny1, fig.cap="Nay=1 models", echo=FALSE>>=
+xyplot(data~age, groups=qname, data=flqs, type="l",
+       auto.key=list(points=FALSE, lines=TRUE, columns=2),
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
+       strip.background=list(col="gray90")), ylab="")
+@
+
+\subsection{Variance model}
+
+The variance model allows the user to set up the shape of the observation variances $\sigma^2_{ay}$ and $I_{ays}$. This is an important subject related with fisheries data used for input to stock assessment models. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. This is due to the fact that the last ages do not appear as often at the auction markets, in the fishing operations or on survey samples.
+
+By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. As with the other submodels, R linear model capabilities are used (Figure~\ref{fig:varmod}).
+
+<<>>=
+vmod <- list(~1, ~1)
+fit1 <- sca(ple4, ple4.indices[1], vmodel=vmod)
+vmod <- list(~ s(age, k=4), ~1)
+fit2 <- sca(ple4, ple4.indices[1], vmodel=vmod)
+flqs <- FLQuants(cts=catch.n(fit1), smo=catch.n(fit2))
+@
+
+<<varmod, fig.cap="Population estimates using two different variance models", echo=FALSE>>=
+xyplot(data~year|age, groups=qname, data=flqs, type="l",
+       scales=list(y=list(relation="free", draw=FALSE)),
+       auto.key=list(points=FALSE, lines=TRUE, columns=2),
+       par.settings=list(superpose.line=list(col=c("gray35", "black")),
+       strip.background=list(col="gray90")), ylab="")
+@
+
+
 \section{The major effects - age, year and cohort}
 
 All submodels use the same type of specification process, the R formula interface, wich gives lot's of flexibility to explore models and combination of sub-models. As a reference one can consider three major effects that can be modelled the same way, the age affect, year effect and cohort effect. As examples note the following models, in these cases applied to fishing mortality, and all of them as a factor, which means one coefficient will be estimated for each level of the factor, meaning age, year or cohort respectively.
@@ -511,54 +555,6 @@ wireframe(harvest(fit2), main='age effect')
 
 <<majeffc, fig.cap="Major effects: the cohort effect (~ factor(year-age))", echo=FALSE>>=
 wireframe(harvest(fit3), main='cohort effect')
-@
-
-\section{The statistical catch-at-age stock assessment framework advanced features - the \code{a4aSCA} method}
-
-A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
-
-<<>>=
-fit <- a4aSCA(ple4, ple4.indices[1])
-submodels(fit)
-@
-
-\subsection{N1 model}
-
-The submodel for the stock number at age in the first year of the time series is set up with the usual linear tools (Figure~\ref{fig:ny1}), but bare in mind that the year effect does not make sense here.
-
-<<>>=
-n1mod <- ~s(age, k=4)
-fit1 <- a4aSCA(ple4, ple4.indices[1], n1model=n1mod)
-flqs <- FLQuants(smother=stock.n(fit1)[,1], factor=stock.n(fit)[,1])
-@
-
-<<ny1, fig.cap="Nay=1 models", echo=FALSE>>=
-xyplot(data~age, groups=qname, data=flqs, type="l",
-       auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")),
-       strip.background=list(col="gray90")), ylab="")
-@
-
-\subsection{Variance model}
-
-The variance model allows the user to set up the shape of the observation variances $\sigma^2_{ay}$ and $I_{ays}$. This is an important subject related with fisheries data used for input to stock assessment models. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. This is due to the fact that the last ages do not appear as often at the auction markets, in the fishing operations or on survey samples.
-
-By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. As with the other submodels, R linear model capabilities are used (Figure~\ref{fig:varmod}).
-
-<<>>=
-vmod <- list(~1, ~1)
-fit1 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod)
-vmod <- list(~ s(age, k=4), ~1)
-fit2 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod)
-flqs <- FLQuants(cts=catch.n(fit1), smo=catch.n(fit2))
-@
-
-<<varmod, fig.cap="Population estimates using two different variance models", echo=FALSE>>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l",
-       scales=list(y=list(relation="free", draw=FALSE)),
-       auto.key=list(points=FALSE, lines=TRUE, columns=2),
-       par.settings=list(superpose.line=list(col=c("gray35", "black")),
-       strip.background=list(col="gray90")), ylab="")
 @
 
 \subsection{Working with covariates}
@@ -611,7 +607,7 @@ Note that covariates can be added to any submodel using the linear model capabil
 The framework gives access to the files produced to run the \pkg{ADMB} fitting routine through the argument \code{wkdir}. When set up all the \pkg{ADMB} files will be left in the directory. Note that the \pkg{ADMB} tpl file is distributed with the \pkg{FLa4a}. One can get it from your \pkg{R} library, under the folder \code{myRlib/FLa4a/admb/}.
 
 <<>>=
-fit1 <- a4aSCA(ple4, ple4.indices, wkdir="mytest")
+fit1 <- sca(ple4, ple4.indices, wkdir="mytest")
 @
 
 \section{Predict and simulate}
@@ -655,13 +651,13 @@ plot(stks)
 
 \section{The statistical catch-at-age stock assessment framework with MCMC}
 
-The previous methods were demonstrated using the maximum likelihood estimation method. However, \code{ADMB} can also use MCMC methods to fit the model. This section shows how the \code{sca} and \code{a4aSCA} methods interface with ADMB to use the MCMC fits.
+The previous methods were demonstrated using the maximum likelihood estimation method. However, \code{ADMB} can also use MCMC methods to fit the model. 
 
 The likelihood estimate is
 
 <<>>=
 # ll
-fit <- a4aSCA(ple4, ple4.indices)
+fit <- sca(ple4, ple4.indices)
 fit <- simulate(fit, 1000)
 @
 
@@ -678,7 +674,7 @@ Defaults for now are ok, so lets fit the model. Note that the argument \code{fit
 
 <<>>=
 # fit the model
-fitmc1 <- a4aSCA(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fitmc1 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 # check acceptance rate
 fitSumm(fitmc1)
 @
@@ -700,7 +696,7 @@ As mentioned above \code{ADMB} has several options for MCMC. Here we demonstrate
 
 <<>>=
 mc <- SCAMCMC(mcmc=10000, mcsave=200, mcprobe=0.4)
-fitmc2 <- a4aSCA(ple4, ple4.indices, qmodel=list(~s(age, k=3), ~s(age, k=3),~s(age, k=3)), fit="MCMC", mcmc=mc)
+fitmc2 <- sca(ple4, ple4.indices, qmodel=list(~s(age, k=3), ~s(age, k=3),~s(age, k=3)), fit="MCMC", mcmc=mc)
 @
 
 All fits together
@@ -733,7 +729,7 @@ varslt <- index(idx[[1]])
 varslt[] <- 0.1
 index.var(idx[[1]]) <- varslt
 # run
-fit1 <- a4aSCA(stk, idx)
+fit1 <- sca(stk, idx)
 flqs <- FLQuants(nowgt=stock.n(fit), extwgt=stock.n(fit1))
 @
 
@@ -870,7 +866,7 @@ The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-
 # number of iters
 nits <- 25
 # fit the model
-fit <- a4aSCA(ple4, ple4.indices[1])
+fit <- sca(ple4, ple4.indices[1])
 # update the stock data
 stk <- ple4 + fit
 # simulate controlling the random seed
@@ -880,7 +876,7 @@ stks <- ple4 + fits
 idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
 # run assessments on each iter
-sfit <- a4aSCA(stks, idxs, fit="MP")
+sfit <- sca(stks, idxs, fit="MP")
 @
 
 <<wcsam, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach)", fig.width=8, fig.height=10>>=
@@ -897,7 +893,7 @@ Finally, compare this code with the one for replicating WCSAM and note that it's
 data(ple4)
 data(ple4.indices)
 nits <- 25
-fit <- a4aSCA(ple4, ple4.indices[1])
+fit <- sca(ple4, ple4.indices[1])
 stk <- ple4 + fit
 fits <- simulate(fit, nits, 1234)
 stks <- ple4 + fits
@@ -905,7 +901,7 @@ idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
 library(parallel)
 lst <- mclapply(split(1:nits, 1:nits), function(x){
-	out <- try(a4aSCA(iter(stks, x), FLIndices(iter(idxs[[1]], x)), fit="MP"))
+	out <- try(sca(iter(stks, x), FLIndices(iter(idxs[[1]], x)), fit="MP"))
 	if(is(out, "try-error")) NULL else out
 })
 

@@ -21,7 +21,7 @@ is(fit0, "a4aFit")
 "range" %in%  names(attributes(index(fit0)[[1]]))
 
 # check convergence info
-is.na(fitSumm(fit0)["convergence",])
+fitSumm(fit0)["convergence",]==0
 
 #--------------------------------------------------------------------
 # iters
@@ -166,28 +166,19 @@ dim(coef(vmodel(pars(fit))[[2]]))[2]==nits
 #--------------------------------------------------------------------
 
 # sca defaults
-fit0 <-  sca(ple4, ple4.indices, fit="MP")
-# when fit="MP" class is "a4aFit" instead of "a4aFitSA"
-!is(fit0, "a4aFitSA")
-
-fit1 <-  sca(ple4, ple4.indices)
-# default is fit="MP" and class "a4aFit"
-!is(fit1, "a4aFitSA")
-
-all.equal(fitSumm(fit0), fitSumm(fit1))
-all.equal(harvest(fit0), harvest(fit1))
-all.equal(stock.n(fit0), stock.n(fit1))
-all.equal(catch.n(fit0), catch.n(fit1))
-
-# sca defaults
 fit0 <-  sca(ple4, ple4.indices)
 # default fit is "assessment" class should be "a4aFitSA"
 is(fit0, "a4aFitSA")
+
+# when fit="MP" class is "a4aFit"
+fit0 <-  sca(ple4, ple4.indices, fit="MP")
+is(fit0, "a4aFit")
 
 # when fit="assessment" class is "a4aFitSA"
 fit1 <-  sca(ple4, ple4.indices, fit="assessment")
 is(fit1, "a4aFitSA")
 
+# both must have the same results
 all.equal(fitSumm(fit0), fitSumm(fit1))
 all.equal(harvest(fit0), harvest(fit1))
 all.equal(stock.n(fit0), stock.n(fit1))
@@ -226,7 +217,7 @@ length(params(vmodel(pars(fit0))[[2]]))==1
 # hessian non-positive definite
 #====================================================================
 
-fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), useADMB=TRUE)
+fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
 sum(stock.n(fit0), na.rm=T)==0
 sum(catch.n(fit0), na.rm=T)==0
 sum(index(fit0)[[1]], na.rm=T)==0
@@ -240,7 +231,7 @@ sum(vcov(vmodel(pars(fit0))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit0))[[2]]), na.rm=T)==0
 
 
-fit <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), useADMB=TRUE)
+fit <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
 # check convergence info
 fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
@@ -255,7 +246,7 @@ sum(vcov(qmodel(pars(fit))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit))[[2]]), na.rm=T)==0
 
-fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment", useADMB=TRUE)
+fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment")
 sum(stock.n(fit1), na.rm=T)==0
 sum(catch.n(fit1), na.rm=T)==0
 sum(index(fit1)[[1]], na.rm=T)==0
@@ -315,10 +306,11 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 #====================================================================
 data(ple4)
 data(ple4.index)
-catch.n(ple4) <- FLQuantDistr(catch.n(ple4), (0.2/catch.n(ple4))^2)
-index.var(ple4.index) <- (0.2/index(ple4.index))^2
+catch.n(ple4) <- FLQuantDistr(catch.n(ple4), catch.n(ple4))
+var(catch.n(ple4))[] <- 0.2
+index.var(ple4.index)[] <- 0.2
 
-fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), useADMB=TRUE)
+fit0 <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 
 #--------------------------------------------------------------------
 # iters
@@ -334,7 +326,7 @@ identical(c(catch.n(stk2)[,,,,,1]), c(catch.n(ple4)))
 identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(ple4))))
 
 # Nx1
-fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), useADMB=TRUE)
+fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -344,7 +336,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # 1xN
-fit <- sca(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)), useADMB=TRUE)
+fit <- sca(ple4, FLIndices(idx2), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -354,7 +346,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # NxN
-fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)), useADMB=TRUE)
+fit <- sca(stk2, FLIndices(idx2), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -524,10 +516,6 @@ identical(fitSumm(fit1)["nlogl",], fitSumm(fit2)["nlogl",])
 # MCMC class and fit
 #====================================================================
 
-if (FALSE) {
-
-## do not run MCMC tests
-
 data(ple4)
 data(ple4.indices)
 
@@ -577,25 +565,24 @@ sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
 # must fail, with hybrid mcsave must be 1
 is(try(SCAMCMC(hybrid=TRUE)), "try-error")
 mc <- SCAMCMC(mcmc=100, mcsave=1, hybrid=TRUE)
-fit1 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-fit11 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-identical(dimnames(catch.n(fit1))[-6], dimnames(catch.n(fit11))[-6])
-identical(dimnames(stock.n(fit1))[-6], dimnames(stock.n(fit11))[-6])
-dim(catch.n(fit1))[6]==getN(mc)
-dim(catch.n(fit11))[6]==getN(mc)
-sum(!is.na(fit1@pars@stkmodel@vcov))==0
-sum(!is.na(fit11@pars@stkmodel@vcov))==0
-sum(unlist(lapply(lapply(lapply(fit1@pars@vmodel, vcov), is.na), "!")))==0
-sum(unlist(lapply(lapply(lapply(fit11@pars@vmodel, vcov), is.na), "!")))==0
-sum(unlist(lapply(lapply(lapply(fit1@pars@qmodel, vcov), is.na), "!")))==0
-sum(unlist(lapply(lapply(lapply(fit11@pars@qmodel, vcov), is.na), "!")))==0
+fit2 <- FLa4a:::a4aInternal(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit22 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+identical(dimnames(catch.n(fit2))[-6], dimnames(catch.n(fit22))[-6])
+identical(dimnames(stock.n(fit2))[-6], dimnames(stock.n(fit22))[-6])
+dim(catch.n(fit2))[6]==getN(mc)
+dim(catch.n(fit22))[6]==getN(mc)
+sum(!is.na(fit2@pars@stkmodel@vcov))==0
+sum(!is.na(fit22@pars@stkmodel@vcov))==0
+sum(unlist(lapply(lapply(lapply(fit2@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit22@pars@vmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit2@pars@qmodel, vcov), is.na), "!")))==0
+sum(unlist(lapply(lapply(lapply(fit22@pars@qmodel, vcov), is.na), "!")))==0
 
 # check seed's working
 mc <- SCAMCMC(mcmc=10, mcsave=1, hybrid=TRUE, mcseed=123)
-fit11 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-fit22 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
-identical(fit11@stock.n, fit22@stock.n)
-
+fit3 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+fit33 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
+identical(fit3@stock.n, fit33@stock.n)
 
 #====================================================================
 # iter
@@ -624,4 +611,3 @@ identical(fit1@stock.n, fit0@stock.n)
 identical(fit1@catch.n, fit0@catch.n)
 identical(fit1@index, fit0@index)
 
-}

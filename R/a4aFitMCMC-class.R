@@ -69,7 +69,7 @@ setGeneric("as.mcmc", function(x, ...) useAsDefault=coda::as.mcmc)
 #' @rdname a4aFitMCMC-class
 setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {
 		object <- x
-		df0 <- t(object@pars@stkmodel@params[drop=T])
+		df0 <- t(object@pars@stkmodel@coefficients[drop=T])
 		lst <- lapply(object@pars@qmodel, par2mat)
 		df1 <- do.call("cbind", lst)		
 		lst <- lapply(object@pars@vmodel, par2mat)

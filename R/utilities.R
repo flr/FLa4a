@@ -150,7 +150,7 @@ getADMBCovariance <- function(wkdir) {
 #' dims(FLPar())
 
 setMethod("dims", "a4aStkParams", function(obj) {
-  dim(obj@params)
+  dim(obj@coefficients)
 })
 
 #' @title plot for fitted catch-at-age

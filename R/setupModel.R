@@ -90,7 +90,6 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
         names(gmf) <- paste("by", 1:ncol(gmf), ".", sep = "")
         if (!all(complete.cases(gmf))) stop("Some 'by' arguments in smoothers evaluate to NA: cannot proceed.")
         df <- cbind(df, gmf)
-  
         # now replace by = ... to by = by1. etc and rebuild the formula :)
         #tmp.sfunc <- function(..., by) deparse(substitute(by))
         replace.by <- lapply(dummy.gams[bygams], function(x) gsub("[)]","[)]", gsub("[(]", "[(]", eval(parse(text = x)))))

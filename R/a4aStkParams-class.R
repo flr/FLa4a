@@ -71,7 +71,7 @@ setMethod("initialize", "a4aStkParams",
       .Object@fMod  <- fMod
       .Object@n1Mod <- n1Mod
       .Object@srMod <- srMod
-      .Object@params <- params
+      .Object@coefficients <- coefficients
       .Object@vcov <- vcov
       if (length(dim(vcov)) == 2) dim(.Object@vcov) <- c(dim(vcov), 1)
       .Object@centering <- centering
@@ -186,6 +186,20 @@ setMethod("params", "a4aStkParams", function(object) object@coefficients)
 #' @rdname a4aStkParams-class
 setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){
     if (all.equal(is(value), is(params(object)))) object@coefficients <- value
+    object
+})
+
+#' @rdname a4aStkParams-class
+#' @aliases coefficients coefficients-methods
+setGeneric("coefficients", function(object, ...) standardGeneric("coefficients"))
+#' @rdname a4aStkParams-class
+setMethod("coefficients", "a4aStkParams", function(object) object@coefficients)
+
+#' @aliases coefficients<- coefficients<--methods
+setGeneric("coefficients<-", function(object,value) standardGeneric("coefficients<-"))
+#' @rdname a4aStkParams-class
+setReplaceMethod("coefficients", signature("a4aStkParams","FLPar"), function(object, value){
+    if (all.equal(is(value), is(coefficients(object)))) object@coefficients <- value
     object
 })
 
@@ -315,11 +329,11 @@ setMethod("propagate", signature(object="a4aStkParams"),
 #' @param it iteration to be extracted
 setMethod("iter", "a4aStkParams", function(obj, it){
 	obj@vcov <- obj@vcov[,,it, drop=FALSE]
-	obj@params <- iter(obj@params, it)
+	obj@coefficients <- iter(obj@coefficients, it)
 	obj@m <- iter(obj@m, it)
 	obj@wt <- iter(obj@wt, it)
-  bj@mat <- iter(obj@mat, it)
-	obj@centering <- obj@centering[it]
+	obj@mat <- iter(obj@mat, it)
+	obj@centering <- iter(obj@centering, it)
 	obj
 })
 
