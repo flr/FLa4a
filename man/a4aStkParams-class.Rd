@@ -33,6 +33,8 @@
 \alias{coefficients}
 \alias{coefficients-methods}
 \alias{coefficients,a4aStkParams-method}
+\alias{coefficients<-}
+\alias{coefficients<--methods}
 \alias{coefficients<-,a4aStkParams,FLPar-method}
 \alias{distr,a4aStkParams-method}
 \alias{distr<-,a4aStkParams,character-method}
@@ -83,6 +85,8 @@ srMod(object) <- value
 coefficients(object, ...)
 
 \S4method{coefficients}{a4aStkParams}(object)
+
+coefficients(object) <- value
 
 \S4method{coefficients}{a4aStkParams,FLPar}(object) <- value
 

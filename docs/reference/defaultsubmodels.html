@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Submodel class — submodel • FLa4a</title>
+<title>Default sub-models — defaultSubModels • FLa4a</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Submodel class — submodel" />
+<meta property="og:title" content="Default sub-models — defaultSubModels" />
 
-<meta property="og:description" content="Class definition (slots), constructors, accessors, replacement (when relevant) and common methods." />
+<meta property="og:description" content="Methods to create formulas for sub-models. The sub-models are set automagically using defaults." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -101,100 +101,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Submodel class</h1>
+    <h1>Default sub-models</h1>
     
-    <div class="hidden name"><code>submodel-class.Rd</code></div>
+    <div class="hidden name"><code>defaultsubmodels.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.</p>
+    <p>Methods to create formulas for sub-models. The sub-models are set automagically using defaults.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>submodel</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>defaultFmod</span>(<span class='no'>stock</span>, <span class='kw'>dfm</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.5</span>, <span class='fl'>0.7</span>))
 
-<span class='co'># S4 method for missing</span>
-<span class='fu'>submodel</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'>defaultQmod</span>(<span class='no'>indices</span>, <span class='kw'>dfm</span> <span class='kw'>=</span> <span class='fl'>0.6</span>)
 
-<span class='co'># S4 method for submodel</span>
-<span class='fu'>params</span>(<span class='no'>object</span>)
+<span class='fu'>defaultN1mod</span>(<span class='no'>stock</span>)
 
-<span class='fu'>sMod</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'>defaultVmod</span>(<span class='no'>stock</span>, <span class='no'>indices</span>)
 
-<span class='co'># S4 method for submodel</span>
-<span class='fu'>sMod</span>(<span class='no'>object</span>)
-
-<span class='co'># S4 method for submodel</span>
-<span class='fu'>iter</span>(<span class='no'>obj</span>, <span class='no'>it</span>)
-
-<span class='co'># S4 method for submodel</span>
-<span class='fu'>propagate</span>(<span class='no'>object</span>, <span class='no'>iter</span>, <span class='kw'>fill.iter</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='co'># S4 method for submodel</span>
-<span class='fu'>formula</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>defaultSRmod</span>(<span class='no'>stock</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>object of relevant class (see signature of method)</p></td>
+      <th>stock</th>
+      <td><p>an FLStock object</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>additional argument list that might never be used</p></td>
-    </tr>
-    <tr>
-      <th>obj</th>
-      <td><p>the object to be subset</p></td>
-    </tr>
-    <tr>
-      <th>it</th>
-      <td><p>iteration to be extracted</p></td>
-    </tr>
-    <tr>
-      <th>iter</th>
-      <td><p>the number of iterations to create</p></td>
-    </tr>
-    <tr>
-      <th>fill.iter</th>
-      <td><p>should the new iterations be filled with values (TRUE) or NAs (FALSE)</p></td>
-    </tr>
-    <tr>
-      <th>x</th>
-      <td><p>the submodel object that is to be modified</p></td>
+      <th>indices</th>
+      <td><p>an FLIndices object</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="slot"><a class="anchor" href="#slot"></a>Slot</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-    <dl class='dl-horizontal'>
-    <dt><code>Mod</code></dt><dd><p><code>formula</code> describing the model</p></dd>
-    <dt><code>params</code></dt><dd><p><code>FLPar</code> with model parameters</p></dd>
-    <dt><code>vcov</code></dt><dd><p><code>array</code> with variance covariance paramaters related to the variance model</p></dd>
-    <dt><code>centering</code></dt><dd><p><code>numeric</code> value used for centering the data</p></dd>
-    <dt><code>distr</code></dt><dd><p>a character with the parameters' statistical distribution; it must match a known distribution for R (<em>e.g.</em> "norm" for gaussian) so that <code>rnorm</code> can be called</p></dd>
-</dl>
-    
-    <h2 class="hasAnchor" id="accessors"><a class="anchor" href="#accessors"></a>Accessors</h2>
-
-    
-    <p>All slots in the class have accessor and replacement methods defined that
-allow retrieving and substituting individual slots.</p>
-<p>The values passed for replacement need to be of the class of that slot.
-A numeric vector can also be used when replacing FLQuant slots, and the
-vector will be used to substitute the values in the slot, but not its other
-attributes.</p>
-    
-    <h2 class="hasAnchor" id="constructor"><a class="anchor" href="#constructor"></a>Constructor</h2>
-
-    
-    <p>A construction method exists for this class that can take named arguments for
-any of its slots. All slots are then created to match the requirements of the
-class validity. If an unnamed <code>FLQuant</code> object is provided, this is used
-for sizing, but not for populating any slot.</p>
+    <p>a FLStock object</p>
     
 
   </div>
@@ -203,11 +146,7 @@ for sizing, but not for populating any slot.</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#slot">Slot</a></li>
-
-      <li><a href="#accessors">Accessors</a></li>
-
-      <li><a href="#constructor">Constructor</a></li>
+      <li><a href="#value">Value</a></li>
           </ul>
 
   </div>

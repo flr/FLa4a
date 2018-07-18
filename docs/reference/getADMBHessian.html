@@ -11,26 +11,41 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
+
+
+<meta property="og:title" content="Get ADMB Hessian — getADMBHessian" />
+
+<meta property="og:description" content="Reads the hessian file from any ADMB fit.  Used here with the a4a model." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -44,8 +59,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">FLa4a</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">FLa4a</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -71,6 +90,7 @@
   <a href="http://flr-project.org/">FLR</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -78,25 +98,32 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get ADMB Hessian</h1>
+    
+    <div class="hidden name"><code>getADMBHessian.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Reads the hessian file from any ADMB fit.  Used here with the a4a model.</p>
     
+    </div>
 
-    <pre><span class='fu'>getADMBHessian</span>(<span class='no'>wkdir</span>)
+    <pre class="usage"><span class='fu'>getADMBHessian</span>(<span class='no'>wkdir</span>)
 
 <span class='fu'>getADMBCovariance</span>(<span class='no'>wkdir</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>wkdir</dt>
-      <dd>the location of the admb output</dd>
-    </dl>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>wkdir</th>
+      <td><p>the location of the admb output</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -114,13 +141,8 @@
 <span class='co'># choose a working directory</span>
 <span class='no'>wkdir</span> <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>()
 <span class='co'># do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='a4aSCA.html'>a4aSCA</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>,<span class='kw'>indices</span><span class='kw'>=</span><span class='no'>ple4.indices</span>,<span class='kw'>wkdir</span><span class='kw'>=</span><span class='no'>wkdir</span>,<span class='kw'>fit</span><span class='kw'>=</span><span class='st'>"assessment"</span>)</div><div class='output co'>#&gt; Model and results are stored in working directory [/tmp/Rtmprqj4rg/file2e5846039f0c]</div><div class='input'><span class='no'>hessInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>getADMBHessian</span>(<span class='no'>wkdir</span>)
-<span class='fu'>str</span>(<span class='no'>hessInfo</span>)</div><div class='output co'>#&gt; List of 4
-#&gt;  $ num.pars           : int 187
-#&gt;  $ hes                : num [1:187, 1:187] 113598 -579 -421 -492 -447 ...
-#&gt;  $ hybrid_bounded_flag: int 0
-#&gt;  $ scale              : num [1:187] 1 1 1 1 1 1 1 1 1 1 ...</div><div class='input'><span class='co'># calculate covariance matrix</span>
-<span class='no'>Sigma</span> <span class='kw'>&lt;-</span> <span class='fu'>solve</span>(<span class='no'>hessInfo</span>$<span class='no'>hes</span>)</div></pre>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>,<span class='kw'>indices</span><span class='kw'>=</span><span class='no'>ple4.indices</span>,<span class='kw'>wkdir</span><span class='kw'>=</span><span class='no'>wkdir</span>)</div><div class='output co'>#&gt; <span class='error'>Error in a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,     n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices,     wkdir = wkdir, verbose = verbose, fit = ifit, center = center,     mcmc = mcmc): only non-zero survey indices allowed.</span></div><div class='input'><span class='no'>hessInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>getADMBHessian</span>(<span class='no'>wkdir</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file '/tmp/RtmpTUD8pw/file3ff854afdf71/admodel.hes': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(paste0(wkdir, "/admodel.hes"), "rb"): cannot open the connection</span></div><div class='input'><span class='fu'>str</span>(<span class='no'>hessInfo</span>)</div><div class='output co'>#&gt; <span class='error'>Error in str(hessInfo): object 'hessInfo' not found</span></div><div class='input'><span class='co'># calculate covariance matrix</span>
+<span class='no'>Sigma</span> <span class='kw'>&lt;-</span> <span class='fu'>solve</span>(<span class='no'>hessInfo</span>$<span class='no'>hes</span>)</div><div class='output co'>#&gt; <span class='error'>Error in solve(hessInfo$hes): object 'hessInfo' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -143,11 +165,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

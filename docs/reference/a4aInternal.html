@@ -11,26 +11,41 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
+
+
+<meta property="og:title" content="Stock assessment model advanced method — a4aInternal" />
+
+<meta property="og:description" content="The advanced user interface to the a4a fitting routine." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -44,8 +59,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">FLa4a</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">FLa4a</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -71,6 +90,7 @@
   <a href="http://flr-project.org/">FLR</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -78,56 +98,86 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Stock assessment model advanced method</h1>
+    
+    <div class="hidden name"><code>a4aInternal.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>The advanced user interface to the a4a fitting routine.</p>
     
+    </div>
 
-    <pre><span class='fu'>a4aInternal</span>(<span class='no'>stock</span>, <span class='no'>indices</span>, <span class='kw'>fmodel</span> <span class='kw'>=</span> ~<span class='fu'>s</span>(<span class='no'>age</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>) + <span class='fu'>factor</span>(<span class='no'>year</span>),
-  <span class='kw'>qmodel</span> <span class='kw'>=</span> <span class='fu'>lapply</span>(<span class='fu'>seq</span>(<span class='fu'>length</span>(<span class='no'>indices</span>)), <span class='kw'>function</span>(<span class='no'>i</span>) ~<span class='fl'>1</span>),
-  <span class='kw'>srmodel</span> <span class='kw'>=</span> ~<span class='fu'>factor</span>(<span class='no'>year</span>), <span class='kw'>n1model</span> <span class='kw'>=</span> ~<span class='fu'>factor</span>(<span class='no'>age</span>),
-  <span class='kw'>vmodel</span> <span class='kw'>=</span> <span class='fu'>lapply</span>(<span class='fu'>seq</span>(<span class='fu'>length</span>(<span class='no'>indices</span>) + <span class='fl'>1</span>), <span class='kw'>function</span>(<span class='no'>i</span>) ~<span class='fl'>1</span>),
+    <pre class="usage"><span class='fu'>a4aInternal</span>(<span class='no'>stock</span>, <span class='no'>indices</span>, <span class='kw'>fmodel</span> <span class='kw'>=</span> <span class='fu'><a href='defaultsubmodels.html'>defaultFmod</a></span>(<span class='no'>stock</span>),
+  <span class='kw'>qmodel</span> <span class='kw'>=</span> <span class='fu'><a href='defaultsubmodels.html'>defaultQmod</a></span>(<span class='no'>indices</span>), <span class='kw'>srmodel</span> <span class='kw'>=</span> <span class='fu'><a href='defaultsubmodels.html'>defaultSRmod</a></span>(<span class='no'>stock</span>),
+  <span class='kw'>n1model</span> <span class='kw'>=</span> <span class='fu'><a href='defaultsubmodels.html'>defaultN1mod</a></span>(<span class='no'>stock</span>), <span class='kw'>vmodel</span> <span class='kw'>=</span> <span class='fu'><a href='defaultsubmodels.html'>defaultVmod</a></span>(<span class='no'>stock</span>, <span class='no'>indices</span>),
   <span class='kw'>covar</span> <span class='kw'>=</span> <span class='no'>missing</span>, <span class='kw'>wkdir</span> <span class='kw'>=</span> <span class='no'>missing</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>fit</span> <span class='kw'>=</span> <span class='st'>"assessment"</span>,
   <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>mcmc</span> <span class='kw'>=</span> <span class='no'>missing</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>stock</dt>
-      <dd>an FLStock object containing catch and stock information</dd>
-      <dt>indices</dt>
-      <dd>an FLIndices object containing survey indices</dd>
-      <dt>fmodel</dt>
-      <dd>a formula object depicting the model for log fishing mortality at age</dd>
-      <dt>qmodel</dt>
-      <dd>a list of formula objects depicting the models for log survey catchability at age</dd>
-      <dt>srmodel</dt>
-      <dd>a formula object depicting the model for log recruitment</dd>
-      <dt>n1model</dt>
-      <dd>a formula object depicting the model for the first year of catch data</dd>
-      <dt>vmodel</dt>
-      <dd>a list of formula objects depicting the models for log survey and log fishing mortality variance</dd>
-      <dt>covar</dt>
-      <dd>a list with covariates</dd>
-      <dt>wkdir</dt>
-      <dd>used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.</dd>
-      <dt>verbose</dt>
-      <dd>if true admb fitting information is printed to the screen</dd>
-      <dt>fit</dt>
-      <dd>character with type of fit: &#39;MP&#39; or &#39;assessment&#39;; the former doesn&#39;t require the hessian to be computed, while the latter does.</dd>
-      <dt>center</dt>
-      <dd><code>logical</code> specifying whether data is centered before estimating or not</dd>
-      <dt>mcmc</dt>
-      <dd><code>SCAMCMC</code> specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description</dd>
-    </dl>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>stock</th>
+      <td><p>an FLStock object containing catch and stock information</p></td>
+    </tr>
+    <tr>
+      <th>indices</th>
+      <td><p>an FLIndices object containing survey indices</p></td>
+    </tr>
+    <tr>
+      <th>fmodel</th>
+      <td><p>a formula object depicting the model for log fishing mortality at age</p></td>
+    </tr>
+    <tr>
+      <th>qmodel</th>
+      <td><p>a list of formula objects depicting the models for log survey catchability at age</p></td>
+    </tr>
+    <tr>
+      <th>srmodel</th>
+      <td><p>a formula object depicting the model for log recruitment</p></td>
+    </tr>
+    <tr>
+      <th>n1model</th>
+      <td><p>a formula object depicting the model for the first year of catch data</p></td>
+    </tr>
+    <tr>
+      <th>vmodel</th>
+      <td><p>a list of formula objects depicting the models for log survey and log fishing mortality variance</p></td>
+    </tr>
+    <tr>
+      <th>covar</th>
+      <td><p>a list with covariates</p></td>
+    </tr>
+    <tr>
+      <th>wkdir</th>
+      <td><p>used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>if true admb fitting information is printed to the screen</p></td>
+    </tr>
+    <tr>
+      <th>fit</th>
+      <td><p>character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.</p></td>
+    </tr>
+    <tr>
+      <th>center</th>
+      <td><p><code>logical</code> specifying whether data is centered before estimating or not</p></td>
+    </tr>
+    <tr>
+      <th>mcmc</th>
+      <td><p><code>SCAMCMC</code> specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an <code>a4aFit</code> object if fit is &quot;MP&quot; or an <code>a4aFitSA</code> if fit is &quot;assessment&quot;</p>
+    <p>an <code>a4aFit</code> object if fit is "MP" or an <code>a4aFitSA</code> if fit is "assessment"</p>
     
 
   </div>
@@ -148,11 +198,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
