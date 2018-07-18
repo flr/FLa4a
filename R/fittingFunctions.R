@@ -1,5 +1,16 @@
 globalVariables(c("obs", "year", "age", "fleet"))
 
+#' @title deprecated
+#' @name deprecated
+#' @docType methods
+#' @rdname deprecated
+#' @description Deprecated methods.
+#' @aliases a4aSCA
+a4aSCA <- function(...){
+	stop("The method \"a4aSCA\" was removed, please use \"sca\", which now gives the user assess to the same arguments \"a4aSCA\".")
+}
+
+
 #' @title Default sub-models
 #' @name defaultSubModels
 #' @docType methods
