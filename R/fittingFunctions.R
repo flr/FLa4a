@@ -7,10 +7,11 @@ globalVariables(c("obs", "year", "age", "fleet"))
 #' @description Methods to create formulas for sub-models. The sub-models are set automagically using defaults.
 #' @param stock an FLStock object
 #' @param indices an FLIndices object
+#' @param dfm numeric vector with the data points fraction to be used to set the spline ks.
 #' @return a FLStock object
-#' @aliases collapseSeasons
+#' @aliases defaultFmod
 
-defaultFmod <- function(stock, dfm=c(0.5, 0.5)){
+defaultFmod <- function(stock, dfm=c(0.5, 0.7)){
 	dis <- dims(stock)
 	KY=floor(dfm[1] * dis$year)
 	KA=ceiling(dfm[2] *dis$age)
@@ -24,6 +25,8 @@ defaultFmod <- function(stock, dfm=c(0.5, 0.5)){
 	fmodel
 }
 
+#' @rdname defaultsubmodels
+#' @aliases defaultQmod
 defaultQmod <- function(indices, dfm=0.6){
 	lds <- lapply(indices, dims)
 	lds <- lapply(lds, function(x){
@@ -39,6 +42,8 @@ defaultQmod <- function(indices, dfm=0.6){
 	lds
 }
 
+#' @rdname defaultsubmodels
+#' @aliases defaultN1mod
 defaultN1mod <- function(stock){
   dis <- dims(stock)
   if (dis$age >=6) {
@@ -49,11 +54,17 @@ defaultN1mod <- function(stock){
   n1model
 }
 
+#' @rdname defaultsubmodels
+#' @aliases defaultVmod
 defaultVmod <- function(stock, indices){
   vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
   vmodel[[1]] <- ~ s(age, k = 3)
   vmodel
 }
+
+#' @rdname defaultsubmodels
+#' @aliases defaultSRmod
+defaultSRmod <- function(stock){~factor(year)}
 
 #' @title Collapse seasons
 #' @name collapseSeasons
@@ -111,7 +122,6 @@ collapseSeasons <- function (stock) {
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
 #' @param center, logical defining if the data should be centered before fitting.
 #' @param mcmc an \code{SCAMCMC} object with the arguments to run MCMC
-#' @param useADMB if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)
 #' @template dots
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases sca sca-methods
@@ -171,7 +181,7 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 
 #' @rdname sca
 setMethod("sca", signature("FLStock", "FLIndices"), 
-	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing, useADMB = TRUE) {
+	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing) {
 
   #-----------------------------------------------------------------
   # get fit type
@@ -185,7 +195,7 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   if(missing(qmodel)) qmodel <- defaultQmod(indices)
   if(missing(n1model)) n1model <- defaultN1mod(stock)
   if(missing(vmodel)) vmodel <- defaultVmod(stock, indices)
-  if(missing(srmodel)) srmodel <- ~ factor(year)
+  if(missing(srmodel)) srmodel <- defaultSRmod(stock)
 
   #-----------------------------------------------------------------
   # now to deal with iterations ...
@@ -262,14 +272,14 @@ setMethod("sca", signature("FLStock", "FLIndices"),
     # check: do we need indices to have matching units, areas?
     if (!missing(covar) & !missing(wkdir)) {
       icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
     } else if(!missing(covar) & missing(wkdir)){
       icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
     } else if(missing(covar) & !missing(wkdir)){
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
 	  } else {
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center, mcmc=mcmc, useADMB = useADMB)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
 	  }
     if (i == 1) {
       tmpSumm <- outi@fitSumm
@@ -404,16 +414,16 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #' @param fit character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.
 #' @param center \code{logical} specifying whether data is centered before estimating or not
 #' @param mcmc \code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description
-#' @param useADMB if FALSE use TMB if TRUE (deafault) use ADMB (note MCMC cannot be used with TMB)
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
-a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
-                qmodel  = lapply(seq(length(indices)), function(i) ~ 1),
-                srmodel = ~ factor(year),
-                n1model = ~ factor(age),
-                vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
-                covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
-                center = TRUE, mcmc=missing, useADMB = TRUE)
+#a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
+#                qmodel  = lapply(seq(length(indices)), function(i) ~ 1),
+#                srmodel = ~ factor(year),
+#                n1model = ~ factor(age),
+#                vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
+#                covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
+#                center = TRUE, mcmc=missing)
+a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = defaultQmod(indices), srmodel = defaultSRmod(stock), n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices), covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing)
 {
 
   # first check permissions of executable
@@ -634,8 +644,6 @@ a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year)
   srvMaxAge <- srvRange[,'max']
   srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
   names(srvMaxAge) <- names(indices)
-
-
 
 #  if (useADMB) { # fit using the ADMB code
 

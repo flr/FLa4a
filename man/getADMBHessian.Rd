@@ -28,7 +28,7 @@ data(ple4.indices)
 # choose a working directory
 wkdir <- tempfile()
 # do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
-fit <- sca(stock=ple4,indices=ple4.indices,wkdir=wkdir,fit="assessment", useADMB=TRUE)
+fit <- sca(stock=ple4,indices=ple4.indices,wkdir=wkdir)
 hessInfo <- getADMBHessian(wkdir)
 str(hessInfo)
 # calculate covariance matrix

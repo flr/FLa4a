@@ -30,6 +30,10 @@
 \alias{srMod<-,a4aStkParams,formula-method}
 \alias{params,a4aStkParams-method}
 \alias{params<-,a4aStkParams,FLPar-method}
+\alias{coefficients}
+\alias{coefficients-methods}
+\alias{coefficients,a4aStkParams-method}
+\alias{coefficients<-,a4aStkParams,FLPar-method}
 \alias{distr,a4aStkParams-method}
 \alias{distr<-,a4aStkParams,character-method}
 \alias{vcov,a4aStkParams-method}
@@ -75,6 +79,12 @@ srMod(object) <- value
 \S4method{params}{a4aStkParams}(object)
 
 \S4method{params}{a4aStkParams,FLPar}(object) <- value
+
+coefficients(object, ...)
+
+\S4method{coefficients}{a4aStkParams}(object)
+
+\S4method{coefficients}{a4aStkParams,FLPar}(object) <- value
 
 \S4method{distr}{a4aStkParams}(object)
 

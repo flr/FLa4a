@@ -277,7 +277,6 @@ lst$x <- quantSums(stock.n(fit)[agerng]*exp(-Z[agerng])*stock.wt(ple4)[agerng])
 stkn <- do.call("trim", lst)
 qhat <- index(fit)[[1]]/stkn
 all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
-# need to deal with biomass indices better...
 all.equal(c(qhat), c(flqs$qmodel[[1]][1,]), tolerance=10e-4)
 all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
 all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)
@@ -295,7 +294,6 @@ lst$x <- quantSums(stock.n(fit)[agerng]*exp(-Z[agerng])*stock.wt(ple4)[agerng])
 stkn <- do.call("trim", lst)
 qhat <- index(fit)[[1]]/stkn
 all.equal(c(qhat), c(flqs$qmodel[[1]]), tolerance=10e-4)
-# need to deal with biomass indices better...
 all.equal(c(qhat), c(flqs$qmodel[[1]][1,]), tolerance=10e-4)
 all.equal(c(harvest(fit)), c(flqs$stkmodel$harvest), tolerance=10e-4)
 all.equal(c(stock.n(fit)[,1]), c(flqs$stkmodel$ny1), tolerance=10e-4)

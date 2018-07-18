@@ -15,7 +15,7 @@ sca(stock, indices, ...)
 \S4method{sca}{FLStock,FLIndices}(stock, indices, fmodel = missing,
   qmodel = missing, srmodel = missing, n1model = missing,
   vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE,
-  fit = "assessment", center = TRUE, mcmc = missing, useADMB = TRUE)
+  fit = "assessment", center = TRUE, mcmc = missing)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}
@@ -45,8 +45,6 @@ sca(stock, indices, ...)
 \item{center, }{logical defining if the data should be centered before fitting.}
 
 \item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
-
-\item{useADMB}{if FALSE use TMB if TRUE (default) use ADMB (note MCMC cannot be used with TMB)}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"

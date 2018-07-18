@@ -195,6 +195,7 @@ setGeneric("coefficients", function(object, ...) standardGeneric("coefficients")
 #' @rdname a4aStkParams-class
 setMethod("coefficients", "a4aStkParams", function(object) object@coefficients)
 
+#' @rdname a4aStkParams-class
 #' @aliases coefficients<- coefficients<--methods
 setGeneric("coefficients<-", function(object,value) standardGeneric("coefficients<-"))
 #' @rdname a4aStkParams-class

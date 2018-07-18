@@ -140,7 +140,4 @@ importFrom("coda", mcmc, as.mcmc)
 importFrom("utils", capture.output, read.table, write.table, sessionInfo)
 importFrom("stats", runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm, as.formula, "nlminb", "optimHess")
 importFrom("utils", "combn")
-importFrom(TMB,MakeADFun)
-importFrom(TMB,oneStepPredict)
-importFrom(TMB,sdreport)
-useDynLib(FLa4a)
+

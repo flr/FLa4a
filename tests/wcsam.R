@@ -1,7 +1,7 @@
 library(FLa4a)
 data(ple4)
 data(ple4.indices)
-err <- 0.05
+err <- 0.1
 nits <- 250
 
 fit <-  sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)))
@@ -12,7 +12,7 @@ idx.sim <- ple4.indices[1]
 index(idx.sim[[1]]) <- index(fit.sim)[[1]]
 stk.sim <- propagate(ple4, nits) + fit.sim 
 
-fit2 <-  sca(stk.sim, idx.sim, qmodel=list(~s(age, k=4)), fit="MP", useADMB=TRUE)
+fit2 <-  sca(stk.sim, idx.sim, qmodel=list(~s(age, k=4)), fit="MP")
 
 # are the simulated values unbiased
 stk.fit <- stock.n(fit)

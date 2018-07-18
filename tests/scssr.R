@@ -14,69 +14,27 @@ fit0 <-  sca(ple4, FLIndices(ple4.index))
 #====================================================================
 # bevholt
 #====================================================================
-fitbh <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholt(CV=0.1))
+fitbh <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholt(CV=0.2))
 
-fitbhsv <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.1), useADMB = TRUE)
-
-#====================================================================
-# ricker
-#====================================================================
-
-fitr <-  sca(ple4, FLIndices(ple4.index), srmodel=~ricker(CV=0.1))
-
-#====================================================================
-# hockey-stick
-#====================================================================
-
-fith <-  sca(ple4, FLIndices(ple4.index), srmodel=~hockey(CV=0.1))
-
-#====================================================================
-# geomean
-#====================================================================
-
-fitg <-  sca(ple4, FLIndices(ple4.index), srmodel=~geomean(CV=0.1))
-
-#====================================================================
-# mean
-#====================================================================
-
-fitm <-  sca(ple4, FLIndices(ple4.index), srmodel=~1)
-
-stk <- expand(ple4, age=0:10)
-catch.n(stk)["0"] <- rlnorm(catch.n(stk)["0"])
-catch.wt(stk)["0"] <- catch.wt(stk)["1"]
-stock.wt(stk)["0"] <- stock.wt(stk)["1"]
-m(stk)["0"] <- m(stk)["1"]
-m.spwn(stk)["0"] <- m.spwn(stk)["1"]
-harvest.spwn(stk)["0"] <- harvest.spwn(stk)["1"]
-mat(stk)["0"] <- mat(stk)["1"]
-stk <- setPlusGroup(stk, 10)
-fit00 <-  sca(stk, FLIndices(ple4.index))
-
-#====================================================================
-# bevholt
-#====================================================================
-fitbh <-  sca(stk, FLIndices(ple4.index), srmodel=~bevholt(CV=0.1))
-
-fitbhsv <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.1), useADMB = TRUE)
+fitbhsv <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.2))
 
 #====================================================================
 # ricker
 #====================================================================
 
-fitr <-  sca(ple4, FLIndices(ple4.index), srmodel=~ricker(CV=0.1))
+fitr <-  sca(ple4, FLIndices(ple4.index), srmodel=~ricker(CV=0.2))
 
 #====================================================================
 # hockey-stick
 #====================================================================
 
-fith <-  sca(ple4, FLIndices(ple4.index), srmodel=~hockey(CV=0.1))
+fith <-  sca(ple4, FLIndices(ple4.index), srmodel=~hockey(CV=0.2))
 
 #====================================================================
 # geomean
 #====================================================================
 
-fitg <-  sca(ple4, FLIndices(ple4.index), srmodel=~geomean(CV=0.1))
+fitg <-  sca(ple4, FLIndices(ple4.index), srmodel=~geomean(CV=0.2))
 
 #====================================================================
 # mean

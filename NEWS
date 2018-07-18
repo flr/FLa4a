@@ -2,9 +2,14 @@
 
  NEW FEATURES:
  - methods "a4a" removed
+ - method a4aSCA replaced with sca
+ - method sca removed, now works as previous a4aSCA
+ - new accessors for coefficients
  
  BUG FIXES:
-
+ - a lot of small things due to change in slot name from params to coefficients
+ - predict of FLIndexBiomass now reports for "all", not each age.
+  
  FLa4a 1.1.x:
 
  NEW FEATURES:

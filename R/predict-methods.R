@@ -27,7 +27,6 @@ setMethod("predict", signature(object = "a4aFitSA"),
 #' @rdname predict-methods
 setMethod("predict", signature(object = "SCAPars"),
   function(object) {
-
   sm <- stkmodel(object)
   qm <- qmodel(object)
   vm <- vmodel(object)
