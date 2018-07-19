@@ -789,8 +789,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	a4aout@index <- FLQuants(index)
 
 	# GCV (Wood, 2006, pag. 132)
+	browser()
 	flev <- diag(Xf %*% solve(t(Xf) %*% Xf) %*% t(Xf))
-	cgcv <- prod(dim(a4aout@catch.n)) * sum(c(log(catch.n(stock)/a4aout@catch.n))^2)/sum(1-flev)^2
+	idna <- !is.na(catch.n(stock))
+	cgcv <- length(a4aout@catch.n[idna, drop=TRUE]) * sum(c(log(catch.n(stock)/a4aout@catch.n))[idna, drop=TRUE]^2)/sum(1-flev)^2
 	tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv, convergence, NA))
 	a4aout@fitSumm <- array(tmpSumm, dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv", "convergence", "accrate")))
 
