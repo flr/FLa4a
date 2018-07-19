@@ -8,7 +8,7 @@ data(ple4.index)
 nits <- 2
 
 #====================================================================
-# run sca
+# run sca MP
 #====================================================================
 fit0 <-  sca(ple4, FLIndices(ple4.index))
 is(fit0, "a4aFit")
@@ -31,7 +31,7 @@ idx2 <- propagate(ple4.index, nits)
 stk2 <- propagate(ple4, nits)
 
 # Nx1
-fit <- sca(stk2, FLIndices(ple4.index))
+fit <- sca(stk2, FLIndices(ple4.index), fit = "MP")
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -41,7 +41,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # 1xN
-fit <- sca(ple4, FLIndices(idx2))
+fit <- sca(ple4, FLIndices(idx2), fit = "MP")
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -51,7 +51,7 @@ identical(stock.n(fit)[,,,,,2, drop=TRUE], stock.n(fit0)[drop=TRUE])
 identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 
 # NxN
-fit <- sca(stk2, FLIndices(idx2))
+fit <- sca(stk2, FLIndices(idx2), fit = "MP")
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
 identical(stock.n(fit)[,,,,,1], stock.n(fit0))
@@ -75,7 +75,7 @@ fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
 all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=5)"))
 
 #====================================================================
-# run sca
+# run sca assessment
 #====================================================================
 
 # run
@@ -212,6 +212,14 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0b)[drop=TRUE])
 fit0 <-  sca(ple4, FLIndices(a=ple4.index), qmodel=list(~s(age, k=4)))
 # this bug concatenated catch pars with qpars
 length(params(vmodel(pars(fit0))[[2]]))==1
+
+#====================================================================
+# bug in gcv with NA
+#====================================================================
+stk <- ple4
+catch.n(stk)[,"2000"] <- NA
+fit <- sca(stk, ple4.indices)
+!is.na(fitSumm(fit)["gcv",])
 
 #====================================================================
 # hessian non-positive definite
