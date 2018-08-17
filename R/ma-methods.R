@@ -13,9 +13,9 @@
 #' data(ple4)
 #' data(ple4.indices)
 #' fmod <- ~ factor(age) + s(year, k=20)
-#' qmod <- list(~ s(age, k = 4), ~ s(age, k = 4), ~ s(age, k = 3))
+#' qmod <- c(list(~ s(age, k = 4)), rep(list(~s(age, k=4)), 5))
 #' f1 <- sca(ple4, ple4.indices, fmodel=fmod, qmodel=qmod, fit = "assessment")
-#' qmod <- list(~ s(age, k = 4)+year, ~ s(age, k = 4), ~ s(age, k = 3))
+#' qmod <- c(list(~ s(age, k = 4) + year), rep(list(~s(age, k=4)), 5))
 #' f2 <- sca(ple4, ple4.indices, fmodel=fmod, qmodel=qmod, fit = "assessment")
 #' # AIC weighting
 #' aicwt <- function(object){

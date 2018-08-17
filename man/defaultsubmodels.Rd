@@ -23,6 +23,8 @@ defaultSRmod(stock)
 \arguments{
 \item{stock}{an FLStock object}
 
+\item{dfm}{numeric vector with the data points fraction to be used to set the spline ks.}
+
 \item{indices}{an FLIndices object}
 }
 \value{

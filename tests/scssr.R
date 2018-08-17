@@ -4,6 +4,7 @@
 library(FLa4a)
 data(ple4)
 data(ple4.indices)
+ple4.indices <- ple4.indices[c(3,4,5)]
 data(ple4.index)
 
 #====================================================================

@@ -3,9 +3,8 @@ appveyor.yml
 ^_pkgdown.yml$
 code-experimental
 man-experimental
-gh-pages/
 man-roxygen
-Makefile
+^Makefile$
 template.Rnw
 tests/wcsam.R
 .git
@@ -13,4 +12,3 @@ tests/wcsam.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
 docs/
-^vignettes/sca.Rnw$

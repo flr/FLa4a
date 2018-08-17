@@ -5,6 +5,7 @@ library(FLa4a)
 data(ple4)
 data(ple4.index)
 data(ple4.indices)
+ple4.indices <- ple4.indices[c(3,4,5)]
 nits <- 1000
 err <- 0.05
 

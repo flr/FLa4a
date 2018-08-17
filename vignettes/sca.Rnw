@@ -563,17 +563,16 @@ In linear model one can use covariates to explain part of the variance observed 
 
 <<>>=
 nao <- read.table("https://www.esrl.noaa.gov/psd/data/correlation/nao.data", skip=1,
-                  nrow=62, na.strings="-99.90")
-dnms <- list(quant="nao", year=1948:2009, unit="unique", season=1:12, area="unique")
+  nrow=62, na.strings="-99.90")
+dnms <- list(quant="nao", year=1948:2017, unit="unique", season=1:12, area="unique")
 nao <- FLQuant(unlist(nao[,-1]), dimnames=dnms, units="nao")
 nao <- seasonMeans(trim(nao, year=dimnames(stock.n(ple4))$year))
-nao <- as.numeric(nao)
 @
 
 First by simply assuming that the NAO index drives recruitment (Figure~\ref{fig:naor}).
 
 <<>>=
-srmod <- ~ nao
+srmod <- ~ c(nao)
 fit2 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod)
 flqs <- FLQuants(simple=stock.n(fit)[1], covar=stock.n(fit2)[1])
 @
@@ -587,13 +586,13 @@ xyplot(data~year, groups=qname, data=flqs, type="l",
 
 In a second model we're using the NAO index not to model recruitment directly but to model one of the parameters of the S/R function (Figure~\ref{fig:naor2}).
 
-<<>>=
-srmod <- ~ ricker(a=~nao, CV=0.1)
+<<eval=FALSE>>=
+srmod <- ~ ricker(a=~c(nao), CV=0.1)
 fit3 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod)
 flqs <- FLQuants(simple=stock.n(fit)[1], covar=stock.n(fit3)[1])
 @
 
-<<naor2, echo=FALSE, fig.cap="Recruitment model with covariates. Using the NAO index as a covariate for the stock-recruitment model parameters.">>=
+<<naor2, eval=FALSE, echo=FALSE, fig.cap="Recruitment model with covariates. Using the NAO index as a covariate for the stock-recruitment model parameters.">>=
 xyplot(data~year, groups=qname, data=flqs, type="l",
        auto.key=list(points=FALSE, lines=TRUE, columns=2),
        par.settings=list(superpose.line=list(col=c("gray35", "black")),
@@ -670,7 +669,7 @@ mc <- SCAMCMC()
 mc
 @
 
-Defaults for now are ok, so lets fit the model. Note that the argument \code{fit} ius set to \emph{MCMC} and the argument \code{mcmc} takes the \code{SCAMCMC} object. A major check when running MCMC is the acceptance rate, which should be around 0.3. This is a rule of thumb, for more information read the (extensive) literature on MCMC. The slot \code{fitSumm} stores that information.
+Defaults for now are ok, so lets fit the model. Note that the argument \code{fit} is set to \emph{MCMC} and the argument \code{mcmc} takes the \code{SCAMCMC} object. A major check when running MCMC is the acceptance rate, which should be around 0.3. This is a rule of thumb, for more information read the (extensive) literature on MCMC. The slot \code{fitSumm} stores that information.
 
 <<>>=
 # fit the model
@@ -696,7 +695,7 @@ As mentioned above \code{ADMB} has several options for MCMC. Here we demonstrate
 
 <<>>=
 mc <- SCAMCMC(mcmc=10000, mcsave=200, mcprobe=0.4)
-fitmc2 <- sca(ple4, ple4.indices, qmodel=list(~s(age, k=3), ~s(age, k=3),~s(age, k=3)), fit="MCMC", mcmc=mc)
+fitmc2 <- sca(ple4, ple4.indices, fit="MCMC", mcmc=mc)
 @
 
 All fits together
