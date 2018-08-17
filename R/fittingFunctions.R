@@ -58,7 +58,7 @@ defaultQmod <- function(indices, dfm=0.6){
 defaultN1mod <- function(stock){
   dis <- dims(stock)
   if (dis$age >=6) {
-    n1model <- ~ s(age, k = 6)
+    n1model <- ~ s(age, k = 4)
   } else {
     n1model <- ~ factor(age)
   }
