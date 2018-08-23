@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.2</span>
       </span>
     </div>
 
@@ -134,13 +134,58 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>mod1</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fu'>exp</span>(-<span class='no'>age</span>-<span class='fl'>0.5</span>))</div><div class='output co'>#&gt; <span class='error'>Error in validObject(.Object): invalid class “FLModelSim” object: Object is not valid. Check that the names of the parameters in the params matrix and the vcov match the names of the formula parameters.</span></div><div class='input'><span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='no'>k</span>^<span class='fl'>0.66</span>*<span class='no'>t</span>^<span class='fl'>0.57</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0.4</span>,<span class='fl'>10</span>,<span class='fl'>0.5</span>,<span class='fl'>11</span>),
+    <pre class="examples"><div class='input'><span class='no'>mod1</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fu'>exp</span>(-<span class='no'>age</span>-<span class='fl'>0.5</span>))
+<span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='no'>k</span>^<span class='fl'>0.66</span>*<span class='no'>t</span>^<span class='fl'>0.57</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0.4</span>,<span class='fl'>10</span>,<span class='fl'>0.5</span>,<span class='fl'>11</span>),
  <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>dimnames</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>params</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"k"</span>,<span class='st'>"t"</span>), <span class='kw'>iter</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>2</span>))),
  <span class='kw'>vcov</span><span class='kw'>=</span><span class='fu'>array</span>(<span class='fu'>c</span>(<span class='fl'>0.004</span>,<span class='fl'>0.</span>,<span class='fl'>0.</span>,<span class='fl'>0.001</span>,<span class='fl'>0.006</span>,<span class='fl'>0.</span>,<span class='fl'>0.</span>,<span class='fl'>0.003</span>), <span class='kw'>dim</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>2</span>)))
 <span class='no'>mod3</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fl'>1</span>+<span class='no'>b</span>*<span class='no'>v</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='kw'>b</span><span class='kw'>=</span><span class='fl'>0.05</span>))
 <span class='no'>mObj</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='no'>mod2</span>, <span class='kw'>trend</span><span class='kw'>=</span><span class='no'>mod3</span>,
- <span class='kw'>range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='kw'>min</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>max</span><span class='kw'>=</span><span class='fl'>15</span>,<span class='kw'>minyear</span><span class='kw'>=</span><span class='fl'>2000</span>,<span class='kw'>maxyear</span><span class='kw'>=</span><span class='fl'>2003</span>,<span class='kw'>minmbar</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>maxmbar</span><span class='kw'>=</span><span class='fl'>0</span>))</div><div class='output co'>#&gt; <span class='error'>Error in a4aM(shape = mod1, level = mod2, trend = mod3, range = c(min = 0,     max = 15, minyear = 2000, maxyear = 2003, minmbar = 0, maxmbar = 0)): object 'mod1' not found</span></div><div class='input'><span class='no'>mObj</span> <span class='kw'>&lt;-</span> <span class='fu'>mvrnorm</span>(<span class='fl'>100</span>, <span class='no'>mObj</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mvrnorm(100, mObj): object 'mObj' not found</span></div><div class='input'><span class='co'># Generate 100 iterations with no trend over time</span>
-  <span class='fu'><a href='m.html'>m</a></span>(<span class='no'>mObj</span>, <span class='kw'>v</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>))</div><div class='output co'>#&gt; <span class='error'>Error in m(mObj, v = c(1, 1, 1, 1)): object 'mObj' not found</span></div><div class='input'><span class='co'># Generate replicates based on iteration-specific multivariate distributions</span>
+ <span class='kw'>range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='kw'>min</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>max</span><span class='kw'>=</span><span class='fl'>15</span>,<span class='kw'>minyear</span><span class='kw'>=</span><span class='fl'>2000</span>,<span class='kw'>maxyear</span><span class='kw'>=</span><span class='fl'>2003</span>,<span class='kw'>minmbar</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>maxmbar</span><span class='kw'>=</span><span class='fl'>0</span>))
+<span class='no'>mObj</span> <span class='kw'>&lt;-</span> <span class='fu'>mvrnorm</span>(<span class='fl'>100</span>, <span class='no'>mObj</span>)
+<span class='co'># Generate 100 iterations with no trend over time</span>
+  <span class='fu'><a href='m.html'>m</a></span>(<span class='no'>mObj</span>, <span class='kw'>v</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>))</div><div class='output co'>#&gt; An object of class "FLQuant"
+#&gt; iters:  100 
+#&gt; 
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  2000                 2001                 2002                
+#&gt;   0  2.3799e+00(2.47e-01) 2.3799e+00(2.47e-01) 2.3799e+00(2.47e-01)
+#&gt;   1  8.7553e-01(9.08e-02) 8.7553e-01(9.08e-02) 8.7553e-01(9.08e-02)
+#&gt;   2  3.2209e-01(3.34e-02) 3.2209e-01(3.34e-02) 3.2209e-01(3.34e-02)
+#&gt;   3  1.1849e-01(1.23e-02) 1.1849e-01(1.23e-02) 1.1849e-01(1.23e-02)
+#&gt;   4  4.3590e-02(4.52e-03) 4.3590e-02(4.52e-03) 4.3590e-02(4.52e-03)
+#&gt;   5  1.6036e-02(1.66e-03) 1.6036e-02(1.66e-03) 1.6036e-02(1.66e-03)
+#&gt;   6  5.8993e-03(6.12e-04) 5.8993e-03(6.12e-04) 5.8993e-03(6.12e-04)
+#&gt;   7  2.1702e-03(2.25e-04) 2.1702e-03(2.25e-04) 2.1702e-03(2.25e-04)
+#&gt;   8  7.9838e-04(8.28e-05) 7.9838e-04(8.28e-05) 7.9838e-04(8.28e-05)
+#&gt;   9  2.9371e-04(3.05e-05) 2.9371e-04(3.05e-05) 2.9371e-04(3.05e-05)
+#&gt;   10 1.0805e-04(1.12e-05) 1.0805e-04(1.12e-05) 1.0805e-04(1.12e-05)
+#&gt;   11 3.9749e-05(4.12e-06) 3.9749e-05(4.12e-06) 3.9749e-05(4.12e-06)
+#&gt;   12 1.4623e-05(1.52e-06) 1.4623e-05(1.52e-06) 1.4623e-05(1.52e-06)
+#&gt;   13 5.3794e-06(5.58e-07) 5.3794e-06(5.58e-07) 5.3794e-06(5.58e-07)
+#&gt;   14 1.9790e-06(2.05e-07) 1.9790e-06(2.05e-07) 1.9790e-06(2.05e-07)
+#&gt;   15 7.2803e-07(7.55e-08) 7.2803e-07(7.55e-08) 7.2803e-07(7.55e-08)
+#&gt;     year
+#&gt; age  2003                
+#&gt;   0  2.3799e+00(2.47e-01)
+#&gt;   1  8.7553e-01(9.08e-02)
+#&gt;   2  3.2209e-01(3.34e-02)
+#&gt;   3  1.1849e-01(1.23e-02)
+#&gt;   4  4.3590e-02(4.52e-03)
+#&gt;   5  1.6036e-02(1.66e-03)
+#&gt;   6  5.8993e-03(6.12e-04)
+#&gt;   7  2.1702e-03(2.25e-04)
+#&gt;   8  7.9838e-04(8.28e-05)
+#&gt;   9  2.9371e-04(3.05e-05)
+#&gt;   10 1.0805e-04(1.12e-05)
+#&gt;   11 3.9749e-05(4.12e-06)
+#&gt;   12 1.4623e-05(1.52e-06)
+#&gt;   13 5.3794e-06(5.58e-07)
+#&gt;   14 1.9790e-06(2.05e-07)
+#&gt;   15 7.2803e-07(7.55e-08)
+#&gt; 
+#&gt; units:  NA </div><div class='input'><span class='co'># Generate replicates based on iteration-specific multivariate distributions</span>
 <span class='co'># (as defined by params() and vcov())</span>
   <span class='fu'>params</span>(<span class='no'>mod2</span>)</div><div class='output co'>#&gt; An object of class "FLPar"
 #&gt; iters:  2 
@@ -160,20 +205,20 @@
 #&gt; [1,] 0.006 0.000
 #&gt; [2,] 0.000 0.003
 #&gt; </div><div class='input'>  <span class='no'>m1</span><span class='kw'>&lt;-</span><span class='fu'>mvrnorm</span>(<span class='no'>mod2</span>)
-  <span class='fu'>c</span>(<span class='fu'>params</span>(<span class='no'>m1</span>))</div><div class='output co'>#&gt; [1]  0.4197285 10.0119126  0.4454764 11.0102646</div><div class='input'><span class='co'># Generate replicates based on a single multivariate distribution (here the</span>
+  <span class='fu'>c</span>(<span class='fu'>params</span>(<span class='no'>m1</span>))</div><div class='output co'>#&gt; [1]  0.4602074  9.9809938  0.4564323 10.9602921</div><div class='input'><span class='co'># Generate replicates based on a single multivariate distribution (here the</span>
 <span class='co'># median of params() and vcov() is used)</span>
   <span class='fu'>mvrnorm</span>(<span class='fl'>2</span>,<span class='no'>mod2</span>)</div><div class='output co'>#&gt; An object of class "FLModelSim"
 #&gt; Slot "model":
 #&gt; ~k^0.66 * t^0.57
-#&gt; &lt;environment: 0x192662b8&gt;
+#&gt; &lt;environment: 0xd8b76e8&gt;
 #&gt; 
 #&gt; Slot "params":
 #&gt; An object of class "FLPar"
 #&gt; iters:  2 
 #&gt; 
 #&gt; params
-#&gt;                 k                 t 
-#&gt;  0.38612(0.01319) 10.48210(0.00556) 
+#&gt;                k                t 
+#&gt;  0.48863(0.0129) 10.48440(0.0353) 
 #&gt; units:  NA NA 
 #&gt; 
 #&gt; Slot "vcov":
@@ -182,7 +227,7 @@
 #&gt; Slot "distr":
 #&gt; [1] "norm"
 #&gt; </div><div class='input'>  <span class='no'>m2</span><span class='kw'>&lt;-</span><span class='fu'>mvrnorm</span>(<span class='fl'>2</span>,<span class='no'>mod2</span>)
-  <span class='fu'>c</span>(<span class='fu'>params</span>(<span class='no'>m2</span>))</div><div class='output co'>#&gt; [1]  0.4670294 10.5645466  0.4312099 10.5337377</div></pre>
+  <span class='fu'>c</span>(<span class='fu'>params</span>(<span class='no'>m2</span>))</div><div class='output co'>#&gt; [1]  0.4379447 10.5491455  0.5258687 10.4686311</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
