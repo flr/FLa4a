@@ -182,7 +182,7 @@ mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical=TRUE){
 
 # if FLPar param is of dim 1 coerce to matrix and name "intercept"
 par2mat <- function(object){
-	p0 <- object@params
+	p0 <- object@coefficients
 	dims <- dim(p0)
 	if(dims[1]==1){
 		m0 <- t(t(p0[drop=TRUE]))
