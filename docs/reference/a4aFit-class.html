@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.2</span>
       </span>
     </div>
 
@@ -212,12 +212,12 @@ for sizing, but not for populating any slot.</p>
 #&gt; 
 #&gt; Time used:
 #&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.7556105       6.7411168       0.2461162       7.7428434 
+#&gt;       0.5526505       6.9247921       0.2518604       7.7293029 
 #&gt; 
 #&gt; Submodels:
 #&gt; 	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
 #&gt; 	srmodel: ~factor(year)
-#&gt; 	n1model: ~s(age, k = 6)
+#&gt; 	n1model: ~s(age, k = 4)
 #&gt; 	 qmodel:
 #&gt; 	   BTS-Isis-early: ~s(age, k = 6)
 #&gt; 	 vmodel:
@@ -225,19 +225,19 @@ for sizing, but not for populating any slot.</p>
 #&gt; 	   BTS-Isis-early: ~1</div><div class='input'>
 <span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  [1] "pars"    "call"    "clock"   "fitSumm" "stock.n" "harvest" "catch.n"
 #&gt;  [8] "index"   "name"    "desc"    "range"  </div><div class='input'><span class='fu'>clock</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.7556105       6.7411168       0.2461162       7.7428434 </div><div class='input'><span class='fu'>fitSumm</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
-#&gt;                           1
-#&gt;   nopar        2.570000e+02
-#&gt;   nlogl       -1.355050e+03
-#&gt;   maxgrad      2.361000e-03
-#&gt;   nobs         7.090000e+02
-#&gt;   gcv          3.917367e-03
-#&gt;   convergence  0.000000e+00
-#&gt;   accrate                NA</div><div class='input'>
+#&gt;       0.5526505       6.9247921       0.2518604       7.7293029 </div><div class='input'><span class='fu'>fitSumm</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
+#&gt;                          1
+#&gt;   nopar        2.55000e+02
+#&gt;   nlogl       -1.19495e+03
+#&gt;   maxgrad      1.51931e-03
+#&gt;   nobs         7.09000e+02
+#&gt;   gcv          1.03495e-02
+#&gt;   convergence  0.00000e+00
+#&gt;   accrate               NA</div><div class='input'>
 <span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>stock.n</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] "FLQuant"   "FLArray"   "array"     "structure" "vector"   </div><div class='input'><span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>index</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] "FLQuants" "FLlst"    "list"     "vector"  </div><div class='input'>
-<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; 'log Lik.' 1355.05 (df=257)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -2196.1</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -1023.189</div></pre>
+<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; 'log Lik.' 1194.95 (df=255)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -1879.9</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -716.1168</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

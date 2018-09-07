@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.2</span>
       </span>
     </div>
 
@@ -148,22 +148,158 @@
 <span class='no'>lvl</span> <span class='kw'>&lt;-</span> <span class='fu'>eval</span>(<span class='fu'>as.list</span>(~<span class='fl'>1.5</span>*<span class='no'>k</span>)<span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>envir</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>k</span><span class='kw'>=</span><span class='no'>k</span>))
 <span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='no'>shp</span>*<span class='no'>lvl</span>/<span class='fu'>mean</span>(<span class='no'>shp</span>)
 <span class='co'># Now set up an equivalent a4aM object</span>
-<span class='no'>mod1</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fu'>exp</span>(-<span class='no'>age</span>-<span class='fl'>0.5</span>))</div><div class='output co'>#&gt; <span class='error'>Error in validObject(.Object): invalid class “FLModelSim” object: Object is not valid. Check that the names of the parameters in the params matrix and the vcov match the names of the formula parameters.</span></div><div class='input'><span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fl'>1.5</span>*<span class='no'>k</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='kw'>k</span><span class='kw'>=</span><span class='fl'>0.4</span>))
-<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='no'>mod2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in a4aM(shape = mod1, level = mod2): object 'mod1' not found</span></div><div class='input'>  <span class='co'># set up the age range for the object...</span>
-  <span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>15</span>)</div><div class='output co'>#&gt; <span class='error'>Error in range(m1, c("min", "max")) &lt;- c(0, 15): object 'm1' not found</span></div><div class='input'>  <span class='co'># ...and the age range for mbar</span>
-  <span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"minmbar"</span>, <span class='st'>"maxmbar"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>15</span>)</div><div class='output co'>#&gt; <span class='error'>Error in range(m1, c("minmbar", "maxmbar")) &lt;- c(0, 15): object 'm1' not found</span></div><div class='input'><span class='fu'>m</span>(<span class='no'>m1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in m(m1): object 'm1' not found</span></div><div class='input'><span class='fu'>mean</span>(<span class='fu'>m</span>(<span class='no'>m1</span>)[<span class='fu'>ac</span>(<span class='fl'>0</span>:<span class='fl'>15</span>)])</div><div class='output co'>#&gt; <span class='error'>Error in m(m1): object 'm1' not found</span></div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>M</span>, <span class='fu'>c</span>(<span class='fu'>m</span>(<span class='no'>m1</span>)))</div><div class='output co'>#&gt; <span class='error'>Error in m(m1): object 'm1' not found</span></div><div class='input'>
+<span class='no'>mod1</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fu'>exp</span>(-<span class='no'>age</span>-<span class='fl'>0.5</span>))
+<span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fl'>1.5</span>*<span class='no'>k</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='kw'>k</span><span class='kw'>=</span><span class='fl'>0.4</span>))
+<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='no'>mod2</span>)
+  <span class='co'># set up the age range for the object...</span>
+  <span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>15</span>)
+  <span class='co'># ...and the age range for mbar</span>
+  <span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"minmbar"</span>, <span class='st'>"maxmbar"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>15</span>)
+<span class='fu'>m</span>(<span class='no'>m1</span>)</div><div class='output co'>#&gt; An object of class "FLQuant"
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  0         
+#&gt;   0  6.0684e+00
+#&gt;   1  2.2324e+00
+#&gt;   2  8.2126e-01
+#&gt;   3  3.0213e-01
+#&gt;   4  1.1115e-01
+#&gt;   5  4.0888e-02
+#&gt;   6  1.5042e-02
+#&gt;   7  5.5336e-03
+#&gt;   8  2.0357e-03
+#&gt;   9  7.4889e-04
+#&gt;   10 2.7550e-04
+#&gt;   11 1.0135e-04
+#&gt;   12 3.7285e-05
+#&gt;   13 1.3716e-05
+#&gt;   14 5.0460e-06
+#&gt;   15 1.8563e-06
+#&gt; 
+#&gt; units:  NA </div><div class='input'><span class='fu'>mean</span>(<span class='fu'>m</span>(<span class='no'>m1</span>)[<span class='fu'>ac</span>(<span class='fl'>0</span>:<span class='fl'>15</span>)])</div><div class='output co'>#&gt; [1] 0.6</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>M</span>, <span class='fu'>c</span>(<span class='fu'>m</span>(<span class='no'>m1</span>)))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># another example m</span>
-<span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>15</span>)</div><div class='output co'>#&gt; <span class='error'>Error in range(m1, c("min", "max")) &lt;- c(2, 15): object 'm1' not found</span></div><div class='input'><span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"minmbar"</span>, <span class='st'>"maxmbar"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in range(m1, c("minmbar", "maxmbar")) &lt;- c(2, 4): object 'm1' not found</span></div><div class='input'><span class='fu'>m</span>(<span class='no'>m1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in m(m1): object 'm1' not found</span></div><div class='input'><span class='fu'>mean</span>(<span class='fu'>m</span>(<span class='no'>m1</span>)[<span class='fu'>ac</span>(<span class='fl'>2</span>:<span class='fl'>4</span>)])</div><div class='output co'>#&gt; <span class='error'>Error in m(m1): object 'm1' not found</span></div><div class='input'>
+<span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>15</span>)
+<span class='fu'>range</span>(<span class='no'>m1</span>, <span class='fu'>c</span>(<span class='st'>"minmbar"</span>, <span class='st'>"maxmbar"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>4</span>)
+<span class='fu'>m</span>(<span class='no'>m1</span>)</div><div class='output co'>#&gt; An object of class "FLQuant"
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  0         
+#&gt;   2  1.1974e+00
+#&gt;   3  4.4051e-01
+#&gt;   4  1.6206e-01
+#&gt;   5  5.9617e-02
+#&gt;   6  2.1932e-02
+#&gt;   7  8.0682e-03
+#&gt;   8  2.9681e-03
+#&gt;   9  1.0919e-03
+#&gt;   10 4.0169e-04
+#&gt;   11 1.4778e-04
+#&gt;   12 5.4363e-05
+#&gt;   13 1.9999e-05
+#&gt;   14 7.3573e-06
+#&gt;   15 2.7066e-06
+#&gt; 
+#&gt; units:  NA </div><div class='input'><span class='fu'>mean</span>(<span class='fu'>m</span>(<span class='no'>m1</span>)[<span class='fu'>ac</span>(<span class='fl'>2</span>:<span class='fl'>4</span>)])</div><div class='output co'>#&gt; [1] 0.6</div><div class='input'>
 <span class='co'># example with specified iters (i.e. not simulated from a statistical distribution)...</span>
 <span class='no'>mod2</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='no'>k</span>^<span class='fl'>0.66</span>*<span class='no'>t</span>^<span class='fl'>0.57</span>,
   <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0.4</span>,<span class='fl'>10</span>,<span class='fl'>0.5</span>,<span class='fl'>11</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>dimnames</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>params</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"k"</span>,<span class='st'>"t"</span>), <span class='kw'>iter</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>2</span>))),
   <span class='kw'>vcov</span><span class='kw'>=</span><span class='fu'>array</span>(<span class='fu'>c</span>(<span class='fl'>0.004</span>,<span class='fl'>0.</span>,<span class='fl'>0.</span>,<span class='fl'>0.001</span>,<span class='fl'>0.006</span>,<span class='fl'>0.</span>,<span class='fl'>0.</span>,<span class='fl'>0.002</span>), <span class='kw'>dim</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>2</span>,<span class='fl'>2</span>)))
-<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='no'>mod2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in a4aM(shape = mod1, level = mod2): object 'mod1' not found</span></div><div class='input'><span class='fu'>range</span>(<span class='no'>m2</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>10</span>)</div><div class='output co'>#&gt; <span class='error'>Error in range(m2, c("min", "max")) &lt;- c(2, 10): object 'm2' not found</span></div><div class='input'><span class='fu'>m</span>(<span class='no'>m2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in m(m2): object 'm2' not found</span></div><div class='input'><span class='co'># ...and with randomly generated iters (based on the medians for params(mod2) and vcov(mod2))</span>
-<span class='no'>m3</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='fu'>mvrnorm</span>(<span class='fl'>100</span>, <span class='no'>mod2</span>))</div><div class='output co'>#&gt; <span class='error'>Error in a4aM(shape = mod1, level = mvrnorm(100, mod2)): object 'mod1' not found</span></div><div class='input'><span class='fu'>range</span>(<span class='no'>m3</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>15</span>)</div><div class='output co'>#&gt; <span class='error'>Error in range(m3, c("min", "max")) &lt;- c(0, 15): object 'm3' not found</span></div><div class='input'><span class='fu'>m</span>(<span class='no'>m3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in m(m3): object 'm3' not found</span></div><div class='input'>
+<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='no'>mod2</span>)
+<span class='fu'>range</span>(<span class='no'>m2</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>10</span>)
+<span class='fu'>m</span>(<span class='no'>m2</span>)</div><div class='output co'>#&gt; An object of class "FLQuant"
+#&gt; iters:  2 
+#&gt; 
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  0                  
+#&gt;   2  2.2560020(0.336016)
+#&gt;   3  0.8299367(0.123613)
+#&gt;   4  0.3053167(0.045475)
+#&gt;   5  0.1123197(0.016729)
+#&gt;   6  0.0413201(0.006154)
+#&gt;   7  0.0152008(0.002264)
+#&gt;   8  0.0055921(0.000833)
+#&gt;   9  0.0020572(0.000306)
+#&gt;   10 0.0007568(0.000113)
+#&gt; 
+#&gt; units:  NA </div><div class='input'><span class='co'># ...and with randomly generated iters (based on the medians for params(mod2) and vcov(mod2))</span>
+<span class='no'>m3</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='fu'>mvrnorm</span>(<span class='fl'>100</span>, <span class='no'>mod2</span>))
+<span class='fu'>range</span>(<span class='no'>m3</span>, <span class='fu'>c</span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>)) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>15</span>)
+<span class='fu'>m</span>(<span class='no'>m3</span>)</div><div class='output co'>#&gt; An object of class "FLQuant"
+#&gt; iters:  100 
+#&gt; 
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  0                   
+#&gt;   0  2.2955e+00(2.13e-01)
+#&gt;   1  8.4446e-01(7.84e-02)
+#&gt;   2  3.1066e-01(2.88e-02)
+#&gt;   3  1.1429e-01(1.06e-02)
+#&gt;   4  4.2043e-02(3.90e-03)
+#&gt;   5  1.5467e-02(1.44e-03)
+#&gt;   6  5.6899e-03(5.28e-04)
+#&gt;   7  2.0932e-03(1.94e-04)
+#&gt;   8  7.7005e-04(7.15e-05)
+#&gt;   9  2.8328e-04(2.63e-05)
+#&gt;   10 1.0421e-04(9.67e-06)
+#&gt;   11 3.8338e-05(3.56e-06)
+#&gt;   12 1.4104e-05(1.31e-06)
+#&gt;   13 5.1885e-06(4.82e-07)
+#&gt;   14 1.9088e-06(1.77e-07)
+#&gt;   15 7.0219e-07(6.52e-08)
+#&gt; 
+#&gt; units:  NA </div><div class='input'>
 <span class='co'># example with a trend</span>
 <span class='no'>mod3</span> <span class='kw'>&lt;-</span> <span class='fu'>FLModelSim</span>(<span class='kw'>model</span><span class='kw'>=</span>~<span class='fl'>1</span>+<span class='no'>b</span>*<span class='no'>v</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='fu'>FLPar</span>(<span class='kw'>b</span><span class='kw'>=</span><span class='fl'>0.05</span>))
 <span class='no'>mObj</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aM</span>(<span class='kw'>shape</span><span class='kw'>=</span><span class='no'>mod1</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='fu'>mvrnorm</span>(<span class='fl'>100</span>, <span class='no'>mod2</span>), <span class='kw'>trend</span><span class='kw'>=</span><span class='no'>mod3</span>,
-  <span class='kw'>range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='kw'>min</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>max</span><span class='kw'>=</span><span class='fl'>15</span>,<span class='kw'>minyear</span><span class='kw'>=</span><span class='fl'>2000</span>,<span class='kw'>maxyear</span><span class='kw'>=</span><span class='fl'>2003</span>,<span class='kw'>minmbar</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>maxmbar</span><span class='kw'>=</span><span class='fl'>0</span>))</div><div class='output co'>#&gt; <span class='error'>Error in a4aM(shape = mod1, level = mvrnorm(100, mod2), trend = mod3,     range = c(min = 0, max = 15, minyear = 2000, maxyear = 2003,         minmbar = 0, maxmbar = 0)): object 'mod1' not found</span></div><div class='input'><span class='fu'>m</span>(<span class='no'>mObj</span>, <span class='kw'>v</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in m(mObj, v = 1:4): object 'mObj' not found</span></div></pre>
+  <span class='kw'>range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='kw'>min</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>max</span><span class='kw'>=</span><span class='fl'>15</span>,<span class='kw'>minyear</span><span class='kw'>=</span><span class='fl'>2000</span>,<span class='kw'>maxyear</span><span class='kw'>=</span><span class='fl'>2003</span>,<span class='kw'>minmbar</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>maxmbar</span><span class='kw'>=</span><span class='fl'>0</span>))
+<span class='fu'>m</span>(<span class='no'>mObj</span>, <span class='kw'>v</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>4</span>)</div><div class='output co'>#&gt; An object of class "FLQuant"
+#&gt; iters:  100 
+#&gt; 
+#&gt; , , unit = unique, season = all, area = unique
+#&gt; 
+#&gt;     year
+#&gt; age  2000                 2001                 2002                
+#&gt;   0  2.3406e+00(2.74e-01) 2.4521e+00(2.88e-01) 2.5635e+00(3.01e-01)
+#&gt;   1  8.6106e-01(1.01e-01) 9.0206e-01(1.06e-01) 9.4306e-01(1.11e-01)
+#&gt;   2  3.1677e-01(3.71e-02) 3.3185e-01(3.89e-02) 3.4693e-01(4.07e-02)
+#&gt;   3  1.1653e-01(1.37e-02) 1.2208e-01(1.43e-02) 1.2763e-01(1.50e-02)
+#&gt;   4  4.2870e-02(5.03e-03) 4.4911e-02(5.27e-03) 4.6952e-02(5.51e-03)
+#&gt;   5  1.5771e-02(1.85e-03) 1.6522e-02(1.94e-03) 1.7273e-02(2.03e-03)
+#&gt;   6  5.8018e-03(6.80e-04) 6.0780e-03(7.13e-04) 6.3543e-03(7.45e-04)
+#&gt;   7  2.1343e-03(2.50e-04) 2.2360e-03(2.62e-04) 2.3376e-03(2.74e-04)
+#&gt;   8  7.8518e-04(9.21e-05) 8.2257e-04(9.65e-05) 8.5996e-04(1.01e-04)
+#&gt;   9  2.8885e-04(3.39e-05) 3.0261e-04(3.55e-05) 3.1636e-04(3.71e-05)
+#&gt;   10 1.0626e-04(1.25e-05) 1.1132e-04(1.31e-05) 1.1638e-04(1.36e-05)
+#&gt;   11 3.9092e-05(4.58e-06) 4.0953e-05(4.80e-06) 4.2815e-05(5.02e-06)
+#&gt;   12 1.4381e-05(1.69e-06) 1.5066e-05(1.77e-06) 1.5751e-05(1.85e-06)
+#&gt;   13 5.2905e-06(6.20e-07) 5.5424e-06(6.50e-07) 5.7944e-06(6.79e-07)
+#&gt;   14 1.9463e-06(2.28e-07) 2.0390e-06(2.39e-07) 2.1316e-06(2.50e-07)
+#&gt;   15 7.1599e-07(8.40e-08) 7.5009e-07(8.80e-08) 7.8418e-07(9.20e-08)
+#&gt;     year
+#&gt; age  2003                
+#&gt;   0  2.6750e+00(3.14e-01)
+#&gt;   1  9.8407e-01(1.15e-01)
+#&gt;   2  3.6202e-01(4.24e-02)
+#&gt;   3  1.3318e-01(1.56e-02)
+#&gt;   4  4.8994e-02(5.74e-03)
+#&gt;   5  1.8024e-02(2.11e-03)
+#&gt;   6  6.6306e-03(7.77e-04)
+#&gt;   7  2.4393e-03(2.86e-04)
+#&gt;   8  8.9735e-04(1.05e-04)
+#&gt;   9  3.3012e-04(3.87e-05)
+#&gt;   10 1.2144e-04(1.42e-05)
+#&gt;   11 4.4677e-05(5.24e-06)
+#&gt;   12 1.6436e-05(1.93e-06)
+#&gt;   13 6.0463e-06(7.09e-07)
+#&gt;   14 2.2243e-06(2.61e-07)
+#&gt;   15 8.1828e-07(9.59e-08)
+#&gt; 
+#&gt; units:  NA </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
