@@ -57,12 +57,14 @@ defaultQmod <- function(indices, dfm=0.6){
 #' @aliases defaultN1mod
 defaultN1mod <- function(stock){
   dis <- dims(stock)
-  if (dis$age >=6) {
-    n1model <- ~ s(age, k = 4)
+  if(dis$age==1){
+	frm <- ~1
+  } else if(dis$age>1 & dis$age<=3){
+	frm <- ~factor(age)
   } else {
-    n1model <- ~ factor(age)
+	frm <- ~ s(age, k = 4)
   }
-  n1model
+  as.formula(frm)
 }
 
 #' @rdname defaultsubmodels
