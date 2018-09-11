@@ -7,6 +7,7 @@
  - new accessors for coefficients
  
  BUG FIXES:
+ - residuals now work with FLIndex fits 
  - n1 default model fixed
  - a lot of small things due to change in slot name from params to coefficients
  - predict of FLIndexBiomass now reports for "all", not each age.

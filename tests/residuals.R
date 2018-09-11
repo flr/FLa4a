@@ -25,6 +25,11 @@ fit <- sca(ple4, idxs, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1,
 res <- residuals(fit, ple4, idxs)
 length(res) == 7
 
+# FLIndex
+fit <- sca(ple4, ple4.index)
+res <- try(residuals(fit, ple4, ple4.index))
+!is(res, 'try-error')
+
 # flquantdistr
 catch.n(ple4) <- FLQuantDistr(catch.n(ple4), catch.n(ple4))
 var(catch.n(ple4))[] <- 0.2
@@ -33,6 +38,7 @@ index.var(ple4.index)[] <- 0.2
 fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
 res <- residuals(fit, ple4, FLIndices(ple4.index))
 length(res) == 3
+
 
 
 

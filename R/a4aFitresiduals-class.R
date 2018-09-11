@@ -17,10 +17,10 @@ setClass("a4aFitResiduals", contain="FLQuants")
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
-#' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 setMethod("residuals", signature(object="a4aFit"), function(object, stock, indices, ...) {
 	args <- list(...)
+    if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
 	# object holder
 	lst <- list()
 	length(lst) <- length(indices) + 2	
