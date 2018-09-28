@@ -17,7 +17,7 @@
 #	out
 #}
 
-sca.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
+sca.est <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args <- list(...)
 	if(update) args$fmodel <- defaultFmod(stk, dfm=dfm)
 	args$stock <- stk
@@ -27,7 +27,7 @@ sca.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args$tracking <- NULL
 	fit <- do.call('sca', args)
 	stk <- stk + fit
-	tracking["convergence",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
+	tracking["conv.est",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
 	list(stk = stk, tracking = tracking)
 }
 
@@ -44,7 +44,7 @@ sca.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 #	list(stk = stk, tracking = tracking)
 #}
 
-sep.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
+sep.est <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args <- list(...)
 	# set model
 	if(update){
@@ -67,7 +67,7 @@ sep.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args$tracking <- NULL
 	fit <- do.call('sca', args)
 	stk <- stk + fit
-	tracking["convergence",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
+	tracking["conv.est",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
 	list(stk = stk, tracking = tracking)
 }
 

@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 1.6.0
+Version: 1.6.1
 Date: 2018-09-27
 Authors@R: c(
   person("Colin P.", "Millar", email = "colinpmillar@googlemail.com", role = "aut"),
@@ -64,5 +64,5 @@ Collate:
     'utilities.R'
     'gen-methods.R'
     'southern_hake-data.R'
-    'a4ase-sa.R'
+    'a4amse-sa.R'
 RoxygenNote: 6.0.1
