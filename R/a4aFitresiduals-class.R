@@ -65,7 +65,7 @@ setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	flq <- log(obs/fit)	
 	#res <- apply(flq, c(1,3:6), scale, center=FALSE)
-	res <- flq/sqrt(yearVars(flq)[,rep(1,ncol(flq))])
+	res <- flq %/% sqrt(yearVars(flq))
 	dimnames(res) <- dimnames(flq)
 	as(res, "FLQuant")
 }) 
