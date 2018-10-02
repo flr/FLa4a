@@ -17,7 +17,7 @@
 #	out
 #}
 
-sca.est <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
+sca.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args <- list(...)
 	if(update) args$fmodel <- defaultFmod(stk, dfm=dfm)
 	args$stock <- stk
@@ -44,7 +44,7 @@ sca.est <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 #	list(stk = stk, tracking = tracking)
 #}
 
-sep.est <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
+sep.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args <- list(...)
 	# set model
 	if(update){
