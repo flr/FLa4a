@@ -6,8 +6,8 @@
 \alias{plot,a4aFitResiduals,missing-method}
 \title{Plot of standardized log residuals}
 \usage{
-\S4method{plot}{a4aFitResiduals,missing}(x, y = missing, auxline = "smooth",
-  ...)
+\S4method{plot}{a4aFitResiduals,missing}(x, y = missing,
+  auxline = "smooth", ...)
 }
 \arguments{
 \item{x}{an \code{a4aFitResiduals} object with the standardized residuals}

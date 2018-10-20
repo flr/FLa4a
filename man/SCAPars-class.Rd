@@ -4,7 +4,6 @@
 \name{SCAPars}
 \alias{SCAPars}
 \alias{SCAPars-class}
-\alias{SCAPars}
 \alias{SCAPars-methods}
 \alias{SCAPars,missing-method}
 \alias{stkmodel}

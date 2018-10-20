@@ -6,7 +6,8 @@
 \alias{mvrnorm,numeric,a4aM,missing,missing,missing,missing-method}
 \title{natural mortality}
 \usage{
-\S4method{mvrnorm}{numeric,a4aM,missing,missing,missing,missing}(n = 1, mu)
+\S4method{mvrnorm}{numeric,a4aM,missing,missing,missing,missing}(n = 1,
+  mu)
 }
 \arguments{
 \item{n}{the number of iterations to be generated}

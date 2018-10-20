@@ -4,7 +4,6 @@
 \name{a4aFit-class}
 \alias{a4aFit-class}
 \alias{a4aFit}
-\alias{a4aFit}
 \alias{a4aFit-methods}
 \alias{clock}
 \alias{clock-methods}

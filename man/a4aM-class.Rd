@@ -4,7 +4,6 @@
 \name{a4aM}
 \alias{a4aM}
 \alias{a4aM-class}
-\alias{a4aM}
 \alias{a4aM-methods}
 \alias{a4aM,missing-method}
 \alias{show,a4aM-method}

@@ -13,7 +13,6 @@
 \alias{coef,submodels-method}
 \alias{coef,submodel-method}
 \alias{coef<-}
-\alias{coef<-,a4aFitSA-methods}
 \alias{coef<-,a4aFitSA,numeric-method}
 \alias{coef<-,SCAPars,numeric-method}
 \alias{coef<-,a4aStkParams,numeric-method}

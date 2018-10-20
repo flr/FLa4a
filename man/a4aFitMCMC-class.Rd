@@ -4,7 +4,6 @@
 \name{a4aFitMCMC-class}
 \alias{a4aFitMCMC-class}
 \alias{a4aFitMCMC}
-\alias{a4aFitMCMC}
 \alias{a4aFitMCMC-methods}
 \alias{a4aFitSA,a4aFitMCMC-method}
 \alias{a4aFit,a4aFitMCMC-method}

@@ -4,7 +4,6 @@
 \name{a4aGr}
 \alias{a4aGr}
 \alias{a4aGr-class}
-\alias{a4aGr}
 \alias{a4aGr-methods}
 \alias{a4aGr,missing-method}
 \alias{grMod}
