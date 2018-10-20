@@ -196,7 +196,9 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 
 #' @rdname sca
 setMethod("sca", signature("FLStock", "FLIndices"),
-	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing) {
+	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing,
+		       n1model = missing, vmodel = missing, covar = missing, wkdir = missing,
+		       verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing) {
 
   #-----------------------------------------------------------------
   # get fit type
@@ -206,11 +208,11 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   #-----------------------------------------------------------------
   # set models if missing
 
-  if(missing(fmodel)) fmodel <- defaultFmod(stock)
-  if(missing(qmodel)) qmodel <- defaultQmod(indices)
-  if(missing(n1model)) n1model <- defaultN1mod(stock)
-  if(missing(vmodel)) vmodel <- defaultVmod(stock, indices)
-  if(missing(srmodel)) srmodel <- defaultSRmod(stock)
+  if (missing(fmodel)) fmodel <- defaultFmod(stock)
+  if (missing(qmodel)) qmodel <- defaultQmod(indices)
+  if (missing(n1model)) n1model <- defaultN1mod(stock)
+  if (missing(vmodel)) vmodel <- defaultVmod(stock, indices)
+  if (missing(srmodel)) srmodel <- defaultSRmod(stock)
 
   #-----------------------------------------------------------------
   # now to deal with iterations ...
@@ -229,19 +231,19 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   # if fit = MP then we return an a4aFit with the same dimensions as stock
   # if fit = assessment then we return a4aFitSA with same dimensions as stock....  \TODO only true with iters so far
 
-  grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3,5)], list(iter = 1:max(dms$iter))))
+  grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3, 5)], list(iter = 1:max(dms$iter))))
   #if (!identical(sort(unique(dms$iter)), sort(unique(c(1L, max(dms$iter))))))
-  if(length(unique(dms$iter[dms$iter>1]))>1)
+  if(length(unique(dms$iter[dms$iter > 1])) > 1)
   	stop("incosistent number of iterations in stock and indices")
   it <- max(dms$iter)
-  if(fit=="MCMC" & it>1) stop("You can not run MCMC with iters on your data objects")
-  if(fit=="MCMC" & it==1) it <- getN(mcmc)
+  if (fit == "MCMC" & it > 1) stop("You can not run MCMC with iters on your data objects")
+  if (fit == "MCMC" & it == 1) it <- getN(mcmc)
 
   # set up objects
   # stk
   dms <- dimnames(stock.n(stock))
   dms$iter <- 1:it
-  ini <- FLQuant(NA, dimnames=dms)
+  ini <- FLQuant(NA, dimnames = dms)
   out <- if (fit %in% c("MP", "sim")) a4aFit() else a4aFitSA()
   out@desc <- desc(stock)
   out@name <- name(stock)
@@ -251,10 +253,10 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   out@stock.n <- ini
   out@catch.n <- ini
   # idx
-  ini <- lapply(indices, function(x){
+  ini <- lapply(indices, function(x) {
   	dms <- dimnames(index(x))
   	dms$iter <- 1:it
-	FLQuant(NA, dimnames=dms)
+	  FLQuant(NA, dimnames=dms)
   })
   out@index <- FLQuants(ini)
 
@@ -272,55 +274,69 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   # also need FLQuants with iterations.
   niters <- nrow(grid)
   for (i in seq(niters)) {
-    istock <- stock[,, grid$unit[i], grid$area[i]]
+    istock <- stock[, , grid$unit[i], grid$area[i]]
 	  istock <- iter(istock, min(grid$iter[i], dims(stock)$iter))
 
 	  # check: do we need indices to have matching units, areas?
     #iindices <- lapply(indices, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
     iindices <-
       lapply(indices, function(x) {
-        idx <- x[,, grid$unit[i], grid$area[i]]
+        idx <- x[, , grid$unit[i], grid$area[i]]
 		    iter(idx, min(grid$iter[i], dims(x)$iter))
     })
     iindices <- FLIndices(iindices)
 
     # check: do we need indices to have matching units, areas?
     if (!missing(covar) & !missing(wkdir)) {
-      icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
-    } else if(!missing(covar) & missing(wkdir)){
-      icovar <- lapply(covar, function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, covar = icovar, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
-    } else if(missing(covar) & !missing(wkdir)){
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, wkdir=wkdir, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
+      icovar <-
+        lapply(covar,
+      	       function(x) x[, , grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
+	    	                  vmodel = vmodel, stock = istock, indices = iindices, covar = icovar,
+	    	                  wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
+    } else
+    if (!missing(covar) & missing(wkdir)) {
+      icovar <-
+        lapply(covar,
+        	     function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
+	    	                  vmodel = vmodel, stock = istock, indices = iindices, covar = icovar,
+	    	                  verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
+    } else
+    if (missing(covar) & !missing(wkdir)) {
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
+	    	                  vmodel = vmodel, stock = istock, indices = iindices, wkdir = wkdir,
+	    	                  verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
 	  } else {
-	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose, fit = ifit, center = center, mcmc=mcmc)
+	    outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
+	    	                  vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose,
+	    	                  fit = ifit, center = center, mcmc = mcmc)
 	  }
     if (i == 1) {
       tmpSumm <- outi@fitSumm
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
     }
-    out@fitSumm[,i] <- outi@fitSumm
+    out@fitSumm[, i] <- outi@fitSumm
 
     if (fit == "MP") {
       # copy results
-      out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
-      out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
-      out@catch.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(outi)
+      out@harvest[, , grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
+      out@stock.n[, , grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
+      out@catch.n[, , grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(outi)
       # add indices
       for (j in 1:length(iindices)) {
-        out@index[[j]][,, grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
+        out@index[[j]][, , grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
       }
     }
 
     if (fit == "assessment") {
       # store everything in a a4aFitSA object
-      out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
-      out@stock.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
-      out@catch.n[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(outi)
+      out@harvest[, , grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
+      out@stock.n[, , grid$unit[i], grid$area[i], , grid$iter[i]] <- stock.n(outi)
+      out@catch.n[, , grid$unit[i], grid$area[i], , grid$iter[i]] <- catch.n(outi)
       # add indices
       for (j in 1:length(iindices)) {
-        out@index[[j]][,, grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
+        out@index[[j]][, , grid$unit[i], grid$area[i], , grid$iter[i]] <- index(outi)[[j]]
       }
 
       # fill up models
@@ -336,16 +352,16 @@ setMethod("sca", signature("FLStock", "FLIndices"),
         # now the a4aFitSA bits
         out@pars@stkmodel@centering[,i] <- outi@pars@stkmodel@centering
         out@pars@stkmodel@coefficients[,i]   <- outi@pars@stkmodel@coefficients
-        out@pars@stkmodel@vcov[,,i]    <- outi@pars@stkmodel@vcov
-        out@pars@stkmodel@m[,,,,,i]    <- outi@pars@stkmodel@m
-        out@pars@stkmodel@wt[,,,,,i]    <- outi@pars@stkmodel@wt
-        out@pars@stkmodel@mat[,,,,,i]    <- outi@pars@stkmodel@mat
+        out@pars@stkmodel@vcov[, ,i]    <- outi@pars@stkmodel@vcov
+        out@pars@stkmodel@m[, , , , , i]    <- outi@pars@stkmodel@m
+        out@pars@stkmodel@wt[, , , , , i]    <- outi@pars@stkmodel@wt
+        out@pars@stkmodel@mat[, , , , , i]    <- outi@pars@stkmodel@mat
         # qmodel
         for (j in seq_along(indices)) {
           # add stock centering to link qmodel back to stock size
-          out@pars@qmodel[[j]]@centering[,i] <- outi@pars@qmodel[[j]]@centering - outi@pars@stkmodel@centering
-          out@pars@qmodel[[j]]@coefficients[,i] <- outi@pars@qmodel[[j]]@coefficients
-          out@pars@qmodel[[j]]@vcov[,,i]  <- outi@pars@qmodel[[j]]@vcov
+          out@pars@qmodel[[j]]@centering[, i] <- outi@pars@qmodel[[j]]@centering - outi@pars@stkmodel@centering
+          out@pars@qmodel[[j]]@coefficients[, i] <- outi@pars@qmodel[[j]]@coefficients
+          out@pars@qmodel[[j]]@vcov[, , i]  <- outi@pars@qmodel[[j]]@vcov
         }
         for (j in seq_along(outi@pars@qmodel@corBlocks)) {
           out@pars@qmodel@corBlocks[[j]][,,i]  <- outi@pars@qmodel@corBlocks[[j]]
@@ -353,12 +369,12 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 
         # vmodel
         for (j in seq_along(out@pars@vmodel)) {
-          out@pars@vmodel[[j]]@centering[,i] <- outi@pars@vmodel[[j]]@centering
-          out@pars@vmodel[[j]]@coefficients[,i] <- outi@pars@vmodel[[j]]@coefficients
-          out@pars@vmodel[[j]]@vcov[,,i]   <- outi@pars@vmodel[[j]]@vcov
+          out@pars@vmodel[[j]]@centering[, i] <- outi@pars@vmodel[[j]]@centering
+          out@pars@vmodel[[j]]@coefficients[, i] <- outi@pars@vmodel[[j]]@coefficients
+          out@pars@vmodel[[j]]@vcov[, , i]   <- outi@pars@vmodel[[j]]@vcov
         }
         for (j in seq_along(outi@pars@vmodel@corBlocks)) {
-          out@pars@vmodel@corBlocks[[j]][,,i]  <- outi@pars@vmodel@corBlocks[[j]]
+          out@pars@vmodel@corBlocks[[j]][, , i]  <- outi@pars@vmodel@corBlocks[[j]]
         }
       }
 
@@ -367,12 +383,12 @@ setMethod("sca", signature("FLStock", "FLIndices"),
     if (fit == "MCMC") {
       out <- a4aFitMCMC(out, mcmc=mcmc)
       # store everything
-      out@harvest[,, grid$unit[i], grid$area[i], , ] <- harvest(outi)
-      out@stock.n[,, grid$unit[i], grid$area[i], , ] <- stock.n(outi)
-      out@catch.n[,, grid$unit[i], grid$area[i], , ] <- catch.n(outi)
+      out@harvest[, , grid$unit[i], grid$area[i], , ] <- harvest(outi)
+      out@stock.n[, , grid$unit[i], grid$area[i], , ] <- stock.n(outi)
+      out@catch.n[, , grid$unit[i], grid$area[i], , ] <- catch.n(outi)
       # add indices
       for (j in 1:length(iindices)) {
-        out@index[[j]][,, grid$unit[i], grid$area[i], , ] <- index(outi)[[j]]
+        out@index[[j]][, , grid$unit[i], grid$area[i], , ] <- index(outi)[[j]]
         units(out@index[[j]]) <- units(indices[[j]]@index)
       }
 
