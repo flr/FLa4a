@@ -22,31 +22,31 @@ a4aSCA <- function(...){
 #' @return a FLStock object
 #' @aliases defaultFmod
 
-defaultFmod <- function(stock, dfm=c(0.5, 0.7)){
+defaultFmod <- function(stock, dfm = c(0.5, 0.7)) {
 	dis <- dims(stock)
-	KY=floor(dfm[1] * dis$year)
-	KA=ceiling(dfm[2] *dis$age)
+	KY <- floor(dfm[1] * dis$year)
+	KA <- ceiling(dfm[2] * dis$age)
 	if (KA >= 3) {
 		KA <- min(max(3, KA), 6)
 		KB <- min(max(3, KA), 10)
 	    fmodel <- formula(paste("~ te(age, year, k = c(", KA,",", KY,"), bs = 'tp') + s(age, k=", KB, ")"))
 	  } else {
-		fmodel <- formula(paste("~ age + s(year, k = ", KY,")"))
+		  fmodel <- formula(paste("~ age + s(year, k = ", KY,")"))
 	  }
 	fmodel
 }
 
 #' @rdname defaultsubmodels
 #' @aliases defaultQmod
-defaultQmod <- function(indices, dfm=0.6){
+defaultQmod <- function(indices, dfm = 0.6) {
 	lds <- lapply(indices, dims)
-	lds <- lapply(lds, function(x){
-		if(x$age==1){
-			frm <- ~1
-		} else if(x$age>1 & x$age<=3){
-			frm <- ~factor(age)
+	lds <- lapply(lds, function(x) {
+		if (x$age == 1) {
+			frm <- ~ 1
+		} else if (x$age > 1 & x$age <= 3){
+			frm <- ~ factor(age)
 		} else {
-			frm <- substitute(~s(age, k=KA), list(KA=min(ceiling(dfm * x$age), 6)))
+			frm <- substitute(~ s(age, k = KA), list(KA = min(ceiling(dfm * x$age), 6)))
 		}
 		as.formula(frm)
 	})
@@ -55,14 +55,14 @@ defaultQmod <- function(indices, dfm=0.6){
 
 #' @rdname defaultsubmodels
 #' @aliases defaultN1mod
-defaultN1mod <- function(stock){
+defaultN1mod <- function(stock) {
   dis <- dims(stock)
-  if(dis$age==1){
-	frm <- ~1
-  } else if(dis$age>1 & dis$age<=3){
-	frm <- ~factor(age)
+  if (dis$age == 1) {
+	  frm <- ~1
+  } else if (dis$age > 1 & dis$age <= 3) {
+	  frm <- ~ factor(age)
   } else {
-	frm <- ~ s(age, k = 4)
+	  frm <- ~ s(age, k = 4)
   }
   as.formula(frm)
 }
@@ -77,7 +77,9 @@ defaultVmod <- function(stock, indices){
 
 #' @rdname defaultsubmodels
 #' @aliases defaultSRmod
-defaultSRmod <- function(stock){~factor(year)}
+defaultSRmod <- function(stock) {
+	~ factor(year)
+}
 
 #' @title Collapse seasons
 #' @name collapseSeasons
@@ -193,7 +195,7 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 )
 
 #' @rdname sca
-setMethod("sca", signature("FLStock", "FLIndices"), 
+setMethod("sca", signature("FLStock", "FLIndices"),
 	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing) {
 
   #-----------------------------------------------------------------
