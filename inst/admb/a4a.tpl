@@ -1,6 +1,7 @@
 //  --------------------------------------------------------------------------
-// Copyright (c) 2008,2009,2010,2011,2012, Anders Nielsen <an@aqua.dtu.dk> 
-// and Colin Millar <colinpmillar@gmail.com>. All rights reserved.
+// Copyright (c) 2008,2009,2010,2011,2012, 2013, 2014, 2015, 2016, 2017, 2018,
+// Anders Nielsen <an@aqua.dtu.dk> and Colin Millar <colinpmillar@gmail.com>. 
+// All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -480,24 +481,31 @@ PROCEDURE_SECTION
     // here we split - if locAge == -1 then we have a biomass index and 
     // use add to a different likelihood component.
 
-    if (locAge >= 0) { // standard observation
+    if (locAge >= 0) 
+    { // standard observation
       locZ = mfexp(f(locYear, locAge)) + mfexp(m(locYear, locAge));
-      if (locFleet == 1) { //    catches predicted 
+      if (locFleet == 1) 
+      { //    catches predicted 
         pred(i) = f(locYear, locAge) - 
                   log(locZ) + 
                   log(1.0 - mfexp(-locZ)) + 
                   n(locYear, locAge);
-      } else { //    survey predicted 
+      } 
+      else 
+      { //    survey predicted 
         pred(i) = q(locFleet - 1, locYear, locAge) - 
                   locZ * surveyTimes(locFleet - 1) + 
                   n(locYear, locAge); 
       }
       locVar = mfexp(2.0 * v(locFleet, locYear, locAge));
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar);    
-    } else { // an observation of biomass
+    } 
+    else 
+    { // an observation of biomass
       pred(i) = 0; // not sure i need to but best to be safe
       for (int a = surveyMinAge(locFleet - 1); 
-           a <= surveyMaxAge(locFleet - 1); ++a) {
+           a <= surveyMaxAge(locFleet - 1); ++a) 
+      {
         locZ = mfexp(f(locYear, a)) + mfexp(m(locYear, a));
         pred(i) += mfexp(q(locFleet - 1, locYear, a)) * 
                    stkWt(locYear, a) * 
