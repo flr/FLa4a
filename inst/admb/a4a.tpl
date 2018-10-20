@@ -478,21 +478,21 @@ PROCEDURE_SECTION
     locAge   = obsVec(3);
     locObs   = obsVec(4); 
 
-    // here we split - if locAge == -1 then we have a biomass index and 
-    // use add to a different likelihood component.
+    // here we split - if locAge == -1 then we have a biomass index
+    // or total catch weight obs
 
     if (locAge >= 0) 
     { // standard observation
       locZ = mfexp(f(locYear, locAge)) + mfexp(m(locYear, locAge));
       if (locFleet == 1) 
-      { //    catches predicted 
+      { // catches 
         pred(i) = f(locYear, locAge) - 
                   log(locZ) + 
                   log(1.0 - mfexp(-locZ)) + 
                   n(locYear, locAge);
       } 
       else 
-      { //    survey predicted 
+      { // survey 
         pred(i) = q(locFleet - 1, locYear, locAge) - 
                   locZ * surveyTimes(locFleet - 1) + 
                   n(locYear, locAge); 
@@ -501,19 +501,40 @@ PROCEDURE_SECTION
       nll += obsVec(5) * nldnorm(locObs, pred(i), locVar);    
     } 
     else 
-    { // an observation of biomass
-      pred(i) = 0; // not sure i need to but best to be safe
-      for (int a = surveyMinAge(locFleet - 1); 
-           a <= surveyMaxAge(locFleet - 1); ++a) 
-      {
-        locZ = mfexp(f(locYear, a)) + mfexp(m(locYear, a));
-        pred(i) += mfexp(q(locFleet - 1, locYear, a)) * 
-                   stkWt(locYear, a) * 
-                   mfexp(n(locYear, a) - surveyTimes(locFleet - 1) * locZ);
+    { // if age is < 0, an observation of biomass / total catch weight has been specified
+      if (locFleet == 1)
+      { // catches
+        pred(i) = 0; // not sure i need to but best to be safe
+        for (int a = minAge; a <= maxAge; ++a) 
+        {
+          locZ = mfexp(f(locYear, a)) + mfexp(m(locYear, a));
+          pred(i) += 
+            mfexp(f(locYear, a) - 
+                  log(locZ) + 
+                  log(1.0 - mfexp(-locZ)) + 
+                  n(locYear, a) +
+                  log(stkwt(locYear, a))
+                  );
+        }
+        pred(i) = log(pred(i));
       }
-      // note variance are stored in the minimum age column
+      else
+      { // survey
+        pred(i) = 0; // not sure i need to but best to be safe
+        for (int a = surveyMinAge(locFleet - 1); 
+             a <= surveyMaxAge(locFleet - 1); ++a) 
+        {
+          locZ = mfexp(f(locYear, a)) + mfexp(m(locYear, a));
+          pred(i) += mfexp(q(locFleet - 1, locYear, a)) * 
+                     stkWt(locYear, a) * 
+                     mfexp(n(locYear, a) - surveyTimes(locFleet - 1) * locZ);
+        }
+        pred(i) = log(pred(i));
+      }
+      // note variance are stored in the minimum age column for surveys
+      // but what do we do for catch weights
       locVar = mfexp(2.0 * v(locFleet, locYear, minAge)); 
-      nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar);
+      nll += obsVec(5) * nldnorm(locObs, pred(i), locVar);
     }
   }
 
