@@ -505,6 +505,11 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     varslt[] <- NA
     catch.n(stock) <- FLQuantDistr(catch.n(stock), varslt)
   }
+  if (!inherits(catch(stock),"FLQuantDistr")) {
+    varslt <- catch(stock)
+    varslt[] <- NA
+    catch(stock) <- FLQuantDistr(catch(stock), varslt)
+  }
 
   # check survey names
   if (length(names(indices)) == 0) {
@@ -527,23 +532,30 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # first some checks
   if (any(is.infinite(log(catch.n(stock))))) stop("only non-zero catches allowed.")
   if (any(is.infinite(log(var(catch.n(stock)))))) stop("only non-zero catch variances allowed.")
+  if (any(is.infinite(log(catch(stock))))) stop("only non-zero total catches allowed.")
+  if (any(is.infinite(log(var(catch(stock)))))) stop("only non-zero total catch variances allowed.")
+  if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))
     stop("only non-zero survey indices allowed.")
   if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))
     stop("only non-zero survey index variances allowed.")
 
-  # convert catches and indices to a list of named arrays
-  list.obs <- c(list(catch = quant2mat(catch.n(stock)@.Data)),
+  # convert catches, total catch weight and indices to a list of named arrays
+  list.obs <- c(list(catch = quant2mat(catch.n(stock)@.Data),
+                     catchtotal = quant2mat(catch(stock)@.Data)),
                 lapply(indices, function(x) quant2mat(index(x)@.Data)))
 
-  # convert the variances of catches and indices to a list of named arrays
-  list.var <- c(list(catch = quant2mat(catch.n(stock)@var)),
+  # convert the variances of catches, total catch weights and indices to a list of named arrays
+  list.var <- c(list(catch = quant2mat(catch.n(stock)@var),
+                     catchtotal = quant2mat(catch(stock)@var)),
                 lapply(indices, function(x) quant2mat(index.var(x))))
 
   # calculate appropriate centering for observations on log scale
   # a bit spaguetti ... if center is a numeric vector only those elements will be centered
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
   if (is.numeric(center)) {
+    # add a message, as we now have fleet 2 as the total catch weight
+    message("NB - not centring: ", paste0(names(list.obs)[-center], collapse = ", "))
     center.log[-center][] <- 0
   } else if (!isTRUE(center)) {
     center.log[] <- 0
@@ -562,14 +574,16 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   if (any(df.data[,5] != 1))
     message("Note: Provided variances will be used to weight observations.\n",
             "      Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).")
-
   # extract auxilliary stock info
   fbar <-  unname(range(stock)[c("minfbar", "maxfbar")])
-  ### NB - looks a bit buggy:
+  ### NB - looks a bit buggy (21/10/2018)
+  #plusgroup <-
+  #  as.integer(!is.na(range(stock)["plusgroup"]),
+  #             range(stock)["plusgroup"] >= range(stock)["max"] )
+  ###  suggest:
   plusgroup <-
-    as.integer(!is.na(range(stock)["plusgroup"]),
-               range(stock)["plusgroup"] >= range(stock)["max"] )
-  ###
+    as.integer(!is.na(range(stock)["plusgroup"]) &&
+               range(stock)["plusgroup"] == range(stock)["max"] )
 
   # extract auxilliary survey info - always assume oldest age is true age TODO TODO TODO !!
   surveytime <- unname(sapply(indices, function(x) mean(c(dims(x)$startf, dims(x)$endf))))
@@ -587,7 +601,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       lapply(1:length(list.obs),
              function(i)
                cbind(fleet = i,
-                     make.df(i, stock=stock, indices=indices))))
+                     make.df(i, stock = stock, indices = indices))))
 
   #-------------------------------------------------------------------------
   # NOTE: check covar object. Need to be consistent on how this information
@@ -611,7 +625,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   # add in data
   full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
-  # put biomass surveys in min age position
+  # put biomass surveys and total catch weights in minimum age position
   full.df$age <- with(full.df, replace(age, is.na(age), min(age, na.rm = TRUE)))
   full.df$fleet <- factor(names(list.obs)[full.df$fleet], levels = names(list.obs))
 
@@ -622,7 +636,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     if (any(is.na(full.df$obs))) {
       missing_obs <-
         capture.output(
-          print(subset(full.df, is.na(obs))[c("fleet","year","age")], row.names = FALSE))
+          print(subset(full.df, is.na(obs))[c("fleet", "year", "age")], row.names = FALSE))
       message("Note: The following observations are treated as being missing at random:\n\t",
               paste(missing_obs, collapse = "\n\t"), "\n",
               "      Predictions will be made for missing observations." )
@@ -639,14 +653,21 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       lapply(full.df[3:1],
              function(x) sort(unique(x))),
       KEEP.OUT.ATTRS = FALSE)[3:1]
+
   for (i in seq_along(indices)) {
-    # if biomass survey skip this step
+    .years <- temp.full.df$year[temp.full.df$fleet == levels(full.df$fleet)[i + 2]]
+    .yrange <- range(subset(full.df, fleet == levels(full.df$fleet)[i + 2])$year)
+    .years[.years < .yrange[1]] <- .yrange[1]
+    .years[.years > .yrange[2]] <- .yrange[2]
+    temp.full.df$year[temp.full.df$fleet == levels(full.df$fleet)[i + 2]] <- .years
+
+    # if biomass survey skip the age step
     if (is(indices[[i]], 'FLIndexBiomass')) next
-    .ages <- temp.full.df$age[temp.full.df$fleet == levels(full.df$fleet)[i+1]]
-    .range <- range(subset(full.df, fleet == levels(full.df$fleet)[i+1])$age)
-    .ages[.ages < .range[1]] <- .range[1]
-    .ages[.ages > .range[2]] <- .range[2]
-    temp.full.df$age [temp.full.df$fleet == levels(full.df$fleet)[i+1]] <- .ages
+    .ages <- temp.full.df$age[temp.full.df$fleet == levels(full.df$fleet)[i + 2]]
+    .arange <- range(subset(full.df, fleet == levels(full.df$fleet)[i + 2])$age)
+    .ages[.ages < .arange[1]] <- .arange[1]
+    .ages[.ages > .arange[2]] <- .arange[2]
+    temp.full.df$age[temp.full.df$fleet == levels(full.df$fleet)[i + 2]] <- .ages
   }
   full.df <- merge(temp.full.df, full.df, all.x = TRUE)
 
@@ -671,7 +692,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # order df
   full.df <- full.df[with(full.df, order(fleet, year, age)), ]
   rownames(full.df) <- NULL
-  full.df <- full.df[c(3,1,2,4:ncol(full.df))]
+  full.df <- full.df[c(3, 1, 2, 4:ncol(full.df))]
 
   # TODO stop if some obs have no parameter - it should be quite rare ...
 
@@ -688,7 +709,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   fleet.names <- c("catch", names(indices))
   Xqlist <-
     lapply(seq_along(indices),
-           function(i) getX(qmodel[[i]], subset(full.df, fleet == fleet.names[i+1])))
+           function(i) getX(qmodel[[i]], subset(full.df, fleet == fleet.names[i + 1])))
   Xq <- as.matrix(do.call(bdiag, Xqlist))
   # Q model offsets
   # ...
@@ -746,11 +767,11 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
   # build survey's max and min age vectors
   # If age is not set (NA) it will take the min and max from catch.n
-  srvRange <- do.call('rbind',lapply(indices, range))
-  srvMinAge <- srvRange[,'min']
+  srvRange <- do.call('rbind', lapply(indices, range))
+  srvMinAge <- srvRange[, 'min']
   srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
   names(srvMinAge) <- names(indices)
-  srvMaxAge <- srvRange[,'max']
+  srvMaxAge <- srvRange[, 'max']
   srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
   names(srvMaxAge) <- names(indices)
 
@@ -1122,7 +1143,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 
   # build survey's max and min age vectors
   # If age is not set (NA) it will take the min and max from catch.n
-  srvRange <- do.call('rbind',lapply(indices, range))
+  srvRange <- do.call('rbind', lapply(indices, range))
   srvMinAge <- srvRange[,'min']
   srvMinAge[is.na(srvMinAge)] <- range(full.df$age)[1]
   names(srvMinAge) <- names(indices)
@@ -1132,11 +1153,11 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 
   cat("# Data for the a4a model\n",
       "# Full age range\n",
-      range(full.df$age), "\n",
+      paste(range(full.df$age), collapse = " "), "\n",
       "# Full year range\n",
-      range(full.df$year), "\n",
+      paste(range(full.df$year), collapse = " "), "\n",
       "# Number of surveys\n",
-      length(unique(full.df$fleet)) - 1, "\n",
+      length(unique(full.df$fleet)) - 2, "\n",
       "# Survey min ages\n",
       paste(srvMinAge, collapse = " "), "\n",
       "# Survey max ages\n",
@@ -1151,6 +1172,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
       nrow(df.data), "\n",
       "# Observation data frame\n",
       "# fleet\tyear\tage\tobservation\tweights\n",
+      sep = "",
       file = filename)
   write.t(df.data, file = filename)
 
@@ -1159,7 +1181,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
       "# Number of auxilliary data\n",
       nrow(df.aux), "\n",
       "# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\n",
-      file = filename, append = TRUE)
+      file = filename, sep = "", append = TRUE)
   write.t(df.aux, file = filename)
 
   #-------------------------------------------------------------------------
@@ -1173,7 +1195,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
       "# model params\n", ncol(Xf), "\n",
       "# number of rows\n", nrow(Xf), "\n",
       "# design matrix\n",
-      file = filename)
+      file = filename, sep = "")
   write.t(Xf, file = filename)
 
   Covf <- getCov(nrow(Xf), model = "iid", tau = 1)
@@ -1181,7 +1203,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
       "# flag to turn F-deviations on and off 0=off 1=on\n",
        0, "\n",# off for now - until we work on the interface for randomness
       "# var-cov matrix\n",
-    file = filename, append = TRUE)
+    file = filename, sep = "", append = TRUE)
   write.t.sparse(Covf, file = filename)
 
   # qmodel
@@ -1225,10 +1247,12 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
     "\n# SPR0 :\n", srr$SPR0,
     "\n# a model params\n", ncol(Xsra),
     "\n# a model number of rows\n", nrow(Xsra),
-    "\n# a model design matrix\n", file = filename); write.t(Xsra, file=filename)
+    "\n# a model design matrix\n", file = filename)
+  write.t(Xsra, file=filename)
   cat("# b model params\n", ncol(Xsrb),
     "\n# b model number of rows\n", nrow(Xsrb),
-    "\n# b model design matrix\n", file = filename, append = TRUE); write.t(Xsrb, file=filename)
+    "\n# b model design matrix\n", file = filename, append = TRUE)
+  write.t(Xsrb, file=filename)
 
   Covr <- getCov(nrow(Xsra), model = "iid", tau = 1)
   cat("# prior model for the SRR a param",
@@ -1271,7 +1295,6 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 
   # end here if we just want to write the data and model files
   if (fit == "setup") return(wkdir)
-
 
   #========================================================================
   # Run the ADMB executable (build up argument list first)
