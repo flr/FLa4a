@@ -9,7 +9,8 @@ a4aInternal(stock, indices, fmodel = defaultFmod(stock),
   qmodel = defaultQmod(indices), srmodel = defaultSRmod(stock),
   n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices),
   covar = missing, wkdir = missing, verbose = FALSE,
-  fit = "assessment", center = TRUE, mcmc = missing)
+  fit = "assessment", center = TRUE, mcmc = missing,
+  useTotalCatch = TRUE)
 }
 \arguments{
 \item{stock}{an FLStock object containing catch and stock information}
@@ -24,19 +25,26 @@ a4aInternal(stock, indices, fmodel = defaultFmod(stock),
 
 \item{n1model}{a formula object depicting the model for the first year of catch data}
 
-\item{vmodel}{a list of formula objects depicting the models for log survey and log fishing mortality variance}
+\item{vmodel}{a list of formula objects depicting the models for log survey and log fishing
+mortality variance}
 
 \item{covar}{a list with covariates}
 
-\item{wkdir}{used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.}
+\item{wkdir}{used to set a working directory for the admb optimiser.  If wkdir is set all admb
+files are saved to this folder otherwise they are deleted.}
 
 \item{verbose}{if true admb fitting information is printed to the screen}
 
-\item{fit}{character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.}
+\item{fit}{character with type of fit: 'MP' or 'assessment'; the former doesn't require the
+hessian to be computed, while the latter does.}
 
 \item{center}{\code{logical} specifying whether data is centered before estimating or not}
 
-\item{mcmc}{\code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description}
+\item{mcmc}{\code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for
+detailed description}
+
+\item{useTotalCatch}{\code{logical} specifying whether to use total catch weight when there is
+no age information available.}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"

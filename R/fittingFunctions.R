@@ -123,20 +123,31 @@ collapseSeasons <- function (stock) {
 #' @docType methods
 #' @rdname sca
 #' @description Statistical catch-at-age method of the a4a stock assessment framework.
-#' @details [REQUIRES REVISION] This method is the advanced method for stock assessment, it gives the user access to a set of arguments that the \code{sca} method doesn't. In particular, the default for the \code{fit} argument is 'assessment'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}).
+#' @details [REQUIRES REVISION] This method is the advanced method for stock assessment, it gives
+#'          the user access to a set of arguments that the \code{sca} method doesn't. In particular,
+#'          the default for the \code{fit} argument is 'assessment'. For detailed information about
+#'          using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework'
+#'          (\code{vignette('sca')}).
 #' @param stock an \code{FLStock} object containing catch and stock information
 #' @param indices an \code{FLIndices} object containing survey indices
 #' @param fmodel a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a formula object depicting the model for log recruitment
-#' @param n1model a formula object depicting the model for the population in the first year of the time series
-#' @param vmodel a list of formula objects depicting the model for the variance of fishing mortality and the indices
-#' @param covar a list with covariates to be used by the submodels. The formula must have an element with the same name as the list element.
-#' @param wkdir used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted.
+#' @param n1model a formula object depicting the model for the population in the first year of the
+#'                time series
+#' @param vmodel a list of formula objects depicting the model for the variance of fishing mortality
+#'               and the indices
+#' @param covar a list with covariates to be used by the submodels. The formula must have an element
+#'              with the same name as the list element.
+#' @param wkdir used to set a working directory for the admb optimiser; if wkdir is set, all admb
+#'              files are saved to this folder, otherwise they are deleted.
 #' @param verbose if true, admb fitting information is printed to the screen.
-#' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.
+#' @param fit character with type of fit: 'MP' or 'assessment'; the former does not require the
+#'            hessian to be computed, while the latter does.
 #' @param center, logical defining if the data should be centered before fitting.
 #' @param mcmc an \code{SCAMCMC} object with the arguments to run MCMC
+#' @param useTotalCatch \code{logical} specifying whether to use total catch weight when there is
+#'                       no age information available.
 #' @template dots
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases sca sca-methods
@@ -198,7 +209,8 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 setMethod("sca", signature("FLStock", "FLIndices"),
 	function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing,
 		       n1model = missing, vmodel = missing, covar = missing, wkdir = missing,
-		       verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing) {
+		       verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing,
+		       useTotalCatch = TRUE) {
 
   #-----------------------------------------------------------------
   # get fit type
@@ -436,15 +448,21 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #' @param qmodel a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a formula object depicting the model for log recruitment
 #' @param n1model a formula object depicting the model for the first year of catch data
-#' @param vmodel a list of formula objects depicting the models for log survey and log fishing mortality variance
+#' @param vmodel a list of formula objects depicting the models for log survey and log fishing
+#'               mortality variance
 #' @param stock an FLStock object containing catch and stock information
 #' @param indices an FLIndices object containing survey indices
 #' @param covar a list with covariates
-#' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb files are saved to this folder otherwise they are deleted.
+#' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb
+#'              files are saved to this folder otherwise they are deleted.
 #' @param verbose if true admb fitting information is printed to the screen
-#' @param fit character with type of fit: 'MP' or 'assessment'; the former doesn't require the hessian to be computed, while the latter does.
+#' @param fit character with type of fit: 'MP' or 'assessment'; the former doesn't require the
+#'            hessian to be computed, while the latter does.
 #' @param center \code{logical} specifying whether data is centered before estimating or not
-#' @param mcmc \code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for detailed description
+#' @param mcmc \code{SCAMCMC} specifying parameters for the ADMB MCMC run, check ADMB manual for
+#'             detailed description
+#' @param useTotalCatch \code{logical} specifying whether to use total catch weight when there is
+#'                       no age information available.
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
 #a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
@@ -454,15 +472,19 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #                vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
 #                covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
 #                center = TRUE, mcmc=missing)
-a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = defaultQmod(indices), srmodel = defaultSRmod(stock), n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices), covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing)
-{
+a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = defaultQmod(indices),
+	                      srmodel = defaultSRmod(stock), n1model = defaultN1mod(stock),
+	                      vmodel = defaultVmod(stock, indices), covar = missing, wkdir = missing,
+	                      verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing,
+	                      useTotalCatch = TRUE) {
 
   # first check permissions of executable
   #	exeok <- check.executable()
   #	if (!exeok) stop("a4a executable has wrong permissions.")
 
   # if fit MCMC mcmc object must exist
-  if(fit=="MCMC" & missing(mcmc)) stop("To run MCMC you need to set the mcmc argument, using the method SCAMCMC.")
+  if (fit == "MCMC" & missing(mcmc))
+  	stop("To run MCMC you need to set the mcmc argument, using the method SCAMCMC.")
 
   # start timer
 	my.time.used <- numeric(4)
@@ -479,7 +501,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	# check survey names
 	if (length(names(indices)) == 0) {
 		# check that survey names don't use ':'
-		if(sum(grepl(':', names(indices)))>0) stop('Indices names can\'t use the character \':\'')
+		if (sum(grepl(':', names(indices))) > 0) stop('Indices names can\'t use the character \':\'')
 		snames <- make.unique(rep("survey", length(indices)))
 	} else {
 		snames <- make.unique(names(indices))
@@ -497,8 +519,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	# first some checks
 	if (any(is.infinite(log(catch.n(stock))))) stop("only non-zero catches allowed.")
 	if (any(is.infinite(log(var(catch.n(stock)))))) stop("only non-zero catch variances allowed.")
-	if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))  stop("only non-zero survey indices allowed.")
-	if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))  stop("only non-zero survey index variances allowed.")
+	if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))
+		stop("only non-zero survey indices allowed.")
+	if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))
+		stop("only non-zero survey index variances allowed.")
 
 	# convert catches and indices to a list of named arrays
 	list.obs <- c(list(catch = quant2mat(catch.n(stock)@.Data)), lapply(indices, function(x) quant2mat(index(x)@.Data)))
@@ -512,12 +536,12 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	if(is.numeric(center)) center.log[-center][] <- 0 else if(!isTRUE(center)) center.log[] <- 0
 
 	# convert to dataframe. NOTE: list2df also logs the observations and centers
-	df.data <- do.call(rbind, lapply(1:length(list.obs), list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
+	df.data <- do.call(rbind, lapply(1:length(list.obs), list2df, list.obs = list.obs, list.var = list.var, center.log = center.log))
 
 	if (any(df.data[,5] != 1)) message("Note: Provided variances will be used to weight observations.\n\tWeighting assumes variances are on the log scale or equivalently log(CV^2 + 1).")
 
 	# extract auxilliary stock info
-	fbar <-  unname(range(stock)[c("minfbar","maxfbar")])
+	fbar <-  unname(range(stock)[c("minfbar", "maxfbar")])
 	plusgroup <- as.integer( !is.na(range(stock)["plusgroup"]), range(stock)["plusgroup"] >= range(stock)["max"] )
 
 	# extract auxilliary survey info - always assume oldest age is true age TODO TODO TODO !!

@@ -16,7 +16,7 @@ sca(stock, indices, ...)
   qmodel = missing, srmodel = missing, n1model = missing,
   vmodel = missing, covar = missing, wkdir = missing,
   verbose = FALSE, fit = "assessment", center = TRUE,
-  mcmc = missing)
+  mcmc = missing, useTotalCatch = TRUE)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}
@@ -31,21 +31,29 @@ sca(stock, indices, ...)
 
 \item{srmodel}{a formula object depicting the model for log recruitment}
 
-\item{n1model}{a formula object depicting the model for the population in the first year of the time series}
+\item{n1model}{a formula object depicting the model for the population in the first year of the
+time series}
 
-\item{vmodel}{a list of formula objects depicting the model for the variance of fishing mortality and the indices}
+\item{vmodel}{a list of formula objects depicting the model for the variance of fishing mortality
+and the indices}
 
-\item{covar}{a list with covariates to be used by the submodels. The formula must have an element with the same name as the list element.}
+\item{covar}{a list with covariates to be used by the submodels. The formula must have an element
+with the same name as the list element.}
 
-\item{wkdir}{used to set a working directory for the admb optimiser; if wkdir is set, all admb files are saved to this folder, otherwise they are deleted.}
+\item{wkdir}{used to set a working directory for the admb optimiser; if wkdir is set, all admb
+files are saved to this folder, otherwise they are deleted.}
 
 \item{verbose}{if true, admb fitting information is printed to the screen.}
 
-\item{fit}{character with type of fit: 'MP' or 'assessment'; the former does not require the hessian to be computed, while the latter does.}
+\item{fit}{character with type of fit: 'MP' or 'assessment'; the former does not require the
+hessian to be computed, while the latter does.}
 
 \item{center, }{logical defining if the data should be centered before fitting.}
 
 \item{mcmc}{an \code{SCAMCMC} object with the arguments to run MCMC}
+
+\item{useTotalCatch}{\code{logical} specifying whether to use total catch weight when there is
+no age information available.}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
@@ -54,7 +62,11 @@ an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "a
 Statistical catch-at-age method of the a4a stock assessment framework.
 }
 \details{
-[REQUIRES REVISION] This method is the advanced method for stock assessment, it gives the user access to a set of arguments that the \code{sca} method doesn't. In particular, the default for the \code{fit} argument is 'assessment'. For detailed information about using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework' (\code{vignette('sca')}).
+[REQUIRES REVISION] This method is the advanced method for stock assessment, it gives
+         the user access to a set of arguments that the \code{sca} method doesn't. In particular,
+         the default for the \code{fit} argument is 'assessment'. For detailed information about
+         using the \code{sca} read the vignette 'The a4a Stock Assessment Modelling Framework'
+         (\code{vignette('sca')}).
 }
 \examples{
 data(ple4)
