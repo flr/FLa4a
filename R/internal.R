@@ -6,12 +6,13 @@
 .onAttach <- function(libname, pkgname) {
   ## TODO find out sep char for environment vars on macs
   sep <-
-    if (os.type("linux") | os.type("osx"))
+    if (os.type("linux") | os.type("osx")) {
       ":"
-    else if (os.type("windows"))
+    } else if (os.type("windows")){
       ";"
-    else
+    } else {
       ","
+    }
 
   path <- paste0(a4a.dir(), sep, Sys.getenv("PATH"))
   Sys.setenv(PATH = path)
@@ -34,57 +35,49 @@
 
 # returns the location on the file system of the ADMB executable
 a4a.dir <- function () {
-  if (os.type("linux")) {
-    fnm <- system.file("bin/linux", package = "FLa4a")
-  }
-  else if (os.type("osx")) {
-    fnm <- system.file("bin/osx", package = "FLa4a")
-  }
-  else if (os.type("windows")) {
-    fnm <- system.file("bin/windows", package = "FLa4a")
-  }
-  else {
-    stop("Unknown OS")
-  }
-  if (file.exists(fnm)) {
-    return(fnm)
-  }
-  else {
+  fnm <-
+    if (os.type("linux")) {
+      system.file("bin/linux", package = "FLa4a")
+    } else if (os.type("osx")) {
+      system.file("bin/osx", package = "FLa4a")
+    } else if (os.type("windows")) {
+      system.file("bin/windows", package = "FLa4a")
+    } else {
+      stop("Unknown OS")
+    }
+
+  if (!file.exists(fnm))
     stop(paste("FLa4a installation error; no such file", fnm))
-  }
+
+  fnm
 }
 
 
 # returns TRUE if correct operating system is passed as an argument
-#os.type <- function (type = c("linux", "mac", "windows", "else"))
 os.type <- function (type = c("linux", "windows", "osx", "else")) {
   type <- match.arg(type)
   if (type == "windows") {
-    return(.Platform$OS.type == "windows")
-  }
-  else if (type == "linux") {
-    return(.Platform$OS.type == "unix")
-  }
-  else if (type == "osx") {
-    return(grepl("^darwin", R.version$os))
-  }
-  else if (type == "else") {
-    return(TRUE)
-  }
-  else {
-    stop("This shouldn't happen.")
+    .Platform$OS.type == "windows"
+  } else if (type == "linux") {
+    .Platform$OS.type == "unix"
+  } else if (type == "osx") {
+    grepl("^darwin", R.version$os)
+  } else if (type == "else") {
+    TRUE
+  } else {
+    stop("Unknown OS")
   }
 }
 
 # finds the size of the operating system addresses
 os.32or64bit <- function () {
-  return(ifelse(.Machine$sizeof.pointer == 4, "32", "64"))
+  ifelse(.Machine$sizeof.pointer == 4, "32", "64")
 }
 
 
 # Checks that the executable can be run by the user
 check.executable <- function() {
- if (os.type("linux")) {
+  if (os.type("linux")) {
    system(paste0("ls -l ", file.path(a4a.dir(), "a4a"), " > syslog.txt"))
    syslog <- readLines("syslog.txt")
    unlink("syslog.txt")
@@ -95,16 +88,16 @@ check.executable <- function() {
      message(paste0(
        "Something has gone wrong!\n",
        "the a4a executable has the wrong permissions:\n\t",
-          substring(syslog, 1, 10),
-     "\nPlease change permissions (in a terminal) to a+x using\n",
+       substring(syslog, 1, 10), "\n",
+       "Please change permissions (in a terminal) to a+x using\n",
        "\tchmod a+x ", file.path(a4a.dir(), "a4a"), "\n",
        "if you installed under sudo you will have to run:\n",
        "\tsudo chmod a+x ", file.path(a4a.dir(), "a4a")))
      }
 
    return(is.x)
- }
- # windows
+  }
+  # else windows or osx
   TRUE
 }
 
@@ -261,35 +254,39 @@ dropMatrixIter <- function(object, iter = 1) {
 #
 # ----------------------------------------------
 
-bevholt <- function(CV = 0.5) {
+check_cv <- function(CV) {
   if (CV <= 0)
     stop ("CV in stock recruit relationship cannot be less than zero")
-  list(srr = "bevholt", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 1)
-}
-bevholtSV <- function(SPR0 = 1, CV = 0.5) {
-  if (CV <= 0)
-    stop ("CV in stock recruit relationship cannot be less than zero")
-  list(srr = "bevholtSV", a = ~ 1, b = ~ 1, SPR0 = SPR0, srrCV = CV, ID = 5)
-}
-ricker <- function(CV = 0.5) {
-  if (CV <= 0)
-    stop ("CV in stock recruit relationship cannot be less than zero")
-  list(srr = "ricker", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 2)
-}
-hockey <- function(CV = 0.5) {
-  if (CV <= 0)
-    stop ("CV in stock recruit relationship cannot be less than zero")
-  list(srr = "hockey", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 3)
-}
-geomean <- function(CV = 0.5) {
-  if (CV <= 0)
-    stop ("CV in stock recruit relationship cannot be less than zero")
-  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
-}
-none <- function() {
-  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
 }
 
+bevholt <- function(CV = 0.5) {
+  check_cv(CV)
+  list(srr = "bevholt", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 1)
+}
+
+bevholtSV <- function(SPR0 = 1, CV = 0.5) {
+  check_cv(CV)
+  list(srr = "bevholtSV", a = ~ 1, b = ~ 1, SPR0 = SPR0, srrCV = CV, ID = 5)
+}
+
+ricker <- function(CV = 0.5) {
+  check_cv(CV)
+  list(srr = "ricker", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 2)
+}
+
+hockey <- function(CV = 0.5) {
+  check_cv(CV)
+  list(srr = "hockey", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 3)
+}
+
+geomean <- function(CV = 0.5) {
+  check_cv(CV)
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
+}
+
+none <- function(...) {
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+}
 
 a4a_srmodel_list <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
 flc_srmodel_list <- c("bevholt", "ricker", "geomean")
