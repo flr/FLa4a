@@ -1,34 +1,39 @@
-###################################################################################
+################################################################################
 # internal functions
-###################################################################################
+################################################################################
 
 # startup message
-.onAttach <- function(libname, pkgname)
-{
+.onAttach <- function(libname, pkgname) {
   ## TODO find out sep char for environment vars on macs
-  sep <- if (os.type("linux") | os.type("osx")) ":" else if (os.type("windows")) ";" else ","
+  sep <-
+    if (os.type("linux") | os.type("osx"))
+      ":"
+    else if (os.type("windows"))
+      ";"
+    else
+      ","
+
   path <- paste0(a4a.dir(), sep, Sys.getenv("PATH"))
-  Sys.setenv(PATH=path)
+  Sys.setenv(PATH = path)
 
   ## message with version number
   tbl <- library(help = FLa4a)$info[[1]]
-  version <- gsub(" |[a-zA-z]|:", "", tbl[grep("Version:",tbl)])
-  msg <- paste0("This is FLa4a ", version,". For overview type \'help(package=\"FLa4a\")\'\n")
+  version <- gsub(" |[a-zA-z]|:", "", tbl[grep("Version:", tbl)])
+  msg <- paste0("This is FLa4a ", version,
+                ". For overview type \'help(package=\"FLa4a\")\'\n")
   packageStartupMessage(msg)
 
   # check 64 bit platform in windows
-  if(os.type("windows") && grepl("x86", sessionInfo()$running))
-    stop("a4a executable in this package has been compiled for a 64 bit OS,
-      please get the i386 version on the FLa4a release page at
-      https://github.com/flr/FLa4a/releases")
+  if (os.type("windows") && grepl("x86", sessionInfo()$running))
+    stop("a4a executable in this package has been compiled for a 64 bit OS,\n",
+         "       please get the i386 version on the FLa4a release page at\n",
+         "       https://github.com/flr/FLa4a/releases")
 
-  #
   check.executable()
 }
 
 # returns the location on the file system of the ADMB executable
-a4a.dir <- function ()
-{
+a4a.dir <- function () {
   if (os.type("linux")) {
     fnm <- system.file("bin/linux", package = "FLa4a")
   }
@@ -52,21 +57,12 @@ a4a.dir <- function ()
 
 # returns TRUE if correct operating system is passed as an argument
 #os.type <- function (type = c("linux", "mac", "windows", "else"))
-os.type <- function (type = c("linux", "windows", "osx", "else"))
-{
-  type = match.arg(type)
+os.type <- function (type = c("linux", "windows", "osx", "else")) {
+  type <- match.arg(type)
   if (type == "windows") {
     return(.Platform$OS.type == "windows")
   }
-#  else if (type == "mac") {
-#   result = (file.info("/Library")$isdir && file.info("/Applications")$isdir)
-#    if (is.na(result)) {
-#      result = FALSE
-#    }
-#    return(result)
-#  }
   else if (type == "linux") {
-#    return((.Platform$OS.type == "unix") && !os.type("mac"))
     return(.Platform$OS.type == "unix")
   }
   else if (type == "osx") {
@@ -81,8 +77,7 @@ os.type <- function (type = c("linux", "windows", "osx", "else"))
 }
 
 # finds the size of the operating system addresses
-os.32or64bit <- function ()
-{
+os.32or64bit <- function () {
   return(ifelse(.Machine$sizeof.pointer == 4, "32", "64"))
 }
 
@@ -90,126 +85,138 @@ os.32or64bit <- function ()
 # Checks that the executable can be run by the user
 check.executable <- function() {
  if (os.type("linux")) {
-   system(paste0("ls -l ", a4a.dir(), "/a4a > syslog.txt"))
+   system(paste0("ls -l ", file.path(a4a.dir(), "a4a"), " > syslog.txt"))
    syslog <- readLines("syslog.txt")
    unlink("syslog.txt")
 
-   is.x <- grepl("x", substring(syslog, 1,10))
+   is.x <- grepl("x", substring(syslog, 1, 10))
 
    if (!is.x) {
      message(paste0(
        "Something has gone wrong!\n",
        "the a4a executable has the wrong permissions:\n\t",
-          substring(syslog, 1,10),
+          substring(syslog, 1, 10),
      "\nPlease change permissions (in a terminal) to a+x using\n",
-       "\tchmod a+x ", a4a.dir(), "/a4a\n",
+       "\tchmod a+x ", file.path(a4a.dir(), "a4a"), "\n",
        "if you installed under sudo you will have to run:\n",
-       "\tsudo chmod a+x ", a4a.dir(), "/a4a"))
+       "\tsudo chmod a+x ", file.path(a4a.dir(), "a4a")))
      }
 
    return(is.x)
- } else { # windows
-    return(TRUE)
  }
+ # windows
+  TRUE
 }
 
 # utility to convert to a 2d array
 
 quant2mat <- function(x) {
-	out <- x[drop=TRUE]
-	dim(out) <- dim(x)[1:2]
-	dimnames(out) <- dimnames(x)[1:2]
-	if (nrow(out) == 1 && dimnames(out)[[1]] == "all") dimnames(out)[[1]] <- NA_character_  # "all" denotes a biomass survey
-	out
+  out <- x[drop = TRUE]
+  dim(out) <- dim(x)[1:2]
+  dimnames(out) <- dimnames(x)[1:2]
+  # "all" denotes a biomass survey
+  if (nrow(out) == 1 && dimnames(out)[[1]] == "all")
+    dimnames(out)[[1]] <- NA_character_
+  out
 }
 
 # convert to dataframe
 list2df <- function(fleet, list.obs, list.var, center.log) {
-	x <- list.obs[[fleet]]
-	v <- as.vector(list.var[[fleet]])
-	year <- as.numeric(colnames(x)[col(x)])
-	age <- as.numeric(rownames(x)[row(x)])
-	obs <- log(as.vector(x)) - center.log[fleet]
-	if (all(is.na(v))) {
-		wts <- 1
-	} else { # use inverse variance weighting
-		wts <-  1 / v # inverse variance weigting
-	}
-	ret <- data.frame(fleet = fleet, year = year, age = age, obs = obs, weights = wts)
-	ret <- ret[!is.na(ret $ obs), ]
-	if (any(is.na(ret[,5])) || any(ret[,5] <= 0)) {
-		ret[, 5] <- 1
-		warning("*** NA and/or non-positive variances found in: ",
-			      names(list.obs)[fleet],
-			      " - all variances set to 1", call. = FALSE)
-	}
-	ret
+  x <- list.obs[[fleet]]
+  v <- as.vector(list.var[[fleet]])
+  year <- as.numeric(colnames(x)[col(x)])
+  age <- as.numeric(rownames(x)[row(x)])
+  obs <- log(as.vector(x)) - center.log[fleet]
+  if (all(is.na(v))) {
+    wts <- 1
+  } else {
+    # use inverse variance weighting
+    wts <-  1 / v # inverse variance weigting
+  }
+  ret <- data.frame(fleet = fleet, year = year, age = age,
+                    obs = obs, weights = wts)
+  ret <- ret[!is.na(ret $ obs), ]
+  if (any(is.na(ret[, 5])) || any(ret[, 5] <= 0)) {
+    ret[, 5] <- 1
+    warning("*** NA and/or non-positive variances found in: ",
+            names(list.obs)[fleet],
+            " - all variances set to 1", call. = FALSE)
+  }
+  ret
 }
 
 # build a full data frame
 make.df <- function(fleet, stock, indices) {
-	if (fleet <= 2)
-		thing <- stock
-	else
-		thing <- indices[[fleet - 2]]
-	expand.grid(
-		age = if (is(thing, 'FLIndexBiomass') || fleet == 2) NA else range(thing)["min"]:range(thing)["max"],
+  if (fleet <= 2)
+    thing <- stock
+  else
+    thing <- indices[[fleet - 2]]
+
+  if (is(thing, "FLIndexBiomass") || fleet == 2) {
+    age <- NA
+  } else {
+    age <- range(thing)["min"]:range(thing)["max"]
+  }
+  expand.grid(
+    age =  age,
     year = range(thing)["minyear"]:range(thing)["maxyear"]
   )[2:1]
 }
 
 # local utility
 write.t <- function(x, file, ...) {
-	write.table(x, row.names = FALSE, col.names = FALSE, quote = FALSE,
-		          sep = '\t', file = file, append = TRUE)
+  write.table(x, file = file,
+              row.names = FALSE, col.names = FALSE, quote = FALSE,
+              sep = "\t", append = TRUE)
 }
 
 write.t.sparse <- function(x, file, ...) {
-	x <- as(x, "dsCMatrix")
-	cat("# i\n", x@i,
-		"\n# p\n", x@p,
-		"\n# x\n", x@x,
-		file = file, append = TRUE)
+  x <- as(x, "dsCMatrix")
+  cat("# i\n", x@i,
+    "\n# p\n", x@p,
+    "\n# x\n", x@x,
+    file = file, append = TRUE)
 }
 
 
 # simulate mvnorm with empirical T (fixes bug in mvrnorm)
 
-mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical=TRUE){
-	if(empirical){
-		if(n>length(mu)){
-			mm <- mvrnorm(n, mu, Sigma, tol=tol, empirical=T)
-		} else {
-			mm <- mvrnorm(length(mu)+1, mu, Sigma, tol=tol, empirical=TRUE)
-			mm <- mm[1:n,]
-		}
-	} else {
-			mm <- mvrnorm(n, mu, Sigma, tol=tol, empirical=FALSE)
-	}
+mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical = TRUE) {
+  if (empirical) {
+    if (n > length(mu)) {
+      mm <- MASS::mvrnorm(n, mu, Sigma, tol = tol, empirical = TRUE)
+    } else {
+      mm <- MASS::mvrnorm(length(mu) + 1, mu, Sigma,
+                          tol = tol, empirical = TRUE)
+      mm <- mm[1:n, ]
+    }
+  } else {
+      mm <- MASS::mvrnorm(n, mu, Sigma, tol = tol, empirical = FALSE)
+  }
 
-	# output with right dims for FLPar
-	if(is(mm, "matrix")) t(mm) else (t(t(mm)))
+  # output with right dims for FLPar
+  if (is(mm, "matrix")) t(mm) else (t(t(mm)))
 
 }
 
 
 # if FLPar param is of dim 1 coerce to matrix and name "intercept"
 par2mat <- function(object){
-	p0 <- object@coefficients
-	dims <- dim(p0)
-	if(dims[1]==1){
-		m0 <- t(t(p0[drop=TRUE]))
-		dimnames(m0)[[2]] <- dimnames(p0)[[1]]
-	} else {
-		m0 <- t(p0[drop=T])
-	}
-	m0
+  p0 <- object@coefficients
+  dims <- dim(p0)
+  if (dims[1] == 1){
+    m0 <- t(t(p0[drop = TRUE]))
+    dimnames(m0)[[2]] <- dimnames(p0)[[1]]
+  } else {
+    m0 <- t(p0[drop = TRUE])
+  }
+  m0
 }
 
 flqFromRange <- function(object) {
   range <- range(object)
-#  if (all(is.na(range[c("min", "max")]))) {
-  if (all(is.na(range[c("min", "max")])) | isTRUE(attr(object, "FLIndexBiomass"))) {
+  if (all(is.na(range[c("min", "max")])) |
+      isTRUE(attr(object, "FLIndexBiomass"))) {
     # fix for biomass indices or any quant that has "all" for the first dim
     FLQuant(
       matrix(NA,
@@ -235,36 +242,14 @@ flqFromRange <- function(object) {
 
 dropMatrixIter <- function(object, iter = 1) {
   dims <- dim(object)
-  if (!inherits(object, "array") || length(dims) != 3) stop("object must be an array")
+  if (!inherits(object, "array") || length(dims) != 3)
+    stop("object must be an array")
   out <- object[,, iter]
   dim(out) <- dim(object)[1:2]
   dimnames(out) <- dimnames(object)[1:2]
   out
 }
 
-
-# these are left over from when you could set linear models for SR params
-  #bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-  #  list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
-  #}
-  #bevholtSV <- function(h = ~ 1, v = ~ 1, SPR0 = 1, CV = 0.5) {
-  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-  #  list(srr = "bevholtSV", a = h, b = v, SPR0 = SPR0, srrCV = CV, ID = 5)
-  #}
-  #ricker <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-  #  list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
-  #}
-  #hockey <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
-  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-  #  list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
-  #}
-  #geomean <- function(a = ~ 1, CV = 0.5) {
-  #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-  #  list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
-  #}
-  #none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, srrCV = -1, ID = 4)
 
 # ----------------------------------------------
 #
@@ -276,62 +261,80 @@ dropMatrixIter <- function(object, iter = 1) {
 #
 # ----------------------------------------------
 
-  bevholt <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "bevholt", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 1)
-  }
-  bevholtSV <- function(SPR0 = 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "bevholtSV", a = ~ 1, b = ~ 1, SPR0 = SPR0, srrCV = CV, ID = 5)
-  }
-  ricker <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "ricker", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 2)
-  }
-  hockey <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "hockey", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 3)
-  }
-  geomean <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
-  }
-  none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+bevholt <- function(CV = 0.5) {
+  if (CV <= 0)
+    stop ("CV in stock recruit relationship cannot be less than zero")
+  list(srr = "bevholt", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 1)
+}
+bevholtSV <- function(SPR0 = 1, CV = 0.5) {
+  if (CV <= 0)
+    stop ("CV in stock recruit relationship cannot be less than zero")
+  list(srr = "bevholtSV", a = ~ 1, b = ~ 1, SPR0 = SPR0, srrCV = CV, ID = 5)
+}
+ricker <- function(CV = 0.5) {
+  if (CV <= 0)
+    stop ("CV in stock recruit relationship cannot be less than zero")
+  list(srr = "ricker", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 2)
+}
+hockey <- function(CV = 0.5) {
+  if (CV <= 0)
+    stop ("CV in stock recruit relationship cannot be less than zero")
+  list(srr = "hockey", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 3)
+}
+geomean <- function(CV = 0.5) {
+  if (CV <= 0)
+    stop ("CV in stock recruit relationship cannot be less than zero")
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
+}
+none <- function() {
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+}
 
 
-a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
-flcSRmodelList <- c("bevholt", "ricker", "geomean")
+a4a_srmodel_list <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
+flc_srmodel_list <- c("bevholt", "ricker", "geomean")
 
 
 a4aSRmodelDefinitions <- function(srmodel) {
-  srmodelName <- gsub("\\([^()]*\\)", "", srmodel)
-  if (srmodelName %in% flcSRmodelList) {
+  srmodelname <- gsub("\\([^()]*\\)", "", srmodel)
+  if (srmodelname %in% flc_srmodel_list) {
     # get FLSR definition
-    eval(parse(text=paste0("FLCore::", srmodelName, "()")))$model[[3]]
+    eval(parse(text = paste0("FLCore::", srmodelname, "()")))$model[[3]]
   } else {
     # use a4a definition
-    switch(srmodelName,
-      bevholtSV = (~ (6*h*b*ssb) / (spr0* (((a/(1+a)*0.8 + 0.2) + 1)*b + (5*(a/(1+a)*0.8 + 0.2) - 1)*ssb) ))[[2]], # spr0 is provided by user,
-      hockey = (~ a * (ssb + sqrt(b^2 + 0.0025) - sqrt((ssb - b)^2 + 0.0025)))[[2]],
+    switch(srmodelname,
+      # for bevholtSV, spr0 is provided by user,
+      bevholtSV = (~ 6 * h * b * ssb /
+                     spr0 /
+                     ( (b + 5 * ssb) * (a / (1 + a) * 0.8 + 0.2) + b - ssb)
+                  )[[2]],
+      hockey = (~ a *
+                 (ssb + sqrt(b ^ 2 + 0.0025) - sqrt( (ssb - b) ^ 2 + 0.0025))
+               )[[2]],
       stop("unknown SR model")
     )
   }
 }
 
 
-isPresenta4aSRmodel <- function(srMod) {
-  facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+isPresenta4aSRmodel <- function(srmodel) {
+  facs <- strsplit(as.character(srmodel)[length(srmodel)], "[+]")[[1]]
   facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
-  grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
+  grepl(paste("(^", a4a_srmodel_list, "[(])", collapse = "|", sep = ""), facs)
 }
 
 
-geta4aSRmodel <- function(srMod) {
-  facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
-  facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
-  a4as <- grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
-  if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
-  if (sum(a4as) == 0) "none()" else facs[a4as]
+geta4aSRmodel <- function(srmodel) {
+  facs <- strsplit(as.character(srmodel)[length(srmodel)], "[+]")[[1]]
+  # remove leading and trailing spaces
+  facs <- gsub("(^ )|( $)", "", facs)
+  a4as <-
+    grepl(paste("(^", a4a_srmodel_list, "[(])", collapse = "|", sep = ""),
+          facs)
+  if (sum(a4as) > 1)
+    stop("you can only specify one type of stock recruit relationship.")
+  if (sum(a4as) == 0)
+    "none()"
+  else
+    facs[a4as]
 }
-
-
