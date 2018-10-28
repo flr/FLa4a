@@ -143,9 +143,8 @@ setMethod("getX", "formula",
     if (!any(gams)) {
       X <- model.matrix(model, df)
     } else {
-      browser()
       deparsed_model <- deparse(model[[length(model)]], width.cutoff = 500L)
-      model <- eval(parse(text = paste("fake.obs ~", deparsed_model)))
+      model <- formula(paste("fake.obs ~", deparsed_model))
       #X <- model.matrix.gam(gam(model, data = cbind(fake.obs = 1, df)))
       G <- gam(model, data = cbind(fake.obs = 1, df), fit = FALSE)
       X <- G$X
