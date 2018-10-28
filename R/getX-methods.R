@@ -135,8 +135,18 @@ setMethod("getX", "formula",
     if (any(!gams)) {
       model_sansgam <-
         eval(parse(text = paste("~", paste(facs[!gams], collapse = "+"))))
-      if (nrow(model.frame(model_sansgam, df)) != nrow(df))
-        stop("something went wrong - check for NAs in covariates")
+        modelframe_sansgam <- try(
+          model.frame(model_sansgam, df)
+        )
+      if (inherits(modelframe_sansgam, "try-error")) {
+        stop("Please check your model formula: ",
+             print(model_sansgam, showEnv = FALSE), ", ",
+             "there seems to be an error.",
+             call. = FALSE)
+      }
+      if (nrow(modelframe_sansgam) != nrow(df))
+        stop("something went wrong - check for NAs in covariates",
+             call. = FALSE)
     }
 
     # now run formula through model.matrix
@@ -146,11 +156,18 @@ setMethod("getX", "formula",
       deparsed_model <- deparse(model[[length(model)]], width.cutoff = 500L)
       model <- formula(paste("fake.obs ~", deparsed_model))
       #X <- model.matrix.gam(gam(model, data = cbind(fake.obs = 1, df)))
-      G <- gam(model, data = cbind(fake.obs = 1, df), fit = FALSE)
+      G <- try(
+          gam(model, data = cbind(fake.obs = 1, df), fit = FALSE)
+        )
+      if (inherits(G, "try-error")) {
+        stop("Please check your (gam) model formula: ",
+             print(model[-2], showEnv = FALSE), ", ",
+             "there seems to be an error.",
+             call. = FALSE)
+      }
       X <- G$X
       colnames(X) <- G$term.names
     }
-
     # a double check
     if (nrow(X) != nrow(df))
       stop("something went wrong - check for NAs in covariates")
