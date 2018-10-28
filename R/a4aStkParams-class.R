@@ -352,16 +352,6 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                linkinv = from@link,
                range = range(from)
            )
-    rmodel <-
-      submodel(formula = srMod(from),
-               coefficients = b[r_which],
-               vcov = vmat[r_which, r_which,, drop = FALSE],
-               centering = from@centering,
-               distr = from@distr,
-               link = from@link,
-               linkinv = from@link,
-               range = range(from)
-           )
     n1model <-
       submodel(formula = n1Mod(from),
                coefficients = b[n1_which],
@@ -372,13 +362,39 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                linkinv = from@link,
                range = range(from)
            )
-
-    # build the block correlation
+    rmodel <-
+      submodel(formula = srMod(from),
+               coefficients = b[r_which],
+               vcov = vmat[r_which, r_which,, drop = FALSE],
+               centering = from@centering,
+               distr = from@distr,
+               link = from@link,
+               linkinv = from@link,
+               range = range(from)
+           )
 
 
     # construct submodels
-    submodels(list(fmodel, rmodel, n1model),
-              names = c("fmodel", "rmodel", "n1model"))
+    stk_submodel <-
+      submodels(list(fmodel, n1model, rmodel),
+                names = c("fmodel", "n1model", "rmodel"))
+
+    # calculate correlation matrix for each iter
+    corrmat <- vmat
+    for (i in 1:dim(vmat)[3]) {
+      corrmat[,, i] <- cov2cor(vmat[,, i])
+    }
+    # f and r correlation
+    stk_submodel@corBlocks$fmodel.n1model[] <-
+      corrmat[f_which, n1_which,, drop = FALSE]
+    # f and n1 model correlation
+    stk_submodel@corBlocks$fmodel.rmodel[] <-
+      corrmat[f_which, r_which,, drop = FALSE]
+    # r and n1 model correlation
+    stk_submodel@corBlocks$n1model.rmodel[] <-
+      corrmat[n1_which, r_which,, drop = FALSE]
+
+    stk_submodel
   }
 )
 
