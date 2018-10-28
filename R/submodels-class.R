@@ -56,10 +56,10 @@ setMethod("initialize", "submodels",
             lapply(seq(ncol(modelpairs)),
                    function(i)
                      array(0,
-                            dim = c(npar[modelpairs[1,i]],
-                                    npar[modelpairs[2,i]],
+                            dim = c(npar[modelpairs[1, i]],
+                                    npar[modelpairs[2, i]],
                                     iter = 1),
-                            dimnames = c(parnames[modelpairs[,i]], "1")))
+                            dimnames = c(parnames[modelpairs[, i]], "1")))
           names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(names(.Object)[x], collapse = "."))
         }
       }
@@ -70,7 +70,7 @@ setMethod("initialize", "submodels",
 setValidity("submodels",
   function(object) {
     # All items are submodel-class
-    if(!all(sapply(object, is, 'submodel'))) {
+    if(!all(sapply(object, is, "submodel"))) {
       "Components must be submodel"
     } else {
       TRUE
@@ -184,7 +184,7 @@ setMethod("show", "submodels",
 # method.skeleton("propagate", "submodels",  file = stdout())
 #' @rdname submodels-class
 #' @param iter the number of iterations to create
-#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
 setMethod("propagate",
   signature(object = "submodels"),
   function (object, iter, fill.iter = TRUE)

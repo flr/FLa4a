@@ -3,11 +3,11 @@
 #' @name SCAPars
 #' @rdname SCAPars-class
 #' @template ClassDescription
-#' @section Slot: 
+#' @section Slot:
 #' \describe{
-#'	\item{\code{stkmodel}}{parameters related to stock dynamics}
-#'	\item{\code{qmodel}}{paramaters related to catchability of tunning fleets}
-#'	\item{\code{vmodel}}{paramaters related to the variance model}
+#'  \item{\code{stkmodel}}{parameters related to stock dynamics}
+#'  \item{\code{qmodel}}{paramaters related to catchability of tunning fleets}
+#'  \item{\code{vmodel}}{paramaters related to the variance model}
 #' }
 #' @aliases SCAPars-class
 setClass("SCAPars",
@@ -16,10 +16,10 @@ setClass("SCAPars",
                   vmodel    = "submodels")
 )
 
-setValidity("SCAPars", 
+setValidity("SCAPars",
   function(object) {
     # vmodel should be 1 longer than qmodel
-    if(length(object@qmodel) + 1 != length(object@vmodel)) {
+    if (length(object@qmodel) + 1 != length(object@vmodel)) {
       "vmodel should be 1 longer than qmodel"
     } else {
       TRUE
@@ -27,7 +27,7 @@ setValidity("SCAPars",
 })
 
 setMethod("initialize", "SCAPars",
-  function(.Object, 
+  function(.Object,
            stkmodel = new("a4aStkParams"),
            qmodel = new("submodels"),
            vmodel = new("submodels")) {
@@ -38,7 +38,7 @@ setMethod("initialize", "SCAPars",
       .Object@qmodel <- qmodel
       .Object@vmodel <- vmodel
       .Object
-}) 
+})
 
 
 
@@ -50,17 +50,17 @@ setMethod("initialize", "SCAPars",
 #' @aliases SCAPars SCAPars-methods
 setGeneric("SCAPars", function(object, ...) standardGeneric("SCAPars"))
 #' @rdname SCAPars-class
-setMethod("SCAPars", signature(object="missing"),
+setMethod("SCAPars", signature(object = "missing"),
   function(...) {
     # empty
-  	if(missing(...)){
-	  	new("SCAPars")
+    if (missing(...)) {
+      new("SCAPars")
     # or not
-  	} else {
+    } else {
       args <- list(...)
-	  args$Class <- 'SCAPars'
+    args$Class <- "SCAPars"
       do.call("new", args)
-	  }
+    }
   }
 )
 
@@ -90,7 +90,7 @@ setMethod("srMod", "SCAPars", function(object) srMod(stkmodel(object)))
 #' @aliases fmodel fmodel-methods
 setGeneric("fmodel", function(object, ...) standardGeneric("fmodel"))
 #' @rdname SCAPars-class
-setMethod("fmodel", "SCAPars", function(object) fMod(stkmodel(object)))
+setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
 setMethod("fMod", "SCAPars", function(object) fMod(stkmodel(object)))
 
 #' @rdname SCAPars-class
@@ -145,7 +145,7 @@ setGeneric("fPars", function(object, ...) standardGeneric("fPars"))
 setMethod("fPars", "SCAPars", function(object) {
   stkmodel_coefficients <- coef(stkmodel(object))
   idx <- grep("fMod:", rownames(stkmodel_coefficients))
-  stkmodel_coefficients[idx,]
+  stkmodel_coefficients[idx, ]
 })
 
 #' @rdname SCAPars-class
@@ -197,10 +197,10 @@ setGeneric("vFrml", function(object, ...) standardGeneric("vFrml"))
 setMethod("vFrml", "SCAPars", function(object) object@vmodel@model)
 
 #' @rdname SCAPars-class
-setMethod("m", signature(object="SCAPars"), function(object) m(stkmodel(object)))
+setMethod("m", signature(object = "SCAPars"), function(object) m(stkmodel(object)))
 
 #' @rdname SCAPars-class
-setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object)))
+setMethod("wt", signature(object = "SCAPars"), function(object) wt(stkmodel(object)))
 
 
 
@@ -208,11 +208,10 @@ setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object
 
 #' @rdname SCAPars-class
 #' @param iter the number of iterations to create
-#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
 setMethod("propagate",
   signature(object = "SCAPars"),
-  function (object, iter, fill.iter = TRUE) 
-  {
+  function (object, iter, fill.iter = TRUE) {
     # stkmodel
     object@stkmodel <- propagate(object@stkmodel, iter, fill.iter = fill.iter)
     # qmodel
@@ -227,11 +226,10 @@ setMethod("propagate",
 
 #' @rdname SCAPars-class
 #' @param obj the object to be subset
-#' @param it iteration to be extracted 
+#' @param it iteration to be extracted
 setMethod("iter", "SCAPars", function(obj, it){
-	obj@stkmodel <- iter(obj@stkmodel, it)
-	obj@qmodel <- iter(obj@qmodel, it)
-	obj@vmodel <- iter(obj@vmodel, it)
-	obj
+  obj@stkmodel <- iter(obj@stkmodel, it)
+  obj@qmodel <- iter(obj@qmodel, it)
+  obj@vmodel <- iter(obj@vmodel, it)
+  obj
 })
-
