@@ -122,15 +122,15 @@ Class definition (slots), constructors, accessors, replacement (when relevant) a
 \section{Slot}{
 
 \describe{
-\item{\code{fMod}}{F submodel \code{formula}}
-\item{\code{n1Mod}}{first year N \code{formula}}
-\item{\code{srMod}}{stock-recruitment submodel \code{formula}}
-\item{\code{params}}{\code{FLPar} with parameters}
-\item{\code{vcov}}{\code{array} with variance-covariance}
-\item{\code{centering}}{centering values \code{numeric}}
-\item{\code{distr}}{statistical distribution \code{character}}
-\item{\code{m}}{natural mortality \code{FLQuant}}
-\item{\code{units}}{data units \code{character}}
+ \item{\code{fMod}}{F submodel \code{formula}}
+ \item{\code{n1Mod}}{first year N \code{formula}}
+ \item{\code{srMod}}{stock-recruitment submodel \code{formula}}
+ \item{\code{params}}{\code{FLPar} with parameters}
+ \item{\code{vcov}}{\code{array} with variance-covariance}
+ \item{\code{centering}}{centering values \code{numeric}}
+ \item{\code{distr}}{statistical distribution \code{character}}
+ \item{\code{m}}{natural mortality \code{FLQuant}}
+ \item{\code{units}}{data units \code{character}}
 }
 }
 

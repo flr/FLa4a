@@ -35,9 +35,9 @@ genFLQuant(object, ...)
 
 \item{niter}{the number of iterations to be generated}
 
-\item{type}{the type of output required. The default is on the scale of the linear predictors (link); 
-the alternative "response" is on the scale of the response variable. 
-Thus for a model on the log scale the default predictions are of log F (for example) 
+\item{type}{the type of output required. The default is on the scale of the linear predictors (link);
+the alternative "response" is on the scale of the response variable.
+Thus for a model on the log scale the default predictions are of log F (for example)
 and type = "response" gives the predicted F.}
 
 \item{nsim}{the number of iterations to simulate, if nsim = 0, then deterministic values are returned
@@ -48,7 +48,7 @@ covariance slot and distribution slot.}
 
 \item{simulate.recruitment}{if FALSE (default) recruitment is simulated from
 the recruitment estimates of recruitment, which may or may not be based on a stock-recruit
-model in the origional fit.  If TRUE, then new recruitments are simulated based on the 
+model in the origional fit.  If TRUE, then new recruitments are simulated based on the
 stock recruitment model and supplied CV used in the fit, rsulting in a completly different
 timeseries of N and Catches.}
 }
