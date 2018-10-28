@@ -366,7 +366,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
 
     # construct submodels
     submodels(list(fmodel, rmodel, n1model),
-              names = c("f", "r", "n1"))
+              names = c("fmodel", "rmodel", "n1model"))
   }
 )
 
