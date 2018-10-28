@@ -5,15 +5,15 @@
 #' @template ClassDescription
 #' @section Slot:
 #' \describe{
-#'	\item{\code{fMod}}{F submodel \code{formula}}
-#'	\item{\code{n1Mod}}{first year N \code{formula}}
-#'	\item{\code{srMod}}{stock-recruitment submodel \code{formula}}
-#'	\item{\code{params}}{\code{FLPar} with parameters}
-#'	\item{\code{vcov}}{\code{array} with variance-covariance}
-#'	\item{\code{centering}}{centering values \code{numeric}}
-#'	\item{\code{distr}}{statistical distribution \code{character}}
-#'	\item{\code{m}}{natural mortality \code{FLQuant}}
-#'	\item{\code{units}}{data units \code{character}}
+#'  \item{\code{fMod}}{F submodel \code{formula}}
+#'  \item{\code{n1Mod}}{first year N \code{formula}}
+#'  \item{\code{srMod}}{stock-recruitment submodel \code{formula}}
+#'  \item{\code{params}}{\code{FLPar} with parameters}
+#'  \item{\code{vcov}}{\code{array} with variance-covariance}
+#'  \item{\code{centering}}{centering values \code{numeric}}
+#'  \item{\code{distr}}{statistical distribution \code{character}}
+#'  \item{\code{m}}{natural mortality \code{FLQuant}}
+#'  \item{\code{units}}{data units \code{character}}
 #' }
 #' @aliases a4aStkParams-class
 
@@ -78,20 +78,17 @@ setMethod("initialize", "a4aStkParams",
       .Object@distr <- distr
       # if missing set dimensions of of m and wt based on range
       if (missing(m) || missing(wt))
-        flq <- FLQuant(
-                  matrix(NA,
-                     nrow = .Object@range["max"] - .Object@range["min"] + 1,
-                     ncol = .Object@range["maxyear"] - .Object@range["minyear"] + 1),
-                     dimnames = list(age = .Object@range["min"]:.Object@range["max"],
-                                     year = .Object@range["minyear"]:.Object@range["maxyear"])
-                  )
+        flq <- flq_from_range(.Object)
       .Object@m <- if (missing(m)) flq else m
       .Object@wt <- if (missing(wt)) flq else wt
       .Object@wt <- if (missing(mat)) flq else mat
       # throw error if range from FLComp doesn't match FLQuants
-      # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
-      if (abs(as.numeric(dimnames(.Object@m)$year[1]) - .Object@range["minyear"]) > 1e-9 ||
-          abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) - .Object@range["maxyear"]) > 1e-9) {
+      # (can't check this in setValidity due to callNextMethod resulting in an
+      # invalid a4aStkParams object when range is supplied)
+      if (abs(as.numeric(dimnames(.Object@m)$year[1]) -
+              .Object@range["minyear"]) > 1e-9 ||
+          abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) -
+              .Object@range["maxyear"]) > 1e-9) {
             stop("range does not match supplied m and wt dimensions")
       }
       .Object@units <- units
@@ -108,9 +105,11 @@ setMethod("initialize", "a4aStkParams",
 #' @aliases a4aStkParams a4aStkParams-methods
 #' @template Accessors
 #' @template Constructors
-setGeneric("a4aStkParams", function(object, ...) standardGeneric("a4aStkParams"))
+setGeneric("a4aStkParams",
+  function(object, ...) standardGeneric("a4aStkParams"))
+
 #' @rdname a4aStkParams-class
-setMethod("a4aStkParams", signature(object="missing"),
+setMethod("a4aStkParams", signature(object = "missing"),
   function(...) {
     # empty
     if(missing(...)){
@@ -118,7 +117,7 @@ setMethod("a4aStkParams", signature(object="missing"),
     # or not
     } else {
       args <- list(...)
-      args$Class <- 'a4aStkParams'
+      args$Class <- "a4aStkParams"
       do.call("new", args)
       }
   }
@@ -126,13 +125,16 @@ setMethod("a4aStkParams", signature(object="missing"),
 
 
 #' @rdname a4aStkParams-class
-setMethod("m", signature(object="a4aStkParams"), function(object) object@m)
+setMethod("m", signature(object = "a4aStkParams"),
+  function(object) object@m)
 
 #' @rdname a4aStkParams-class
-setMethod("wt", signature(object="a4aStkParams"), function(object) object@wt)
+setMethod("wt", signature(object = "a4aStkParams"),
+  function(object) object@wt)
 
 #' @rdname a4aStkParams-class
-setMethod("mat", signature(object="a4aStkParams"), function(object) object@mat)
+setMethod("mat", signature(object = "a4aStkParams"),
+  function(object) object@mat)
 
 #' @rdname a4aStkParams-class
 #' @aliases fMod fMod-methods
@@ -143,12 +145,15 @@ setMethod("fMod", "a4aStkParams", function(object) object@fMod)
 #' @rdname a4aStkParams-class
 #' @param value the new object
 #' @aliases fMod<- fMod<--methods
-setGeneric("fMod<-", function(object,value) standardGeneric("fMod<-"))
+setGeneric("fMod<-", function(object, value) standardGeneric("fMod<-"))
 #' @rdname a4aStkParams-class
-setReplaceMethod("fMod", signature("a4aStkParams","formula"), function(object, value){
-    if(all.equal(is(value), is(object@fMod))) object@fMod <- value
+setReplaceMethod("fMod", signature("a4aStkParams", "formula"),
+  function(object, value) {
+    if (all.equal(is(value), is(object@fMod)))
+      object@fMod <- value
     object
-})
+  }
+)
 
 #' @rdname a4aStkParams-class
 #' @aliases n1Mod n1Mod-methods
@@ -160,10 +165,13 @@ setMethod("n1Mod", "a4aStkParams", function(object) object@n1Mod)
 #' @aliases n1Mod<- n1Mod<--methods
 setGeneric("n1Mod<-", function(object,value) standardGeneric("n1Mod<-"))
 #' @rdname a4aStkParams-class
-setReplaceMethod("n1Mod", signature("a4aStkParams","formula"), function(object, value){
-    if(all.equal(is(value), is(object@n1Mod))) object@n1Mod <- value
+setReplaceMethod("n1Mod", signature("a4aStkParams", "formula"),
+  function(object, value) {
+    if (all.equal(is(value), is(object@n1Mod)))
+      object@n1Mod <- value
     object
-})
+  }
+)
 
 #' @rdname a4aStkParams-class
 #' @aliases srMod rMod-methods
@@ -173,54 +181,70 @@ setMethod("srMod", "a4aStkParams", function(object) object@srMod)
 
 #' @rdname a4aStkParams-class
 #' @aliases srMod<- srMod<--methods
-setGeneric("srMod<-", function(object,value) standardGeneric("srMod<-"))
+setGeneric("srMod<-", function(object, value) standardGeneric("srMod<-"))
 #' @rdname a4aStkParams-class
-setReplaceMethod("srMod", signature("a4aStkParams","formula"), function(object, value){
-    if(all.equal(is(value), is(object@srMod))) object@srMod <- value
+setReplaceMethod("srMod", signature("a4aStkParams", "formula"),
+  function(object, value){
+    if (all.equal(is(value), is(object@srMod)))
+      object@srMod <- value
     object
-})
+  })
 
 #' @rdname a4aStkParams-class
 setMethod("params", "a4aStkParams", function(object) object@coefficients)
 
 #' @rdname a4aStkParams-class
-setReplaceMethod("params", signature("a4aStkParams","FLPar"), function(object, value){
-    if (all.equal(is(value), is(params(object)))) object@coefficients <- value
+setReplaceMethod("params", signature("a4aStkParams", "FLPar"),
+  function(object, value) {
+    if (all.equal(is(value), is(params(object))))
+      object@coefficients <- value
     object
-})
+  }
+)
 
 #' @rdname a4aStkParams-class
 #' @aliases coefficients coefficients-methods
-setGeneric("coefficients", function(object, ...) standardGeneric("coefficients"))
+setGeneric("coefficients",
+  function(object, ...) standardGeneric("coefficients"))
 #' @rdname a4aStkParams-class
 setMethod("coefficients", "a4aStkParams", function(object) object@coefficients)
 
 #' @rdname a4aStkParams-class
 #' @aliases coefficients<- coefficients<--methods
-setGeneric("coefficients<-", function(object,value) standardGeneric("coefficients<-"))
+setGeneric("coefficients<-",
+  function(object, value) standardGeneric("coefficients<-"))
 #' @rdname a4aStkParams-class
-setReplaceMethod("coefficients", signature("a4aStkParams","FLPar"), function(object, value){
-    if (all.equal(is(value), is(coefficients(object)))) object@coefficients <- value
+setReplaceMethod("coefficients", signature("a4aStkParams", "FLPar"),
+  function(object, value){
+    if (all.equal(is(value), is(coefficients(object))))
+      object@coefficients <- value
     object
-})
+  }
+)
 
 #' @rdname a4aStkParams-class
 setMethod("distr", "a4aStkParams", function(object) object@distr)
 
 #' @rdname a4aStkParams-class
-setReplaceMethod("distr", signature("a4aStkParams","character"), function(object, value){
-    if(all.equal(is(value), is(object@distr))) object@distr <- value
+setReplaceMethod("distr", signature("a4aStkParams", "character"),
+  function(object, value){
+    if (all.equal(is(value), is(object@distr)))
+      object@distr <- value
     object
-})
+  }
+)
 
 #' @rdname a4aStkParams-class
 setMethod("vcov", "a4aStkParams", function(object) object@vcov)
 
 #' @rdname a4aStkParams-class
-setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, value){
-    if(all.equal(is(value), is(object@vcov))) object@vcov <- value
+setReplaceMethod("vcov", signature("a4aStkParams", "array"),
+  function(object, value){
+    if(all.equal(is(value), is(object@vcov)))
+      object@vcov <- value
     object
-})
+  }
+)
 
 
 
@@ -229,8 +253,7 @@ setReplaceMethod("vcov", signature("a4aStkParams","array"), function(object, val
 #
 
 setMethod("show", "a4aStkParams",
-  function(object)
-  {
+  function(object) {
     cat("stkmodel:\n")
     if (length(object) == 0) {
       cat("empty object\n")
@@ -253,31 +276,38 @@ setMethod("show", "a4aStkParams",
 # method.skeleton("coerce", "a4aStkParams",  file = stdout())
 
 setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
-  function (from, to, strict = TRUE)
-  {
+  function (from, to, strict = TRUE) {
     # get SR model formula
     srmodel <- geta4aSRmodel(srMod(from))
     # get FLSR definition
     expr_model <- a4aSRmodelDefinitions(srmodel)
 
     # build skeleton FLSR
-    flsr <- FLSR(formula(paste("rec ~ (", deparse(expr_model, width.cutoff = 500), ") *", exp(from@centering))))
+    flsr <-
+      FLSR(
+        formula(
+          paste("rec ~ (",
+                deparse(expr_model, width.cutoff = 500),
+                ") * ",
+                exp(from@centering))
+          ))
 
     # get SR pars
     cnames <- rownames(coef(from))
     params(flsr) <- FLPar(a = exp(coef(from)[grep("sraMod", cnames)]),
                           b = exp(coef(from)[grep("srbMod", cnames)]))
 
-    which <- c(grep("sraMod", cnames), grep("srbMod", cnames)) 
-    vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
+    which <- c(grep("sraMod", cnames), grep("srbMod", cnames))
+    vcov(flsr) <- vcov(from)[which, which,, drop = FALSE]
     dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
 
     flqs <- genFLQuant(from)
 
-    rec(flsr) <- flqs$stock.n[1,]
+    rec(flsr) <- flqs$stock.n[1, ]
     ssb <- quantSums(flqs$stock.n * mat(from) * wt(from))
     ssb(flsr) <- ssb
-    fitted(flsr) <- ssb/ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
+    fitted(flsr) <-
+      ssb / ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
     residuals(flsr) <- log(rec(flsr)) - log(fitted(flsr))
 
     range(flsr) <- range(from)[c("min", "max", "minyear", "maxyear")]
@@ -288,21 +318,74 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
   }
 )
 
+# method.skeleton("coerce", "a4aStkParams",  file = stdout())
+
+setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
+  function (from, to, strict = TRUE) {
+
+    # extract come bits from stkmodel
+    b <- coef(from)
+    vmat <- vcov(from)
+    f_which <- which(grepl("fMod", rownames(b)))
+    r_which <- which(grepl("rMod", rownames(b)))
+    n1_which <- which(grepl("n1Mod", rownames(b)))
+
+    fmodel <-
+      submodel(formula = fMod(from),
+               coefficients = b[f_which],
+               vcov = vmat[f_which, f_which,, drop = FALSE],
+               centering = from@centering,
+               distr = from@distr,
+               link = from@link,
+               linkinv = from@link,
+               range = range(from)
+           )
+    rmodel <-
+      submodel(formula = srMod(from),
+               coefficients = b[r_which],
+               vcov = vmat[r_which, r_which,, drop = FALSE],
+               centering = from@centering,
+               distr = from@distr,
+               link = from@link,
+               linkinv = from@link,
+               range = range(from)
+           )
+    n1model <-
+      submodel(formula = n1Mod(from),
+               coefficients = b[n1_which],
+               vcov = vmat[n1_which, n1_which,, drop = FALSE],
+               centering = from@centering,
+               distr = from@distr,
+               link = from@link,
+               linkinv = from@link,
+               range = range(from)
+           )
+
+    # build the block correlation
+
+
+    # construct submodels
+    submodels(list(fmodel, rmodel, n1model),
+              names = c("f", "r", "n1"))
+  }
+)
+
+
 
 
 #' @rdname a4aStkParams-class
 #' @param iter the number of iterations to create
 #' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
-setMethod("propagate", signature(object="a4aStkParams"),
-  function(object, iter, fill.iter = TRUE)
-  {
+setMethod("propagate", signature(object = "a4aStkParams"),
+  function(object, iter, fill.iter = TRUE) {
 
     # propagate coefs, centering, m and wt
-    object@coefficients <- propagate(object@coefficients, iter, fill.iter = fill.iter)
-    object@centering    <- propagate(object@centering, iter, fill.iter = fill.iter)
-    object@m            <- propagate(object@m, iter, fill.iter = fill.iter)
-    object@wt           <- propagate(object@wt, iter, fill.iter = fill.iter)
-    object@mat          <- propagate(object@mat, iter, fill.iter = fill.iter)
+    object@coefficients <-
+      propagate(object@coefficients, iter, fill.iter = fill.iter)
+    object@centering <- propagate(object@centering, iter, fill.iter = fill.iter)
+    object@m <- propagate(object@m, iter, fill.iter = fill.iter)
+    object@wt <- propagate(object@wt, iter, fill.iter = fill.iter)
+    object@mat <- propagate(object@mat, iter, fill.iter = fill.iter)
 
     # now propagate vcov
     vcov.iter <- vcov(object)
@@ -310,13 +393,15 @@ setMethod("propagate", signature(object="a4aStkParams"),
 
     if (iter != dob[3]) {
       # CHECK no iters in object
-      if(dob[3] > 1) stop("propagate can only extend objects with no iters")
+      if (dob[3] > 1) stop("propagate can only extend objects with no iters")
 
-      object@vcov <- array(NA, dim = c(dob[1:2], iter), dimnames = c(dimnames(vcov.iter)[1:2], list(1:iter)))
+      object@vcov <-
+        array(NA, dim = c(dob[1:2], iter),
+              dimnames = c(dimnames(vcov.iter)[1:2], list(1:iter)))
       if (fill.iter) {
         object@vcov[] <- as.vector(vcov.iter)
       } else {
-        object@vcov[,,1] <- as.vector(vcov.iter)
+        object@vcov[,, 1] <- as.vector(vcov.iter)
       }
     }
 
@@ -328,13 +413,14 @@ setMethod("propagate", signature(object="a4aStkParams"),
 #' @rdname a4aStkParams-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted
-setMethod("iter", "a4aStkParams", function(obj, it){
-	obj@vcov <- obj@vcov[,,it, drop=FALSE]
-	obj@coefficients <- iter(obj@coefficients, it)
-	obj@m <- iter(obj@m, it)
-	obj@wt <- iter(obj@wt, it)
-	obj@mat <- iter(obj@mat, it)
-	obj@centering <- iter(obj@centering, it)
-	obj
-})
-
+setMethod("iter", "a4aStkParams",
+  function(obj, it) {
+    obj@vcov <- obj@vcov[,, it, drop = FALSE]
+    obj@coefficients <- iter(obj@coefficients, it)
+    obj@m <- iter(obj@m, it)
+    obj@wt <- iter(obj@wt, it)
+    obj@mat <- iter(obj@mat, it)
+    obj@centering <- iter(obj@centering, it)
+    obj
+  }
+)
