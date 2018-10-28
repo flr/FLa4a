@@ -107,7 +107,8 @@ setMethod("formula", "submodels", function(x) lapply(x, formula))
 #' @rdname submodels-class
 #' @param value value the new object
 #' @aliases corBlocks<-
-setGeneric("corBlocks<-", function(object, ..., value) standardGeneric("corBlocks<-"))
+setGeneric("corBlocks<-",
+  function(object, ..., value) standardGeneric("corBlocks<-"))
 
 #' @rdname submodels-class
 #' @aliases corBlocks<-
@@ -117,7 +118,8 @@ setMethod("corBlocks<-", signature(object = "submodels", value = "list"),
     object
   })
 
-# method.skeleton("$<-", signature(object = "submodels", value = "submodel"),  file = stdout())
+# method.skeleton("$<-", signature(object = "submodels", value = "submodel"),
+#                 file = stdout())
 
 #' @rdname submodels-class
 #' @param x object to be modified
@@ -164,10 +166,7 @@ setMethod("show", "submodels",
     if (length(object) == 0) {
       cat("empty object\n")
     } else {
-      fmt <- paste0("\t %", max(nchar(sapply(object, name))), "s: ")
-      for (i in object) {
-        cat(sprintf(fmt, name(i))); print(formula(i), showEnv = FALSE)
-      }
+      lapply(object, print)
     }
   }
 )
