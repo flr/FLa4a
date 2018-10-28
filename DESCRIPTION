@@ -57,7 +57,7 @@ Collate:
     'internal.R'
     'data.R'
     'redfish-data.R'
-    'setupModel.R'
+    'getX-methods.R'
     'fittingFunctions.R'
     'l2a-methods.R'
     'ma-methods.R'

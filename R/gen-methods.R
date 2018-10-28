@@ -132,17 +132,17 @@ setMethod("genFLQuant", "FLQuant",
 })
 
 #' @rdname genFLQuant-methods
-#' @param type the type of output required. The default is on the scale of the linear predictors (link); 
-#'             the alternative "response" is on the scale of the response variable. 
-#'             Thus for a model on the log scale the default predictions are of log F (for example) 
-#'             and type = "response" gives the predicted F. 
+#' @param type the type of output required. The default is on the scale of the linear predictors (link);
+#'             the alternative "response" is on the scale of the response variable.
+#'             Thus for a model on the log scale the default predictions are of log F (for example)
+#'             and type = "response" gives the predicted F.
 #' @param nsim the number of iterations to simulate, if nsim = 0, then deterministic values are returned
 #'             based on the coefficients.  If nsim > 0 then coefficients are simluated using the
 #'             covariance slot and distribution slot.
 #' @param seed if supplied the random numbers are generate with a fixed seed for repeatablility
 #' @param simulate.recruitment if FALSE (default) recruitment is simulated from
 #'             the recruitment estimates of recruitment, which may or may not be based on a stock-recruit
-#'             model in the origional fit.  If TRUE, then new recruitments are simulated based on the 
+#'             model in the origional fit.  If TRUE, then new recruitments are simulated based on the
 #'             stock recruitment model and supplied CV used in the fit, rsulting in a completly different
 #'             timeseries of N and Catches.
 # if nsim > 0 the simulate nsim times
@@ -159,14 +159,14 @@ setMethod("genFLQuant", "submodel",
         object@centering <- propagate(object@centering, niter)
       } # otherwise rely on propagates error message
 
-      # make empty FLQuant
-      flq <- flqFromRange(object)
-      df <- as.data.frame(flq)
-      # this should have 2 dimensions!
-      b <- coef(object)
       # get design matrix
-      X <- getX(formula(object), df)
-      # predict accross all iters (if dimensions don't match then coefs are the wrong length!)
+      X <- getX(object)
+
+      # coefficients should have 2 dimensions!
+      b <- coef(object)
+
+      # predict accross all iters (if dimensions don't match then
+      #   coefs are the wrong length!)
       pred <- sweep(X %*% as(b, "matrix"), 2, object@centering, "+")
       # add into flq
       flq <- propagate(flq, dims(b)$iter)
@@ -221,10 +221,10 @@ setMethod("genFLQuant", "a4aStkParams",
 
       # get FLSR definition
       expr_model <- a4aSRmodelDefinitions(srmodel)
-      
+
       # get SR pars
       cnames <- rownames(coef(object))
-      parList <- list(a = exp(coef(object)[grep("sraMod", cnames)]), 
+      parList <- list(a = exp(coef(object)[grep("sraMod", cnames)]),
                       b = exp(coef(object)[grep("srbMod", cnames)]))
       srrCV <- eval(parse(text = srmodel))$srrCV
 
@@ -232,7 +232,7 @@ setMethod("genFLQuant", "a4aStkParams",
       recPred <- function(ssb) {
         # if ssb is an FLQuant, the return will be an FLQuant
         # stdev = sqrt(cv^2 + 1)
-        ssb/ssb * eval(expr_model, c(parList, ssb = ssb)) * 
+        ssb/ssb * eval(expr_model, c(parList, ssb = ssb)) *
           exp(rnorm(dms$iter, 0, sqrt(log(srrCV^2 + 1)))) * # random noise
           exp(object@centering)
       }
@@ -301,11 +301,11 @@ setMethod("genFLQuant", "a4aStkParams",
 
     # out
     if (type == "response") {
-      FLQuants(harvest = flqs$harvest, stock.n = N, catch.n = C)  
+      FLQuants(harvest = flqs$harvest, stock.n = N, catch.n = C)
     } else {
-      FLQuants(harvest = object@link(flqs$harvest), stock.n = object@link(N), catch.n = object@link(C))  
+      FLQuants(harvest = object@link(flqs$harvest), stock.n = object@link(N), catch.n = object@link(C))
     }
-    
+
   }
 )
 

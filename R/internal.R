@@ -206,7 +206,7 @@ par2mat <- function(object){
   m0
 }
 
-flqFromRange <- function(object) {
+flq_from_range <- function(object) {
   range <- range(object)
   if (all(is.na(range[c("min", "max")])) |
       isTRUE(attr(object, "FLIndexBiomass"))) {

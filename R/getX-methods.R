@@ -4,14 +4,26 @@
 #' @description Uses the user-specified formula to build a model matrix.
 #' @template bothargs
 #' @param df the data.frame to build the model matrix against.
-#' @param newdf the data.frame to create the model matrix for.
 #' @return a matrix.
 #' @note \code{getX} is intended to be used internally
 #' @aliases getX getX-methods
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
+
+#' @rdname getX-methods
+setMethod("getX", "submodel",
+  function(object) {
+    # make empty FLQuant and make a data.frame from it
+    flq <- flq_from_range(object)
+    df <- as.data.frame(flq)
+
+    # get design matrix
+    getX(formula(object), df)
+  }
+)
+
 #' @rdname getX-methods
 setMethod("getX", "formula",
-  function(object, df, newdf = df) {
+  function(object, df) {
     opts <-
       options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
 
