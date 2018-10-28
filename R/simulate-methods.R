@@ -25,76 +25,80 @@ setGeneric("simulate", useAsDefault = stats::simulate)
 #' @param empirical logical, shall the empirical method in MASS be used
 #' @template dots
 setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, seed = NULL, empirical=TRUE) {
+  function(object, nsim = 1, seed = NULL, empirical = TRUE) {
     out <- object
-    out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
+    out@pars <- simulate(pars(object), nsim = nsim, seed = seed,
+                         empirical = empirical)
 
     # now get catch.n, stock.n, harvest and index
     preds <- predict(out)
-    out @ harvest <- preds $ stkmodel $  harvest
-    out @ stock.n <- out @ catch.n <- out @ harvest
-    out @ stock.n[1,] <- preds $ stkmodel $  rec
-    out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
+    out@harvest <- preds$stkmodel$ harvest
+    out@stock.n <- out@catch.n <- out@harvest
+    out@stock.n[1, ] <- preds$stkmodel$ rec
+    out@stock.n[-1, 1] <- preds$stkmodel$ny1[-1, ]
 
     # plusgroup?
     dms <- dims(object)
-    plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
+    plusgrp <- !is.na(dms$plusgroup) && dms$plusgroup >= dms$max
 
-	# fill stock.n (waste space save time)
-	stkn <- stock.n(out)
+  # fill stock.n (waste space save time)
+  stkn <- stock.n(out)
     Zs <- harvest(out) + m(out)
-    for (a in 2:dms $ age) {
-      stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
+    for (a in 2:dms$age) {
+      stkn[a, -1] <- stkn[a - 1, 1:(dms$year - 1)] *
+                       exp(-Zs[a - 1, 1:(dms$year - 1)])
     }
     # if plus group
     if (plusgrp) {
-      for (y in 1:(dms $ year-1))
-        stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
+      for (y in 1:(dms$year - 1))
+        stkn[a, y + 1, ] <- stkn[a, y + 1, ] + stkn[a, y, ] * exp(-Zs[a, y, ])
     }
 
-	out@stock.n <- stkn
+  out@stock.n <- stkn
 
     # calculate catch
     zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
-    out @ catch.n <- zfrac * stkn
+    out@catch.n <- zfrac * stkn
 
     # work out indices
-    out @ index <- idxs <- preds $ qmodel
+    out@index <- idxs <- preds$qmodel
 
     for (i in seq(idxs)) {
-    	idx <- idxs[[i]]
-    	dnms <- dimnames(idx)
-    	iages <- dnms$age
-    	iyears <- dnms$year
-		when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
-		# is it a biomass idx ?
-		bioidx <- FALSE
-		if(attr(index(object)[[i]], "FLIndexBiomass")) bioidx <- TRUE
-     	# if biomass index use ages in range or all ages have to be accounted
-     	# WARNING: spagheti code
-	 	if(bioidx){
-#		if(missing(stock)){
-#		    warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
-#		    out @ index[[i]][] <- object@index[[i]][]
-#	    } else {
-			rng <- attr(index(object)[[i]], "range")
-			if(is.na(rng["min"])) iages <- dimnames(stkn)[[1]] else iages <- ac(rng["min"]:rng["max"])
-			stk <- stkn[iages]*exp(-Zs[iages] * when)
-			stk <- mcf(list(e1=stk, e2=wt(out)[iages]))
-			stk$e2[] <- stk$e2[,,,,,1]
-			stk <- quantSums(do.call("*", stk))[,iyears]
-			out @ index[[i]] <- stk * out @ index[[i]]
-			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
-			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
-
-#	    }
-	    # or else it's a age based index
-		} else {
-			stk <- (stkn * exp(-Zs * when))[iages, iyears]
-			out @ index[[i]] <- stk * out @ index[[i]]
-			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
-			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
-		}
+      idx <- idxs[[i]]
+      dnms <- dimnames(idx)
+      iages <- dnms$age
+      iyears <- dnms$year
+    when <- mean(range(qmodel(pars(out))[[i]])[c("startf", "endf")])
+    # is it a biomass idx ?
+    bioidx <- FALSE
+    if (attr(index(object)[[i]], "FLIndexBiomass")) bioidx <- TRUE
+      # if biomass index use ages in range or all ages have to be accounted
+      # WARNING: spagheti code
+    if (bioidx) {
+#   if(missing(stock)){
+#       warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
+#       out@index[[i]][] <- object@index[[i]][]
+#     } else {
+      rng <- attr(index(object)[[i]], "range")
+      if (is.na(rng["min"]))
+        iages <- dimnames(stkn)[[1]] else iages <- ac(rng["min"]:rng["max"])
+      stk <- stkn[iages] * exp(-Zs[iages] * when)
+      stk <- mcf(list(e1 = stk, e2 = wt(out)[iages]))
+      stk$e2[] <- stk$e2[,,,,, 1]
+      stk <- quantSums(do.call("*", stk))[, iyears]
+      out@index[[i]] <- stk * out@index[[i]]
+      attr(out@index[[i]], "FLIndexBiomass") <-
+                         attr(object@index[[i]], "FLIndexBiomass")
+      attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
+#     }
+      # or else it's a age based index
+    } else {
+      stk <- (stkn * exp(-Zs * when))[iages, iyears]
+      out@index[[i]] <- stk * out@index[[i]]
+      attr(out@index[[i]], "FLIndexBiomass") <-
+                         attr(object@index[[i]], "FLIndexBiomass")
+      attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
+    }
     }
     out
 })
@@ -103,15 +107,18 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 setMethod("simulate", signature(object = "SCAPars"),
   function(object, nsim = 1, seed=NULL, empirical=TRUE) {
     out <- object
-    out @ stkmodel <- simulate(object @ stkmodel, nsim = nsim, seed = seed, empirical=empirical)
-    out @ qmodel <- simulate(object @ qmodel, nsim = nsim, seed = seed, empirical=empirical)
-    out @ vmodel <- simulate(object @ vmodel, nsim = nsim, seed = seed, empirical=empirical)
+    out@stkmodel <-
+      simulate(object@stkmodel, nsim = nsim, seed = seed, empirical = empirical)
+    out@qmodel <-
+      simulate(object@qmodel, nsim = nsim, seed = seed, empirical = empirical)
+    out@vmodel <-
+      simulate(object@vmodel, nsim = nsim, seed = seed, empirical = empirical)
     out
   })
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "a4aStkParams"),
-  function(object, nsim = 1, seed=NULL, empirical=TRUE) {
+  function(object, nsim = 1, seed = NULL, empirical = TRUE) {
 
     # get parameter estimates
     b <- coef(object)
@@ -119,47 +126,49 @@ setMethod("simulate", signature(object = "a4aStkParams"),
     # get parameter variance matrices
     V <- vcov(object)
 
-	# iters and objects
+    # iters and objects
     pitr <- dims(b)$iter
-	vitr <- dim(V)[3]
-	mitr <- max(c(nsim, pitr, vitr))
-	it <- seq(mitr)
+    vitr <- dim(V)[3]
+    mitr <- max(c(nsim, pitr, vitr))
+    it <- seq(mitr)
 
     # sanity checks - must be 1 or n
-	if(!((nsim==1 | nsim==mitr) & (pitr==1 | pitr==mitr) & (vitr==1 | vitr==mitr)))
-		stop("The number of iters and simulations must be 1 or n.")
+    if (!( (nsim == 1 | nsim == mitr) &
+           (pitr == 1 | pitr == mitr) &
+           (vitr == 1 | vitr == mitr) )) {
+      stop("The number of iters and simulations must be 1 or n.")
+    }
 
-	# if there are iters in pars or vcov simulation must be done by iter
-	if(pitr!=1 | vitr != 1){
-		# expand objects is needed
-		if(pitr==mitr & vitr==1){
-			V <- V[,,rep(1,mitr), drop=FALSE]
-			dimnames(V)[[3]] <- it
-		} else if(pitr==1 & vitr==mitr){
-			b <- propagate(b, mitr)
-		}
-		# run simulations along iters
-	    if(is.null(seed)){
-		    parsim <- sapply(seq_along(it), function(i){
-		    	mvrEmpT(1, c(b[,it[i]]), V[,,it[i]], empirical=empirical)
-		    })
-	    } else {
-			set.seed(seed)
-		    parsim <- sapply(seq_along(it), function(i){
-		    	mvrEmpT(1, c(b[,it[i]]), V[,,it[i]], empirical=empirical)
-		    })
- 	   }
-	} else {
-		if(!is.null(seed)) set.seed(seed)
-		parsim <- mvrEmpT(mitr, c(b), V[,,1,drop=T], empirical=empirical)
-	}
+    # if there are iters in pars or vcov simulation must be done by iter
+    if (pitr != 1 | vitr != 1) {
+      # expand objects is needed
+      if (pitr == mitr & vitr == 1) {
+        V <- V[,, rep(1, mitr), drop = FALSE]
+        dimnames(V)[[3]] <- it
+      } else if (pitr == 1 & vitr == mitr) {
+        b <- propagate(b, mitr)
+      }
+      # run simulations along iters
+      if (is.null(seed)) {
+        parsim <- sapply(seq_along(it), function(i) {
+          mvrEmpT(1, c(b[, it[i]]), V[,, it[i]], empirical = empirical)
+        })
+      } else {
+        set.seed(seed)
+        parsim <- sapply(seq_along(it), function(i) {
+          mvrEmpT(1, c(b[, it[i]]), V[,, it[i]], empirical = empirical)
+        })
+      }
+    } else {
+      if (!is.null(seed)) set.seed(seed)
+      parsim <- mvrEmpT(mitr, c(b), V[,, 1, drop = TRUE], empirical = empirical)
+    }
 
-	# add to object and return
-	if(mitr > pitr) coef(object) <- propagate(coef(object), mitr)
-	coef(object) <- parsim
-	return(object)
-
-})
+    # add to object and return
+    if (mitr > pitr) coef(object) <- propagate(coef(object), mitr)
+    coef(object) <- parsim
+    return(object)
+  })
 
 #' @rdname simulate-methods
 setMethod("simulate", signature(object = "submodels"),
@@ -172,23 +181,25 @@ setMethod("simulate", signature(object = "submodels"),
 
     # iters and objects
     pitr <- sapply(blist, function(x) dims(x)$iter)
-    if (!all(pitr[1] == pitr)) stop("Not valid object, all submodels should have the same iterations!")
+    if (!all(pitr[1] == pitr))
+      stop("Not valid object, all submodels should have the same iterations!")
     pitr <- unique(pitr)
     if (length(dim(V)) == 2) dim(V) <- c(dim(V), 1)
     vitr <- dim(V)[3]
     mitr <- max(c(nsim, pitr, vitr))
 
     # sanity checks - must be 1 or nsim
-    if (!((nsim == 1 || nsim == mitr) &
-          (pitr == 1 || pitr == mitr) &
-          (vitr == 1 || vitr == mitr))) {
+    if (!( (nsim == 1 || nsim == mitr) &
+           (pitr == 1 || pitr == mitr) &
+           (vitr == 1 || vitr == mitr) )) {
       stop("The number of iters and simulations must be 1 or nsim.")
     }
 
     if (!is.null(seed)) set.seed(seed)
     # get the random generator from the dist slot
     distr <- unique(sapply(object, slot, "distr"))
-    if (length(distr) > 1) stop("For now all submodels must have the same distribution")
+    if (length(distr) > 1)
+      stop("For now all submodels must have the same distribution")
     simfunc <- match.fun(paste0("mvr", distr))
 
     # combine blist into a single FLPar
@@ -202,33 +213,34 @@ setMethod("simulate", signature(object = "submodels"),
     if (pitr != 1 || vitr != 1) {
       # expand objects as needed
       if (pitr == mitr & vitr == 1) {
-        V <- V[,, rep(1,mitr), drop=FALSE]
+        V <- V[,, rep(1, mitr), drop = FALSE]
         dimnames(V)[[3]] <- seq(mitr)
-      } else
-        if(pitr == 1 & vitr == mitr) {
-          b <- propagate(b, mitr)
-        }
+      } else if(pitr == 1 & vitr == mitr) {
+        b <- propagate(b, mitr)
+      }
       # run simulations along iters
       parsim <-
         sapply(seq(mitr),
                function(i) {
                  ## empirical must be set to FALSE for one iteration
-                 ## it only makes sense to use empirical=TRUE when there are more samples than dimensions
-                 simfunc(1, as(b[,i], "vector"), V[,,i], empirical = FALSE)
+                 ## it only makes sense to use empirical=TRUE when there are
+                 ## more samples than dimensions
+                 simfunc(1, as(b[, i], "vector"), V[,, i], empirical = FALSE)
                 })
-    } else
-    if (nsim > 1) {
+    } else if (nsim > 1) {
       # for mvrnorm at least samples are in rows,
       # so transform is required for FLPar
       if (nsim < dim(V)[1]) {
-        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = FALSE))
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,, 1], empirical = FALSE))
       } else {
-        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = empirical))
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,, 1],
+                            empirical = empirical))
       }
     } else {
       ## empirical must be set to FALSE for one iteration
-      ## it only makes sense to use empirical=TRUE when there are more samples than dimensions
-      parsim <- simfunc(1, as(b, "vector"), V[,,1], empirical = FALSE)
+      ## it only makes sense to use `empirical=TRUE` when there are
+      ## more samples than dimensions
+      parsim <- simfunc(1, as(b, "vector"), V[,, 1], empirical = FALSE)
       dim(parsim) <- c(length(parsim), 1)
     }
 
@@ -240,7 +252,8 @@ setMethod("simulate", signature(object = "submodels"),
     }
     npar <- c(0, sapply(object, function(x) nrow(coef(x))))
     for (i in seq_along(object)) {
-      coef(object[[i]]) <- as(parsim[sum(npar[1:i]) + 1:npar[i+1],], "vector")
+      coef(object[[i]]) <-
+        as(parsim[sum(npar[1:i]) + 1:npar[i + 1], ], "vector")
     }
     object
   })
@@ -261,9 +274,9 @@ setMethod("simulate", signature(object = "submodel"),
     mitr <- max(c(nsim, pitr, vitr))
 
     # sanity checks - must be 1 or nsim
-    if (!((nsim == 1 || nsim == mitr) &
-         (pitr == 1 || pitr == mitr) &
-         (vitr == 1 || vitr == mitr))) {
+    if (!( (nsim == 1 || nsim == mitr) &
+           (pitr == 1 || pitr == mitr) &
+           (vitr == 1 || vitr == mitr) )) {
       stop("The number of iters and simulations must be 1 or nsim.")
     }
 
@@ -275,10 +288,10 @@ setMethod("simulate", signature(object = "submodel"),
     if (pitr != 1 || vitr != 1) {
       # expand objects as needed
       if (pitr == mitr & vitr == 1) {
-        V <- V[,, rep(1,mitr), drop=FALSE]
+        V <- V[,, rep(1, mitr), drop = FALSE]
         dimnames(V)[[3]] <- seq(mitr)
       } else
-        if(pitr == 1 & vitr == mitr) {
+        if (pitr == 1 & vitr == mitr) {
           b <- propagate(b, mitr)
         }
       # run simulations along iters
@@ -286,22 +299,24 @@ setMethod("simulate", signature(object = "submodel"),
         sapply(seq(mitr),
                function(i) {
                  ## empirical must be set to FALSE for one iteration
-                 ## it only makes sense to use empirical=TRUE when there are multiple samples
-                 simfunc(1, as(b[,i], "vector"), V[,,i], empirical = FALSE)
+                 ## it only makes sense to use empirical=TRUE when there are
+                 ## multiple samples
+                 simfunc(1, as(b[, i], "vector"), V[,, i], empirical = FALSE)
                 })
-    } else
-    if (nsim > 1) {
+    } else if (nsim > 1) {
       # for mvrnorm at least samples are in rows,
       # so transform is required for FLPar
       if (nsim < dim(V)[1]) {
-        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = FALSE))
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,, 1], empirical = FALSE))
       } else {
-        parsim <- t(simfunc(nsim, as(b, "vector"), V[,,1], empirical = empirical))
+        parsim <- t(simfunc(nsim, as(b, "vector"), V[,, 1],
+                            empirical = empirical))
       }
     } else {
       ## empirical must be set to FALSE for one iteration
-      ## it only makes sense to use empirical=TRUE when there are multiple samples
-      parsim <- simfunc(1, as(b, "vector"), V[,,1], empirical = FALSE)
+      ## it only makes sense to use 'empirical=TRUE' when there are
+      ## multiple samples
+      parsim <- simfunc(1, as(b, "vector"), V[,, 1], empirical = FALSE)
     }
 
     # add to object and return
@@ -309,4 +324,3 @@ setMethod("simulate", signature(object = "submodel"),
     coef(object) <- as(parsim, "vector")
     object
   })
-
