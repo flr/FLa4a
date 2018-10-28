@@ -118,6 +118,26 @@ setGeneric("sMod", function(object, ...) standardGeneric("sMod"))
 #' @rdname submodel-class
 setMethod("sMod", "submodel", function(object) object@formula)
 
+
+
+#
+#  show methods
+#
+
+setMethod("show", "submodel",
+  function(object) {
+    fmt <- paste0("\t %s: ")
+    cat(sprintf(fmt, name(object)))
+    print(formula(object), showEnv = FALSE)
+  }
+)
+
+
+#
+# Other methods
+#
+
+
 #' @rdname submodel-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted
