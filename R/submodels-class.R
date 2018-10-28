@@ -127,14 +127,14 @@ setMethod("$<-",
   function(x, name, value) {
     x[[name]] <- value
     x
-  })
+  }
+)
 
 #' @rdname submodels-class
 #' @param i,j indices specifying elements to extract or replace.
 setMethod("[[<-",
   c("submodels", "character", "missing"),
-  function (x, i, j, ..., value)
-  {
+  function (x, i, j, ..., value) {
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
@@ -145,8 +145,7 @@ setMethod("[[<-",
 #' @rdname submodels-class
 setMethod("[[<-",
   c("submodels", "numeric", "missing"),
-  function (x, i, j, ..., value)
-  {
+  function (x, i, j, ..., value) {
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
@@ -160,18 +159,18 @@ setMethod("[[<-",
 #
 
 setMethod("show", "submodels",
-  function(object)
-  {
+  function(object) {
     cat("submodels:\n")
     if (length(object) == 0) {
       cat("empty object\n")
     } else {
-      fmt <- paste0("\t %", max(nchar(sapply(object, name))), "smodel: ")
+      fmt <- paste0("\t %", max(nchar(sapply(object, name))), "s: ")
       for (i in object) {
         cat(sprintf(fmt, name(i))); print(formula(i), showEnv = FALSE)
       }
     }
- })
+  }
+)
 
 
 
@@ -187,10 +186,10 @@ setMethod("show", "submodels",
 #' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
 setMethod("propagate",
   signature(object = "submodels"),
-  function (object, iter, fill.iter = TRUE)
-  {
+  function (object, iter, fill.iter = TRUE) {
     if (length(object) == 0) {
-      stop("propagate can only extend a submodels object that has at least one submodel")
+      stop("propagate can only extend a submodels object",
+           "that has at least one submodel")
     }
 
     lst <- as(object, "list")
@@ -198,19 +197,20 @@ setMethod("propagate",
 
     # propagate corblocks
     corBlocks <-
-      lapply(object@corBlocks, function(x)
-      {
+      lapply(object@corBlocks, function(x) {
         dob <- dim(x)
 
         if (iter != dob[3]) {
           # CHECK no iters in object
-          if (dob[3] > 1) stop("propagate can only extend objects with no iters")
+          if (dob[3] > 1)
+            stop("propagate can only extend objects with no iters")
 
-          out <- array(NA, dim = c(dob[1:2], iter), dimnames = c(dimnames(x)[1:2], list(1:iter)))
+          out <- array(NA, dim = c(dob[1:2], iter),
+                       dimnames = c(dimnames(x)[1:2], list(1:iter)))
           if (fill.iter) {
             out[] <- as.vector(x)
           } else {
-            out[,,1] <- as.vector(x)
+            out[,, 1] <- as.vector(x)
           }
         } else {
           out <- x
@@ -231,5 +231,3 @@ setMethod("iter", "submodels", function(obj, it){
   names(out) <- names(obj)
   out
 })
-
-
