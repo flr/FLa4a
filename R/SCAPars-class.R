@@ -87,9 +87,6 @@ setMethod("srmodel", "SCAPars", function(object) srMod(stkmodel(object)))
 setMethod("srMod", "SCAPars", function(object) srMod(stkmodel(object)))
 
 #' @rdname SCAPars-class
-#' @aliases fmodel fmodel-methods
-setGeneric("fmodel", function(object, ...) standardGeneric("fmodel"))
-#' @rdname SCAPars-class
 setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
 setMethod("fMod", "SCAPars", function(object) fMod(stkmodel(object)))
 

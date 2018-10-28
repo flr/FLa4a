@@ -143,6 +143,18 @@ setGeneric("fMod", function(object, ...) standardGeneric("fMod"))
 setMethod("fMod", "a4aStkParams", function(object) object@fMod)
 
 #' @rdname a4aStkParams-class
+#' @aliases fmodel fmodel-methods
+setGeneric("fmodel", function(object, ...) standardGeneric("fmodel"))
+#' @rdname a4aStkParams-class
+setMethod("fmodel", "a4aStkParams",
+  function(object) {
+    stk_submodel <- as(object, "submodels")
+    stk_submodel$fmodel
+  }
+)
+
+
+#' @rdname a4aStkParams-class
 #' @param value the new object
 #' @aliases fMod<- fMod<--methods
 setGeneric("fMod<-", function(object, value) standardGeneric("fMod<-"))
@@ -163,7 +175,7 @@ setMethod("n1Mod", "a4aStkParams", function(object) object@n1Mod)
 
 #' @rdname a4aStkParams-class
 #' @aliases n1Mod<- n1Mod<--methods
-setGeneric("n1Mod<-", function(object,value) standardGeneric("n1Mod<-"))
+setGeneric("n1Mod<-", function(object, value) standardGeneric("n1Mod<-"))
 #' @rdname a4aStkParams-class
 setReplaceMethod("n1Mod", signature("a4aStkParams", "formula"),
   function(object, value) {

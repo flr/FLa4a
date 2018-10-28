@@ -15,8 +15,6 @@
 \alias{srmodel}
 \alias{srmodel-methods}
 \alias{srmodel,SCAPars-method}
-\alias{fmodel}
-\alias{fmodel-methods}
 \alias{fmodel,SCAPars-method}
 \alias{qmodel}
 \alias{qmodel-methods}
@@ -87,8 +85,6 @@ n1model(object, ...)
 srmodel(object, ...)
 
 \S4method{srmodel}{SCAPars}(object)
-
-fmodel(object, ...)
 
 \S4method{fmodel}{SCAPars}(object)
 

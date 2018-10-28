@@ -12,6 +12,9 @@
 \alias{fMod}
 \alias{fMod-methods}
 \alias{fMod,a4aStkParams-method}
+\alias{fmodel}
+\alias{fmodel-methods}
+\alias{fmodel,a4aStkParams-method}
 \alias{fMod<-}
 \alias{fMod<--methods}
 \alias{fMod<-,a4aStkParams,formula-method}
@@ -56,6 +59,10 @@ a4aStkParams(object, ...)
 fMod(object, ...)
 
 \S4method{fMod}{a4aStkParams}(object)
+
+fmodel(object, ...)
+
+\S4method{fmodel}{a4aStkParams}(object)
 
 fMod(object) <- value
 
