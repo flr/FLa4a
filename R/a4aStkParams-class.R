@@ -266,7 +266,7 @@ setReplaceMethod("vcov", signature("a4aStkParams", "array"),
 
 setMethod("show", "a4aStkParams",
   function(object) {
-    cat("stkmodel:\n")
+    cat("    stkmodel:\n")
     if (length(object) == 0) {
       cat("empty object\n")
     } else {
@@ -275,7 +275,8 @@ setMethod("show", "a4aStkParams",
       cat(sprintf(fmt, "n1")); print(n1Mod(object), showEnv = FALSE)
       cat(sprintf(fmt, "sr")); print(srMod(object), showEnv = FALSE)
     }
- })
+ }
+)
 
 
 

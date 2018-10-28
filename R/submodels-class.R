@@ -9,7 +9,8 @@
 submodels <-
   setClass("submodels",
     contains = "FLComps",
-    slots = c("corBlocks" = "list"))
+    slots = c(corBlocks = "list",
+              name      = "character"))
 
 #' @rdname submodels-class
 #' @template Constructors
@@ -21,7 +22,8 @@ setMethod("initialize", "submodels",
   function(.Object,
            ...,
            corBlocks,
-           names) {
+           names,
+           name = "") {
       .Object <- callNextMethod(.Object, ...)
       if (!missing(names)) {
         # need to apply new() recursively to maintain a valid object
@@ -34,7 +36,7 @@ setMethod("initialize", "submodels",
       # when calling the names function in following if statment
       names <- ""
       if (any(is.na(names(.Object)) | names(.Object) == "")) {
-        names(.Object) <- unname(sapply(.Object, name))
+        names(.Object) <- unname(sapply(.Object, slot, "name"))
       }
       # finally check for corrupt submodels and apply a simple naming scheme
       if (any(names(.Object) == "")) {
@@ -63,6 +65,8 @@ setMethod("initialize", "submodels",
           names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(names(.Object)[x], collapse = "."))
         }
       }
+      # finally add a name
+      .Object@name <- name
       .Object
 })
 
@@ -99,6 +103,8 @@ setMethod("sMod", "submodels", function(object) lapply(object, sMod))
 #' @rdname submodels-class
 setMethod("formula", "submodels", function(x) lapply(x, formula))
 
+#' @rdname submodels-class
+setMethod("name", "submodels", function(object) object@name)
 
 #
 #  assignment methods
@@ -140,7 +146,7 @@ setMethod("[[<-",
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
-    new("submodels", lst, corBlocks = x@corBlocks)
+    new("submodels", lst, corBlocks = x@corBlocks, name = x@name)
   }
 )
 
@@ -151,7 +157,7 @@ setMethod("[[<-",
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
-    new("submodels", lst, corBlocks = x@corBlocks)
+    new("submodels", lst, corBlocks = x@corBlocks, name = x@name)
   }
 )
 
@@ -162,9 +168,9 @@ setMethod("[[<-",
 
 setMethod("show", "submodels",
   function(object) {
-    cat("submodels:\n")
+    cat("    ", name(object), ":\n", sep = "")
     if (length(object) == 0) {
-      cat("empty object\n")
+      cat("\tempty object\n")
     } else {
       lapply(object, print)
     }
@@ -217,7 +223,7 @@ setMethod("propagate",
         out
       })
 
-    new("submodels", lst, corBlocks = corBlocks)
+    new("submodels", lst, corBlocks = corBlocks, name = name(object))
   }
 )
 

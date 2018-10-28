@@ -126,8 +126,7 @@ setMethod("sMod", "submodel", function(object) object@formula)
 
 setMethod("show", "submodel",
   function(object) {
-    fmt <- paste0("\t %s: ")
-    cat(sprintf(fmt, name(object)))
+    cat(paste0("\t", name(object),": ", sep = ""))
     print(formula(object), showEnv = FALSE)
   }
 )

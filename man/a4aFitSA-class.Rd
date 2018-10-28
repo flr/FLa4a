@@ -18,7 +18,6 @@
 \alias{vmodel,a4aFitSA-method}
 \alias{stkmodel,a4aFitSA-method}
 \alias{show,a4aFitSA-method}
-\alias{submodels,a4aFitSA-method}
 \alias{iter,a4aFitSA-method}
 \alias{a4aFitSAs-class}
 \alias{a4aFitSAs}
@@ -55,8 +54,6 @@ pars(object)
 \S4method{stkmodel}{a4aFitSA}(object)
 
 \S4method{show}{a4aFitSA}(object)
-
-\S4method{submodels}{a4aFitSA}(object, ...)
 
 \S4method{iter}{a4aFitSA}(obj, it)
 

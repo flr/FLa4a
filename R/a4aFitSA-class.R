@@ -60,9 +60,11 @@ setMethod("a4aFit", "a4aFitSA",
 )
 
 setMethod("initialize", "a4aFitSA",
-    function(.Object, ..., pars) {
-      if (!missing(pars)) .Object@pars <- pars
+    function(.Object,
+             ...,
+             pars = SCAPars()) {
       .Object <- callNextMethod(.Object, ...)
+      .Object@pars <- pars
       .Object
 })
 
@@ -83,73 +85,60 @@ setGeneric("pars", function(object) standardGeneric("pars"))
 setMethod("pars", "a4aFitSA", function(object) object@pars)
 
 #' @rdname a4aFitSA-class
-setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
+setMethod("m", signature(object = "a4aFitSA"), function(object) m(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("wt", signature(object="a4aFitSA"), function(object) wt(pars(object)))
+setMethod("wt", signature(object = "a4aFitSA"),
+  function(object) wt(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("qmodel", signature(object="a4aFitSA"), function(object) qmodel(pars(object)))
-setMethod("qMod", signature(object="a4aFitSA"), function(object) qmodel(pars(object)))
+setMethod("qmodel", signature(object = "a4aFitSA"),
+  function(object) qmodel(pars(object)))
+setMethod("qMod", signature(object = "a4aFitSA"),
+  function(object) qmodel(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("fmodel", signature(object="a4aFitSA"), function(object) fmodel(pars(object)))
-setMethod("fMod", signature(object="a4aFitSA"), function(object) fmodel(pars(object)))
+setMethod("fmodel", signature(object = "a4aFitSA"),
+  function(object) fmodel(pars(object)))
+setMethod("fMod", signature(object = "a4aFitSA"),
+  function(object) fmodel(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("srmodel", signature(object="a4aFitSA"), function(object) srmodel(pars(object)))
-setMethod("srMod", signature(object="a4aFitSA"), function(object) srmodel(pars(object)))
+setMethod("srmodel", signature(object = "a4aFitSA"),
+  function(object) srmodel(pars(object)))
+setMethod("srMod", signature(object = "a4aFitSA"),
+  function(object) srmodel(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("n1model", signature(object="a4aFitSA"), function(object) n1model(pars(object)))
-setMethod("n1Mod", signature(object="a4aFitSA"), function(object) n1model(pars(object)))
+setMethod("n1model", signature(object = "a4aFitSA"),
+  function(object) n1model(pars(object)))
+setMethod("n1Mod", signature(object = "a4aFitSA"),
+  function(object) n1model(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("vmodel", signature(object="a4aFitSA"), function(object) vmodel(pars(object)))
-setMethod("vMod", signature(object="a4aFitSA"), function(object) vmodel(pars(object)))
+setMethod("vmodel", signature(object = "a4aFitSA"),
+  function(object) vmodel(pars(object)))
+setMethod("vMod", signature(object = "a4aFitSA"),
+  function(object) vmodel(pars(object)))
 
 #' @rdname a4aFitSA-class
-setMethod("stkmodel", signature(object="a4aFitSA"), function(object) stkmodel(pars(object)))
+setMethod("stkmodel", signature(object = "a4aFitSA"),
+  function(object) stkmodel(pars(object)))
 
 
 
 #' @rdname a4aFitSA-class
 setMethod("show", "a4aFitSA",
-  function(object)
-  {
+  function(object){
     show(a4aFit(object))
 
     cat("\nSubmodels:\n")
-    submodels(object)
+    show(stkmodel(object))
+    cat("\n")
+    show(qmodel(object))
+    cat("\n")
+    show(vmodel(object))
  })
-
-#' @rdname a4aFitSA-class
-# THIS IS A SHOW METHOD - NEED TO THINK ABOUT THIS ONE...
-setMethod("submodels", "a4aFitSA",
-  function(object, ...)
-  {
-    cat("\t fmodel: "); print( fmodel(pars(object)), showEnv = FALSE)
-    cat("\tsrmodel: "); print(srmodel(pars(object)), showEnv = FALSE)
-    cat("\tn1model: "); print(n1model(pars(object)), showEnv = FALSE)
-
-    # something to format the qmodel and vmodel formulas
-    printFormulaList <- function(mods) {
-      if (length(mods) == 0) return(invisible(NA))
-      mnames <- names(mods)
-      maxname <- max(sapply(mnames, nchar))
-      for (i in seq_along(mods)) {
-        cat("\t   ", mnames[i], ": ", rep(" ", maxname - nchar(mnames[i])), sep = "")
-        print(mods[[i]], showEnv = FALSE)
-      }
-    }
-
-    cat("\t qmodel:\n")
-    printFormulaList(sMod(qmodel(pars(object))))
-    cat("\t vmodel:\n")
-    printFormulaList(sMod(vmodel(pars(object))))
-
- })
-
 
 
 #

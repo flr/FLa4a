@@ -29,10 +29,13 @@ setValidity("SCAPars",
 setMethod("initialize", "SCAPars",
   function(.Object,
            stkmodel = new("a4aStkParams"),
-           qmodel = new("submodels"),
-           vmodel = new("submodels")) {
+           qmodel = new("submodels", name = "qmodel"),
+           vmodel = new("submodels", name = "vmodel")) {
       # initialize FLComp slots
       .Object <- callNextMethod()
+      # ensure correct names in q nd v models
+      qmodel@name <- "qmodel"
+      vmodel@name <- "vmodel"
       # initialize remaining slots
       .Object@stkmodel <- stkmodel
       .Object@qmodel <- qmodel

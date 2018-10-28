@@ -250,7 +250,7 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3, 5)], list(iter = 1:max(dms$iter))))
   #if (!identical(sort(unique(dms$iter)), sort(unique(c(1L, max(dms$iter))))))
   if(length(unique(dms$iter[dms$iter > 1])) > 1)
-    stop("incosistent number of iterations in stock and indices")
+    stop("inconsistent number of iterations in stock and indices")
   it <- max(dms$iter)
   if (fit == "MCMC" & it > 1) stop("You can not run MCMC with iters on your data objects")
   if (fit == "MCMC" & it == 1) it <- getN(mcmc)
@@ -285,21 +285,19 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 
   time.used <- matrix(NA, nrow = 4, ncol = nrow(grid))
   ifit <- if (fit == "sim") "assessment" else fit
-  # note this niters are not the same as it. niters will come from data objects with iters to loop
-  # and fit the model several times, while it is used to build the output objects, which in the case
-  # of MCMC also need FLQuants with iterations.
+  # note this niters are not the same as it. niters will come from data
+  # objects with iters to loop and fit the model several times, while it is
+  # used to build the output objects, which in the case of MCMC also
+  # need FLQuants with iterations.
   niters <- nrow(grid)
   for (i in seq(niters)) {
-    istock <- stock[, , grid$unit[i], grid$area[i]]
+    istock <- stock[,, grid$unit[i], grid$area[i]]
     istock <- iter(istock, min(grid$iter[i], dims(stock)$iter))
 
     # check: do we need indices to have matching units, areas?
-    #iindices <-
-    #  lapply(indices,
-    #         function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
     iindices <-
       lapply(indices, function(x) {
-        idx <- x[, , grid$unit[i], grid$area[i]]
+        idx <- x[,, grid$unit[i], grid$area[i]]
         iter(idx, min(grid$iter[i], dims(x)$iter))
     })
     iindices <- FLIndices(iindices)
@@ -307,21 +305,28 @@ setMethod("sca", signature("FLStock", "FLIndices"),
     # check: do we need indices to have matching units, areas?
     if (!missing(covar) & !missing(wkdir)) {
       icovar <-
-        lapply(covar,
-               function(x) x[, , grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-      outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
-                          vmodel = vmodel, stock = istock, indices = iindices, covar = icovar,
-                          wkdir = wkdir, verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
-    } else
-    if (!missing(covar) & missing(wkdir)) {
+        lapply(
+          covar,
+          function(x)
+            x[,, grid$unit[i], grid$area[i],, min(grid$iter[i], dims(x)$iter)]
+        )
+      outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,
+                          n1model = n1model, vmodel = vmodel, stock = istock,
+                          indices = iindices, covar = icovar, wkdir = wkdir,
+                          verbose = verbose, fit = ifit, center = center,
+                          mcmc = mcmc)
+    } else if (!missing(covar) & missing(wkdir)) {
       icovar <-
-        lapply(covar,
-               function(x) x[,, grid$unit[i], grid$area[i], , min(grid$iter[i], dims(x)$iter)])
-      outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
-                          vmodel = vmodel, stock = istock, indices = iindices, covar = icovar,
-                          verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
-    } else
-    if (missing(covar) & !missing(wkdir)) {
+        lapply(
+          covar,
+          function(x)
+            x[,, grid$unit[i], grid$area[i],, min(grid$iter[i], dims(x)$iter)]
+        )
+      outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,
+                          n1model = n1model, vmodel = vmodel, stock = istock,
+                          indices = iindices, covar = icovar, verbose = verbose,
+                          fit = ifit, center = center, mcmc = mcmc)
+    } else if (missing(covar) & !missing(wkdir)) {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
                           vmodel = vmodel, stock = istock, indices = iindices, wkdir = wkdir,
                           verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
@@ -985,7 +990,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       )
 
     names(qmodels) <- fleet.names[-1]
-    a4aout@pars@qmodel <- submodels(qmodels)
+    a4aout@pars@qmodel <- submodels(qmodels, name = "qmodel")
 
     # fill up vmodel
     vmodels <-
@@ -1009,7 +1014,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       )
 
     names(vmodels) <- fleet.names
-    a4aout@pars@vmodel <- submodels(vmodels)
+    a4aout@pars@vmodel <- submodels(vmodels, name = "vmodel")
   }
 
   #------------------------------------------------------------------------

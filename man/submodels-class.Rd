@@ -11,6 +11,7 @@
 \alias{params,submodels-method}
 \alias{sMod,submodels-method}
 \alias{formula,submodels-method}
+\alias{name,submodels-method}
 \alias{corBlocks<-}
 \alias{corBlocks<-,submodels,list-method}
 \alias{$<-,submodels,submodel-method}
@@ -33,6 +34,8 @@ corBlocks(object, ...)
 \S4method{sMod}{submodels}(object)
 
 \S4method{formula}{submodels}(x)
+
+\S4method{name}{submodels}(object)
 
 corBlocks(object, ...) <- value
 
