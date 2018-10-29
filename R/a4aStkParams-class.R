@@ -343,14 +343,15 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
     r_which <- which(grepl("rMod", rownames(b)))
     n1_which <- which(grepl("n1Mod", rownames(b)))
 
+    # note fmodel has no centering (only abundance was centered)
+    # so fmodel submodel used default of FLPar(centering = 0)
     fmodel <-
       submodel(formula = fMod(from),
                coefficients = b[f_which],
                vcov = vmat[f_which, f_which,, drop = FALSE],
-               centering = from@centering,
                distr = from@distr,
                link = from@link,
-               linkinv = from@link,
+               linkinv = from@linkinv,
                range = range(from)
            )
     n1model <-
@@ -360,7 +361,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                centering = from@centering,
                distr = from@distr,
                link = from@link,
-               linkinv = from@link,
+               linkinv = from@linkinv,
                range = range(from)
            )
     rmodel <-
@@ -370,10 +371,9 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                centering = from@centering,
                distr = from@distr,
                link = from@link,
-               linkinv = from@link,
+               linkinv = from@linkinv,
                range = range(from)
            )
-
 
     # construct submodels
     stk_submodel <-
