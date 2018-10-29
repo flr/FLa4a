@@ -108,6 +108,8 @@ setMethod("n1Mod", signature(object = "a4aFitSA"),
   function(object) n1Mod(pars(object)))
 
 #' @rdname a4aFitSA-class
+setMethod("rmodel", signature(object = "a4aFitSA"),
+  function(object) rmodel(pars(object)))
 setMethod("srmodel", signature(object = "a4aFitSA"),
   function(object) srmodel(pars(object)))
 setMethod("srMod", signature(object = "a4aFitSA"),

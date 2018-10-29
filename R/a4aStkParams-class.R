@@ -158,6 +158,18 @@ setMethod("n1model", "a4aStkParams",
   }
 )
 
+#' @rdname a4aStkParams-class
+#' @aliases rmodel rmodel-methods
+setGeneric("rmodel", function(object, ...) standardGeneric("rmodel"))
+#' @rdname a4aStkParams-class
+setMethod("rmodel", "a4aStkParams",
+  function(object) {
+    stk_submodel <- as(object, "submodels")
+    stk_submodel$rmodel
+  }
+)
+
+
 
 #' @rdname a4aStkParams-class
 #' @aliases fMod fMod-methods
@@ -356,7 +368,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
 
     # note fmodel has no centering (only abundance was centered)
     # so fmodel submodel used default of FLPar(centering = 0)
-    fmodel <-
+    fsubmodel <-
       submodel(formula = fMod(from),
                coefficients = b[f_which],
                vcov = vmat[f_which, f_which,, drop = FALSE],
@@ -368,7 +380,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
     n1range <- range(from)
     n1range["maxyear"] <- n1range["minyear"]
     n1range["min"] <- n1range["min"] + 1
-    n1model <-
+    n1submodel <-
       submodel(formula = n1Mod(from),
                coefficients = b[n1_which],
                vcov = vmat[n1_which, n1_which,, drop = FALSE],
@@ -378,20 +390,32 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                linkinv = from@linkinv,
                range = n1range
            )
+    # note that the r model is a bit complicated to get at due
+    # do the joint purpose of srmodel argument contaning both
+    # the SR model OR a linear model for recruitment
+    srmodel <- srMod(object)
     rmodel <-
-      submodel(formula = srMod(from),
+      if (sum(isPresenta4aSRmodel(srmodel)) == 0) {
+        srmodel
+      } else {
+        ~ factor(year)
+      }
+    rrange <- range(from)
+    rrange["max"] <- rrange["min"]
+    rsubmodel <-
+      submodel(formula = rmodel,
                coefficients = b[r_which],
                vcov = vmat[r_which, r_which,, drop = FALSE],
                centering = from@centering,
                distr = from@distr,
                link = from@link,
                linkinv = from@linkinv,
-               range = range(from)
+               range = rrange
            )
 
     # construct submodels
     stk_submodel <-
-      submodels(list(fmodel, n1model, rmodel),
+      submodels(list(fsubmodel, n1submodel, rsubmodel),
                 names = c("fmodel", "n1model", "rmodel"))
 
     # calculate correlation matrix for each iter
