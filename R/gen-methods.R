@@ -169,6 +169,7 @@ setMethod("genFLQuant", "submodel",
       #   coefs are the wrong length!)
       pred <- sweep(X %*% as(b, "matrix"), 2, object@centering, "+")
       # add into flq
+      flq <- flq_from_range(object)
       flq <- propagate(flq, dims(b)$iter)
       flq[] <- as(pred, "vector")
       # transform if asked
