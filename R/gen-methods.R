@@ -147,7 +147,7 @@ setMethod("genFLQuant", "FLQuant",
 #'             timeseries of N and Catches.
 # if nsim > 0 the simulate nsim times
 setMethod("genFLQuant", "submodel",
-  function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
+  function(object, type = c("response", "link"), nsim = 0, seed = NULL) {
       type <- match.arg(type)
       # simulate from submodel?
       if (nsim > 0) {
