@@ -137,12 +137,6 @@ setMethod("mat", signature(object = "a4aStkParams"),
   function(object) object@mat)
 
 #' @rdname a4aStkParams-class
-#' @aliases fMod fMod-methods
-setGeneric("fMod", function(object, ...) standardGeneric("fMod"))
-#' @rdname a4aStkParams-class
-setMethod("fMod", "a4aStkParams", function(object) object@fMod)
-
-#' @rdname a4aStkParams-class
 #' @aliases fmodel fmodel-methods
 setGeneric("fmodel", function(object, ...) standardGeneric("fmodel"))
 #' @rdname a4aStkParams-class
@@ -153,6 +147,23 @@ setMethod("fmodel", "a4aStkParams",
   }
 )
 
+#' @rdname a4aStkParams-class
+#' @aliases n1model n1model-methods
+setGeneric("n1model", function(object, ...) standardGeneric("n1model"))
+#' @rdname a4aStkParams-class
+setMethod("n1model", "a4aStkParams",
+  function(object) {
+    stk_submodel <- as(object, "submodels")
+    stk_submodel$n1model
+  }
+)
+
+
+#' @rdname a4aStkParams-class
+#' @aliases fMod fMod-methods
+setGeneric("fMod", function(object, ...) standardGeneric("fMod"))
+#' @rdname a4aStkParams-class
+setMethod("fMod", "a4aStkParams", function(object) object@fMod)
 
 #' @rdname a4aStkParams-class
 #' @param value the new object
@@ -354,6 +365,9 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                linkinv = from@linkinv,
                range = range(from)
            )
+    n1range <- range(from)
+    n1range["maxyear"] <- n1range["minyear"]
+    n1range["min"] <- n1range["min"] + 1
     n1model <-
       submodel(formula = n1Mod(from),
                coefficients = b[n1_which],
@@ -362,7 +376,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                distr = from@distr,
                link = from@link,
                linkinv = from@linkinv,
-               range = range(from)
+               range = n1range
            )
     rmodel <-
       submodel(formula = srMod(from),

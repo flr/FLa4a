@@ -76,10 +76,11 @@ setGeneric("stkmodel", function(object, ...) standardGeneric("stkmodel"))
 setMethod("stkmodel", "SCAPars", function(object) object@stkmodel)
 
 #' @rdname SCAPars-class
-#' @aliases n1model n1model-methods
-setGeneric("n1model", function(object, ...) standardGeneric("n1model"))
+setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
+setMethod("fMod", "SCAPars", function(object) fMod(stkmodel(object)))
+
 #' @rdname SCAPars-class
-setMethod("n1model", "SCAPars", function(object) n1Mod(stkmodel(object)))
+setMethod("n1model", "SCAPars", function(object) n1model(stkmodel(object)))
 setMethod("n1Mod", "SCAPars", function(object) n1Mod(stkmodel(object)))
 
 #' @rdname SCAPars-class
@@ -88,10 +89,6 @@ setGeneric("srmodel", function(object, ...) standardGeneric("srmodel"))
 #' @rdname SCAPars-class
 setMethod("srmodel", "SCAPars", function(object) srMod(stkmodel(object)))
 setMethod("srMod", "SCAPars", function(object) srMod(stkmodel(object)))
-
-#' @rdname SCAPars-class
-setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
-setMethod("fMod", "SCAPars", function(object) fMod(stkmodel(object)))
 
 #' @rdname SCAPars-class
 #' @aliases qmodel qmodel-methods
