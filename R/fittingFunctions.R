@@ -531,6 +531,12 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # what kind of run is this
   fit <- match.arg(fit, c("MP", "assessment", "MCMC", "setup"))
 
+  # check covariates are FLQuants
+  if (!inherits(covar, "FLQuants")) {
+    message("Converting 'covar' to FLQuants class using FLQuants(covar).")
+    covar <- FLQuants(covar)
+  }
+
   #========================================================================
   # Extract observations and auxilliary info from stock and indices objects
   #========================================================================
@@ -946,91 +952,126 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
   if (fit %in% c("assessment", "MCMC")) {
 
-    # coerce into a4aFitSA
-    a4aout <- a4aFitSA(a4aout)
-
-    # fill up stkmodel
-    a4aout@pars@stkmodel@name      <- a4aout@name
-    a4aout@pars@stkmodel@desc      <- a4aout@desc
-    a4aout@pars@stkmodel@range     <- a4aout@range
-    a4aout@pars@stkmodel@centering <- FLPar(centering = center.log[1])
-    a4aout@pars@stkmodel@fMod      <- fmodel
-    a4aout@pars@stkmodel@n1Mod     <- n1model
-    a4aout@pars@stkmodel@srMod     <- srmodel
-    a4aout@pars@stkmodel@m         <- m(stock)
-    a4aout@pars@stkmodel@wt        <- stock.wt(stock)
-    a4aout@pars@stkmodel@mat       <- mat(stock)
-    a4aout@pars@stkmodel@link      <- log
-    a4aout@pars@stkmodel@linkinv   <- exp
-    pars <- out$par.est
-    active <- sapply(out$par.std, length) > 0
-    # add in iter dimension
+    # extract active parameter estimates from returned estimates (out$par.est)
+    par_names <- unlist(pnames)
+    pars <- unlist(out$par.est[sapply(out$par.std, length) > 0])
+    names(pars) <- par_names
+    # add names and iter to covariance matrix
     dim(out$cov) <- c(dim(out$cov), 1)
-    dimnames(out$cov) <- list(unlist(pnames), unlist(pnames), 1)
-    stkactive <- active
-    stkactive[2:3] <- FALSE
-    a4aout@pars@stkmodel@coefficients <-
-      FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
-    units(a4aout@pars@stkmodel@coefficients) <- "NA"
-    a4aout@pars@stkmodel@distr <- "norm"
-    whichcol <-  grep(paste("(^", c("f","n1","r","sra","srb"), "Mod:)", collapse = "|", sep = ""),
-                      unlist(pnames))
-    # we can use the inverse of a subset of the precision matrix
-    # if we want the vcov matrix conditional on the
-    # other (qmodel etc.) parameter estimates.
-    ##a4aout@pars@stkmodel@vcov <- solve(out$prec[whichcol, whichcol])
-    # or just the full vcov matrix, unconditional on the other things...
-    a4aout@pars@stkmodel@vcov <- out$cov[whichcol, whichcol, 1, drop = FALSE]
+    dimnames(out$cov) <- list(par_names, par_names, 1)
 
-    # fill up qmodel
+    # build up stock model
+
+    # extract stkmodel parameters and variance covariance matrix
+    which_pars <-
+      grep("(^fMod:)|(^n1Mod:)|(^rMod:)|(^sraMod:)|(^srbMod:)", par_names)
+
+    # create stkmodel class
+    stkmodel <-
+      a4aStkParams(
+        name = name(a4aout),
+        desc = desc(a4aout),
+        range = range(a4aout),
+        fMod = fmodel,
+        n1Mod = n1model,
+        srMod = srmodel,
+        coefficients = FLPar(pars[which_pars], units = "NA"),
+        vcov = out$cov[which_pars, which_pars, 1, drop = FALSE],
+        distr = "norm",
+        centering = FLPar(centering = center.log[1]),
+        link = log,
+        linkinv = exp,
+        m = m(stock),
+        wt = stock.wt(stock),
+        mat = mat(stock)
+      )
+
+    # fill up q submodels
+    qmodels <- vector("list", length(indices))
+    for (i in seq_along(qmodels)) {
+      which_pars <-
+        grep(sprintf("(^qMod:%s:)", name(indices[[i]])), par_names)
+      qmodels[[i]] <-
+        submodel(
+          name = name(indices[[i]]),
+          desc = desc(indices[[i]]),
+          range = range(indices[[i]]),
+          formula = qmodel[[i]],
+          coefficients = FLPar(pars[which_pars], units = "NA"),
+          vcov = out$cov[which_pars, which_pars, 1, drop = FALSE],
+          distr = "norm",
+          # must not! subtract catch scaling
+          centering = FLPar(centering = center.log[i + 1]),
+          link = log,
+          linkinv = exp
+        )
+    }
+
     qmodels <-
-      lapply(
-        seq_along(indices),
-        function(i) {
-          which <- sapply(strsplit(pnames[[2]], split=":"), "[[", 2) %in% fleet.names[i+1]
-          submodel(
-            formula = qmodel[[i]],
-            coefficients = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
-            vcov = out$cov[pnames[[2]][which], pnames[[2]][which], 1, drop = FALSE],
-            distr = "norm",
-            #centering = FLPar(centering = center.log[i+1] - center.log[1]),
-            # must also subtract catch scaling
-            centering = FLPar(centering = center.log[i+1]), # must not! subtract catch scaling
-            name = fleet.names[i+1],
-            desc = indices[[i]]@desc,
-            range = indices[[i]]@range,
-            link = log,
-            linkinv = exp
-          )
-        }
+      submodels(
+        qmodels,
+        names = names(indices),
+        name = "qmodel"
       )
 
-    names(qmodels) <- fleet.names[-1]
-    a4aout@pars@qmodel <- submodels(qmodels, name = "qmodel")
+    # fill up v submodels
+    vmodels <- vector("list", length(indices) + 1)
+    which_pars <-
+        grep(sprintf("(^vMod:%s:)", fleet.names[1]), par_names)
+    vmodels[[1]] <-
+        submodel(
+          name = fleet.names[1],
+          desc = desc(stock),
+          range = range(stock),
+          formula = vmodel[[1]],
+          coefficients = FLPar(pars[which_pars], units = "NA"),
+          vcov = out$cov[which_pars, which_pars, 1, drop = FALSE],
+          distr = "norm",
+          centering = FLPar(centering = 0),
+          link = log,
+          linkinv = exp
+        )
+    for (i in seq_along(indices)) {
+      which_pars <-
+        grep(sprintf("(^vMod:%s:)", name(indices[[i]])), par_names)
+      vmodels[[i + 1]] <-
+        submodel(
+          name = name(indices[[i]]),
+          desc = desc(indices[[i]]),
+          range = range(indices[[i]]),
+          formula = vmodel[[i + 1]],
+          coefficients = FLPar(pars[which_pars], units = "NA"),
+          vcov = out$cov[which_pars, which_pars, 1, drop = FALSE],
+          distr = "norm",
+          # must not! subtract catch scaling
+          centering = FLPar(centering = 0),
+          link = log,
+          linkinv = exp
+        )
+    }
 
-    # fill up vmodel
     vmodels <-
-      lapply(
-        seq_along(fleet.names),
-        function(i) {
-          which <- sapply(strsplit(pnames[[3]], split=":"), "[[", 2) %in% fleet.names[i]
-          submodel(
-            formula = vmodel[[i]],
-            coefficients = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
-            vcov = out$cov[pnames[[3]][which], pnames[[3]][which], 1, drop = FALSE],
-            distr = "norm",
-            centering = FLPar(centering = 0),
-            name = fleet.names[i],
-            desc = "",
-            range = if (i==1) stock@range else indices[[i-1]]@range,
-            link = log,
-            linkinv = exp
-          )
-        }
+      submodels(
+        vmodels,
+        names = fleet.names,
+        name = "vmodel"
       )
 
-    names(vmodels) <- fleet.names
-    a4aout@pars@vmodel <- submodels(vmodels, name = "vmodel")
+    # collect into an SCAPars class
+    a4apars <-
+      SCAPars(
+        stkmodel = stkmodel,
+        qmodel = qmodels,
+        vmodel = vmodels,
+        covariates = covar
+      )
+
+    # create an a4aFitSA class
+    a4aout <-
+      a4aFitSA(
+        a4aout,
+        pars = a4apars
+      )
   }
 
   #------------------------------------------------------------------------
