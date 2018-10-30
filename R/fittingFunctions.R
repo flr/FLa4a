@@ -535,14 +535,19 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # Extract observations and auxilliary info from stock and indices objects
   #========================================================================
   # first some checks
-  if (any(is.infinite(log(catch.n(stock))))) stop("only non-zero catches allowed.")
-  if (any(is.infinite(log(var(catch.n(stock)))))) stop("only non-zero catch variances allowed.")
-  if (any(is.infinite(log(catch(stock))))) stop("only non-zero total catches allowed.")
-  if (any(is.infinite(log(var(catch(stock)))))) stop("only non-zero total catch variances allowed.")
-  if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))
-  if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index(x)))) ))))
+  if (any(is.infinite(log(catch.n(stock)))))
+    stop("only non-zero catches allowed.")
+  if (any(is.infinite(log(var(catch.n(stock))))))
+    stop("only non-zero catch variances allowed.")
+  if (any(is.infinite(log(catch(stock)))))
+    stop("only non-zero total catches allowed.")
+  if (any(is.infinite(log(var(catch(stock))))))
+    stop("only non-zero total catch variances allowed.")
+  if (any(is.infinite(log(unlist(lapply(indices,
+                                        function(x) c(index(x))))))))
     stop("only non-zero survey indices allowed.")
-  if (any(is.infinite(log( unlist(lapply(indices, function(x) c(index.var(x)))) ))))
+  if (any(is.infinite(log(unlist(lapply(indices,
+                                        function(x) c(index.var(x))))))))
     stop("only non-zero survey index variances allowed.")
 
   # convert catches, total catch weight and indices to a list of named arrays
@@ -550,17 +555,20 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
                      catchtotal = quant2mat(catch(stock)@.Data)),
                 lapply(indices, function(x) quant2mat(index(x)@.Data)))
 
-  # convert the variances of catches, total catch weights and indices to a list of named arrays
+  # convert the variances of catches, total catch weights and indices to a
+  # list of named arrays
   list.var <- c(list(catch = quant2mat(catch.n(stock)@var),
                      catchtotal = quant2mat(catch(stock)@var)),
                 lapply(indices, function(x) quant2mat(index.var(x))))
 
   # calculate appropriate centering for observations on log scale
-  # a bit spaguetti ... if center is a numeric vector only those elements will be centered
+  # a bit spaguetti ... if center is a numeric vector only those elements
+  # will be centered
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
   if (is.numeric(center)) {
     # add a message, as we now have fleet 2 as the total catch weight
-    message("NB - not centring: ", paste0(names(list.obs)[-center], collapse = ", "))
+    message("NB - not centring: ",
+            paste0(names(list.obs)[-center], collapse = ", "))
     center.log[-center][] <- 0
   } else if (!isTRUE(center)) {
     center.log[] <- 0
@@ -578,10 +586,11 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
   if (any(df.data[,5] != 1))
     message("Note: Provided variances will be used to weight observations.\n",
-            "      Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).")
+            "      Weighting assumes variances are on the log scale or\n",
+            "      equivalently log(CV^2 + 1).")
   # extract auxilliary stock info
   fbar <-  unname(range(stock)[c("minfbar", "maxfbar")])
-  ### NB - looks a bit buggy (21/10/2018)
+  ## NB - looks a bit buggy (21/10/2018)
   #plusgroup <-
   #  as.integer(!is.na(range(stock)["plusgroup"]),
   #             range(stock)["plusgroup"] >= range(stock)["max"] )
@@ -590,16 +599,20 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     as.integer(!is.na(range(stock)["plusgroup"]) &&
                range(stock)["plusgroup"] == range(stock)["max"] )
 
-  # extract auxilliary survey info - always assume oldest age is true age TODO TODO TODO !!
-  surveytime <- unname(sapply(indices, function(x) mean(c(dims(x)$startf, dims(x)$endf))))
+  # extract auxilliary survey info -
+  # always assume oldest age is true age TODO TODO TODO !!
+  surveytime <-
+    unname(sapply(indices, function(x) mean(c(dims(x)$startf, dims(x)$endf))))
   names(surveytime) <- names(indices)
-  if (any(is.na(surveytime))) stop("You need to define startf and endf for each index!!")
+  if (any(is.na(surveytime)))
+    stop("You need to define startf and endf for each index!!")
 
   #========================================================================
   # Make a full data.frame and add in covariates and observations
   #========================================================================
 
-  # build a full data frame first (we will use this for the variance model so it is not a waste)
+  # build a full data frame first
+  # (we will use this for the variance model so it is not a waste)
   full.df <-
     do.call(
       rbind,
@@ -614,16 +627,17 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # others directly with vectors.
   #-------------------------------------------------------------------------
   if (!missing(covar)) {
-    # add in covariates to data.frame - it is easiest to provide covariates in one list
+    # add in covariates to data.frame
     tmp <- lapply(seq_along(covar), function(i) {
-      x <- as.data.frame(covar[[i]])[c(1, 2, 7)]
+      x <- as.data.frame(covar[[i]])[c("age", "year", "data")]
       if (length(unique(x$age)) == 1) x <- x[names(x) != "age"]
       if (length(unique(x$year)) == 1) x <- x[names(x) != "year"]
       names(x) <- gsub("data", names(covar)[i], names(x))
       x
     })
     covar.df <- tmp[[1]]
-    for (i in seq_along(tmp[-1])) covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
+    for (i in seq_along(tmp[-1]))
+      covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
 
     full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
   }
@@ -631,8 +645,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # add in data
   full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
   # put biomass surveys and total catch weights in minimum age position
-  full.df$age <- with(full.df, replace(age, is.na(age), min(age, na.rm = TRUE)))
-  full.df$fleet <- factor(names(list.obs)[full.df$fleet], levels = names(list.obs))
+  full.df$age <- with(full.df,
+                      replace(age, is.na(age), min(age, na.rm = TRUE)))
+  full.df$fleet <- factor(names(list.obs)[full.df$fleet],
+                          levels = names(list.obs))
 
   # set weights for missing values to zero
   full.df$weights[is.na(full.df$obs)] <- 0
@@ -641,18 +657,17 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     if (any(is.na(full.df$obs))) {
       missing_obs <-
         capture.output(
-          print(subset(full.df, is.na(obs))[c("fleet", "year", "age")], row.names = FALSE))
-      message("Note: The following observations are treated as being missing at random:\n\t",
+          print(subset(full.df, is.na(obs))[c("fleet", "year", "age")],
+                row.names = FALSE))
+      message("Note: These observations are treated as missing at random:\n\t",
               paste(missing_obs, collapse = "\n\t"), "\n",
               "      Predictions will be made for missing observations." )
     }
   }
 
-  # fill out data frame for all eventualities ... except ages ....
-  # or a quick one that would not mess array dims and things later is to fix ages in
-  # data.frame but keep rows...
-  # it would actually be easiest to present all auxilliary data and covariates as a data.frame
-  # and the observations as a matrix...
+  # fill out data frame for all ages an years ...
+  # a quick one that would not mess array dims and things later is to
+  # fix ages and years in data.frame but keep all rows...
   temp.full.df <-
     expand.grid(
       lapply(full.df[3:1],
@@ -678,7 +693,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
   # add in auxilliary data - maturity, natural mortality etc.
   aux.df <-
-    cbind(as.data.frame(stock.n(stock))[c("year","age")],
+    cbind(as.data.frame(stock.n(stock))[c("year", "age")],
           m = log(as.data.frame(m(stock))$data),
           mat = as.data.frame(mat(stock))$data,
           stock.wt = as.data.frame(stock.wt(stock))$data,
@@ -922,7 +937,8 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv, convergence, NA))
   a4aout@fitSumm <-
     array(tmpSumm,
-          dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv", "convergence", "accrate")))
+          dimnames = list(c("nopar", "nlogl", "maxgrad", "nobs", "gcv",
+                            "convergence", "accrate")))
 
   #------------------------------------------------------------------------
   # a4aFitSA
