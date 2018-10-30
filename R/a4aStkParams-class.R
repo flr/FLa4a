@@ -33,7 +33,8 @@ setClass("a4aStkParams",
       mat          = "FLQuant",
       units        = "character",
       link         = "function",
-      linkinv      = "function"
+      linkinv      = "function",
+      covariates   = "FLQuants"
     )
 )
 
@@ -64,6 +65,7 @@ setMethod("initialize", "a4aStkParams",
               units        = "NA",
               ink          = log,
               linkinv      = exp,
+              covariates   = FLQuants(),
               ...) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
@@ -393,7 +395,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
     # note that the r model is a bit complicated to get at due
     # do the joint purpose of srmodel argument contaning both
     # the SR model OR a linear model for recruitment
-    srmodel <- srMod(object)
+    srmodel <- srMod(from)
     rmodel <-
       if (sum(isPresenta4aSRmodel(srmodel)) == 0) {
         srmodel
@@ -416,7 +418,8 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
     # construct submodels
     stk_submodel <-
       submodels(list(fsubmodel, n1submodel, rsubmodel),
-                names = c("fmodel", "n1model", "rmodel"))
+                names = c("fmodel", "n1model", "rmodel"),
+                name = "stkmodel")
 
     # calculate correlation matrix for each iter
     corrmat <- vmat

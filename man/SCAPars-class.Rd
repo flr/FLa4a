@@ -9,13 +9,12 @@
 \alias{stkmodel}
 \alias{stkmodel-methods}
 \alias{stkmodel,SCAPars-method}
-\alias{n1model}
-\alias{n1model-methods}
+\alias{fmodel,SCAPars-method}
 \alias{n1model,SCAPars-method}
+\alias{rmodel,SCAPars-method}
 \alias{srmodel}
 \alias{srmodel-methods}
 \alias{srmodel,SCAPars-method}
-\alias{fmodel,SCAPars-method}
 \alias{qmodel}
 \alias{qmodel-methods}
 \alias{qmodel,SCAPars-method}
@@ -78,15 +77,15 @@ stkmodel(object, ...)
 
 \S4method{stkmodel}{SCAPars}(object)
 
-n1model(object, ...)
+\S4method{fmodel}{SCAPars}(object)
 
 \S4method{n1model}{SCAPars}(object)
+
+\S4method{rmodel}{SCAPars}(object)
 
 srmodel(object, ...)
 
 \S4method{srmodel}{SCAPars}(object)
-
-\S4method{fmodel}{SCAPars}(object)
 
 qmodel(object, ...)
 

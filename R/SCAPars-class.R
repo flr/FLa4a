@@ -11,9 +11,10 @@
 #' }
 #' @aliases SCAPars-class
 setClass("SCAPars",
-        slots = c(stkmodel  = "a4aStkParams",
-                  qmodel    = "submodels",
-                  vmodel    = "submodels")
+        slots = c(stkmodel   = "a4aStkParams",
+                  qmodel     = "submodels",
+                  vmodel     = "submodels",
+                  covariates = "FLQuants")
 )
 
 setValidity("SCAPars",
@@ -30,7 +31,9 @@ setMethod("initialize", "SCAPars",
   function(.Object,
            stkmodel = new("a4aStkParams"),
            qmodel = new("submodels", name = "qmodel"),
-           vmodel = new("submodels", name = "vmodel")) {
+           vmodel = new("submodels", name = "vmodel"),
+           covariates = new("FLQuants")
+           ) {
       # initialize FLComp slots
       .Object <- callNextMethod()
       # ensure correct names in q nd v models
@@ -40,6 +43,7 @@ setMethod("initialize", "SCAPars",
       .Object@stkmodel <- stkmodel
       .Object@qmodel <- qmodel
       .Object@vmodel <- vmodel
+      .Object@covariates <- covariates
       .Object
 })
 
@@ -91,7 +95,7 @@ setMethod("rmodel", "SCAPars", function(object) rmodel(stkmodel(object)))
 #' @aliases srmodel srmodel-methods
 setGeneric("srmodel", function(object, ...) standardGeneric("srmodel"))
 #' @rdname SCAPars-class
-setMethod("srmodel", "SCAPars", function(object) srMod(stkmodel(object)))
+setMethod("srmodel", "SCAPars", function(object) srmodel(stkmodel(object)))
 setMethod("srMod", "SCAPars", function(object) srMod(stkmodel(object)))
 
 #' @rdname SCAPars-class

@@ -29,7 +29,8 @@ setClass("submodel",
             centering    = "FLPar",
             distr        = "character",
             link         = "function",
-            linkinv      = "function")
+            linkinv      = "function",
+            covariates   = "FLQuants")
 )
 
 setValidity("submodel",
@@ -55,7 +56,8 @@ setMethod("initialize", "submodel",
            centering = FLPar(centering = 0),
            distr = "norm",
            link = log,
-           linkinv = exp
+           linkinv = exp,
+           covariates = FLQuants()
            ) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)

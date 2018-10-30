@@ -9,8 +9,9 @@
 submodels <-
   setClass("submodels",
     contains = "FLComps",
-    slots = c(corBlocks = "list",
-              name      = "character"))
+    slots = c(corBlocks  = "list",
+              name       = "character",
+              covariates = "FLQuants"))
 
 #' @rdname submodels-class
 #' @template Constructors
@@ -23,7 +24,8 @@ setMethod("initialize", "submodels",
            ...,
            corBlocks,
            names,
-           name = "") {
+           name       = "",
+           covariates = FLQuants()) {
       .Object <- callNextMethod(.Object, ...)
       if (!missing(names)) {
         # need to apply new() recursively to maintain a valid object

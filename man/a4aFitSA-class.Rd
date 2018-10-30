@@ -11,12 +11,12 @@
 \alias{pars,a4aFitSA-method}
 \alias{m,a4aFitSA-method}
 \alias{wt,a4aFitSA-method}
-\alias{qmodel,a4aFitSA-method}
-\alias{fmodel,a4aFitSA-method}
-\alias{srmodel,a4aFitSA-method}
-\alias{n1model,a4aFitSA-method}
-\alias{vmodel,a4aFitSA-method}
 \alias{stkmodel,a4aFitSA-method}
+\alias{fmodel,a4aFitSA-method}
+\alias{n1model,a4aFitSA-method}
+\alias{rmodel,a4aFitSA-method}
+\alias{qmodel,a4aFitSA-method}
+\alias{vmodel,a4aFitSA-method}
 \alias{show,a4aFitSA-method}
 \alias{iter,a4aFitSA-method}
 \alias{a4aFitSAs-class}
@@ -41,17 +41,17 @@ pars(object)
 
 \S4method{wt}{a4aFitSA}(object)
 
-\S4method{qmodel}{a4aFitSA}(object)
+\S4method{stkmodel}{a4aFitSA}(object)
 
 \S4method{fmodel}{a4aFitSA}(object)
 
-\S4method{srmodel}{a4aFitSA}(object)
-
 \S4method{n1model}{a4aFitSA}(object)
 
-\S4method{vmodel}{a4aFitSA}(object)
+\S4method{rmodel}{a4aFitSA}(object)
 
-\S4method{stkmodel}{a4aFitSA}(object)
+\S4method{qmodel}{a4aFitSA}(object)
+
+\S4method{vmodel}{a4aFitSA}(object)
 
 \S4method{show}{a4aFitSA}(object)
 

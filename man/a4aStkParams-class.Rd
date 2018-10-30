@@ -9,12 +9,18 @@
 \alias{m,a4aStkParams-method}
 \alias{wt,a4aStkParams-method}
 \alias{mat,a4aStkParams-method}
-\alias{fMod}
-\alias{fMod-methods}
-\alias{fMod,a4aStkParams-method}
 \alias{fmodel}
 \alias{fmodel-methods}
 \alias{fmodel,a4aStkParams-method}
+\alias{n1model}
+\alias{n1model-methods}
+\alias{n1model,a4aStkParams-method}
+\alias{rmodel}
+\alias{rmodel-methods}
+\alias{rmodel,a4aStkParams-method}
+\alias{fMod}
+\alias{fMod-methods}
+\alias{fMod,a4aStkParams-method}
 \alias{fMod<-}
 \alias{fMod<--methods}
 \alias{fMod<-,a4aStkParams,formula-method}
@@ -56,13 +62,21 @@ a4aStkParams(object, ...)
 
 \S4method{mat}{a4aStkParams}(object)
 
-fMod(object, ...)
-
-\S4method{fMod}{a4aStkParams}(object)
-
 fmodel(object, ...)
 
 \S4method{fmodel}{a4aStkParams}(object)
+
+n1model(object, ...)
+
+\S4method{n1model}{a4aStkParams}(object)
+
+rmodel(object, ...)
+
+\S4method{rmodel}{a4aStkParams}(object)
+
+fMod(object, ...)
+
+\S4method{fMod}{a4aStkParams}(object)
 
 fMod(object) <- value
 
