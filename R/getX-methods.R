@@ -16,6 +16,24 @@ setMethod("getX", "submodel",
     flq <- flq_from_range(object)
     df <- as.data.frame(flq)
 
+    # add in covariates
+    if (length(object@covariates) > 0) {
+      covar <- object@covariates
+      # add in covariates to data.frame
+      tmp <- lapply(seq_along(covar), function(i) {
+        x <- as.data.frame(covar[[i]])[c("age", "year", "data")]
+        if (length(unique(x$age)) == 1) x <- x[names(x) != "age"]
+        if (length(unique(x$year)) == 1) x <- x[names(x) != "year"]
+        names(x) <- gsub("data", names(covar)[i], names(x))
+        x
+      })
+      covar.df <- tmp[[1]]
+      for (i in seq_along(tmp[-1]))
+        covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
+
+      df <- merge(df, covar.df, all.x = TRUE, all.y = FALSE)
+    }
+
     # get design matrix
     getX(formula(object), df)
   }
