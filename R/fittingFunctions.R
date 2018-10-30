@@ -532,7 +532,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   fit <- match.arg(fit, c("MP", "assessment", "MCMC", "setup"))
 
   # check covariates are FLQuants
-  if (!inherits(covar, "FLQuants")) {
+  if (!missing(covar) && !inherits(covar, "FLQuants")) {
     message("Converting 'covar' to FLQuants class using FLQuants(covar).")
     covar <- FLQuants(covar)
   }
@@ -1063,7 +1063,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
         stkmodel = stkmodel,
         qmodel = qmodels,
         vmodel = vmodels,
-        covariates = covar
+        covariates = if (missing(covar)) FLQuants() else covar
       )
 
     # create an a4aFitSA class

@@ -25,7 +25,8 @@ setMethod("initialize", "submodels",
            corBlocks,
            names,
            name       = "",
-           covariates = FLQuants()) {
+           covariates = FLQuants()
+          ) {
       .Object <- callNextMethod(.Object, ...)
       if (!missing(names)) {
         # need to apply new() recursively to maintain a valid object
@@ -67,8 +68,9 @@ setMethod("initialize", "submodels",
           names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(names(.Object)[x], collapse = "."))
         }
       }
-      # finally add a name
+      # finally add a name and covariates
       .Object@name <- name
+      .Object@covariates <- covariates
       .Object
 })
 
@@ -88,6 +90,33 @@ setValidity("submodels",
 #
 #  accessor methods
 #
+
+#' @rdname submodels-class
+#' @aliases [[
+setMethod("[[",
+  signature(x = "submodels"),
+  function (x, i, j, ...) {
+    out <- x@.Data[[i]]
+    out@covariates <- x@covariates
+    out
+  }
+)
+
+setMethod("[[",
+  signature(x = "submodels", i = "character"),
+  function (x, i, j, ...) {
+    int_i <- which(i == names(x))
+    if (length(int_i) == 0) return(NULL)
+    x[[int_i]]
+  }
+)
+
+setMethod("$",
+  signature(x = "submodels"),
+  function (x, name) {
+    x[[name]]
+  }
+)
 
 #' @rdname submodels-class
 #' @aliases corBlocks corBlock-methods

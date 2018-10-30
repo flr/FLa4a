@@ -77,7 +77,13 @@ setMethod("SCAPars", signature(object = "missing"),
 #' @aliases stkmodel stkmodel-methods
 setGeneric("stkmodel", function(object, ...) standardGeneric("stkmodel"))
 #' @rdname SCAPars-class
-setMethod("stkmodel", "SCAPars", function(object) object@stkmodel)
+setMethod("stkmodel", "SCAPars",
+  function(object) {
+    out <- object@stkmodel
+    out@covariates <- object@covariates
+    out
+  }
+)
 
 #' @rdname SCAPars-class
 setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
@@ -102,7 +108,13 @@ setMethod("srMod", "SCAPars", function(object) srMod(stkmodel(object)))
 #' @aliases qmodel qmodel-methods
 setGeneric("qmodel", function(object, ...) standardGeneric("qmodel"))
 #' @rdname SCAPars-class
-setMethod("qmodel", "SCAPars", function(object) object@qmodel)
+setMethod("qmodel", "SCAPars",
+  function(object) {
+    out <- object@qmodel
+    out@covariates <- object@covariates
+    out
+  }
+)
 
 #' @rdname SCAPars-class
 #' @aliases qMod qMod-methods
@@ -114,7 +126,13 @@ setMethod("qMod", "SCAPars", function(object) qmodel(object))
 #' @aliases vmodel vmodel-methods
 setGeneric("vmodel", function(object, ...) standardGeneric("vmodel"))
 #' @rdname SCAPars-class
-setMethod("vmodel", "SCAPars", function(object) object@vmodel)
+setMethod("vmodel", "SCAPars",
+  function(object) {
+    out <- object@vmodel
+    out@covariates <- object@covariates
+    out
+  }
+)
 
 #' @rdname SCAPars-class
 #' @aliases vMod vMod-methods

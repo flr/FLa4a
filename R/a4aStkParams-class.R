@@ -51,51 +51,55 @@ setValidity("a4aStkParams",
 })
 
 setMethod("initialize", "a4aStkParams",
-    function(.Object,
-              fMod         = ~ 1,
-              n1Mod        = ~ 1,
-              srMod        = ~ 1,
-              coefficients = FLPar(),
-              vcov         = array(),
-              centering    = FLPar(centering = 0),
-              distr        = "norm",
-              m            = FLQuant(),
-              wt           = FLQuant(),
-              mat          = FLQuant(),
-              units        = "NA",
-              ink          = log,
-              linkinv      = exp,
-              covariates   = FLQuants(),
-              ...) {
-      # initialize FLComp slots
-      .Object <- callNextMethod(.Object, ...)
-      # initialize remaining slots
-      .Object@fMod  <- fMod
-      .Object@n1Mod <- n1Mod
-      .Object@srMod <- srMod
-      .Object@coefficients <- coefficients
-      .Object@vcov <- vcov
-      if (length(dim(vcov)) == 2) dim(.Object@vcov) <- c(dim(vcov), 1)
-      .Object@centering <- centering
-      .Object@distr <- distr
-      # if missing set dimensions of of m and wt based on range
-      if (missing(m) || missing(wt))
-        flq <- flq_from_range(.Object)
-      .Object@m <- if (missing(m)) flq else m
-      .Object@wt <- if (missing(wt)) flq else wt
-      .Object@wt <- if (missing(mat)) flq else mat
-      # throw error if range from FLComp doesn't match FLQuants
-      # (can't check this in setValidity due to callNextMethod resulting in an
-      # invalid a4aStkParams object when range is supplied)
-      if (abs(as.numeric(dimnames(.Object@m)$year[1]) -
-              .Object@range["minyear"]) > 1e-9 ||
-          abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) -
-              .Object@range["maxyear"]) > 1e-9) {
-            stop("range does not match supplied m and wt dimensions")
-      }
-      .Object@units <- units
-      .Object
-    })
+  function(.Object,
+            fMod         = ~ 1,
+            n1Mod        = ~ 1,
+            srMod        = ~ 1,
+            coefficients = FLPar(),
+            vcov         = array(),
+            centering    = FLPar(centering = 0),
+            distr        = "norm",
+            m            = FLQuant(),
+            wt           = FLQuant(),
+            mat          = FLQuant(),
+            units        = "NA",
+            link         = log,
+            linkinv      = exp,
+            covariates   = FLQuants(),
+            ...) {
+    # initialize FLComp slots
+    .Object <- callNextMethod(.Object, ...)
+    # initialize remaining slots
+    .Object@fMod  <- fMod
+    .Object@n1Mod <- n1Mod
+    .Object@srMod <- srMod
+    .Object@coefficients <- coefficients
+    .Object@vcov <- vcov
+    if (length(dim(vcov)) == 2) dim(.Object@vcov) <- c(dim(vcov), 1)
+    .Object@centering <- centering
+    .Object@distr <- distr
+    # if missing set dimensions of of m and wt based on range
+    if (missing(m) || missing(wt))
+      flq <- flq_from_range(.Object)
+    .Object@m <- if (missing(m)) flq else m
+    .Object@wt <- if (missing(wt)) flq else wt
+    .Object@wt <- if (missing(mat)) flq else mat
+    # throw error if range from FLComp doesn't match FLQuants
+    # (can't check this in setValidity due to callNextMethod resulting in an
+    # invalid a4aStkParams object when range is supplied)
+    if (abs(as.numeric(dimnames(.Object@m)$year[1]) -
+            .Object@range["minyear"]) > 1e-9 ||
+        abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) -
+            .Object@range["maxyear"]) > 1e-9) {
+          stop("range does not match supplied m and wt dimensions")
+    }
+    .Object@units <- units
+    .Object@link <- link
+    .Object@linkinv <- linkinv
+    .Object@covariates <- covariates
+    .Object
+  }
+)
 
 
 
@@ -419,7 +423,8 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
     stk_submodel <-
       submodels(list(fsubmodel, n1submodel, rsubmodel),
                 names = c("fmodel", "n1model", "rmodel"),
-                name = "stkmodel")
+                name = "stkmodel",
+                covariates = from@covariates)
 
     # calculate correlation matrix for each iter
     corrmat <- vmat
