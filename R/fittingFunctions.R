@@ -314,7 +314,7 @@ setMethod("sca", signature("FLStock", "FLIndices"),
                           n1model = n1model, vmodel = vmodel, stock = istock,
                           indices = iindices, covar = icovar, wkdir = wkdir,
                           verbose = verbose, fit = ifit, center = center,
-                          mcmc = mcmc)
+                          mcmc = mcmc, useTotalCatch = useTotalCatch)
     } else if (!missing(covar) & missing(wkdir)) {
       icovar <-
         lapply(
@@ -325,15 +325,17 @@ setMethod("sca", signature("FLStock", "FLIndices"),
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,
                           n1model = n1model, vmodel = vmodel, stock = istock,
                           indices = iindices, covar = icovar, verbose = verbose,
-                          fit = ifit, center = center, mcmc = mcmc)
+                          fit = ifit, center = center, mcmc = mcmc,
+                          useTotalCatch = useTotalCatch)
     } else if (missing(covar) & !missing(wkdir)) {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
                           vmodel = vmodel, stock = istock, indices = iindices, wkdir = wkdir,
-                          verbose = verbose, fit = ifit, center = center, mcmc = mcmc)
+                          verbose = verbose, fit = ifit, center = center, mcmc = mcmc,
+                          useTotalCatch = useTotalCatch)
     } else {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
                           vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose,
-                          fit = ifit, center = center, mcmc = mcmc)
+                          fit = ifit, center = center, mcmc = mcmc, useTotalCatch = useTotalCatch)
     }
     if (i == 1) {
       tmpSumm <- outi@fitSumm
@@ -594,6 +596,21 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     message("Note: Provided variances will be used to weight observations.\n",
             "      Weighting assumes variances are on the log scale or\n",
             "      equivalently log(CV^2 + 1).")
+
+  # set weights for totalcatch fleet
+  if (useTotalCatch == FALSE) {
+    # set all total catch data weights to 0
+    df.data$weights[df.data$fleet == 2] <- 0
+  } else {
+    which_na <- apply(catch.n(stock)@.Data, 2, function(x) all(is.na(x)))
+    total_catch_years <- names(which_na)[which_na]
+    # switch off totalcatch except when all catch at age are NA
+    df.data$weights[df.data$fleet == 2] <- as.numeric(which_na)
+    # switch off catch when total catch is being used
+    df.data$weights[df.data$fleet == 1 &
+                    df.data$year %in% total_catch_years] <- 0
+  }
+
   # extract auxilliary stock info
   fbar <-  unname(range(stock)[c("minfbar", "maxfbar")])
   ## NB - looks a bit buggy (21/10/2018)
@@ -775,7 +792,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     stop("Stock recruitment model is over parameterised, please reduce the number parameters")
 
   # internal r model matrix - this is setting the X model for the recruitments,
-  # it is not the same as the sr model which is the model for the relationship
+  # it is not the same as the sr mdevtools::load_all(pkg)odel which is the model for the relationship
   # between the recruitments and SSB
   if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year)
   Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
@@ -1238,7 +1255,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
   cat("# Auxilliary data frame\n",
       "# Number of auxilliary data\n",
       nrow(df.aux), "\n",
-      "# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\n",
+      "# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\tstock.wt\n",
       file = filename, sep = "", append = TRUE)
   write.t(df.aux, file = filename)
 
