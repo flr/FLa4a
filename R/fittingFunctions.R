@@ -627,11 +627,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
                cbind(fleet = i,
                      make.df(i, stock = stock, indices = indices))))
 
-  #-------------------------------------------------------------------------
-  # NOTE: check covar object. Need to be consistent on how this information
-  # is passed to the method. Currently sometimes through the covar object
-  # others directly with vectors.
-  #-------------------------------------------------------------------------
+  # add covariates onto full data frame
   if (!missing(covar)) {
     # add in covariates to data.frame
     tmp <- lapply(seq_along(covar), function(i) {
@@ -647,8 +643,8 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
     full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
   }
-  #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  # add in data
+
+  # add in data ?
   full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
   # put biomass surveys and total catch weights in minimum age position
   full.df$age <- with(full.df,
