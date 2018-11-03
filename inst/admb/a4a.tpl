@@ -95,8 +95,8 @@ DATA_SECTION
   init_int noaux // number of auxilliary data points
   //                ( should be diff(yearRange) * diff(ageRange) )
   //!!TRACE(noaux)
-  init_matrix aux(1,noaux,1,7)
-  //  year  age     m       m.spwn  harvest.spwn    mat * stkwt  stkwt
+  init_matrix aux(1,noaux,1,8)
+  //  year  age     m       m.spwn  harvest.spwn    mat * stkwt  stkwt ctchwt
   //!!TRACE(aux)
 
   int idx
@@ -283,6 +283,8 @@ PARAMETER_SECTION
   matrix  matWt(minYear,maxYear,minAge,maxAge)
   matrix  stkWt(minYear,maxYear,minAge,maxAge)
   matrix  logStkWt(minYear,maxYear,minAge,maxAge)
+  matrix  ctchWt(minYear,maxYear,minAge,maxAge)
+  matrix  logCtchWt(minYear,maxYear,minAge,maxAge)
   3darray q(1,nsurveys,minYear,maxYear,minAge,maxAge)
   vector  r(minYear,maxYear) // predicted recruitment
   vector  ra(minYear,maxYear) // SRR params
@@ -290,6 +292,7 @@ PARAMETER_SECTION
   3darray v(1,nsurveys+1,minYear,maxYear,minAge,maxAge)
   matrix  n(minYear,maxYear,minAge,maxAge)
   vector  pred(1,noobs)
+  vector  predvar(1,noobs)
 
   vector ssb(minYear,maxYear)
   sdreport_number ssbmaxYear
@@ -340,7 +343,9 @@ PRELIMINARY_CALCS_SECTION
       fspwn(y,a) = aux(idx,5);
       matWt(y,a) = aux(idx,6);
       stkWt(y,a) = aux(idx,7);
+      ctchWt(y,a) = aux(idx,8);
       logStkWt(y,a) = log(aux(idx,7));
+      logCtchWt(y,a) = log(aux(idx,8));
     }
   }
 
@@ -469,66 +474,66 @@ PROCEDURE_SECTION
   //
   int locFleet, locSurvey, locYear, locAge;
   dvector obsVec(1,5);
-  int minSurveyAge, maxSurveyAge;
-  double locObs, locWgt;
   dvariable locZ;
-  dvariable locVar;
-  for (int i = 1; i <= noobs; ++i) {
+  dvariable locCatchVar;
+  dvariable locPred;
+
+  for (int i = 1; i <= noobs; ++i)
+  {
     obsVec   = obs(i);
     locFleet = obsVec(1);
     locYear  = obsVec(2);
     locAge   = obsVec(3);
-    locObs   = obsVec(4);
-    locWgt   = obsVec(5);
     locSurvey = locFleet - 2;
 
-    // here we split - if locAge == -1 then we have a biomass index
-    // or total catch weight obs
-
-    if (locAge >= 0)
-    { // standard observation
+    if (locFleet == 1)
+    {
+      // catch at age
       locZ = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
-      if (locFleet <= 2)
-      { // catches
-        pred(i) = f(locYear,locAge) -
+      pred(i) = f(locYear,locAge) -
                   log(locZ) +
                   log(1.0 - mfexp(-locZ)) +
                   n(locYear,locAge);
-        locVar = mfexp(2.0 * v(locFleet,locYear,locAge));
+      predvar(i) = mfexp(2.0 * v(1,locYear,locAge));
+    }
+    if (locFleet == 2)
+    {
+      // total catch weight
+      pred(i) = 0;
+      predvar(i) = 0;
+      for (int a = minAge; a <= maxAge; ++a)
+      {
+        locZ = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
+        locPred =
+          mfexp(f(locYear,a) -
+                log(locZ) +
+                log(1.0 - mfexp(-locZ)) +
+                n(locYear,a) +
+                logCtchWt(locYear,a));
+        pred(i) += locPred;
+        predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
+                      (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
+                      mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
       }
-      else
-      { // survey
+      predvar(i) = predvar(i) / square(pred(i));
+      pred(i) = log(pred(i));
+    }
+    if (locFleet > 2)
+    {
+      // surveys
+      if (locAge >= 0)
+      {
+        // indices at age
         pred(i) = q(locSurvey,locYear,locAge) -
                   locZ * surveyTimes(locSurvey) +
                   n(locYear,locAge);
-        locVar = mfexp(2.0 * v(locSurvey + 1,locYear,locAge));
-      }
-    }
-    else
-    { // if age is < 0, an observation of biomass / total catch weight has been specified
-      if (locFleet <= 2)
-      { // catches
-        pred(i) = 0; // not sure i need to but best to be safe
-        for (int a = minAge; a <= maxAge; ++a)
-        {
-          locZ = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
-          pred(i) +=
-            mfexp(
-              f(locYear,a) -
-              log(locZ) +
-              log(1.0 - mfexp(-locZ)) +
-              n(locYear,a) +
-              logStkWt(locYear,a)
-            );
-        }
-        pred(i) = log(pred(i));
-        // note variance are stored in the minimum age column for surveys
-        // but what do we do for catch weights??
-        locVar = mfexp(2.0 * v(locFleet-1,locYear,minAge));
+        predvar(i) = mfexp(2.0 * v(locFleet - 1,locYear,locAge));
       }
       else
-      { // survey
-        pred(i) = 0; // not sure i need to but best to be safe
+      {
+        // biomass index
+        // note variance are stored in the minimum age column
+        pred(i) = 0;
         for (int a = surveyMinAge(locSurvey);
              a <= surveyMaxAge(locSurvey); ++a)
         {
@@ -542,13 +547,11 @@ PROCEDURE_SECTION
             );
         }
         pred(i) = log(pred(i));
-        // note variance are stored in the minimum age column for
-        // biomass surveys -
-        // but what do we do for catch weights??
-        locVar = mfexp(2.0 * v(locSurvey + 1,locYear,minAge));
+        predvar(i) = mfexp(2.0 * v(locFleet - 1,locYear,minAge));
       }
     }
-    nll += locWgt * nldnorm(locObs, pred(i), locVar);
+
+    nll += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));
   }
 
 
@@ -582,7 +585,7 @@ PROCEDURE_SECTION
         predLogR = ra(y) +
                    log(ssb(y - minAge)) -
                    log(mfexp(rb(y)) + ssb(y - minAge));
-        varLogR = log(pow(srCV, 2) + 1);
+        varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
       }
     }
@@ -591,7 +594,7 @@ PROCEDURE_SECTION
         predLogR = ra(y) +
                    log(ssb(y - minAge)) -
                    mfexp(rb(y)) * ssb(y - minAge);
-        varLogR = log(pow(srCV, 2) + 1);
+        varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
       }
     }
@@ -601,14 +604,14 @@ PROCEDURE_SECTION
                    log(ssb(y - minAge) +
                        sqrt(mfexp(2.0 * rb(y)) + 0.0025) -
                        sqrt(pow(ssb(y - minAge) - mfexp(rb(y)), 2.0) + 0.0025));
-        varLogR = log(pow(srCV, 2) + 1);
+        varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 4) { // geomean
       for(int y = minYear + 1; y <= maxYear; ++y){
         predLogR = ra(y);
-        varLogR = log(pow(srCV, 2) + 1);
+        varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
       }
     }
@@ -618,7 +621,7 @@ PROCEDURE_SECTION
         v = mfexp(rb(y));
         predLogR = log(6 * h * v * ssb(y - minAge)) -
                    log(spr0 * ((h + 1) * v + (5 * h - 1) * ssb(y - minAge))); // spr0 is provided by user
-        varLogR = log(pow(srCV, 2) + 1);
+        varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
       }
     }
@@ -683,17 +686,23 @@ REPORT_SECTION
 // *********************************
 
   ofstream nout("n.out");
-  nout<<mfexp(n)<<endl;
+  nout << mfexp(n) << endl;
   nout.close();
   ofstream fout("f.out");
-  fout<<mfexp(f)<<endl;
+  fout << mfexp(f) << endl;
   fout.close();
   ofstream qout("q.out");
-  qout<<q<<endl;
+  qout << q << endl;
   qout.close();
   ofstream vout("v.out");
-  vout<<v<<endl;
+  vout << v << endl;
   vout.close();
+  ofstream predout("pred.out");
+  predout << pred << endl;
+  predout.close();
+  ofstream repdvarout("predvar.out");
+  repdvarout << predvar << endl;
+  repdvarout.close();
 //  ofstream ssbout("ssb.out");
 //  ssbout<<ssb<<endl;
 //  ssbout.close();

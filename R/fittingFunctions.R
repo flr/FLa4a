@@ -1255,11 +1255,11 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
       file = filename)
   write.t(df.data, file = filename)
 
-  df.aux <- unique(full.df[c("year", "age", "m", "m.spwn", "harvest.spwn", "mat.wt", "stock.wt")])
+  df.aux <- unique(full.df[c("year", "age", "m", "m.spwn", "harvest.spwn", "mat.wt", "stock.wt", "catch.wt")])
   cat("# Auxilliary data frame\n",
       "# Number of auxilliary data\n",
       nrow(df.aux), "\n",
-      "# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\tstock.wt\n",
+      "# year\tage\tm\tm.spwn\tharvest.spwn\tmat.wt\tstock.wt\tcatch.wt\n",
       file = filename, sep = "", append = TRUE)
   write.t(df.aux, file = filename)
 
