@@ -281,13 +281,13 @@ hockey <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
   list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
 }
 
-geomean <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
+geomean <- function(CV = 0.5, a = ~ 1, ...) {
   check_cv(CV)
-  list(srr = "geomean", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 4)
+  list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
 }
 
 none <- function(...) {
-  list(srr = "geomean", a = a, b = b, SPR0 = 1, srrCV = -1, ID = 4)
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
 }
 
 a4a_srmodel_list <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
