@@ -573,8 +573,12 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # a bit spaguetti ... if center is a numeric vector only those elements
   # will be centered
   center.log <- sapply(list.obs, function(x) mean(log(x), na.rm = TRUE))
+  # set fleet 2 (total catch weight to have same centering as catch.n)
+  center.log[2] <- center.log[1]
   if (is.numeric(center)) {
-    # add a message, as we now have fleet 2 as the total catch weight
+    # as we now have fleet 2 as the total catch weight, adjust center
+    center <- replace(center, center > 1, center + 1)
+    # add a message
     message("NB - not centring: ",
             paste0(names(list.obs)[-center], collapse = ", "))
     center.log[-center][] <- 0
