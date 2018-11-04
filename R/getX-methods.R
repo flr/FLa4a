@@ -119,7 +119,7 @@ setMethod("getX", "formula",
     gams <- grepl("(^s[(])|(^te[(])", facs)
     if (any(gams)) {
       tmp.sfunc <- function(..., by = NULL) eval(substitute(by), df)
-      dummy.gams <- gsub("(^s[(])|(^te[(])", "tmp.sfunc(", facs[gams])
+      dummy.gams <- gsub("(^s[(])|(^te[(])|(^ti[(])", "tmp.sfunc(", facs[gams])
       gmf <- lapply(dummy.gams, function(x) eval(parse(text = x)))
       bygams <- !sapply(gmf, is.null)
       if (any(bygams)) {
