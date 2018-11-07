@@ -55,9 +55,6 @@ setMethod("initialize", "a4aFitMCMC",
       .Object
 })
 
-
-
-
 #====================================================================
 # coerce to coda object
 #====================================================================
@@ -79,152 +76,33 @@ setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {
 })
 
 #====================================================================
-# The methods below should be inherited from a4aFitSA
+# burnin
 #====================================================================
+#' @rdname a4aFitMCMC-class
+#' @param object a \code{a4aFitMCMC} object 
+#' @param burnin a numeric with the number of iterations to be removed
+#' @aliases burnin burnin-methods
+setGeneric("burnin", function(object, ...) standardGeneric("burnin"))
 
-##' @rdname a4aFitSA-class
-##' @aliases show,a4aFitSA-method
-#setMethod("show", signature(object = "a4aFitSA"),
-#  function(object) 
-#  {
+#' @rdname a4aFitMCMC-class
+setMethod("burnin", signature(object="a4aFitMCMC"), function(object, burnin){
+	object@catch.n <- catch.n(object)[,,,,,-c(1:burnin)]
+	object@stock.n <- stock.n(object)[,,,,,-c(1:burnin)]
+	object@harvest <- harvest(object)[,,,,,-c(1:burnin)]
+	object@index <- lapply(index(object), function(x) x[,,,,,-c(1:burnin)])
+	object@pars@stkmodel@coefficients <- coefficients(stkmodel(pars(object)))[,-c(1:burnin)]
+	object@pars@qmodel <- submodels(lapply(qmodel(pars(object)), function(x){
+	    x@coefficients <- x@coefficients[,-c(1:burnin)]
+	    x
+	})) 
+	object@pars@vmodel@.Data <- lapply(vmodel(pars(object)), function(x){
+    	x@coefficients <- x@coefficients[,-c(1:burnin)]
+    	x
+	}) 
+	object
+})
 
-#    show(a4aFit(object))
-#    
-#    cat("\nSubmodels:\n")  
-#    cat("\t fmodel: "); print( fmodel(pars(object)), showEnv = FALSE)
-#    cat("\tsrmodel: "); print(srmodel(pars(object)), showEnv = FALSE)
-#    cat("\tn1model: "); print(n1model(pars(object)), showEnv = FALSE)
 
-#    # something to format the qmodel and vmodel    
-#    printFormList <- function(frmL) {
-#      if (length(frmL) == 0) return(invisible(NA))
-#      mods <- lapply(frmL, slot, "Mod")
-#      mnames <- names(mods)
-#      maxname <- max(sapply(mnames, nchar))
-#      for (i in seq(length(mods))) {
-#        cat("\t   ", mnames[i], ": ", rep(" ", maxname - nchar(mnames[i])), sep = "")
-#        print(mods[[i]], showEnv = FALSE)
-#      }
-#    }
 
-#    cat("\t qmodel:\n")
-#    printFormList(qmodel(pars(object)))
-#    cat("\t vmodel:\n")
-#    printFormList(vmodel(pars(object)))
-#   
-# })
 
-##' @rdname a4aFitSA-class
-##' @aliases submodels,a4aFitSA-method
-#setMethod("submodels", signature(object = "a4aFitSA"),
-#  function(object) 
-#  {
-#    cat("\t fmodel: "); print( fmodel(pars(object)), showEnv = FALSE)
-#    cat("\tsrmodel: "); print(srmodel(pars(object)), showEnv = FALSE)
-#    cat("\tn1model: "); print(n1model(pars(object)), showEnv = FALSE)
-
-#    # something to format the qmodel and vmodel    
-#    printFormList <- function(frmL) {
-#      if (length(frmL) == 0) return(invisible(NA))
-#      mods <- lapply(frmL, slot, "Mod")
-#      mnames <- names(mods)
-#      maxname <- max(sapply(mnames, nchar))
-#      for (i in seq(length(mods))) {
-#        cat("\t   ", mnames[i], ": ", rep(" ", maxname - nchar(mnames[i])), sep = "")
-#        print(mods[[i]], showEnv = FALSE)
-#      }
-#    }
-
-#    cat("\t qmodel:\n")
-#    printFormList(qmodel(pars(object)))
-#    cat("\t vmodel:\n")
-#    printFormList(vmodel(pars(object)))
-#   
-# })
-#
-##' @rdname a4aFitSA-class
-##' @aliases pars pars-method pars,a4aFitSA-method
-#setGeneric("pars", function(object) standardGeneric("pars"))
-#setMethod("pars", "a4aFitSA", function(object) object@pars)
-
-##' @rdname a4aFitSA-class
-##' @aliases m,a4aFitSA-method
-#setMethod("m", signature(object="a4aFitSA"), function(object) m(pars(object)))
-
-##' @rdname a4aFitSA-class
-##' @aliases wt,a4aFitSA-method
-#setMethod("wt", signature(object="a4aFitSA"), function(object) wt(pars(object)))
-
-##====================================================================
-## plural class for a4aFitSA (used for model averaging)
-##====================================================================
-
-##' @rdname a4aFitSA-class
-##' @aliases a4aFitSAs-class
-
-#setClass("a4aFitSAs", 
-#	contains="FLComps",
-#	validity=function(object){
-#		if(!all(unlist(lapply(object, is, 'a4aFitSA'))))
-#			return("Components must be a4aFitSA")	
-#		return(TRUE)}
-#)
-
-##' @rdname a4aFitSA-class
-##' @aliases a4aFitSAs a4aFitSAs,list-method
-#setGeneric("a4aFitSAs", function(object, ...) standardGeneric("a4aFitSAs"))
-#setMethod("a4aFitSAs", signature(object="list"),
-#  function(object, ...) {
-#    args <- list(...)
-#    
-#    # names in args, ... 
-#    if("names" %in% names(args)) {
-#      names <- args[['names']]
-#    } else {
-#    # ... or in object,
-#      if(!is.null(names(object))) {
-#        names <- names(object)
-#    # ... or in elements, ...
-#      } else {
-#        names <- unlist(lapply(object, name))
-#        # ... or 1:n
-#        idx <- names == "NA" | names == ""
-#        if(any(idx))
-#          names[idx] <- as.character(length(names))[idx]
-#      }
-#    }
-
-#    # desc & lock
-#    args <- c(list(Class="a4aFitSAs", .Data=object, names=names),
-#      args[!names(args)%in%'names'])
-
-#    return(
-#      do.call('new', args)
-#      )
-
-#})
-
-##' @rdname a4aFitSA-class
-##' @aliases a4aFitSAs,a4aFitSA-method
-#setMethod("a4aFitSAs", signature(object="a4aFitSA"), function(object, ...) {
-#    lst <- c(object, list(...))
-#    a4aFitSAs(lst)
-#})
-
-##' @rdname a4aFitSA-class
-##' @aliases a4aFitSAs a4aFitSAs,missing-method
-#setMethod("a4aFitSAs", signature(object="missing"),
-#  function(...) {
-#    # empty
-#  	if(missing(...)){
-#	  	new("a4aFitSAs")
-#    # or not
-#  	} else {
-#      args <- list(...)
-#      object <- args[!names(args)%in%c('names', 'desc', 'lock')]
-#      args <- args[!names(args)%in%names(object)]
-#      do.call('a4aFitSAs',  c(list(object=object), args))
-#	  }
-#  }
-#)
 

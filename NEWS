@@ -1,6 +1,7 @@
  FLa4a 1.6.x:
 
  NEW FEATURES:
+ - method burnin to remove a group of iters from a MCMC fit. 
  - method sca.est to run stock assessments in a MP. 
  - method sep.est to run separable stock assessments in a MP. 
  - sca.est and sep.est adjusted to new mse naming convention.
