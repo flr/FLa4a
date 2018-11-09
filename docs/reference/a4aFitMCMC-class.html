@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.6.2</span>
       </span>
     </div>
 
@@ -117,15 +117,20 @@
 <span class='fu'>a4aFitMCMC</span>(<span class='no'>...</span>)
 
 <span class='co'># S4 method for a4aFitMCMC</span>
-<span class='fu'>a4aFitSA</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'><a href='a4aFitSA-class.html'>a4aFitSA</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for a4aFitMCMC</span>
-<span class='fu'>a4aFit</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'><a href='a4aFit-class.html'>a4aFit</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
 <span class='fu'>as.mcmc</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for a4aFitMCMC</span>
-<span class='fu'>as.mcmc</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>as.mcmc</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='fu'>burnin</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+
+<span class='co'># S4 method for a4aFitMCMC</span>
+<span class='fu'>burnin</span>(<span class='no'>object</span>, <span class='no'>burnin</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,6 +146,14 @@
     <tr>
       <th>x</th>
       <td><p>an object to be coerced into mcmc</p></td>
+    </tr>
+    <tr>
+      <th>burnin</th>
+      <td><p>a numeric with the number of iterations to be removed</p></td>
+    </tr>
+    <tr>
+      <th>object</th>
+      <td><p>a <code>a4aFitMCMC</code> object</p></td>
     </tr>
     </table>
     
@@ -192,32 +205,32 @@ for sizing, but not for populating any slot.</p>
 #&gt; 
 #&gt; Time used:
 #&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.5914760       7.7245071       0.1682277       8.4842107 
+#&gt;       0.6794755       7.8746676       0.1846974       8.7388406 
 #&gt; 
 #&gt; Submodels:
 #&gt; 	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
 #&gt; 	srmodel: ~factor(year)
 #&gt; 	n1model: ~s(age, k = 4)
 #&gt; 	 qmodel:
-#&gt; 	   BTS-Isis-early: ~s(age, k = 6)
+#&gt; 	   BTS-Combined (all): ~s(age, k = 6)
 #&gt; 	 vmodel:
-#&gt; 	   catch:          ~s(age, k = 3)
-#&gt; 	   BTS-Isis-early: ~1</div><div class='input'>
+#&gt; 	   catch:              ~s(age, k = 3)
+#&gt; 	   BTS-Combined (all): ~1</div><div class='input'>
 <span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  [1] "pars"    "call"    "clock"   "fitSumm" "stock.n" "harvest" "catch.n"
 #&gt;  [8] "index"   "name"    "desc"    "range"  </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>clock</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.5914760       7.7245071       0.1682277       8.4842107 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
-#&gt;                          1
-#&gt;   nopar        2.55000e+02
-#&gt;   nlogl       -1.19495e+03
-#&gt;   maxgrad      1.51931e-03
-#&gt;   nobs         7.09000e+02
-#&gt;   gcv          1.03495e-02
-#&gt;   convergence  0.00000e+00
-#&gt;   accrate               NA</div><div class='input'>
+#&gt;       0.6794755       7.8746676       0.1846974       8.7388406 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
+#&gt;                           1
+#&gt;   nopar        2.550000e+02
+#&gt;   nlogl       -1.117240e+03
+#&gt;   maxgrad      1.098070e-04
+#&gt;   nobs         8.300000e+02
+#&gt;   gcv          1.084606e-02
+#&gt;   convergence  0.000000e+00
+#&gt;   accrate                NA</div><div class='input'>
 <span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>stock.n</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] "FLQuant"   "FLArray"   "array"     "structure" "vector"   </div><div class='input'><span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>index</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] "FLQuants" "FLlst"    "list"     "vector"  </div><div class='input'>
-<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; 'log Lik.' 1194.95 (df=255)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -1879.9</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -716.1168</div><div class='input'>
+<span class='fu'>logLik</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; 'log Lik.' 1117.24 (df=255)</div><div class='input'><span class='fu'>AIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -1724.48</div><div class='input'><span class='fu'>BIC</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -520.5164</div><div class='input'>
 <span class='fu'>is</span>(<span class='fu'><a href='a4aFitSA-class.html'>pars</a></span>(<span class='no'>obj</span>))</div><div class='output co'>#&gt; [1] "SCAPars"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
