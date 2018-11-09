@@ -91,10 +91,10 @@ setMethod("burnin", signature(object="a4aFitMCMC"), function(object, burnin){
 	object@harvest <- harvest(object)[,,,,,-c(1:burnin)]
 	object@index <- lapply(index(object), function(x) x[,,,,,-c(1:burnin)])
 	object@pars@stkmodel@coefficients <- coefficients(stkmodel(pars(object)))[,-c(1:burnin)]
-	object@pars@qmodel <- submodels(lapply(qmodel(pars(object)), function(x){
+	object@pars@qmodel@.Data <- lapply(qmodel(pars(object)), function(x){
 	    x@coefficients <- x@coefficients[,-c(1:burnin)]
 	    x
-	})) 
+	}) 
 	object@pars@vmodel@.Data <- lapply(vmodel(pars(object)), function(x){
     	x@coefficients <- x@coefficients[,-c(1:burnin)]
     	x
