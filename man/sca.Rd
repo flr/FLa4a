@@ -14,8 +14,9 @@ sca(stock, indices, ...)
 
 \S4method{sca}{FLStock,FLIndices}(stock, indices, fmodel = missing,
   qmodel = missing, srmodel = missing, n1model = missing,
-  vmodel = missing, covar = missing, wkdir = missing, verbose = FALSE,
-  fit = "assessment", center = TRUE, mcmc = missing)
+  vmodel = missing, covar = missing, wkdir = missing,
+  verbose = FALSE, fit = "assessment", center = TRUE,
+  mcmc = missing)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}

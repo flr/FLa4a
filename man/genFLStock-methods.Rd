@@ -11,11 +11,14 @@
 \usage{
 genFLStock(object, R, C, F, ...)
 
-\S4method{genFLStock}{FLStock,FLQuant,FLQuant,missing}(object, R, C, F, ...)
+\S4method{genFLStock}{FLStock,FLQuant,FLQuant,missing}(object, R, C, F,
+  ...)
 
-\S4method{genFLStock}{FLStock,missing,FLQuant,FLQuant}(object, R, C, F, ...)
+\S4method{genFLStock}{FLStock,missing,FLQuant,FLQuant}(object, R, C, F,
+  ...)
 
-\S4method{genFLStock}{FLStock,FLQuant,missing,FLQuant}(object, R, C, F, ...)
+\S4method{genFLStock}{FLStock,FLQuant,missing,FLQuant}(object, R, C, F,
+  ...)
 }
 \arguments{
 \item{object}{an FLStock}

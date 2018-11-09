@@ -4,7 +4,6 @@
 \name{a4aFitSA-class}
 \alias{a4aFitSA-class}
 \alias{a4aFitSA}
-\alias{a4aFitSA}
 \alias{a4aFitSA-methods}
 \alias{a4aFit,a4aFitSA-method}
 \alias{pars}
