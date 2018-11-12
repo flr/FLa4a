@@ -5,7 +5,7 @@
 \alias{submodels}
 \alias{submodels-class}
 \alias{submodels-methods}
-\alias{[[,submodels,ANY-method}
+\alias{[[,submodels,ANY,ANY-method}
 \alias{[[}
 \alias{corBlocks}
 \alias{corBlock-methods}
@@ -27,7 +27,7 @@ submodels(...)
 
 submodels(...)
 
-\S4method{[[}{submodels,ANY}(x, i, j, ...)
+\S4method{[[}{submodels,ANY,ANY}(x, i, j, ...)
 
 corBlocks(object, ...)
 

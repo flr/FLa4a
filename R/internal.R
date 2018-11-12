@@ -177,14 +177,14 @@ write.t.sparse <- function(x, file, ...) {
 mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical = TRUE) {
   if (empirical) {
     if (n > length(mu)) {
-      mm <- MASS::mvrnorm(n, mu, Sigma, tol = tol, empirical = TRUE)
+      mm <- mvrnorm(n, mu, Sigma, tol = tol, empirical = TRUE)
     } else {
-      mm <- MASS::mvrnorm(length(mu) + 1, mu, Sigma,
+      mm <- mvrnorm(length(mu) + 1, mu, Sigma,
                           tol = tol, empirical = TRUE)
       mm <- mm[1:n, ]
     }
   } else {
-      mm <- MASS::mvrnorm(n, mu, Sigma, tol = tol, empirical = FALSE)
+      mm <- mvrnorm(n, mu, Sigma, tol = tol, empirical = FALSE)
   }
 
   # output with right dims for FLPar
