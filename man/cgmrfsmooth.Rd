@@ -48,6 +48,7 @@ lines(trend ~ year, data = dat, col = "blue", lty = 2)
 form <- y ~ s(year, k = 9, bs = "cgmrf", m = 2, fx = TRUE,
                   xt = list(gaps = gaps, weight = 0.01, xrange = c(1980, 2020)))
 
+library(mgcv)
  g <- gam(formula(form), data = dat[!dat$gap,])
  pred <- predict(g, newdata = dat, se.fit = TRUE)
  lines(dat$year, pred$fit)
