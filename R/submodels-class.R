@@ -203,7 +203,7 @@ setMethod("show", "submodels",
     if (length(object) == 0) {
       cat("\tempty object\n")
     } else {
-      lapply(object, print)
+      lapply(object, show)
     }
   }
 )
