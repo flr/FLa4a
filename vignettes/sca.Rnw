@@ -239,14 +239,13 @@ BIC(fit)
 
 The statistical catch at age (\code{sca()}) method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for fishing mortality ($F$), catchability ($Q$) and recruitment ($R$).
 
-An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt or 'MP' for a simpler assessment. By default \code{sca()} uses \code{fit='MP'}.
+An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt, 'MP' for a simpler assessment or 'MCMC' for a MCMC fit. By default \code{sca()} uses \code{fit='assessment'}.
 
 We'll start by looking at the submodel for $F$, then $Q$ and finally $R$.
 
 Please note that each of these model \emph{forms} have not been tuned to the data. The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC), etc.
 
-A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
-
+\code{sca()} gives also access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?sca} for more information.
 
 \subsection{Fishing mortality submodel}
 
