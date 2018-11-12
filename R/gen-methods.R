@@ -184,7 +184,7 @@ setMethod("genFLQuant", "submodel",
 #' @rdname genFLQuant-methods
 # if nsim > 0 the simulate nsim times
 setMethod("genFLQuant", "submodels",
-  function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
+  function(object, type = c("response", "link"), nsim = 0, seed = NULL) {
       type <- match.arg(type)
       # simulate from submodels?
       if (nsim > 0) {
@@ -200,7 +200,7 @@ setMethod("genFLQuant", "submodels",
 #' @rdname genFLQuant-methods
 # if nsim > 0 the simulate nsim times
 setMethod("genFLQuant", "a4aStkParams",
-  function(object, type = c("link", "response"), nsim = 0, seed = NULL, simulate.recruitment = FALSE) {
+  function(object, type = c("response", "link"), nsim = 0, seed = NULL, simulate.recruitment = FALSE) {
     # type is always response for a stock model...
     type <- match.arg(type)
     # simulate from submodels?
