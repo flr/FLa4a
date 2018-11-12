@@ -18,10 +18,10 @@ genFLQuant(object, ...)
 \S4method{genFLQuant}{submodel}(object, type = c("response", "link"),
   nsim = 0, seed = NULL)
 
-\S4method{genFLQuant}{submodels}(object, type = c("link", "response"),
+\S4method{genFLQuant}{submodels}(object, type = c("response", "link"),
   nsim = 0, seed = NULL)
 
-\S4method{genFLQuant}{a4aStkParams}(object, type = c("link", "response"),
+\S4method{genFLQuant}{a4aStkParams}(object, type = c("response", "link"),
   nsim = 0, seed = NULL, simulate.recruitment = FALSE)
 }
 \arguments{

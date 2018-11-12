@@ -5,6 +5,8 @@
 \alias{submodels}
 \alias{submodels-class}
 \alias{submodels-methods}
+\alias{[[,submodels,ANY-method}
+\alias{[[}
 \alias{corBlocks}
 \alias{corBlock-methods}
 \alias{corBlocks,submodels-method}
@@ -24,6 +26,8 @@
 submodels(...)
 
 submodels(...)
+
+\S4method{[[}{submodels,ANY}(x, i, j, ...)
 
 corBlocks(object, ...)
 
@@ -54,15 +58,15 @@ corBlocks(object, ...) <- value
 \arguments{
 \item{...}{additional argument list that might never be used}
 
-\item{object}{object of relevant class (see signature of method)}
-
 \item{x}{object to be modified}
+
+\item{i, j}{indices specifying elements to extract or replace.}
+
+\item{object}{object of relevant class (see signature of method)}
 
 \item{value}{value the new object}
 
 \item{name}{name(s) of entry to be extracted / modified}
-
-\item{i, j}{indices specifying elements to extract or replace.}
 
 \item{iter}{the number of iterations to create}
 
