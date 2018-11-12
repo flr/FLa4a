@@ -15,7 +15,7 @@ smooth.construct.cgmrf.smooth.spec <- function (object, data, knots) {
   nx <- length(x)
 
   # contruct an m_th order distance matrix
-  D <- gmrf::Drw(nx, order = m)
+  D <- Drw(nx, order = m)
 
   # set up the step variances (nx - m steps)
   weights <- rep(1, nx - m)
@@ -78,56 +78,25 @@ Predict.matrix.cgmrf.smooth <- function (object, data)
 }
 
 
-
-smooth.construct.bs_knots.smooth.spec <- function(object, data, knots) {
-
-  if (!is.null(object$xt$gaps)) {
-
-    # spread knots accross data range avoiding the gaps
-    x <- unique(data[[object$term]])
-    xg <- x[!x %in% object$xt$gaps]
-
-    k <- getknots(x, object$p.order[1], object$bs.dim, xg)
-
-    knots <- list(k)
-    names(knots) <- object$term
-  } else {
-    knots <- object$xt$knots
-  }
-
-  mgcv::smooth.construct.bs.smooth.spec(object, data, knots)
+# taken from colins gmrf package - once on CRAN will link directly
+Drw <- function (n, order = 2, cyclic = FALSE)
+{
+    stopifnot(order > 0)
+    out <- diag(n)
+    for (i in 1:order) {
+        out <- out %*% Drw1(n, cyclic = TRUE)
+    }
+    if (cyclic)
+        out
+    else out[1:(n - order), ]
 }
 
-
-getknots <- function(x, m, bs.dim, available_x = x) {
-  # number of required knots
-  nk <- bs.dim - m + 1
-
-  # what is the average knot distance
-  xl <- min(x)
-  xu <- max(x)
-  xr <- xu - xl
-  xl <- xl - xr * 0.001
-  xu <- xu + xr * 0.001
-  dx <- (xu - xl) / (nk - 1)
-
-  # outer knots are easy:
-  k_outer_lower <- xl - (m:1) * dx
-  k_outer_upper <- xu + (1:m) * dx
-
-  ## get knots based in distribution of available data
-  xdens <- density(available_x, bw = dx / 2)
-  # restrict to data range
-  xdens_which <- which(xdens$x >=xl & xdens$x <= xu)
-  xcumdens <- cumsum(xdens$y[xdens_which]) / sum(xdens$y[xdens_which])
-
-  k_inner <-
-    approx(x = c(0, xcumdens),
-           y = c(xl, xdens$x[xdens_which]),
-           xout = seq(0, 1, length = nk))$y
-  k_inner[1] <- xl
-  k_inner[nk] <- xu
-
-  # construct all knots
-  c(k_outer_lower, k_inner, k_outer_upper)
+Drw1 <- function (n, cyclic = FALSE)
+{
+    out <- diag(n)
+    diag(out[, -1]) <- -1
+    out[n, 1] <- -1
+    if (cyclic)
+        out
+    else out[-n, ]
 }
