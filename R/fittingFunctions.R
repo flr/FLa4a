@@ -1006,8 +1006,9 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     # fill up q submodels
     qmodels <- vector("list", length(indices))
     for (i in seq_along(qmodels)) {
+      iname <- gsub("[)]", "[)]", gsub("[(]", "[(]", name(indices[[i]])))
       which_pars <-
-        grep(sprintf("(^qMod:%s:)", name(indices[[i]])), par_names)
+        grep(sprintf("(^qMod:%s:)", iname), par_names)
       qmodels[[i]] <-
         submodel(
           name = name(indices[[i]]),
@@ -1049,8 +1050,9 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
           linkinv = exp
         )
     for (i in seq_along(indices)) {
+      iname <- gsub("[)]", "[)]", gsub("[(]", "[(]", name(indices[[i]])))
       which_pars <-
-        grep(sprintf("(^vMod:%s:)", name(indices[[i]])), par_names)
+        grep(sprintf("(^vMod:%s:)", iname), par_names)
       vmodels[[i + 1]] <-
         submodel(
           name = name(indices[[i]]),
