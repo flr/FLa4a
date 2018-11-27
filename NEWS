@@ -7,6 +7,7 @@
  - sca.est and sep.est adjusted to new mse naming convention.
  
  BUG FIXES:
+ - default models for N1 and variance fixed
 
  FLa4a 1.5.x:
 
