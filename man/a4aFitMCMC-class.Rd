@@ -39,8 +39,6 @@ burnin(object, ...)
 \item{x}{an object to be coerced into mcmc}
 
 \item{burnin}{a numeric with the number of iterations to be removed}
-
-\item{object}{a \code{a4aFitMCMC} object}
 }
 \description{
 The \code{a4aFitMCMC} class extends \code{a4aFitSA} to store information about the MCMC run.

@@ -8,6 +8,9 @@
 \usage{
 a4aSCA(...)
 }
+\arguments{
+\item{...}{additional argument list that might never be used}
+}
 \description{
 Deprecated methods.
 }

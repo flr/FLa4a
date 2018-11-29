@@ -4,6 +4,7 @@ globalVariables(c("obs", "year", "age", "fleet"))
 #' @name deprecated
 #' @docType methods
 #' @rdname deprecated
+#' @template dots
 #' @description Deprecated methods.
 #' @aliases a4aSCA
 a4aSCA <- function(...){
