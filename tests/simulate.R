@@ -38,7 +38,7 @@ max(rat) - min(rat) < err/10
 # while here it shouldn't ...
 obj <- simulate(stkm, nits, empirical = FALSE)
 rat <- cov(t(params(obj)))/vcov(stkm)[,,1,drop=T]
-max(rat) - min(rat) > err*4
+max(rat) - min(rat) < err
 
 #====================================================================
 # abundance indices

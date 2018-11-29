@@ -1,0 +1,610 @@
+\documentclass[a4paper,english,10pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.196, 0.196, 0.196}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.063,0.58,0.627}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.063,0.58,0.627}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.588,0.588,0.588}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.196,0.196,0.196}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.196,0.196,0.196}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.231,0.416,0.784}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.627,0,0.314}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0.631,0.314}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.78,0.227,0.412}{#1}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{a4a}
+%\VignetteIndexEntry{Individual Growth and Stochastic Slicing}
+%\VignetteEngine{knitr::knitr}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Assessment for All initiative(a4a) \\ Modelling Individual Growth and Using Stochastic Slicing to Convert Length-based Data Into Age-based Data}
+
+\input{authors}
+
+\maketitle
+
+\abstract{The document explains the approach being developed by a4a to integrate uncertainty in individual growth into stock assessment and advice. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided.}
+
+\newpage
+\tableofcontents
+\newpage
+
+
+
+\section{Background}
+
+The \aFa stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth model and the uncertainty about the model parameters.
+
+Within the \aFa framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
+
+\input{formoreinfo}
+
+%% ======================================
+%% Call child document with libs and data
+
+\section{Installing and loading libraries}
+
+To run the \pkg{FLa4a} methods the reader will need to install the package and its dependencies and load them. Some datasets are distributed with the package and as such need to be loaded too.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# from CRAN}
+\hlkwd{install.packages}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"copula"}\hlstd{,} \hlstr{"triangle"}\hlstd{,} \hlstr{"coda"}\hlstd{))}
+\hlcom{# from FLR}
+\hlkwd{install.packages}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"FLCore"}\hlstd{,} \hlstr{"FLa4a"}\hlstd{),} \hlkwc{repos} \hlstd{=} \hlstr{"http://flr-project.org/R"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# libraries}
+\hlkwd{library}\hlstd{(devtools)}
+\hlkwd{library}\hlstd{(FLa4a)}
+\hlkwd{library}\hlstd{(XML)}
+\hlkwd{library}\hlstd{(reshape2)}
+\hlkwd{library}\hlstd{(latticeExtra)}
+\hlcom{# datasets}
+\hlkwd{data}\hlstd{(ple4)}
+\hlkwd{data}\hlstd{(ple4.indices)}
+\hlkwd{data}\hlstd{(ple4.index)}
+\hlkwd{data}\hlstd{(rfLen)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{packageVersion}\hlstd{(}\hlstr{"FLCore"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] '2.6.9.9007'
+\end{verbatim}
+\begin{alltt}
+\hlkwd{packageVersion}\hlstd{(}\hlstr{"FLa4a"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] '1.6.2'
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+
+\section{How to read this document}
+
+The target audience for this document are readers with some experience in R and some background on stock assessment.
+
+The document explains the approach being developed by \aFa for fish stock assessment and scientific advice. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided. Moreover, having the code allows the reader to copy/paste and replicate the analysis presented here.
+
+The sections and subsections are as independent as possible, so it can be used as a reference document for the \pkg{FLa4a}. 
+
+%Section~\ref{sec:in} deals with reading and preparing data in \pkg{FLR} objects, which constitute the basic dataset for stock assessment with length structured models. This section is independent from \pkg{FLa4a} and relies mostly on \R and \pkg{reshape}.
+
+%Sections~\ref{sec:l2a},\ref{sec:M} and \ref{sec:sca} are related with \pkg{FLa4a} and describe the concepts described in the previous section.
+
+Finally, this is a live document which will be updated and released often.
+
+
+
+\section{a4aGr - The growth class}
+
+The conversion of length data to age is performed through the use of a growth model. The implementation is done through the \class{a4aGr} class.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aGr"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "a4aGr" [package "FLa4a"]
+## 
+## Slots:
+##                                                                   
+## Name:      grMod  grInvMod    params      vcov     distr      name
+## Class:   formula   formula     FLPar     array character character
+##                           
+## Name:       desc     range
+## Class: character   numeric
+## 
+## Extends: "FLComp"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+To construct an \class{a4aGr} object, the growth model and parameters must be provided.
+Check the help file for more information.
+
+Here we show an example using the von Bertalanffy growth model. To create the \class{a4aGr} object it's necessary to pass the model equation ($length \sim time$), the inverse model equation ($time \sim length$) and the parameters. Any growth model can be used as long as it's possible to write the model (and the inverse) as an R formula.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
+    \hlstr{"year-1"}\hlstd{,} \hlstr{"year"}\hlstd{)))}
+
+\hlcom{# Check the model and its inverse}
+\hlstd{lc} \hlkwb{=} \hlnum{20}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{= lc)}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##           1
+##   1 4.86575
+\end{verbatim}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{= lc))} \hlopt{==} \hlstd{lc}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##        1
+##   1 TRUE
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The predict method allows the transformation between age and lengths using the growth model.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##            1
+##   1 1.149080
+##   2 1.370570
+##   3 1.596362
+##   4 1.826625
+##   5 2.061540
+##   6 2.301299
+\end{verbatim}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##            1
+##   1 22.04376
+##   2 25.04796
+##   3 27.80460
+##   4 30.33408
+##   5 32.65511
+##   6 34.78488
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\section{Adding uncertainty to growth parameters with a multivariate normal distribution}
+
+Uncertainty in the growth model is introduced through the inclusion of parameter uncertainty.
+This is done by making use of the parameter variance-covariance matrix (the \code{vcov} slot of the \class{a4aGr} class) and assuming a distribution. The numbers in the variance-covariance matrix could come from the parameter uncertainty from fitting the growth model parameters.
+
+Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2. Based on 
+
+$$\rho_{x,y}=\frac{\Sigma_{x,y}}{\sigma_x \sigma_y}$$
+
+and 
+
+$$CV_x=\frac{\sigma_x}{\mu_x}$$
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Make an empty cor matrix}
+\hlstd{cm} \hlkwb{<-} \hlkwd{diag}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlcom{# k and linf are negatively correlated while t0 is independent}
+\hlstd{cm[}\hlnum{1}\hlstd{,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlstd{cm[}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlopt{-}\hlnum{0.5}
+\hlcom{# scale cor to var using CV=0.2}
+\hlstd{cv} \hlkwb{<-} \hlnum{0.2}
+\hlstd{p} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{60}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.09}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlopt{-}\hlnum{0.01}\hlstd{)}
+\hlstd{vc} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{1}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{3}\hlstd{)}
+\hlstd{l} \hlkwb{<-} \hlstd{vc}
+\hlstd{l[}\hlnum{1}\hlstd{, ]} \hlkwb{<-} \hlstd{l[,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlstd{p[}\hlnum{1}\hlstd{]} \hlopt{*} \hlstd{cv}
+\hlstd{k} \hlkwb{<-} \hlstd{vc}
+\hlstd{k[,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlstd{k[}\hlnum{2}\hlstd{, ]} \hlkwb{<-} \hlstd{p[}\hlnum{2}\hlstd{]} \hlopt{*} \hlstd{cv}
+\hlstd{t} \hlkwb{<-} \hlstd{vc}
+\hlstd{t[}\hlnum{3}\hlstd{, ]} \hlkwb{<-} \hlstd{t[,} \hlnum{3}\hlstd{]} \hlkwb{<-} \hlstd{p[}\hlnum{3}\hlstd{]} \hlopt{*} \hlstd{cv}
+\hlstd{mm} \hlkwb{<-} \hlstd{t} \hlopt{*} \hlstd{k} \hlopt{*} \hlstd{l}
+\hlkwd{diag}\hlstd{(mm)} \hlkwb{<-} \hlkwd{diag}\hlstd{(mm)}\hlopt{^}\hlnum{2}
+\hlstd{mm} \hlkwb{<-} \hlstd{mm} \hlopt{*} \hlstd{cm}
+\hlcom{# check that we have the intended correlation}
+\hlkwd{all.equal}\hlstd{(cm,} \hlkwd{cov2cor}\hlstd{(mm))}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Create the a4aGr object as before but now we also include the vcov argument for the variance-covariance matrix.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{= p[}\hlstr{"linf"}\hlstd{],} \hlkwc{k} \hlstd{= p[}\hlstr{"k"}\hlstd{],} \hlkwc{t0} \hlstd{= p[}\hlstr{"t0"}\hlstd{],}
+    \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,} \hlstr{"year-1"}\hlstd{,} \hlstr{"year"}\hlstd{)),} \hlkwc{vcov} \hlstd{= mm)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+First we show a simple example where we assume that the parameters are represented using a multivariate normal distribution.
+% This covariance matrix can have iterations (i.e. each iteration can have a different covariance matrix). CHECK
+% If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Note that the object we have just created has a single iteration of each}
+\hlcom{# parameter}
+\hlstd{vbObj}\hlopt{@}\hlkwc{params}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLPar"
+## params
+##  linf     k    t0 
+## 60.00  0.09 -0.01 
+## units:  cm year-1 year
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(vbObj}\hlopt{@}\hlkwc{params}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] 3 1
+\end{verbatim}
+\begin{alltt}
+\hlcom{# We simulate 10000 iterations from the a4aGr object by calling mvrnorm()}
+\hlcom{# using the variance-covariance matrix we created earlier.}
+\hlstd{vbNorm} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{10000}\hlstd{, vbObj)}
+\hlcom{# Now we have 10000 iterations of each parameter, randomly sampled from the}
+\hlcom{# multivariate normal distribution}
+\hlstd{vbNorm}\hlopt{@}\hlkwc{params}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLPar"
+## iters:  10000 
+## 
+## params
+##                linf                   k                  t0 
+## 59.938142(12.12146)  0.089728( 0.01796) -0.010007( 0.00201) 
+## units:  cm year-1 year
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(vbNorm}\hlopt{@}\hlkwc{params}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1]     3 10000
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+We can now convert from length to ages data based on the 10000 parameter iterations. This gives us 10000 sets of age data. For example, here we convert a single length vector using each of the 10000 parameter iterations: 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{ages} \hlkwb{<-} \hlkwd{predict}\hlstd{(vbNorm,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\hlkwd{dim}\hlstd{(ages)}
+\end{alltt}
+\begin{verbatim}
+## [1]     6 10000
+\end{verbatim}
+\begin{alltt}
+\hlcom{# We show the first ten iterations only as an illustration}
+\hlstd{ages[,} \hlnum{1}\hlopt{:}\hlnum{10}\hlstd{]}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##            1        2        3         4        5        6         7
+##   1 2.292423 1.028023 1.581493 0.8859694 1.172952 1.053947 0.8543163
+##   2 2.730200 1.228311 1.898970 1.0582189 1.406519 1.256442 1.0207860
+##   3 3.174352 1.432370 2.226293 1.2333680 1.646520 1.462063 1.1905436
+##   4 3.625067 1.640343 2.564095 1.4115158 1.893320 1.670909 1.3637216
+##   5 4.082542 1.852384 2.913068 1.5927669 2.147313 1.883082 1.5404608
+##   6 4.546984 2.068655 3.273977 1.7772313 2.408934 2.098690 1.7209105
+##    iter
+##            8         9       10
+##   1 1.325308 0.6956608 1.609403
+##   2 1.583996 0.8290083 1.933204
+##   3 1.848090 0.9638695 2.267533
+##   4 2.117821 1.1002791 2.613100
+##   5 2.393434 1.2382732 2.970685
+##   6 2.675193 1.3778889 3.341155
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_norm_params-1} 
+
+}
+
+\caption[The marginal distributions of each of the parameters from using a multivariate normal distribution]{The marginal distributions of each of the parameters from using a multivariate normal distribution.}\label{fig:plot_norm_params}
+\end{figure}
+
+
+\end{knitrout}
+
+The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_norm_scatter-1} 
+
+}
+
+\caption[Scatter plot of the 10000 samples parameter from the multivariate normal distribution]{Scatter plot of the 10000 samples parameter from the multivariate normal distribution.}\label{fig:plot_norm_scatter}
+\end{figure}
+
+
+\end{knitrout}
+
+Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_mv_growth-1} 
+
+}
+
+\caption[Growth curves using parameters simulated from a multivariate normal distribution]{Growth curves using parameters simulated from a multivariate normal distribution.}\label{fig:plot_mv_growth}
+\end{figure}
+
+
+\end{knitrout}
+
+\section{Adding uncertainty to growth parameters with a multivariate triangle distribution}
+\label{sec:growth_triangle_cop}
+
+One alternative to using a normal distribution is to use a \href{http://en.wikipedia.org/wiki/Triangle\_distribution}{triangle distribution}. We use the package \href{http://cran.r-project.org/web/packages/triangle/index.html}{\pkg{triangle}}, where this distribution is parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+
+Here we show an example of setting a triangle distribution with values taken from Fishbase.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# The web address for the growth parameters for redfish (Sebastes}
+\hlcom{# norvegicus)}
+\hlstd{addr} \hlkwb{<-} \hlstr{"http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"}
+\hlcom{# Scrape the data}
+\hlstd{tab} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{readHTMLTable}\hlstd{(addr))}
+\hlcom{# Load local copy if no web}
+\hlkwa{if} \hlstd{(}\hlkwd{is}\hlstd{(tab,} \hlstr{"try-error"}\hlstd{))} \hlkwd{load}\hlstd{(}\hlstr{"data/tab.RData"}\hlstd{)}
+\hlcom{# Interrogate the data table and get vectors of the values}
+\hlstd{linf} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{2}\hlstd{]))}
+\hlstd{k} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{4}\hlstd{]))}
+\hlstd{t0} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{5}\hlstd{]))}
+\hlcom{# Set the min (a), max (b) and median (c) values for the parameter as a list}
+\hlcom{# of lists Note that t0 has no 'c' (median) value. This makes the}
+\hlcom{# distribution symmetrical}
+\hlstd{triPars} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{min}\hlstd{(linf),} \hlkwc{b} \hlstd{=} \hlkwd{max}\hlstd{(linf),} \hlkwc{c} \hlstd{=} \hlkwd{median}\hlstd{(linf)),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{min}\hlstd{(k),}
+    \hlkwc{b} \hlstd{=} \hlkwd{max}\hlstd{(k),} \hlkwc{c} \hlstd{=} \hlkwd{median}\hlstd{(k)),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{median}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)} \hlopt{-} \hlkwd{IQR}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)}\hlopt{/}\hlnum{2}\hlstd{,}
+    \hlkwc{b} \hlstd{=} \hlkwd{median}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)} \hlopt{+} \hlkwd{IQR}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)}\hlopt{/}\hlnum{2}\hlstd{))}
+\hlcom{# Simulate 10000 times using mvrtriangle}
+\hlstd{vbTri} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{paramMargins} \hlstd{= triPars)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The marginals will reflect the uncertainty on the parameter values that were scraped from \href{http://fishbase.org}{Fishbase} but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
+The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params} and the shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_tri_params-1} 
+
+}
+
+\caption[The marginal distributions of each of the parameters from using a multivariate triangle distribution]{The marginal distributions of each of the parameters from using a multivariate triangle distribution.}\label{fig:plot_tri_params}
+\end{figure}
+
+
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_tri_scatter-1} 
+
+}
+
+\caption[Scatter plot of the 10000 samples parameter from the multivariate triangle distribution]{Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.}\label{fig:plot_tri_scatter}
+\end{figure}
+
+
+\end{knitrout}
+
+We can still use \code{predict()} to see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_tri_growth-1} 
+
+}
+
+\caption[Growth curves using parameters simulated from a multivariate triangle distribution]{Growth curves using parameters simulated from a multivariate triangle distribution.}\label{fig:plot_tri_growth}
+\end{figure}
+
+
+\end{knitrout}
+
+Remember that the above examples use a variance-covariance matrix that we essentially made up. An alternative would be to scrape the entire growth parameters dataset from Fishbase and compute the shape of the variance-covariance matrix yourself.
+
+\section{Adding uncertainty to growth parameters with statistical copulas}
+
+A more general approach to adding parameter uncertainty is to make use of \href{http://www.encyclopediaofmath.org/index.php/Copula}{statistical copulas} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \href{http://cran.r-project.org/web/packages/copula/}{\pkg{copula}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \pkg{copula} for more information. 
+
+% Needs more explanation
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbCop} \hlkwb{<-} \hlkwd{mvrcop}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{copula} \hlstd{=} \hlstr{"archmCopula"}\hlstd{,} \hlkwc{family} \hlstd{=} \hlstr{"clayton"}\hlstd{,} \hlkwc{param} \hlstd{=} \hlnum{2}\hlstd{,}
+    \hlkwc{margins} \hlstd{=} \hlstr{"triangle"}\hlstd{,} \hlkwc{paramMargins} \hlstd{= triPars)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_cop_tri_scatter-1} 
+
+}
+
+\caption[Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins]{Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.}\label{fig:plot_cop_tri_scatter}
+\end{figure}
+
+
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+{\centering \includegraphics[width=.9\linewidth]{figure/plot_cop_tri_growth-1} 
+
+}
+
+\caption[Growth curves from the using an archmCopula copula with triangle margins]{Growth curves from the using an archmCopula copula with triangle margins.}\label{fig:plot_cop_tri_growth}
+\end{figure}
+
+
+\end{knitrout}
+
+\section{Converting from length to age based data - the \code{l2a()} method}
+
+After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There are two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
+
+When converting from length-based data to age-based data you need to be aware of how the aggregation of length classes is performed. For example, individuals in length classes 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
+
+If the values are abundances then the values should be summed. Summing other types of values, such as mean weight, does not make sense. Instead these values are averaged over the length classes (possibly weighted by the abundance). This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default). Fishing mortality is not computed to avoid making wrong assumptions about the meaning of F at length.
+
+We demonstrate the method by converting a catch-at-length \class{FLQuant} to a catch-at-age \class{FLQuant}. First we make an \class{a4aGr} object with a multivariate triangle distribution (using the parameters we set above). We use 10 iterations as an example. And call \code{l2a()} by passing in the length-based \class{FLQuant} and the \class{a4aGr} object.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbTriSmall} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{10}\hlstd{, vbObj,} \hlkwc{paramMargins} \hlstd{= triPars)}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{l2a}\hlstd{(}\hlkwd{catch.n}\hlstd{(rfLen.stk), vbTriSmall)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(cth.n)}
+\end{alltt}
+\begin{verbatim}
+## [1] 64 26  1  4  1 10
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+In the previous example, the \class{FLQuant} object that was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all \pkg{FLR} objects, the general rule is \emph{one or n} iterations.
+
+As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{catch.wt} and \code{sel.pattern} slots of an \class{FLIndex} object are averaged, while the \code{index}, \code{index.var} and \code{catch.n} slots are summed. 
+
+The method for \class{FLStock} classes takes an additional argument for the plusgroup.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{aStk} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfLen.stk, vbTriSmall,} \hlkwc{plusgroup} \hlstd{=} \hlnum{14}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in .local(object, model, ...): Individual weights, M and maturity will be (weighted) averaged accross lengths,\\\#\#\ \ harvest is not computed and everything else will be summed.\\\#\#\ \ If this is not what you want, you'll have to deal with these slots by hand.}}
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in .local(object, model, ...): Some ages are less than 0, indicating a mismatch between input data lengths\\\#\#\ \ and growth parameters (possibly t0)}}
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in .local(object, model, ...): Trimming age range to a minimum of 0}}\begin{verbatim}
+## [1] "maxfbar has been changed to accomodate new plusgroup"
+\end{verbatim}
+\begin{alltt}
+\hlstd{aIdx} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfTrawl.idx, vbTriSmall)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in l2a(rfTrawl.idx, vbTriSmall): Some ages are less than 0, indicating a mismatch between input data lengths\\\#\#\ \ and growth parameters (possibly t0)}}
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in l2a(rfTrawl.idx, vbTriSmall): Trimming age range to a minimum of 0}}\end{kframe}
+\end{knitrout}
+
+When converting with \code{l2a()} all lengths above Linf are converted to the 
+maximum age, as there is no information in the growth model about how to deal with individuals larger than Linf. 
+
+\end{document}
+

@@ -62,7 +62,7 @@ defaultN1mod <- function(stock){
   } else if(dis$age>1 & dis$age<=3){
 	frm <- ~factor(age)
   } else {
-	frm <- ~ s(age, k = 4)
+	frm <- ~ s(age, k = 3)
   }
   as.formula(frm)
 }
@@ -71,7 +71,15 @@ defaultN1mod <- function(stock){
 #' @aliases defaultVmod
 defaultVmod <- function(stock, indices){
   vmodel  <- lapply(seq(length(indices) + 1), function(i) ~ 1)
-  vmodel[[1]] <- ~ s(age, k = 3)
+  dis <- dims(stock)
+  if(dis$age==1){
+	frm <- ~1
+  } else if(dis$age>1 & dis$age<=3){
+	frm <- ~factor(age)
+  } else {
+	frm <- ~ s(age, k = 3)
+  }
+  vmodel[[1]] <- frm
   vmodel
 }
 
