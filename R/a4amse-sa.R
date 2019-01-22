@@ -27,7 +27,7 @@ sca.sa <- function(stk, idx, genArgs, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args$tracking <- NULL
 	fit <- do.call('sca', args)
 	stk <- stk + fit
-	tracking["conv.est",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
+	tracking["conv.est",ac(range(stk)["maxyear"] + 1)] <- fit@fitSumm["maxgrad",]
 	list(stk = stk, tracking = tracking)
 }
 

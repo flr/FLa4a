@@ -240,7 +240,7 @@ setMethod("genFLQuant", "a4aStkParams",
       # set up N quant
       N <- flqs$harvest
       N[] <- NA
-      units(N) <- ""
+      units(N) <- "1000"
 
       # initial age structure
       N[1,1] <- flqs$rec[1,1]
@@ -273,15 +273,20 @@ setMethod("genFLQuant", "a4aStkParams",
         x[!is.na(x)] <- cumsum(x[!is.na(x)])
         x
       }
-      Z <- FLCohort(flqs$harvest + m(object))
-      Z[] <- apply(Z, c(2:6), cumsumNA)
+      Z <- flqs$harvest + m(object)
+
+      cumZ <- apply(FLCohort(Z), c(2:6), cumsumNA)
 
       # expand variability into [N] by R*[F]
 
       Ns <- FLCohort(flqs$harvest)
       Ns[,-(1:(dms$age-1))] <- flqs$rec[rep(1,dms$age)]
+      
       Ns[,1:(dms$age-1)] <- apply(FLCohort(flqs$ny1), 2:6, sum, na.rm = TRUE)[rep(1,dms$age),1:(dms$age-1)]
-      Ns <- Ns*exp(-Z)
+      
+      Ns <- Ns * exp(-cumZ)
+      units(Ns) <- object@units
+      
       # convert back from cohort shape
       Ns <- as(Ns, "FLQuant")
 
@@ -291,13 +296,16 @@ setMethod("genFLQuant", "a4aStkParams",
       N[1] <- flqs$rec
       # [N]
       N[-1,-1] <- Ns[-dms$age,-dms$year]
+      # [N,1]
+      N[-1, 1] <- flqs$ny1[-1,]
       # plus group
-      N[dms$age,-1] <- Ns[dms$age,-1] + N[dms$age,-1]
+      for(y in seq(2, dms$year))
+        N[dms$age, y] <- Ns[dms$age - 1, y-1] + N[dms$age, y-1] * exp(-Z[dms$age, y-1])
     }
-
     # [C]
     Z <- flqs$harvest + m(object)
     C <- flqs$harvest/Z*(1-exp(-Z))*N
+    units(C) <- units(N)
 
     # out
     if (type == "response") {

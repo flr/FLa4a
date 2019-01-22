@@ -773,10 +773,11 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	a4aout@desc    <- stock@desc
 	a4aout@range   <- stock@range
 	a4aout@call    <- match.call()
-	a4aout@stock.n <- FLQuant(stk.n) * exp(center.log[1])
+	a4aout@stock.n <- FLQuant(stk.n, units=units(catch.n(stock))) * exp(center.log[1])
 	a4aout@harvest <- FLQuant(hvst, units = "f")
 	Z <- a4aout@harvest + m(stock)
 	a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
+  units(a4aout@catch.n) <- units(catch.n(stock))
 
 	index <- lapply(1:length(indices), function(i) {
 	 	dmns <- dimnames(logq[[i]])
@@ -828,6 +829,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     a4aout@pars@stkmodel@mat       <- mat(stock)
 		a4aout@pars@stkmodel@link      <- log
 		a4aout@pars@stkmodel@linkinv   <- exp
+    a4aout@pars@stkmodel@units     <- units(catch.n(stock))
 		pars <- out$par.est
 		active <- sapply(out$par.std, length) > 0
 		# add in iter dimension
