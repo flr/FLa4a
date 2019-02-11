@@ -1,4 +1,8 @@
 # .travis.yml for FLa4a
+
+env:
+  - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
+
 warnings_are_errors: false
 
 os:
@@ -20,8 +24,6 @@ addons:
 repos:
   CRAN: https://cloud.r-project.org
   flr: http://flr-project.org/R
-
-r_github_packages: flr/FLCore
 
 cache: packages
 
