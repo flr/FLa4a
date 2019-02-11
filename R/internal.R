@@ -65,12 +65,12 @@ os.type <- function (type = c("linux", "windows", "osx", "else"))
 #    }
 #    return(result)
 #  }
+  else if (type == "osx") {
+    return(Sys.info()["sysname"] == "Darwin")
+  }
   else if (type == "linux") {
 #    return((.Platform$OS.type == "unix") && !os.type("mac"))
-    return(.Platform$OS.type == "unix")
-  }
-  else if (type == "osx") {
-    return(grepl("^darwin", R.version$os))
+    return(.Platform$OS.type == "unix" && Sys.info()["sysname"] != "Darwin")
   }
   else if (type == "else") {
     return(TRUE)
