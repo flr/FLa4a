@@ -58,14 +58,26 @@ os.type <- function (type = c("linux", "windows", "osx", "else")) {
   type <- match.arg(type)
   if (type == "windows") {
     .Platform$OS.type == "windows"
-  } else if (type == "linux") {
-    .Platform$OS.type == "unix"
-  } else if (type == "osx") {
-    grepl("^darwin", R.version$os)
-  } else if (type == "else") {
-    TRUE
-  } else {
-    stop("Unknown OS")
+  }
+#  else if (type == "mac") {
+#   result = (file.info("/Library")$isdir && file.info("/Applications")$isdir)
+#    if (is.na(result)) {
+#      result = FALSE
+#    }
+#    return(result)
+#  }
+  else if (type == "osx") {
+    return(Sys.info()["sysname"] == "Darwin")
+  }
+  else if (type == "linux") {
+#    return((.Platform$OS.type == "unix") && !os.type("mac"))
+    return(.Platform$OS.type == "unix" && Sys.info()["sysname"] != "Darwin")
+  }
+  else if (type == "else") {
+    return(TRUE)
+  }
+  else {
+    stop("This shouldn't happen.")
   }
 }
 
