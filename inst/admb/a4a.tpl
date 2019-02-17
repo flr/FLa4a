@@ -1,7 +1,7 @@
 //  --------------------------------------------------------------------------
-// Copyright (c) 2008,2009,2010,2011,2012, Anders Nielsen <an@aqua.dtu.dk> 
+// Copyright (c) 2008,2009,2010,2011,2012, Anders Nielsen <an@aqua.dtu.dk>
 // and Colin Millar. All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 //   * Redistributions of source code must retain the above copyright
@@ -12,21 +12,21 @@
 //   * Neither the name of the assessment tool a4a nor the
 //     names of its contributors may be used to endorse or promote products
 //     derived from this software without specific prior written permission.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-// ARE DISCLAIMED. IN NO EVENT SHALL ANDERS NIELSEN OR COLIN MILLAR BE LIABLE 
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
-// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL ANDERS NIELSEN OR COLIN MILLAR BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 //  --------------------------------------------------------------------------
 
-GLOBALS_SECTION 
+GLOBALS_SECTION
   #include <time.h>
   time_t StartTime;   //Time variables, for use in timing loop
   #include <df1b2fun.h>
@@ -37,16 +37,16 @@ GLOBALS_SECTION
   //#define TRACE(object) clogf<<"line "<<__LINE__<<", file "<<__FILE__<<", "\
   //                           <<#object" =\n"<<object<<endl<<endl;
 
-  /* differentiable function for the likelihood */ 
+  /* differentiable function for the likelihood */
 
-  dvariable nldnorm(const double& obs, const dvariable& mu, 
+  dvariable nldnorm(const double& obs, const dvariable& mu,
                     const dvariable& var){
     return 0.5*(log(2.0*M_PI*var)+square(obs-mu)/var);
   }
 
-  /* differentiable function for the likelihood */ 
+  /* differentiable function for the likelihood */
 
-  dvariable nldnorm(const dvariable& obs, const dvariable& mu, 
+  dvariable nldnorm(const dvariable& obs, const dvariable& mu,
                     const dvariable& var){
     return 0.5*(log(2.0*M_PI*var)+square(obs-mu)/var);
   }
@@ -60,7 +60,7 @@ DATA_SECTION
 
   !! time(&StartTime);
 
-  // 
+  //
   // This first block is for the data
   //
 
@@ -69,7 +69,7 @@ DATA_SECTION
   //!!TRACE(ageRange)
   init_vector yearRange(1,2) // full year range
   //!!TRACE(yearRange)
-  // The number of surveys and when they take place */  
+  // The number of surveys and when they take place */
   init_int nsurveys // number of surveys
   //!!TRACE (nsurveys)
   init_vector surveyMinAge(1,nsurveys) // min age of surveys
@@ -78,19 +78,19 @@ DATA_SECTION
   //!!TRACE (surveyMaxAge)
   init_vector surveyTimes(1,nsurveys) // when does survey take place
   //!!TRACE (surveyTimes)
-  // The fbar range and plus group information */  
+  // The fbar range and plus group information */
   init_vector fbarRange(1,2) // fbar age range
   //!!TRACE(fbarRange)
   init_int isPlusGrp // is oldest age a plus group; 0 = NO; 1 = YES
   //!!TRACE(isPlusGrp)
-  // The number of observations and the observation data */  
+  // The number of observations and the observation data */
   init_int noobs // number of observations
   //!!TRACE(noobs)
   init_matrix obs(1,noobs,1,5) // fleet year age obs weight
   //!!TRACE(obs)
   // The number of auxilliary data points (we need this info for missing values and predictions) *
   // and the auxilliary data. Explicit covariates will enter in the design matrices...           *
-  // but this could pose a problem for prediction...                                             * 
+  // but this could pose a problem for prediction...                                             *
   init_int noaux // number of auxilliary data points ( should be diff(yearRange) * diff(ageRange) )
   //!!TRACE(noaux)
   init_matrix aux(1,noaux,1,7) //  year  age     m       m.spwn  harvest.spwn    mat * stkwt  stkwt
@@ -114,7 +114,7 @@ DATA_SECTION
   !! maxAge = ageRange(2);
   //!!TRACE(maxAge)
 
-  // 
+  //
   // The following blocks read the configuration files for the different sub-models
   //
 
@@ -195,14 +195,16 @@ DATA_SECTION
   // the recruitment model
 
   !! ad_comm::change_datafile_name("srrmodel.cfg");
-  // What model are we working with: 
+  // What model are we working with:
   init_int Rmodel
-  //!!TRACE(Rmodel) 
-  // what CV is specified 
+  //!!TRACE(Rmodel)
+  // what CV is specified
   init_number srCV
-  //!!TRACE(srCV) 
+  //!!TRACE(srCV)
   int SRaphase
+  int SRflag
   !! if(srCV>0){SRaphase = 2;}else{SRaphase = -1;}
+  !! if(srCV>0){SRflag = 1;}else{SRflag = 0;}
   //!! TRACE(SRaphase)
   int SRbphase // swith of b if using geomean model
   !! if(srCV < 0 | Rmodel == 3){SRbphase = -1;}else{SRbphase = 2;}
@@ -210,7 +212,7 @@ DATA_SECTION
   //!! TRACE(SRbphase)
   init_number spr0 // only used with SV models
   //!! TRACE(spr0)
-  // First the fixed effects for the a param (the level) 
+  // First the fixed effects for the a param (the level)
   init_int noRapar
   //!! TRACE(noRapar)
   init_int noExpandedRa
@@ -251,10 +253,10 @@ PARAMETER_SECTION
   init_vector qpar(1,noQpar,2)
   init_vector vpar(1,noVpar,1)
   init_vector ny1par(1,noNy1par,4)
-  init_vector rpar(1,noRpar,1) 
+  init_vector rpar(1,noRpar,1)
   init_vector rapar(1,noRapar,SRaphase)
   init_vector rbpar(1,noRbpar,SRbphase)
-  
+
   // the parameters of the random effects
   //init_number logSdLogR(-1)
   //init_vector fdev(1,noExpandedF,fpriorPhase)
@@ -289,6 +291,9 @@ PARAMETER_SECTION
   vector ssb(minYear,maxYear)
   sdreport_number ssbmaxYear
 
+  // return value for likelihood components
+  vector nllikcomp(1,nsurveys+1+SRflag)
+
 //  vector fbar(minYear,maxYear)
 
 //  sdreport_vector stateofstock(1,2)
@@ -314,7 +319,7 @@ rbpar 0;
 PRELIMINARY_CALCS_SECTION
 //
 // *********************************
-  
+
 // we might want to set up initial values for the stock recruitment model...
   //if(srCV>0){
   //  logSdLogR=log(srCV);
@@ -347,24 +352,27 @@ PROCEDURE_SECTION
 // *********************************
   time_t currentTime;
   time(& currentTime);
-  if(difftime(currentTime,StartTime)>3600){ // Terminate after 60 minutes 
+  if(difftime(currentTime,StartTime)>3600){ // Terminate after 60 minutes
     cerr<<endl;
-    cerr<<"############################################################"<<endl; 
-    cerr<<"############################################################"<<endl; 
-    cerr<<"############################################################"<<endl; 
-    cerr<<"     MAX TIME ALLOWED EXCEEDED - MODEL DID NOT FINISH"       <<endl;  
-    cerr<<"############################################################"<<endl; 
-    cerr<<"############################################################"<<endl; 
-    cerr<<"############################################################"<<endl; 
+    cerr<<"############################################################"<<endl;
+    cerr<<"############################################################"<<endl;
+    cerr<<"############################################################"<<endl;
+    cerr<<"     MAX TIME ALLOWED EXCEEDED - MODEL DID NOT FINISH"       <<endl;
+    cerr<<"############################################################"<<endl;
+    cerr<<"############################################################"<<endl;
+    cerr<<"############################################################"<<endl;
     cerr<<endl;
     ad_exit(1);
-  } 
+  }
   nll=0.0;
+  for (int i=1; i<=nsurveys+1+SRflag; i++) {
+    nllikcomp=0.0;
+  }
 
   //
   // Fishing mortality model
   //
-  expandedF = designF*fpar; //+ fdev; 
+  expandedF = designF*fpar; //+ fdev;
   idx = 0;
   for (int y=minYear; y<=maxYear; ++y) {
     for (int a=minAge; a<=maxAge; ++a) {
@@ -378,28 +386,28 @@ PROCEDURE_SECTION
   //
   expandedQ = designQ*qpar; //+ qdev;
   idx = 0;
-  for(int ff = 1; ff <= nsurveys; ++ff){ 
+  for(int ff = 1; ff <= nsurveys; ++ff){
     for(int y = minYear; y <= maxYear; ++y){
       for(int a = minAge; a <= maxAge; ++a){
         q(ff,y,a) = expandedQ(++idx);
       }
     }
-  }    
+  }
 
-  
+
   //
   // variance model
   //
   expandedV = designV*vpar;
   idx = 0;
-  for(int ff = 1; ff <= nsurveys + 1; ++ff){ 
+  for(int ff = 1; ff <= nsurveys + 1; ++ff){
     for(int y = minYear; y <= maxYear; ++y){
       for(int a = minAge; a <= maxAge; ++a){
         v(ff,y,a) = expandedV(++idx);
       }
     }
-  }    
-   
+  }
+
 
   //
   // initial age structure model
@@ -409,7 +417,7 @@ PROCEDURE_SECTION
   for(int a = minAge+1; a <= maxAge; ++a){
     n(minYear,a) = expandedNy1(++idx);
   }
-  
+
   //
   // internal r model
   //
@@ -418,7 +426,7 @@ PROCEDURE_SECTION
   for(int y = minYear; y <= maxYear; ++y){
     r(y) = expandedR(++idx);
   }
-  
+
   //
   // the full population structure
   //
@@ -436,18 +444,21 @@ PROCEDURE_SECTION
   // fbar and ssb
   //
   for(int y=minYear; y<=maxYear; ++y){
-	ssb(y) = sum(elem_prod(mfexp(n(y)-mfexp(f(y))*fspwn(y)-mfexp(m(y))*mspwn(y)), matWt(y))); 
-//	ssb(y) = sum(elem_prod(mfexp(n(y)), matWt(y))); 
+	ssb(y) = sum(elem_prod(mfexp(n(y)-mfexp(f(y))*fspwn(y)-mfexp(m(y))*mspwn(y)), matWt(y)));
+//	ssb(y) = sum(elem_prod(mfexp(n(y)), matWt(y)));
 //    fbar(y) = 0.0;
 //    for(int a=fbarRange(1); a<=fbarRange(2); ++a){
 //      fbar(y) += mfexp(f(y,a));
 //    }
 //    fbar(y) /= fbarRange(2)-fbarRange(1)+1;
-  }  
+  }
 
   ssbmaxYear = ssb(maxYear);
 //  stateofstock(1) = ssb(maxYear);
 //  stateofstock(2) = fbar(maxYear);
+  for (int i=1; i<=nsurveys+1+SRflag; i++) {
+    nllikcomp(i) = 0;
+  }
 
   //
   // The main likelihood
@@ -458,25 +469,27 @@ PROCEDURE_SECTION
   double locObs;
   dvariable locZ;
   dvariable locVar;
+
   for (int i=1; i<=noobs; ++i) {
     obsVec   = obs(i);
     locFleet = obsVec(1);
     locYear  = obsVec(2);
     locAge   = obsVec(3);
-    locObs   = obsVec(4); 
+    locObs   = obsVec(4);
 
     // here we split - if locAge == -1 then we have a biomass index and use add to a different likelihood component.
 
     if (locAge >= 0) { // standard observation
-    
+
       locZ     = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
-      if (locFleet==1) { //    catches predicted 
+      if (locFleet==1) { //    catches predicted
         pred(i) = f(locYear,locAge)-log(locZ)+log(1.0-mfexp(-locZ))+n(locYear,locAge);
-      } else {          //    survey predicted 
-        pred(i) = q(locFleet-1,locYear,locAge) - locZ * surveyTimes(locFleet-1) + n(locYear,locAge); 
+      } else {          //    survey predicted
+        pred(i) = q(locFleet-1,locYear,locAge) - locZ * surveyTimes(locFleet-1) + n(locYear,locAge);
       }
       locVar = mfexp(2.0 * v(locFleet, locYear, locAge));
-      nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...    
+      nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...
+      nllikcomp(locFleet) += obsVec(5) * nldnorm(locObs, pred(i), locVar);
     } else { // an observation of biomass
       pred(i) = 0; // not sure i need to but best to be safe
       for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) {
@@ -484,8 +497,8 @@ PROCEDURE_SECTION
         pred(i) += mfexp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * mfexp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
       locVar = mfexp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
-      nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...    
-          
+      nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...
+      nllikcomp(locFleet) += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...
     }
   }
 
@@ -493,8 +506,8 @@ PROCEDURE_SECTION
   //
   // stock recruit model
   //
-  if(SRaphase > 0) { // then include a SRR model 
-  
+  if(SRaphase > 0) { // then include a SRR model
+
     //
     // recruitment model
     //
@@ -510,7 +523,7 @@ PROCEDURE_SECTION
     //
     // weighted likelihood
     //
-    dvariable predLogR; 
+    dvariable predLogR;
     dvariable varLogR;
     dvariable h;
     dvariable v;
@@ -519,28 +532,32 @@ PROCEDURE_SECTION
       for(int y=minYear+minAge; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-minAge)) - log(mfexp(rb(y)) + ssb(y-minAge));
         varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+        nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+2) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 2) { // ricker
       for(int y=minYear+minAge; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-minAge)) - mfexp(rb(y)) * ssb(y-minAge);
         varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+        nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+2) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
       for(int y=minYear+minAge; y<=maxYear; ++y){
         predLogR = ra(y) + log(ssb(y-minAge) + sqrt(mfexp(2.0*rb(y)) + 0.0025) - sqrt(pow(ssb(y-minAge) - mfexp(rb(y)), 2.0) + 0.0025));
         varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+        nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+2) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 4) { // geomean
       for(int y=minYear+1; y<=maxYear; ++y){
         predLogR = ra(y);
         varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+        nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+2) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
@@ -549,7 +566,8 @@ PROCEDURE_SECTION
         v = mfexp(rb(y));
         predLogR =  log(6 * h * v * ssb(y-minAge)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-minAge)) ); // spr0 is provided by user
         varLogR = log(pow(srCV,2)+1);
-        nll += nldnorm(r(y), predLogR, varLogR);    
+        nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+2) += nldnorm(r(y), predLogR, varLogR);
       }
     }
   }
@@ -563,20 +581,20 @@ PROCEDURE_SECTION
   //  fzeroes = 0;
   //  nll += nLogNormal(fdev, fzeroes, (dvar_matrix) covFP);
   //}
-  
+
   //if (qpriorFlag > 0.5) {
   //  dvar_vector qzeroes(1, noExpandedQ);
   //  qzeroes = 0;
   //  nll += nLogNormal(qdev, qzeroes, (dvar_matrix) covQP);
   //}
-    
+
   //if (rapriorFlag > 0.5) {
   //  dvar_vector razeroes(1, noExpandedRa);
   //  razeroes = 0;
   //  nll += nLogNormal(radev, razeroes, (dvar_matrix) covRaP);
   //}
 
-  
+
   //
   // output the residuals
   //
@@ -624,6 +642,9 @@ REPORT_SECTION
   ofstream vout("v.out");
   vout<<v<<endl;
   vout.close();
+  ofstream nllikout("nllik.out");
+  nllikout<<nllikcomp<<endl;
+  nllikout.close();
 //  ofstream ssbout("ssb.out");
 //  ssbout<<ssb<<endl;
 //  ssbout.close();
