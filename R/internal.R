@@ -89,20 +89,15 @@ os.32or64bit <- function () {
 
 # Checks that the executable can be run by the user
 check.executable <- function() {
-  if (os.type("linux")) {
-   system(paste0("ls -l ", file.path(a4a.dir(), "a4a"), " > syslog.txt"))
-   syslog <- readLines("syslog.txt")
-   unlink("syslog.txt")
+ if (os.type("linux")) {
+   is.x <- file.access(paste0(a4a.dir(), "/a4a"), 1)[[1]]
 
-   is.x <- grepl("x", substring(syslog, 1, 10))
-
-   if (!is.x) {
+   if (is.x != 0) {
      message(paste0(
        "Something has gone wrong!\n",
        "the a4a executable has the wrong permissions:\n\t",
-       substring(syslog, 1, 10), "\n",
-       "Please change permissions (in a terminal) to a+x using\n",
-       "\tchmod a+x ", file.path(a4a.dir(), "a4a"), "\n",
+     "\nPlease change permissions (in a terminal) to a+x using\n",
+       "\tchmod a+x ", a4a.dir(), "/a4a\n",
        "if you installed under sudo you will have to run:\n",
        "\tsudo chmod a+x ", file.path(a4a.dir(), "a4a")))
      }
