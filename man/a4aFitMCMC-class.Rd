@@ -10,6 +10,9 @@
 \alias{as.mcmc}
 \alias{as.mcmc-methods}
 \alias{as.mcmc,a4aFitMCMC-method}
+\alias{burnin}
+\alias{burnin-methods}
+\alias{burnin,a4aFitMCMC-method}
 \title{S4 class \code{a4aFitMCMC}}
 \usage{
 a4aFitMCMC(...)
@@ -23,6 +26,10 @@ a4aFitMCMC(...)
 as.mcmc(x, ...)
 
 \S4method{as.mcmc}{a4aFitMCMC}(x, ...)
+
+burnin(object, ...)
+
+\S4method{burnin}{a4aFitMCMC}(object, burnin)
 }
 \arguments{
 \item{...}{additional argument list that might never be used}
@@ -30,6 +37,10 @@ as.mcmc(x, ...)
 \item{object}{object of relevant class (see signature of method)}
 
 \item{x}{an object to be coerced into mcmc}
+
+\item{burnin}{a numeric with the number of iterations to be removed}
+
+\item{object}{a \code{a4aFitMCMC} object}
 }
 \description{
 The \code{a4aFitMCMC} class extends \code{a4aFitSA} to store information about the MCMC run.

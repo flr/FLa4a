@@ -66,5 +66,5 @@ Collate:
     'southern_hake-data.R'
     'a4amse-sa.R'
     'smoother_constructors.R'
-RoxygenNote: 6.1.0.9000
+RoxygenNote: 6.1.1
 Encoding: UTF-8
