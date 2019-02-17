@@ -1,7 +1,6 @@
 //  --------------------------------------------------------------------------
-// Copyright (c) 2008,2009,2010,2011,2012, 2013, 2014, 2015, 2016, 2017, 2018,
-// Anders Nielsen <an@aqua.dtu.dk> and Colin Millar <colinpmillar@gmail.com>.
-// All rights reserved.
+// Copyright (c) 2008,2009,2010,2011,2012, Anders Nielsen <an@aqua.dtu.dk>
+// and Colin Millar. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
@@ -206,11 +205,13 @@ DATA_SECTION
   init_number srCV
   //!!TRACE(srCV)
   int SRaphase
-  !! if (srCV > 0) { SRaphase = 2; } else { SRaphase = -1; }
+  int SRflag
+  !! if(srCV>0){SRaphase = 2;}else{SRaphase = -1;}
+  !! if(srCV>0){SRflag = 1;}else{SRflag = 0;}
   //!! TRACE(SRaphase)
   int SRbphase // swith of b if using geomean model
-  !! if (srCV < 0 | Rmodel == 3) { SRbphase = -1; } else { SRbphase = 2; }
-  !! if (srCV < 0 | Rmodel == 4) { SRbphase = -1; } else { SRbphase = 2; }
+  !! if(srCV < 0 | Rmodel == 3){SRbphase = -1;}else{SRbphase = 2;}
+  !! if(srCV < 0 | Rmodel == 4){SRbphase = -1;}else{SRbphase = 2;}
   //!! TRACE(SRbphase)
   init_number spr0 // only used with SV models
   //!! TRACE(spr0)
@@ -297,6 +298,9 @@ PARAMETER_SECTION
   vector ssb(minYear,maxYear)
   sdreport_number ssbmaxYear
 
+  // return value for likelihood components
+  vector nllikcomp(1,nsurveys+2+SRflag)
+
 //  vector fbar(minYear,maxYear)
 
 //  sdreport_vector stateofstock(1,2)
@@ -370,7 +374,10 @@ PROCEDURE_SECTION
     cerr<<endl;
     ad_exit(1);
   }
-  nll = 0.0;
+  nll=0.0;
+  for (int i = 1; i <= nsurveys + 2 + SRflag; i++) {
+    nllikcomp=0.0;
+  }
 
   //
   // Fishing mortality model
@@ -552,6 +559,7 @@ PROCEDURE_SECTION
     }
 
     nll += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));
+    nllikcomp(locFleet) += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));;
   }
 
 
@@ -587,6 +595,7 @@ PROCEDURE_SECTION
                    log(mfexp(rb(y)) + ssb(y - minAge));
         varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+3) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 2) { // ricker
@@ -596,6 +605,7 @@ PROCEDURE_SECTION
                    mfexp(rb(y)) * ssb(y - minAge);
         varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+3) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 3) { // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
@@ -606,6 +616,7 @@ PROCEDURE_SECTION
                        sqrt(pow(ssb(y - minAge) - mfexp(rb(y)), 2.0) + 0.0025));
         varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+3) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 4) { // geomean
@@ -613,6 +624,7 @@ PROCEDURE_SECTION
         predLogR = ra(y);
         varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+3) += nldnorm(r(y), predLogR, varLogR);
       }
     }
     if (Rmodel == 5) { // bevholt with steepness: ra is a transform of h; rb is a transform of v
@@ -623,6 +635,7 @@ PROCEDURE_SECTION
                    log(spr0 * ((h + 1) * v + (5 * h - 1) * ssb(y - minAge))); // spr0 is provided by user
         varLogR = log(square(srCV) + 1);
         nll += nldnorm(r(y), predLogR, varLogR);
+        nllikcomp(nsurveys+3) += nldnorm(r(y), predLogR, varLogR);
       }
     }
   }
@@ -697,12 +710,12 @@ REPORT_SECTION
   ofstream vout("v.out");
   vout << v << endl;
   vout.close();
-  ofstream predout("pred.out");
-  predout << pred << endl;
-  predout.close();
-  ofstream repdvarout("predvar.out");
-  repdvarout << predvar << endl;
-  repdvarout.close();
+  ofstream nllikout("nllik.out");
+  nllikout << nllikcomp << endl;
+  nllikout.close();
+  ofstream predvarout("predvar.out");
+  predvarout << predvar << endl;
+  predvarout.close();
 //  ofstream ssbout("ssb.out");
 //  ssbout<<ssb<<endl;
 //  ssbout.close();
