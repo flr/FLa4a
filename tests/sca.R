@@ -64,16 +64,16 @@ identical(harvest(fit)[,,,,,2, drop=TRUE], harvest(fit0)[drop=TRUE])
 #--------------------------------------------------------------------
 # check qmodel defaults
 #--------------------------------------------------------------------
-fit <- sca(ple4, FLIndices(ple4.index[1]), fit="assessment")
+fit <- sca(ple4, FLIndices(ple4.index[1]))
 all.equal(formula(qmodel(pars(fit))[[1]]), formula("~1"))
-fit <- sca(ple4, FLIndices(ple4.index[1:2]), fit="assessment")
+fit <- sca(ple4, FLIndices(ple4.index[1:2]))
 all.equal(formula(qmodel(pars(fit))[[1]]), formula("~age"))
-fit <- sca(ple4, FLIndices(ple4.index[1:3]), fit="assessment")
+fit <- sca(ple4, FLIndices(ple4.index[1:3]))
 all.equal(formula(qmodel(pars(fit))[[1]]), formula("~age"))
-fit <- sca(ple4, FLIndices(ple4.index[1:4]), fit="assessment")
+fit <- sca(ple4, FLIndices(ple4.index[1:4]))
 all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=3)"))
-fit <- sca(ple4, FLIndices(ple4.index), fit="assessment")
-all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=5)"))
+fit <- sca(ple4, FLIndices(ple4.index))
+all.equal(formula(qmodel(pars(fit))[[1]]), formula("~s(age, k=6)"))
 
 #====================================================================
 # run sca assessment
@@ -180,7 +180,7 @@ fit1 <-  sca(ple4, ple4.indices, fit="assessment")
 is(fit1, "a4aFitSA")
 
 # both must have the same results
-all.equal(fitSumm(fit0), fitSumm(fit1))
+all.equal(fitSumm(fit0)[-6,], fitSumm(fit1)[-6,])
 all.equal(harvest(fit0), harvest(fit1))
 all.equal(stock.n(fit0), stock.n(fit1))
 all.equal(catch.n(fit0), catch.n(fit1))
@@ -495,12 +495,11 @@ biofull <- 0.001*stock(ple4)
 biofull <- FLIndexBiomass(index=biofull)
 range(biofull)[c("startf","endf")] <- c(0,0)
 
-fit0 <- sca(ple4, FLIndices(ple4.index, biofull), qmodel=list(~s(age, k=4), ~1))
-fit1 <- sca(ple4, FLIndices(biofull, ple4.index), qmodel=list(~1, ~s(age, k=4)))
+fit0 <- sca(ple4, FLIndices(ple4.index, biofull), qmodel=list(~s(age, k=3), ~1))
+fit1 <- sca(ple4, FLIndices(biofull, ple4.index), qmodel=list(~1, ~s(age, k=3)))
 
 identical(stock.n(fit0), stock.n(fit1))
 all.equal(c(harvest(fit0)), c(harvest(fit1)), tolerance = 1e-5)
-
 
 #====================================================================
 # center argument
@@ -601,15 +600,14 @@ data(ple4)
 data(ple4.index)
 stk <- propagate(ple4, 2)
 
-# iter a4aFitSA
-fit0 <- sca(ple4, FLIndices(a=ple4.index))
-fit <- sca(stk, FLIndices(a=ple4.index))
+# iter a4aFit
+fit0 <- sca(ple4, FLIndices(a=ple4.index), fit='MP')
+fit <- sca(stk, FLIndices(a=ple4.index), fit='MP')
 fit1 <- iter(fit, 1)
 identical(fit1@harvest, fit0@harvest)
 identical(fit1@stock.n, fit0@stock.n)
 identical(fit1@catch.n, fit0@catch.n)
 identical(fit1@index, fit0@index)
-all.equal(fit1@pars, fit0@pars)
 
 # iter a4aFitSA
 fit0 <- sca(ple4, FLIndices(a=ple4.index))
