@@ -8,6 +8,8 @@
  
  BUG FIXES:
  - default models for N1 and variance fixed
+ - iter for a4aFit fixed
+ - iter for a4aStkParams fixed
 
  FLa4a 1.5.x:
 

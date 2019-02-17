@@ -488,14 +488,12 @@ setMethod("propagate", signature(object = "a4aStkParams"),
 #' @rdname a4aStkParams-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted
-setMethod("iter", "a4aStkParams",
-  function(obj, it) {
-    obj@vcov <- obj@vcov[,, it, drop = FALSE]
-    obj@coefficients <- iter(obj@coefficients, it)
-    obj@m <- iter(obj@m, it)
-    obj@wt <- iter(obj@wt, it)
-    obj@mat <- iter(obj@mat, it)
-    obj@centering <- iter(obj@centering, it)
-    obj
-  }
-)
+setMethod("iter", "a4aStkParams", function(obj, it){
+	if(dim(obj@vcov)[3]>1) obj@vcov <- obj@vcov[,,it, drop=FALSE]
+	obj@coefficients <- iter(obj@coefficients, it)
+	obj@m <- iter(obj@m, it)
+	obj@wt <- iter(obj@wt, it)
+	obj@mat <- iter(obj@mat, it)
+	obj@centering <- iter(obj@centering, it)
+	obj
+})
