@@ -966,14 +966,20 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
             sum(c(log(catch.n(stock)/a4aout@catch.n))[idna, drop=TRUE]^2) /
               sum(1-flev)^2
   tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv, convergence, NA))
-  a4aout@fitSumm <-
-    array(tmpSumm,
-          dimnames = list(c("nopar", "nlogl", "maxgrad", "nobs", "gcv",
-                            "convergence", "accrate")))
 
-  #------------------------------------------------------------------------
-  # a4aFitSA
-  #------------------------------------------------------------------------
+  # add in likelihood components here, using simple names for now.
+  # comp1 is fleet 1 (catch), comp2 is fleet 2 (survey 1) etc.
+  # if there is a SR relationship, it is the last comp
+  nlogl_comps <- out$nlogl_comps
+  nlogl_comps_names <- paste0("nlogl_comp", 1:length(nlogl_comps))
+
+	a4aout@fitSumm <-
+    array(c(tmpSumm, nlogl_comps),
+          dimnames = list(c("nopar","nlogl","maxgrad","nobs","gcv", "convergence", "accrate", nlogl_comps_names)))
+
+	#------------------------------------------------------------------------
+	# a4aFitSA
+	#------------------------------------------------------------------------
 
   if (fit %in% c("assessment", "MCMC")) {
 
@@ -1442,6 +1448,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
     lin <- matrix(readLines(paste0(wkdir, '/a4a.par'))[-1], ncol = 2, byrow = TRUE)
     out$par.est <- lapply(strsplit(sub(" ", "", lin[, 2]), " "), as.numeric)
     names(out$par.est) <- gsub("[# |:]", "", lin[, 1])
+    out$nlogl_comps <- scan(paste0(wkdir, "/nllik.out"), numeric(0), quiet = TRUE)
 
     # read derived model quantities
     if(fit=="MP"){
