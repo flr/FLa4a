@@ -4,7 +4,6 @@
 \name{submodel}
 \alias{submodel}
 \alias{submodel-class}
-\alias{submodel}
 \alias{submodel-methods}
 \alias{submodel,missing-method}
 \alias{params,submodel-method}

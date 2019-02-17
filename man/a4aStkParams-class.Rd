@@ -4,7 +4,6 @@
 \name{a4aStkParams}
 \alias{a4aStkParams}
 \alias{a4aStkParams-class}
-\alias{a4aStkParams}
 \alias{a4aStkParams-methods}
 \alias{a4aStkParams,missing-method}
 \alias{m,a4aStkParams-method}

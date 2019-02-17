@@ -4,7 +4,6 @@
 \name{submodels}
 \alias{submodels}
 \alias{submodels-class}
-\alias{submodels}
 \alias{submodels-methods}
 \alias{corBlocks}
 \alias{corBlock-methods}
@@ -14,7 +13,6 @@
 \alias{formula,submodels-method}
 \alias{corBlocks<-}
 \alias{corBlocks<-,submodels,list-method}
-\alias{corBlocks<-}
 \alias{$<-,submodels,submodel-method}
 \alias{[[<-,submodels,character,missing-method}
 \alias{[[<-,submodels,numeric,missing-method}

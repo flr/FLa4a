@@ -8,8 +8,8 @@
 a4aInternal(stock, indices, fmodel = defaultFmod(stock),
   qmodel = defaultQmod(indices), srmodel = defaultSRmod(stock),
   n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices),
-  covar = missing, wkdir = missing, verbose = FALSE, fit = "assessment",
-  center = TRUE, mcmc = missing)
+  covar = missing, wkdir = missing, verbose = FALSE,
+  fit = "assessment", center = TRUE, mcmc = missing)
 }
 \arguments{
 \item{stock}{an FLStock object containing catch and stock information}
