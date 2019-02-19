@@ -4,7 +4,6 @@
 \name{SCAMCMC}
 \alias{SCAMCMC}
 \alias{SCAMCMC-class}
-\alias{SCAMCMC}
 \alias{SCAMCMC-methods}
 \alias{SCAMCMC,missing-method}
 \alias{getADMBCallArgs}

@@ -5,7 +5,6 @@
 \alias{stdlogres}
 \alias{stdlogres-methods}
 \alias{stdlogres,FLQuant,FLQuant-method}
-\alias{stdlogres,FLQuant,FLQuant-method}
 \title{Standardized log residuals}
 \usage{
 stdlogres(obs, fit, ...)

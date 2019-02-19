@@ -5,7 +5,6 @@
 \alias{addition}
 \alias{+,FLStock,a4aFit-method}
 \alias{+,FLIndices,a4aFit-method}
-\alias{+,FLIndices,a4aFit-method}
 \alias{+,FLStock,a4aFitSA-method}
 \title{+ methods}
 \usage{
