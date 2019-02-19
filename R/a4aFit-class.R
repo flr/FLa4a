@@ -162,7 +162,7 @@ setMethod("iter", "a4aFit", function(obj, it){
 setMethod("coerce", signature(from = "a4aFit", to = "FLSR"),
   function (from, to, strict = TRUE)
   {
-    res <- as(stkmodel(pars(fit)), "FLSR")
+    res <- as(stkmodel(pars(from)), "FLSR")
 
     return(res)
   }
