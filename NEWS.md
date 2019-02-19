@@ -1,3 +1,10 @@
+# FLa4a 1.6.5:
+
+## NEW FEATURES
+
+- Likelihood is now returned by component
+- sca.sa and sep.sa functions to make sca() available to the mp function in the mse package
+
 # FLa4a 1.0.0:
 
 ## NEW FEATURES:
