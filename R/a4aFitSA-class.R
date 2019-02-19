@@ -150,22 +150,26 @@ setMethod("submodels", "a4aFitSA",
 
  })
 
-
-
 #
 #  other methods
 #
-
 
 #' @rdname a4aFitSA-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted
 setMethod("iter", "a4aFitSA", function(obj, it){
-	obj@fitSumm <- obj@fitSumm[,it, drop=FALSE]
+	if(dim(obj@fitSumm)[2]>1) obj@fitSumm <- obj@fitSumm[,it, drop=FALSE]
 	obj@harvest <- iter(obj@harvest, it)
 	obj@stock.n <- iter(obj@stock.n, it)
 	obj@catch.n <- iter(obj@catch.n, it)
 	obj@index <- iter(obj@index, it)
-	obj@pars <- iter(obj@pars, 1)
+	obj@pars <- iter(obj@pars, it)
 	obj
 })
+
+
+
+
+
+
+

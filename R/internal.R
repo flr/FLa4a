@@ -65,12 +65,12 @@ os.type <- function (type = c("linux", "windows", "osx", "else"))
 #    }
 #    return(result)
 #  }
+  else if (type == "osx") {
+    return(Sys.info()["sysname"] == "Darwin")
+  }
   else if (type == "linux") {
 #    return((.Platform$OS.type == "unix") && !os.type("mac"))
-    return(.Platform$OS.type == "unix")
-  }
-  else if (type == "osx") {
-    return(grepl("^darwin", R.version$os))
+    return(.Platform$OS.type == "unix" && Sys.info()["sysname"] != "Darwin")
   }
   else if (type == "else") {
     return(TRUE)
@@ -90,17 +90,12 @@ os.32or64bit <- function ()
 # Checks that the executable can be run by the user
 check.executable <- function() {
  if (os.type("linux")) {
-   system(paste0("ls -l ", a4a.dir(), "/a4a > syslog.txt"))
-   syslog <- readLines("syslog.txt")
-   unlink("syslog.txt")
-   
-   is.x <- grepl("x", substring(syslog, 1,10))
- 
-   if (!is.x) {
+   is.x <- file.access(paste0(a4a.dir(), "/a4a"), 1)[[1]]
+
+   if (is.x != 0) {
      message(paste0(
        "Something has gone wrong!\n",
        "the a4a executable has the wrong permissions:\n\t",
-          substring(syslog, 1,10), 
      "\nPlease change permissions (in a terminal) to a+x using\n",
        "\tchmod a+x ", a4a.dir(), "/a4a\n",
        "if you installed under sudo you will have to run:\n",

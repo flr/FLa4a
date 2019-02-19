@@ -25,6 +25,6 @@ The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of t
 \examples{
 data(ple4)
 data(ple4.index)
-obj <- sca(ple4, FLIndices(ple4.index))
+obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
 flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 }

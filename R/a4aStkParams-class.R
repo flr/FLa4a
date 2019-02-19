@@ -330,7 +330,7 @@ setMethod("propagate", signature(object="a4aStkParams"),
 #' @param obj the object to be subset
 #' @param it iteration to be extracted
 setMethod("iter", "a4aStkParams", function(obj, it){
-	obj@vcov <- obj@vcov[,,it, drop=FALSE]
+	if(dim(obj@vcov)[3]>1) obj@vcov <- obj@vcov[,,it, drop=FALSE]
 	obj@coefficients <- iter(obj@coefficients, it)
 	obj@m <- iter(obj@m, it)
 	obj@wt <- iter(obj@wt, it)
