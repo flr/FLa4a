@@ -1,29 +1,34 @@
-# .travis.yml for FLa4a
+warnings_are_errors: false
 
 env:
-  - R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
+- R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
 
-warnings_are_errors: false
+language: r
 
 os:
   - linux
   - osx
 
-language: r
-
 r:
   - release
 
-sudo: false
+r_build_args: "--no-build-vignettes --no-manual --no-resave-data"
+r_check_args: "--no-build-vignettes --no-manual"
+
+repos:
+  CRAN: https://cloud.r-project.org
+  flr: http://flr-project.org/R
 
 addons:
   apt:
     packages:
     - libgsl0-dev
 
-repos:
-  CRAN: https://cloud.r-project.org
-  flr: http://flr-project.org/R
+branches:
+  only:
+  - master
+    
+sudo: false
 
 cache: packages
 
@@ -32,9 +37,27 @@ notifications:
     on_success: change
     on_failure: change
 
-branches:
-  only:
-    - master
+before_deploy:
+  # Get PKGVER
+  - 'export PKGVER=$(sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)'
+  # CHECK version type by counting dots (flaky)
+  - 'export RELEASE=$(grep -o \\. <<< $PKGVER | wc -w)'
+  - "echo $RELEASE"
+  # Build binary and remove the source archive
+  - "R CMD INSTALL --build FLa4a_$PKGVER.tar.gz"
+  - "rm FLa4a_$PKGVER.tar.gz"
+  # Look for packages
+  - "export RELEASE_PKG_FILE=$(ls FLa4a*gz)"
+  - "echo $RELEASE_PKG_FILE"
 
-r_build_args: --no-build-vignettes --no-manual --no-resave-data
-r_check_args: --no-build-vignettes --no-manual
+deploy:
+  provider: releases
+  api_key:
+    secure: OjlShtK5Xsi/ZBh9dCaUe1WphcX1QBgdX+tuG8w4y8vdlesl3Cm+cHayAafPlsWV6kIu39n3TtrtSihSa56LLJVFhmNA6DWFtgOLsCcmUavvdWWWRa11pof3dtU8ROEPF+i5cBFytLdrqKLyJ9/uIrTEjIJ01SmFU/6z8fR+O5A=
+  file: $RELEASE_PKG_FILE
+  skip_cleanup: true
+  draft: true
+  on:
+    repo: flr/FLa4a
+    # condition: "$RELEASE=2"
+    # condition: $RELEASE =~ ^[0-9]+\.[0-9]+\.[0-9]+
