@@ -12,8 +12,10 @@ r:
 r_build_args: "--no-build-vignettes --no-manual --no-resave-data"
 r_check_args: "--no-build-vignettes --no-manual"
 
-before_install:
-  - sudo apt-get install -y libgsl0-dev
+addons:
+  apt:
+    packages:
+    - libgsl0-dev
 
 branches:
   only:
