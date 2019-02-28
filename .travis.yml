@@ -2,18 +2,12 @@ language: r
 
 warnings_are_errors: false
 
-env:
-- R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
-
 os:
   - linux
   - osx
 
 r:
   - release
-
-r_build_args: "--no-build-vignettes --no-manual --no-resave-data"
-r_check_args: "--no-build-vignettes --no-manual"
 
 before_install:
   - sudo apt-get install -y libgsl0-dev
