@@ -15,9 +15,8 @@ r_build_args: "--no-build-vignettes --no-manual --no-resave-data"
 r_check_args: "--no-build-vignettes --no-manual"
 
 script:
-  - |
-    R CMD build --no-build-vignettes .
-    travis_wait 40 R CMD check --no--vignettes FLa4a*tar.gz
+  - R CMD build --no-build-vignettes .
+  - travis_wait 100 R CMD check --no-vignettes --as-cran FLa4a*.tar.gz
 
 addons:
   apt:
