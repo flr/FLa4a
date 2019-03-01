@@ -15,7 +15,7 @@ r:
   - release
 
 r_build_args: "--no-build-vignettes --no-manual --no-resave-data"
-r_check_args: "--no-build-vignettes --no-manual"
+r_check_args: "--no-build-vignettes --no-manual --no-tests"
 
 script:
   - R CMD build --no-build-vignettes .
