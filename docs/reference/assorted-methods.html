@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.6.2</span>
       </span>
     </div>
 
@@ -191,7 +191,7 @@
 <span class='no'>md</span> <span class='kw'>&lt;-</span> ~<span class='no'>linf</span>*(<span class='fl'>1</span>-<span class='fu'>exp</span>(-<span class='no'>k</span>*(<span class='no'>t</span>-<span class='no'>t0</span>)))
 <span class='no'>imd</span> <span class='kw'>&lt;-</span> ~<span class='no'>t0</span>-<span class='fl'>1</span>/<span class='no'>k</span>*<span class='fu'>log</span>(<span class='fl'>1</span>-<span class='no'>len</span>/<span class='no'>linf</span>)
 <span class='no'>prs</span> <span class='kw'>&lt;-</span> <span class='fu'>FLPar</span>(<span class='kw'>linf</span><span class='kw'>=</span><span class='fl'>58.5</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>0.086</span>, <span class='kw'>t0</span><span class='kw'>=</span><span class='fl'>0.001</span>, <span class='kw'>units</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"cm"</span>,<span class='st'>"yr^-1"</span>,<span class='st'>"yr"</span>))
-<span class='no'>vbObj</span> <span class='kw'>&lt;-</span> <span class='fu'>a4aGr</span>(<span class='kw'>grMod</span><span class='kw'>=</span><span class='no'>md</span>, <span class='kw'>grInvMod</span><span class='kw'>=</span><span class='no'>imd</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='no'>prs</span>, <span class='kw'>vcov</span><span class='kw'>=</span><span class='no'>mm</span>, <span class='kw'>distr</span><span class='kw'>=</span><span class='st'>"norm"</span>)
+<span class='no'>vbObj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='a4aGr-class.html'>a4aGr</a></span>(<span class='kw'>grMod</span><span class='kw'>=</span><span class='no'>md</span>, <span class='kw'>grInvMod</span><span class='kw'>=</span><span class='no'>imd</span>, <span class='kw'>params</span><span class='kw'>=</span><span class='no'>prs</span>, <span class='kw'>vcov</span><span class='kw'>=</span><span class='no'>mm</span>, <span class='kw'>distr</span><span class='kw'>=</span><span class='st'>"norm"</span>)
 <span class='co'># Generate 100 sample sets</span>
 <span class='no'>vbObj</span> <span class='kw'>&lt;-</span> <span class='fu'>mvrnorm</span>(<span class='fl'>100</span>,<span class='no'>vbObj</span>)
 <span class='fu'>niters</span>(<span class='no'>vbObj</span>)</div><div class='output co'>#&gt; [1] 100</div><div class='input'><span class='co'>#Example use of dims:</span>

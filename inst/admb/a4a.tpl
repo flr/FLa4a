@@ -475,6 +475,9 @@ PROCEDURE_SECTION
   ssbmaxYear = ssb(maxYear);
 //  stateofstock(1) = ssb(maxYear);
 //  stateofstock(2) = fbar(maxYear);
+  for (int i=1; i<=nsurveys+1+SRflag; i++) {
+    nllikcomp(i) = 0;
+  }
 
   //
   // The main likelihood

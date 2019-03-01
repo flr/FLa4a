@@ -4,6 +4,7 @@ globalVariables(c("obs", "year", "age", "fleet"))
 #' @name deprecated
 #' @docType methods
 #' @rdname deprecated
+#' @template dots
 #' @description Deprecated methods.
 #' @aliases a4aSCA
 a4aSCA <- function(...){
@@ -928,14 +929,15 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   })
   names(logq) <- ind.names
 
-  a4aout@name    <- stock@name
-  a4aout@desc    <- stock@desc
-  a4aout@range   <- stock@range
-  a4aout@call    <- match.call()
-  a4aout@stock.n <- FLQuant(stk.n) * exp(center.log[1])
-  a4aout@harvest <- FLQuant(hvst, units = "f")
-  Z <- a4aout@harvest + m(stock)
-  a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
+	a4aout@name    <- stock@name
+	a4aout@desc    <- stock@desc
+	a4aout@range   <- stock@range
+	a4aout@call    <- match.call()
+	a4aout@stock.n <- FLQuant(stk.n, units=units(catch.n(stock))) * exp(center.log[1])
+	a4aout@harvest <- FLQuant(hvst, units = "f")
+	Z <- a4aout@harvest + m(stock)
+	a4aout@catch.n <- a4aout@harvest / Z * (1 - exp(-Z)) * a4aout@stock.n
+  units(a4aout@catch.n) <- units(catch.n(stock))
 
   index <- lapply(1:length(indices), function(i) {
     dmns <- dimnames(logq[[i]])
@@ -959,13 +961,11 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   names(index) <- ind.names
   a4aout@index <- FLQuants(index)
 
-  # GCV (Wood, 2006, pag. 132)
-  flev <- diag(Xf %*% solve(t(Xf) %*% Xf) %*% t(Xf))
-  idna <- !is.na(catch.n(stock))
-  cgcv <- length(a4aout@catch.n[idna, drop=TRUE]) *
-            sum(c(log(catch.n(stock)/a4aout@catch.n))[idna, drop=TRUE]^2) /
-              sum(1-flev)^2
-  tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv, convergence, NA))
+	# GCV (Wood, 2006, pag. 132)
+	flev <- diag(Xf %*% solve(t(Xf) %*% Xf) %*% t(Xf))
+	idna <- !is.na(catch.n(stock))
+	cgcv <- length(a4aout@catch.n[idna, drop=TRUE]) * sum(c(log(catch.n(stock)/a4aout@catch.n))[idna, drop=TRUE]^2)/sum(1-flev)^2
+	tmpSumm <- with(out, c(nopar, nlogl, maxgrad, nrow(df.data), cgcv, convergence, NA))
 
   # add in likelihood components here, using simple names for now.
   # comp1 is fleet 1 (catch), comp2 is fleet 2 (survey 1) etc.
@@ -1446,8 +1446,8 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
     out[c("nopar","nlogl","maxgrad")] <-
       as.numeric(scan(paste0(wkdir, '/a4a.par'), what = '', nlines = 1, quiet = TRUE)[c(6, 11, 16)])
     lin <- matrix(readLines(paste0(wkdir, '/a4a.par'))[-1], ncol = 2, byrow = TRUE)
-    out$par.est <- lapply(strsplit(sub(" ", "", lin[, 2]), " "), as.numeric)
-    names(out$par.est) <- gsub("[# |:]", "", lin[, 1])
+    out$par.est <- lapply(strsplit(sub(" ", "",lin[,2]), " "), as.numeric)
+    names(out$par.est) <- gsub("[# |:]", "", lin[,1])
     out$nlogl_comps <- scan(paste0(wkdir, "/nllik.out"), numeric(0), quiet = TRUE)
 
     # read derived model quantities

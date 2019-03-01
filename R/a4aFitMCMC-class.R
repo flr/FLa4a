@@ -79,7 +79,6 @@ setMethod("as.mcmc", signature(x="a4aFitMCMC"), function(x, ...) {
 # burnin
 #====================================================================
 #' @rdname a4aFitMCMC-class
-#' @param object a \code{a4aFitMCMC} object 
 #' @param burnin a numeric with the number of iterations to be removed
 #' @aliases burnin burnin-methods
 setGeneric("burnin", function(object, ...) standardGeneric("burnin"))

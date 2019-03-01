@@ -1,40 +1,9 @@
- FLa4a 1.6.x:
+ FLa4a 1.6.5:
 
- NEW FEATURES:
- - method burnin to remove a group of iters from a MCMC fit. 
- - method sca.est to run stock assessments in a MP. 
- - method sep.est to run separable stock assessments in a MP. 
- - sca.est and sep.est adjusted to new mse naming convention.
- 
- BUG FIXES:
- - default models for N1 and variance fixed
- - iter for a4aFit fixed
- - iter for a4aStkParams fixed
+ NEW FEATURES
 
- FLa4a 1.5.x:
-
- NEW FEATURES:
- - methods "a4a" removed
- - method a4aSCA replaced with sca
- - method sca removed, now works as previous a4aSCA
- - new accessors for coefficients
- 
- BUG FIXES:
- - residuals now work with FLIndex fits 
- - n1 default model fixed
- - a lot of small things due to change in slot name from params to coefficients
- - predict of FLIndexBiomass now reports for "all", not each age.
-  
- FLa4a 1.1.x:
-
- NEW FEATURES:
-
-	BUG FIXES:
-- plot(residuals) has a new argument 'auxline' which allows selecting 'smooth', 'r' or empty for no line.
-- indices names with ':' were crashing the qmodel, now fixed
-- minor fixes in documentation
-- iter new method which subsets indices
-- plot(fit, indices) warns and removes FLIndexBiomass indices.
+- Likelihood is now returned by component
+- sca.sa and sep.sa functions to make sca() available to the mp function in the mse package
 
  FLa4a 1.0.0:
 

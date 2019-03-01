@@ -72,7 +72,8 @@ predict.stkpars <- function(object) {
     FLQuant(array(fit, dim = c(length(ages), 1, 1, 1, 1, niter),
                   dimnames = list(age = ages, year = years[1],
                                   unit = "unique", season = "all", area = "unique",
-                                  iter = seq(niter))))
+                                  iter = seq(niter))),
+      units=object@units)
 
   # predict Recruitment - no need to worry about the SR model - it is included in the fit :)
   rMod <- if (isPresenta4aSRmodel(srMod(object))) ~ factor(year) else srMod(object)
@@ -82,7 +83,8 @@ predict.stkpars <- function(object) {
   rec <- FLQuant(array(fit, dim = c(1, length(years), 1, 1, 1, niter),
                        dimnames = list(age = ages[1], year = years,
                                        unit = "unique", season = "all", area = "unique",
-                                       iter = seq(niter))))
+                                       iter = seq(niter))),
+      units=object@units)
 
   FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
 }
