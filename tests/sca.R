@@ -520,4 +520,3 @@ identical(fitSumm(fit0)["nlogl",], fitSumm(fit1)["nlogl",])
 identical(fitSumm(fit0)["nlogl",], fitSumm(fit2)["nlogl",])
 identical(fitSumm(fit1)["nlogl",], fitSumm(fit2)["nlogl",])
 
-
