@@ -16,7 +16,7 @@ sca(stock, indices, ...)
   qmodel = missing, srmodel = missing, n1model = missing,
   vmodel = missing, covar = missing, wkdir = missing,
   verbose = FALSE, fit = "assessment", center = TRUE,
-  mcmc = missing, useTotalCatch = TRUE)
+  mcmc = missing, useTotalCatch = TRUE, useTotalCatchVar = FALSE)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}
@@ -54,6 +54,12 @@ hessian to be computed, while the latter does.}
 
 \item{useTotalCatch}{\code{logical} specifying whether to use total catch weight when there is
 no age information available.}
+
+\item{useTotalCatchVar}{\code{logical}, if FALSE (default) the variance of total catch is
+computed from the estimated variance of catch at age.  If TRUE the
+the \code{catch} slot in \code{stock} object should be a
+\code{FLQuantDistr} class and the var slot should contain the variance
+of the total catch.}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
@@ -113,4 +119,32 @@ fit6 <-  sca(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.
 # fit3 + bevholt
 rmodel <- ~ bevholt(CV=0.05)
 fit7 <-  sca(fmodel=fmodel, qmodel=qmodel, srmodel=rmodel, ple4, FLIndices(ple4.index))
+
+# fit a model with missing age compositions in the catches using total catch to fill the gaps
+ple4_gaps <- ple4
+rng <- range(ple4_gaps)
+# remove some catch.n values
+gaps <- c(1960:1980)
+catch.n(ple4_gaps)[, paste(gaps)] <- NA
+
+data(ple4.indices)
+ple4.indices <- ple4.indices[c("IBTS_Q1")]
+fmodel <- ~ s(age, k = 4) +
+            s(factor(year), bs = "cgmrf", m = 1, k = 15,
+             xt = list(gaps = gaps,  weight = 0.01, xrange = rng[c("minyear", "maxyear")]))
+qmodel <- list(~s(age, k = 4))
+srmodel <- ~ bevholt(a = ~ 1, CV = 0.2)
+vmodel <- list( ~ factor(replace(age, age > 3, 3)), ~ 1)
+fit8 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, vmodel = vmodel,
+            ple4_gaps, ple4.indices)
+
+# now do the same but specify the total catch variance and use it instead of
+# the default behaviour of estimating it from the variance model for catch.n
+catch.var <- catch(ple4_gaps)
+catch.var[] <- 0.1 # give it 10\% cv
+ple4_gaps_wts <- ple4_gaps
+catch(ple4_gaps_wts) <- FLQuantDistr(catch(ple4_gaps), var = catch.var)
+fit9 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, vmodel = vmodel,
+            ple4_gaps_wts, ple4.indices, useTotalCatchVar = TRUE)
+
 }

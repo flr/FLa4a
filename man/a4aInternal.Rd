@@ -10,7 +10,7 @@ a4aInternal(stock, indices, fmodel = defaultFmod(stock),
   n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices),
   covar = missing, wkdir = missing, verbose = FALSE,
   fit = "assessment", center = TRUE, mcmc = missing,
-  useTotalCatch = TRUE)
+  useTotalCatch = TRUE, useTotalCatchVar = FALSE)
 }
 \arguments{
 \item{stock}{an FLStock object containing catch and stock information}
@@ -45,6 +45,12 @@ detailed description}
 
 \item{useTotalCatch}{\code{logical} specifying whether to use total catch weight when there is
 no age information available.}
+
+\item{useTotalCatchVar}{\code{logical}, if FALSE (default) the variance of total catch is
+computed from the estimated variance of catch at age.  If TRUE the
+the \code{catch} slot in \code{stock} object should be a
+\code{FLQuantDistr} class and the var slot should contain the variance
+of the total catch.}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"

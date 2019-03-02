@@ -83,6 +83,9 @@ DATA_SECTION
   //!!TRACE(fbarRange)
   init_int isPlusGrp // is oldest age a plus group; 0 = NO; 1 = YES
   //!!TRACE(isPlusGrp)
+  // use the user provided total catch variance; 0 = NO; 1 = YES
+  init_int useTotalCatchVar
+  //!!TRACE(useTotalCatchVar)
   // The number of observations and the observation data
   init_int noobs // number of observations
   //!!TRACE(noobs)
@@ -521,11 +524,27 @@ PROCEDURE_SECTION
                 n(locYear,a) +
                 logCtchWt(locYear,a));
         pred(i) += locPred;
-        predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
-                      (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
-                      mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
+        // this is the variance calculation -
+        // only needed if user has not supplied variances
+        if (!useTotalCatchVar)
+        {
+          // compute based on estimated catch.n variance
+          predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
+                        (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
+                        mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
+        }
       }
-      predvar(i) = predvar(i) / square(pred(i));
+      if (useTotalCatchVar)
+      {
+        // use user provided variance of total catches
+        predvar(i) = 1;
+      }
+      else
+      {
+        // use estimated variance of total catches based on estimated variance
+        // of catch.n (see previous lines)
+        predvar(i) = predvar(i) / square(pred(i));
+      }
       pred(i) = log(pred(i));
     }
     if (locFleet > 2)
@@ -561,6 +580,7 @@ PROCEDURE_SECTION
       }
     }
 
+    // obsVec(5) is the weighting supplied through the variance slots
     nll += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));
     nllikcomp(locFleet) += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));;
   }
