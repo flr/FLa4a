@@ -162,6 +162,8 @@ collapseSeasons <- function (stock) {
 #'                          the \code{catch} slot in \code{stock} object should be a
 #'                          \code{FLQuantDistr} class and the var slot should contain the variance
 #'                          of the total catch.
+#' @param totalCatchVarMethod temporary argument to set the method used to calculate the variance
+#'                            of total catch from the variance of catch at age
 #' @template dots
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"
 #' @aliases sca sca-methods
@@ -252,7 +254,8 @@ setMethod("sca", signature("FLStock", "FLIndices"),
   function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing,
            n1model = missing, vmodel = missing, covar = missing, wkdir = missing,
            verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing,
-           useTotalCatch = TRUE, useTotalCatchVar = FALSE) {
+           useTotalCatch = TRUE, useTotalCatchVar = FALSE,
+           totalCatchVarMethod = 1) {
 
   #-----------------------------------------------------------------
   # get fit type
@@ -357,7 +360,8 @@ setMethod("sca", signature("FLStock", "FLIndices"),
                           indices = iindices, covar = icovar, wkdir = wkdir,
                           verbose = verbose, fit = ifit, center = center,
                           mcmc = mcmc, useTotalCatch = useTotalCatch,
-                          useTotalCatchVar = useTotalCatchVar)
+                          useTotalCatchVar = useTotalCatchVar,
+                          totalCatchVarMethod = totalCatchVarMethod)
     } else if (!missing(covar) & missing(wkdir)) {
       icovar <-
         lapply(
@@ -369,17 +373,19 @@ setMethod("sca", signature("FLStock", "FLIndices"),
                           n1model = n1model, vmodel = vmodel, stock = istock,
                           indices = iindices, covar = icovar, verbose = verbose,
                           fit = ifit, center = center, mcmc = mcmc,
-                          useTotalCatch = useTotalCatch, useTotalCatchVar = useTotalCatchVar)
+                          useTotalCatch = useTotalCatch, useTotalCatchVar = useTotalCatchVar,
+                          totalCatchVarMethod = totalCatchVarMethod)
     } else if (missing(covar) & !missing(wkdir)) {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
                           vmodel = vmodel, stock = istock, indices = iindices, wkdir = wkdir,
                           verbose = verbose, fit = ifit, center = center, mcmc = mcmc,
-                          useTotalCatch = useTotalCatch, useTotalCatchVar = useTotalCatchVar)
+                          useTotalCatch = useTotalCatch, useTotalCatchVar = useTotalCatchVar,
+                          totalCatchVarMethod = totalCatchVarMethod)
     } else {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
                           vmodel = vmodel, stock = istock, indices = iindices, verbose = verbose,
                           fit = ifit, center = center, mcmc = mcmc, useTotalCatch = useTotalCatch,
-                          useTotalCatchVar = useTotalCatchVar)
+                          useTotalCatchVar = useTotalCatchVar, totalCatchVarMethod = totalCatchVarMethod)
     }
     if (i == 1) {
       tmpSumm <- outi@fitSumm
@@ -527,6 +533,8 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #'                          the \code{catch} slot in \code{stock} object should be a
 #'                          \code{FLQuantDistr} class and the var slot should contain the variance
 #'                          of the total catch.
+#' @param totalCatchVarMethod temporary argument to set the method used to calculate the variance
+#'                            of total catch from the variance of catch at age
 #' @return an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"
 #' @aliases a4aInternal
 #a4aInternal <- function(stock, indices, fmodel  = ~ s(age, k = 3) + factor(year),
@@ -540,7 +548,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
                         srmodel = defaultSRmod(stock), n1model = defaultN1mod(stock),
                         vmodel = defaultVmod(stock, indices), covar = missing, wkdir = missing,
                         verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing,
-                        useTotalCatch = TRUE, useTotalCatchVar = FALSE) {
+                        useTotalCatch = TRUE, useTotalCatchVar = FALSE, totalCatchVarMethod = 1) {
 
   # first check permissions of executable
   # exeok <- check.executable()
@@ -904,7 +912,8 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     fitList <- fitADMB(fit, wkdir, df.data, stock, indices, full.df,
-                       fbar, plusgroup, useTotalCatchVar, surveytime, fleet.names,
+                       fbar, plusgroup, useTotalCatchVar, totalCatchVarMethod,
+                       surveytime, fleet.names,
                        Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
                        my.time.used, mcmc, verbose)
 
@@ -1260,7 +1269,8 @@ setMethod("breakpts", "numeric", function(var, breaks, ...) {
 
 
 fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
-                    fbar, plusgroup, useTotalCatchVar, surveytime, fleet.names,
+                    fbar, plusgroup, useTotalCatchVar, totalCatchVarMethod,
+                    surveytime, fleet.names,
                     Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
                     my.time.used, mcmc, verbose) {
 
@@ -1305,6 +1315,8 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
       plusgroup, "\n",
       "# Use user provided total catch variance 0=no 1=yes\n",
       as.integer(useTotalCatchVar), "\n",
+      "# which total catch variance method to use 1, 2 or 3\n",
+      as.integer(totalCatchVarMethod), "\n",
       "# Number of observations\n",
       nrow(df.data), "\n",
       "# Observation data frame\n",

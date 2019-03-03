@@ -16,7 +16,8 @@ sca(stock, indices, ...)
   qmodel = missing, srmodel = missing, n1model = missing,
   vmodel = missing, covar = missing, wkdir = missing,
   verbose = FALSE, fit = "assessment", center = TRUE,
-  mcmc = missing, useTotalCatch = TRUE, useTotalCatchVar = FALSE)
+  mcmc = missing, useTotalCatch = TRUE, useTotalCatchVar = FALSE,
+  totalCatchVarMethod = 1)
 }
 \arguments{
 \item{stock}{an \code{FLStock} object containing catch and stock information}
@@ -60,6 +61,9 @@ computed from the estimated variance of catch at age.  If TRUE the
 the \code{catch} slot in \code{stock} object should be a
 \code{FLQuantDistr} class and the var slot should contain the variance
 of the total catch.}
+
+\item{totalCatchVarMethod}{temporary argument to set the method used to calculate the variance
+of total catch from the variance of catch at age}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} object if fit is "assessment"

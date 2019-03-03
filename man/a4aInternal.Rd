@@ -10,7 +10,8 @@ a4aInternal(stock, indices, fmodel = defaultFmod(stock),
   n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices),
   covar = missing, wkdir = missing, verbose = FALSE,
   fit = "assessment", center = TRUE, mcmc = missing,
-  useTotalCatch = TRUE, useTotalCatchVar = FALSE)
+  useTotalCatch = TRUE, useTotalCatchVar = FALSE,
+  totalCatchVarMethod = 1)
 }
 \arguments{
 \item{stock}{an FLStock object containing catch and stock information}
@@ -51,6 +52,9 @@ computed from the estimated variance of catch at age.  If TRUE the
 the \code{catch} slot in \code{stock} object should be a
 \code{FLQuantDistr} class and the var slot should contain the variance
 of the total catch.}
+
+\item{totalCatchVarMethod}{temporary argument to set the method used to calculate the variance
+of total catch from the variance of catch at age}
 }
 \value{
 an \code{a4aFit} object if fit is "MP" or an \code{a4aFitSA} if fit is "assessment"

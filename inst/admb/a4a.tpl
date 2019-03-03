@@ -86,6 +86,9 @@ DATA_SECTION
   // use the user provided total catch variance; 0 = NO; 1 = YES
   init_int useTotalCatchVar
   //!!TRACE(useTotalCatchVar)
+  // which total catch variance method to use 1, 2 or 3"
+  init_int totalCatchVarMethod
+  //!!TRACE(totalCatchVarMethod)
   // The number of observations and the observation data
   init_int noobs // number of observations
   //!!TRACE(noobs)
@@ -529,9 +532,20 @@ PROCEDURE_SECTION
         if (!useTotalCatchVar)
         {
           // compute based on estimated catch.n variance
-          predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
-                        (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
-                        mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
+          if (totalCatchVarMethod == 1) {
+            predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
+                          (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
+                          mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
+          }
+          else if (totalCatchVarMethod == 2)
+          {
+             predvar(i) += (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1);
+          }
+          else if (totalCatchVarMethod == 3)
+          {
+            if (a >= fbarRange(1) & a <= fbarRange(2))
+             predvar(i) += (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1);
+          }
         }
       }
       if (useTotalCatchVar)
@@ -539,11 +553,17 @@ PROCEDURE_SECTION
         // use user provided variance of total catches
         predvar(i) = 1;
       }
-      else
+      else if (totalCatchVarMethod == 1)
       {
         // use estimated variance of total catches based on estimated variance
         // of catch.n (see previous lines)
         predvar(i) = predvar(i) / square(pred(i));
+      }
+      else if (totalCatchVarMethod == 2) {
+        predvar(i) = predvar(i) / (maxAge - minAge + 1);
+      }
+      else if (totalCatchVarMethod == 3) {
+        predvar(i) = predvar(i) / (fbarRange(2) - fbarRange(1) + 1);
       }
       pred(i) = log(pred(i));
     }
