@@ -1020,7 +1020,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # comp1 is fleet 1 (catch), comp2 is fleet 2 (survey 1) etc.
   # if there is a SR relationship, it is the last comp
   nlogl_comps <- out$nlogl_comps
-  nlogl_comps_names <- paste0("nlogl_comp", 1:length(nlogl_comps))
+  nlogl_comps_names <- paste0("nlogl_", c("catch.n", "catch", ind.names))
+  if (srr$srrCV > 0) {
+    nlogl_comps_names <- c(nlogl_comps_names, "nlogl_srr")
+  }
 
 	a4aout@fitSumm <-
     array(c(tmpSumm, nlogl_comps),
