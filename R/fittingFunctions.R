@@ -391,11 +391,13 @@ setMethod("sca", signature("FLStock", "FLIndices"),
       out@pars@stkmodel@units     <- units(catch.n(stock))
       # qmodel
       out@pars@qmodel             <- outi@pars@qmodel
+      for (j in seq_along(indices)) {
+          # add stock centering to link qmodel back to stock size
+          out@pars@qmodel[[j]]@centering <- outi@pars@qmodel[[j]]@centering - outi@pars@stkmodel@centering
+      }
       # vmodel
       out@pars@vmodel               <- outi@pars@vmodel
-
-    }
-
+	}
     # keep timing info
     time.used[,i] <- outi@clock
   }
