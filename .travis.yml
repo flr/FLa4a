@@ -19,7 +19,7 @@ r_check_args: "--no-build-vignettes --no-manual --no-tests"
 
 script:
   - R CMD build --no-build-vignettes .
-  - travis_wait 100 R CMD check --no-vignettes --as-cran FLa4a*.tar.gz
+  - travis_wait 200 R CMD check --no-vignettes --as-cran FLa4a*.tar.gz
 
 addons:
   apt:
