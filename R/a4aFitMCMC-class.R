@@ -85,17 +85,28 @@ setGeneric("burnin", function(object, ...) standardGeneric("burnin"))
 
 #' @rdname a4aFitMCMC-class
 setMethod("burnin", signature(object="a4aFitMCMC"), function(object, burnin){
+	it <- 1:(length(dimnames(object)$iter) - burnin)
 	object@catch.n <- catch.n(object)[,,,,,-c(1:burnin)]
+	dimnames(object@catch.n)$iter <- it
 	object@stock.n <- stock.n(object)[,,,,,-c(1:burnin)]
+	dimnames(object@stock.n)$iter <- it
 	object@harvest <- harvest(object)[,,,,,-c(1:burnin)]
-	object@index <- lapply(index(object), function(x) x[,,,,,-c(1:burnin)])
+	dimnames(object@harvest)$iter <- it
+	object@index <- lapply(index(object), function(x){
+		x <- x[,,,,,-c(1:burnin)]
+		dimnames(x)$iter <- it
+		x
+	})
 	object@pars@stkmodel@coefficients <- coefficients(stkmodel(pars(object)))[,-c(1:burnin)]
+	dimnames(object@pars@stkmodel@coefficients)$iter <- it
 	object@pars@qmodel@.Data <- lapply(qmodel(pars(object)), function(x){
 	    x@coefficients <- x@coefficients[,-c(1:burnin)]
+		dimnames(x@coefficients)$iter <- it
 	    x
 	}) 
 	object@pars@vmodel@.Data <- lapply(vmodel(pars(object)), function(x){
     	x@coefficients <- x@coefficients[,-c(1:burnin)]
+		dimnames(x@coefficients)$iter <- it
     	x
 	}) 
 	object

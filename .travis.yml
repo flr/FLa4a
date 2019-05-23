@@ -14,17 +14,20 @@ dist: xenial
 r:
   - release
 
-r_build_args: "--no-build-vignettes --no-manual --no-resave-data"
-r_check_args: "--no-build-vignettes --no-manual --no-tests"
-
 script:
-  - R CMD build --no-build-vignettes .
-  - travis_wait 100 R CMD check --no-vignettes --as-cran FLa4a*.tar.gz
+  - R CMD build .
+  - travis_wait 200 R CMD check --as-cran FLa4a*.tar.gz
 
 addons:
   apt:
     packages:
     - libgsl0-dev
+
+before_install: |
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    brew update
+    brew install gsl
+  fi
 
 branches:
   only:
