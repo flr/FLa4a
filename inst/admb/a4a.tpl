@@ -502,107 +502,112 @@ PROCEDURE_SECTION
     locAge   = obsVec(3);
     locSurvey = locFleet - 2;
 
-    if (locFleet == 1)
-    {
-      // catch at age
-      locZ = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
-      pred(i) = f(locYear,locAge) -
-                  log(locZ) +
-                  log(1.0 - mfexp(-locZ)) +
-                  n(locYear,locAge);
-      predvar(i) = mfexp(2.0 * v(1,locYear,locAge));
-    }
-    if (locFleet == 2)
-    {
-      // total catch weight
-      pred(i) = 0;
-      predvar(i) = 0;
-      for (int a = minAge; a <= maxAge; ++a)
+    if (obsVec(5) > 0) {
+      // obsVec(5) is the weighting supplied through the variance slots
+      // if zero, no need to do anything
+
+      if (locFleet == 1)
       {
-        locZ = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
-        locPred =
-          mfexp(f(locYear,a) -
-                log(locZ) +
-                log(1.0 - mfexp(-locZ)) +
-                n(locYear,a) +
-                logCtchWt(locYear,a));
-        pred(i) += locPred;
-        // this is the variance calculation -
-        // only needed if user has not supplied variances
-        if (!useTotalCatchVar)
-        {
-          // compute based on estimated catch.n variance
-          if (totalCatchVarMethod == 1) {
-            predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
-                          (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
-                          mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
-          }
-          else if (totalCatchVarMethod == 2)
-          {
-             predvar(i) += (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1);
-          }
-          else if (totalCatchVarMethod == 3)
-          {
-            if (a >= fbarRange(1) & a <= fbarRange(2))
-             predvar(i) += (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1);
-          }
-        }
+        // catch at age
+        locZ = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
+        pred(i) = f(locYear,locAge) -
+                    log(locZ) +
+                    log(1.0 - mfexp(-locZ)) +
+                    n(locYear,locAge);
+        predvar(i) = mfexp(2.0 * v(1,locYear,locAge));
       }
-      if (useTotalCatchVar)
+      if (locFleet == 2)
       {
-        // use user provided variance of total catches
-        predvar(i) = 1;
-      }
-      else if (totalCatchVarMethod == 1)
-      {
-        // use estimated variance of total catches based on estimated variance
-        // of catch.n (see previous lines)
-        predvar(i) = predvar(i) / square(pred(i));
-      }
-      else if (totalCatchVarMethod == 2) {
-        predvar(i) = predvar(i) / (maxAge - minAge + 1);
-      }
-      else if (totalCatchVarMethod == 3) {
-        predvar(i) = predvar(i) / (fbarRange(2) - fbarRange(1) + 1);
-      }
-      pred(i) = log(pred(i));
-    }
-    if (locFleet > 2)
-    {
-      // surveys
-      if (locAge >= 0)
-      {
-        // indices at age
-        pred(i) = q(locSurvey,locYear,locAge) -
-                  locZ * surveyTimes(locSurvey) +
-                  n(locYear,locAge);
-        predvar(i) = mfexp(2.0 * v(locFleet - 1,locYear,locAge));
-      }
-      else
-      {
-        // biomass index
-        // note variance are stored in the minimum age column
+        // total catch weight
         pred(i) = 0;
-        for (int a = surveyMinAge(locSurvey);
-             a <= surveyMaxAge(locSurvey); ++a)
+        predvar(i) = 0;
+        for (int a = minAge; a <= maxAge; ++a)
         {
           locZ = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
-          pred(i) +=
-            mfexp(
-              q(locSurvey,locYear,a) +
-              logStkWt(locYear,a) +
-              n(locYear,a) -
-              surveyTimes(locSurvey) * locZ
-            );
+          locPred =
+            mfexp(f(locYear,a) -
+                  log(locZ) +
+                  log(1.0 - mfexp(-locZ)) +
+                  n(locYear,a) +
+                  logCtchWt(locYear,a));
+          pred(i) += locPred;
+          // this is the variance calculation -
+          // only needed if user has not supplied variances
+          if (!useTotalCatchVar)
+          {
+            // compute based on estimated catch.n variance
+            if (totalCatchVarMethod == 1) {
+              predvar(i) += mfexp(2.0 * logCtchWt(locYear,a)) *
+                            (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1) *
+                            mfexp(2.0 * locPred + mfexp(2.0 * v(1,locYear,a)));
+            }
+            else if (totalCatchVarMethod == 2)
+            {
+               predvar(i) += (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1);
+            }
+            else if (totalCatchVarMethod == 3)
+            {
+              if (a >= fbarRange(1) & a <= fbarRange(2))
+               predvar(i) += (mfexp(mfexp(2.0 * v(1,locYear,a))) - 1);
+            }
+          }
+        }
+        if (useTotalCatchVar)
+        {
+          // use user provided variance of total catches
+          predvar(i) = 1;
+        }
+        else if (totalCatchVarMethod == 1)
+        {
+          // use estimated variance of total catches based on estimated variance
+          // of catch.n (see previous lines)
+          predvar(i) = predvar(i) / square(pred(i));
+        }
+        else if (totalCatchVarMethod == 2) {
+          predvar(i) = predvar(i) / (maxAge - minAge + 1);
+        }
+        else if (totalCatchVarMethod == 3) {
+          predvar(i) = predvar(i) / (fbarRange(2) - fbarRange(1) + 1);
         }
         pred(i) = log(pred(i));
-        predvar(i) = mfexp(2.0 * v(locFleet - 1,locYear,minAge));
       }
-    }
+      if (locFleet > 2)
+      {
+        // surveys
+        if (locAge >= 0)
+        {
+          // indices at age
+          pred(i) = q(locSurvey,locYear,locAge) -
+                    locZ * surveyTimes(locSurvey) +
+                    n(locYear,locAge);
+          predvar(i) = mfexp(2.0 * v(locFleet - 1,locYear,locAge));
+        }
+        else
+        {
+          // biomass index
+          // note variance are stored in the minimum age column
+          pred(i) = 0;
+          for (int a = surveyMinAge(locSurvey);
+               a <= surveyMaxAge(locSurvey); ++a)
+          {
+            locZ = mfexp(f(locYear,a)) + mfexp(m(locYear,a));
+            pred(i) +=
+              mfexp(
+                q(locSurvey,locYear,a) +
+                logStkWt(locYear,a) +
+                n(locYear,a) -
+                surveyTimes(locSurvey) * locZ
+              );
+          }
+          pred(i) = log(pred(i));
+          predvar(i) = mfexp(2.0 * v(locFleet - 1,locYear,minAge));
+        }
+      }
 
-    // obsVec(5) is the weighting supplied through the variance slots
-    nll += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));
-    nllikcomp(locFleet) += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));;
+      // obsVec(5) is the weighting supplied through the variance slots
+      nll += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));
+      nllikcomp(locFleet) += obsVec(5) * nldnorm(obsVec(4), pred(i), predvar(i));;
+    }
   }
 
 
