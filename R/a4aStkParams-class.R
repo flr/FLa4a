@@ -332,13 +332,13 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
 
     params(flsr)["a",] <- params(flsr)["a",] * exp(from@centering)
 
-    which <- c(grep("sraMod", cnames), grep("srbMod", cnames)) 
+    which <- c(grep("sraMod", cnames), grep("srbMod", cnames))
     vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
     dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
-    
+
     flqs <- genFLQuant(from, type="response")
     rec(flsr) <- flqs$stock.n[1,]
-    
+
     ssb <- quantSums(flqs$stock.n * mat(from) * wt(from))
     ssb(flsr) <- ssb
     fitted(flsr) <- ssb/ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
@@ -420,6 +420,8 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
                 covariates = from@covariates)
 
     # calculate correlation matrix for each iter
+    # if vmat is NA, it will not be numeric and cov2cor will fail
+    if (!is.numeric(vmat)) vmat[] <- as.numeric(vmat)
     corrmat <- vmat
     for (i in 1:dim(vmat)[3]) {
       corrmat[,, i] <- cov2cor(vmat[,, i])
