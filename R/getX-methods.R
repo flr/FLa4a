@@ -116,9 +116,17 @@ setMethod("getX", "formula",
 
 
     # evaluate by argument in gam elements
-    gams <- grepl("(^s[(])|(^te[(])", facs)
+    gams <- grepl("(^s[(])|(^te[(])|(^ti[(])", facs)
     if (any(gams)) {
-      tmp.sfunc <- function(..., by = NULL) eval(substitute(by), df)
+      # function to return by argument data
+      tmp.sfunc <- function(..., by = NULL) {
+        out <- eval(substitute(by), df)
+        if (is.logical(out)) {
+          factor(out)
+        } else {
+          out
+        }
+      }
       dummy.gams <- gsub("(^s[(])|(^te[(])|(^ti[(])", "tmp.sfunc(", facs[gams])
       gmf <- lapply(dummy.gams, function(x) eval(parse(text = x)))
       bygams <- !sapply(gmf, is.null)
@@ -126,12 +134,14 @@ setMethod("getX", "formula",
         # if there are by arguments then add them to df otherwise do nothing
         gmf <- gmf[bygams]
         gmf <- as.data.frame(gmf)
-        names(gmf) <- paste("by", 1:ncol(gmf), ".", sep = "")
+        names(gmf) <- paste("by", 1:ncol(gmf), sep = "")
         if (!all(complete.cases(gmf)))
           stop("Some 'by' arguments in smoothers evaluate to NA:",
                "cannot proceed.")
         df <- cbind(df, gmf)
         # now replace by = ... to by = by1. etc and rebuild the formula :)
+        # function to get by argument NAME
+        tmp.sfunc <- function(..., by = NULL) deparse(substitute(by))
         replace.by <-
           lapply(dummy.gams[bygams],
             function(x) {
@@ -173,7 +183,6 @@ setMethod("getX", "formula",
     } else {
       deparsed_model <- deparse(model[[length(model)]], width.cutoff = 500L)
       model <- formula(paste("fake.obs ~", deparsed_model))
-      #X <- model.matrix.gam(gam(model, data = cbind(fake.obs = 1, df)))
       G <- try(
           gam(model, data = cbind(fake.obs = 1, df), fit = FALSE)
         )
