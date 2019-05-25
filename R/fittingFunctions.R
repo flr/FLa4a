@@ -669,7 +669,8 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
                     df.data$year %in% total_catch_years] <- 0
   }
 
-  if (any(df.data$weights != 1))
+    # if any weights are not zero or 1:
+  if (any(apply(cbind(abs(df.data$weights), abs(df.data$weights - 1)), 1, min) > 1e-9))
     message("Note: Provided variances will be used to weight observations.\n",
             "      Weighting assumes variances are on the log scale or\n",
             "      equivalently log(CV^2 + 1).")
@@ -1278,7 +1279,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
                     surveytime, fleet.names,
                     Xf, Xq, Xv, Xny1, srr, Xsra, Xsrb, Xr, Xvlist, Xqlist,
                     my.time.used, mcmc, verbose) {
-
+#browser()
   #========================================================================
   # Write model matrices and model info to files in wkdir
   #========================================================================
