@@ -756,6 +756,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       lapply(full.df[3:1],
              function(x) sort(unique(x))),
       KEEP.OUT.ATTRS = FALSE)[3:1]
+  temp.full.df$ord <- 1:nrow(temp.full.df)
 
   for (i in seq_along(indices)) {
     .years <- temp.full.df$year[temp.full.df$fleet == levels(full.df$fleet)[i + 2]]
@@ -793,7 +794,8 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   full.df[is.na(full.df)] <- 0
 
   # order df
-  full.df <- full.df[with(full.df, order(fleet, year, age)), ]
+  full.df <- full.df[order(full.df$ord),]
+  full.df <- full.df[!names(full.df) %in% "df"]
   rownames(full.df) <- NULL
   full.df <- full.df[c(3, 1, 2, 4:ncol(full.df))]
 
