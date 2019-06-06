@@ -577,6 +577,7 @@ PROCEDURE_SECTION
         if (locAge >= 0)
         {
           // indices at age
+          locZ = mfexp(f(locYear,locAge)) + mfexp(m(locYear,locAge));
           pred(i) = q(locSurvey,locYear,locAge) -
                     locZ * surveyTimes(locSurvey) +
                     n(locYear,locAge);
