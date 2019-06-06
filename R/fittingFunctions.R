@@ -997,7 +997,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     dmns <- dimnames(logq[[i]])
     if (is(indices[[i]], 'FLIndexBiomass')) {
       dmns[[1]] <- ac(srvMinAge[i]:srvMaxAge[i])
-      qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
+      qq <- exp(logq[[i]] - center.log[1] + center.log[i+2])
       nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
       zz <- exp(-Z[dmns[[1]], dmns[[2]]] * surveytime[i])
       # there was a bug here, nn was not being reduced by Z
@@ -1006,7 +1006,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       ii <- qq * bb
     } else {
       nn <- stock.n(a4aout)[dmns[[1]], dmns[[2]]]
-      qq <- exp(logq[[i]] - center.log[1] + center.log[i+1])
+      qq <- exp(logq[[i]] - center.log[1] + center.log[i+2])
       zz <- exp(-Z[dmns[[1]], dmns[[2]]] * surveytime[i])
       ii <- qq * nn * zz
     }
