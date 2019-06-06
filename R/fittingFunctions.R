@@ -1090,7 +1090,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
           vcov = out$cov[which_pars, which_pars, 1, drop = FALSE],
           distr = "norm",
           # must not! subtract catch scaling
-          centering = FLPar(centering = center.log[i + 1]),
+          centering = FLPar(centering = center.log[i + 2]),
           link = log,
           linkinv = exp
         )
