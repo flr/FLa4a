@@ -1,3 +1,10 @@
+ FLa4a 1.7.x:
+
+ NEW FEATURES
+- sca uses a new method to fill missing observations in the catch matrix
+
+	BUG FIXES:
+
  FLa4a 1.6.x:
 
  NEW FEATURES
@@ -7,7 +14,6 @@
 
 	BUG FIXES:
 - Centering was not properly reported for MCMCM qmodels
-
 
  FLa4a 1.0.0:
 
