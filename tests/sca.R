@@ -226,7 +226,7 @@ fit <- sca(stk, ple4.indices)
 # hessian non-positive definite
 #====================================================================
 
-fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
+fit0 <- FLa4a:::a4aInternal(ple4, FLIndices(ple4.index), fmodel=~te(age, year, k=c(10, 50)), qmodel=list(~factor(age)), fit="MP")
 sum(stock.n(fit0), na.rm=T)==0
 sum(catch.n(fit0), na.rm=T)==0
 sum(index(fit0)[[1]], na.rm=T)==0
@@ -240,7 +240,7 @@ sum(vcov(vmodel(pars(fit0))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit0))[[2]]), na.rm=T)==0
 
 
-fit <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)))
+fit <- sca(ple4, FLIndices(ple4.index), fmodel=~te(age, year, k=c(10, 50)), qmodel=list(~factor(age)), fit="MP")
 # check convergence info
 fitSumm(fit)["convergence",]==1
 sum(stock.n(fit), na.rm=T)==0
@@ -255,7 +255,7 @@ sum(vcov(qmodel(pars(fit))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit))[[1]]), na.rm=T)==0
 sum(vcov(vmodel(pars(fit))[[2]]), na.rm=T)==0
 
-fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~factor(age)+ factor(year), qmodel=list(~factor(age)+ s(year, k=20)), fit="assessment")
+fit1 <- sca(ple4, FLIndices(ple4.index), fmodel=~te(age, year, k=c(10, 50)), qmodel=list(~factor(age)))
 sum(stock.n(fit1), na.rm=T)==0
 sum(catch.n(fit1), na.rm=T)==0
 sum(index(fit1)[[1]], na.rm=T)==0

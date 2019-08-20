@@ -1174,8 +1174,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
     #if (!useADMB) stop("not implemented in TMB version")
 
-    # coerce into a4aFitMCMC
-    a4aout <- a4aFitMCMC(a4aout, mcmc=mcmc)
+	# NOTE: can't use a4aFitMCMC(a4aout, mcmc=mcmc) as callNextMethods is 
+	# called twice and breaks the code  
+    a4aout <- as(a4aout, "a4aFitMCMC")
+    a4aout@mcmc <- mcmc
     # fill parameters
     a4aout@pars@stkmodel@coefficients <- propagate(a4aout@pars@stkmodel@coefficients, out$mcmc$nit)
     a4aout@pars@stkmodel@coefficients[] <-
