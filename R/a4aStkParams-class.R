@@ -263,22 +263,31 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
 
     # get SR pars
     cnames <- rownames(coef(from))
-    params(flsr) <- FLPar(a = exp(coef(from)[grep("sraMod", cnames)]),
-       b = exp(coef(from)[grep("srbMod", cnames)]))
+    npars <- length(grep("sr[a|b]Mod:", cnames))
+    if (npars == 1) {
+      # then a geomean model (only one SR parameter)
+      which <- grep("sraMod", cnames)
+      params(flsr) <- FLPar(a = exp(coef(from)[which]))
+      params(flsr)["a",] <- params(flsr)["a",] * exp(from@centering)
+      vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
+      dimnames(vcov(flsr)) <- list("a", "a")
+    } else {
+      params(flsr) <- FLPar(a = exp(coef(from)[grep("sraMod", cnames)]),
+                            b = exp(coef(from)[grep("srbMod", cnames)]))
+      params(flsr)["a",] <- params(flsr)["a",] * exp(from@centering)
+      which <- c(grep("sraMod", cnames), grep("srbMod", cnames))
+      vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
+      dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
+    }
 
-    params(flsr)["a",] <- params(flsr)["a",] * exp(from@centering)
-
-    which <- c(grep("sraMod", cnames), grep("srbMod", cnames)) 
-    vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
-    dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
-    
     flqs <- genFLQuant(from, type="response")
     rec(flsr) <- flqs$stock.n[1,]
-    
+
     ssb <- quantSums(flqs$stock.n * mat(from) * wt(from))
     ssb(flsr) <- ssb
     fitted(flsr) <- ssb/ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
     units(fitted(flsr)) <- units(rec(flsr))
+
     residuals(flsr) <- log(rec(flsr)) - log(fitted(flsr))
 
     range(flsr) <- range(from)[c("min", "max", "minyear", "maxyear")]
