@@ -14,7 +14,7 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
     model <- object
-  
+
     # drop unused factor levels
     facs <- which(sapply(df, is.factor))
     df[facs] <- lapply(df[facs], function(x) x[drop=TRUE])
@@ -92,8 +92,17 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
         df <- cbind(df, gmf)
         # now replace by = ... to by = by1. etc and rebuild the formula :)
         #tmp.sfunc <- function(..., by) deparse(substitute(by))
-        replace.by <- lapply(dummy.gams[bygams], function(x) gsub("[)]","[)]", gsub("[(]", "[(]", eval(parse(text = x)))))
-        facs[gams][bygams] <- sapply(seq(ncol(gmf)), function(i) gsub(replace.by[[i]], names(gmf)[i], facs[gams][bygams][i]))
+        tmp.sfunc <- function(..., by = NULL) deparse(substitute(by))
+        replace.by <-
+          lapply(dummy.gams[bygams],
+            function(x) {
+              gsub("[)]", "[)]", gsub("[(]", "[(]", eval(parse(text = x))))
+            })
+        facs[gams][bygams] <-
+          sapply(seq(ncol(gmf)),
+            function(i) {
+              gsub(replace.by[[i]], names(gmf)[i], facs[gams][bygams][i])
+            })
         model <- eval(parse(text = paste("~", paste(facs, collapse = "+"))))
       }
     }
