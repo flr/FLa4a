@@ -258,28 +258,34 @@ dropMatrixIter <- function(object, iter = 1) {
 #
 # ----------------------------------------------
 
-  bevholt <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "bevholt", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 1)
-  }
-  bevholtSV <- function(SPR0 = 1, CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "bevholtSV", a = ~ 1, b = ~ 1, SPR0 = SPR0, srrCV = CV, ID = 5)
-  }
-  ricker <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "ricker", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 2)
-  }
-  hockey <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "hockey", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 3)
-  }
-  geomean <- function(CV = 0.5) {
-    if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
-    list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
-  }
-  none <- function() list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+bevholt <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
+  check_cv(CV)
+  list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
+}
 
+bevholtSV <- function(CV = 0.5, SPR0 = 1, a = ~ 1, b = ~ 1) {
+  check_cv(CV)
+  list(srr = "bevholtSV", a = a, b = b, SPR0 = SPR0, srrCV = CV, ID = 5)
+}
+
+ricker <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
+  check_cv(CV)
+  list(srr = "ricker", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 2)
+}
+
+hockey <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
+  check_cv(CV)
+  list(srr = "hockey", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 3)
+}
+
+geomean <- function(CV = 0.5, a = ~ 1, ...) {
+  check_cv(CV)
+  list(srr = "geomean", a = a, b = ~ 1, SPR0 = 1, srrCV = CV, ID = 4)
+}
+
+none <- function(...) {
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+}
 
 a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")
 flcSRmodelList <- c("bevholt", "ricker", "geomean")
