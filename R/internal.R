@@ -258,6 +258,13 @@ dropMatrixIter <- function(object, iter = 1) {
 #
 # ----------------------------------------------
 
+check_cv <- function(CV) {
+  if (!is.numeric(CV))
+    stop("CV must be a numeric value not: ", capture.output(print(CV)))
+  if (CV <= 0)
+    stop ("CV in stock recruit relationship cannot be less than zero")
+}
+
 bevholt <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
   check_cv(CV)
   list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
