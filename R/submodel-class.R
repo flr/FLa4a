@@ -65,10 +65,6 @@ setMethod("initialize", "submodel",
       formula(.Object) <- formula
       if (!missing(coefficients)) {
         coef(.Object) <- coefficients
-      } else {
-        Xmat <- getX(.Object)
-        coef(.Object) <- FLPar(structure(rep(0, ncol(Xmat)),
-                                         names = colnames(Xmat)))
       }
       # need hard assignment first time round
       npar <- length(coef(.Object))
@@ -209,6 +205,10 @@ setGeneric("formula<-", function(object, value) standardGeneric("formula<-"))
 setMethod("formula<-", c("submodel", "formula"),
   function(object, value) {
     object@formula <- value
+    # recalc coefficients?
+    Xmat <- getX(object)
+    coef(object) <- 
+      FLPar(structure(rep(0, ncol(Xmat)),names = colnames(Xmat)))    
     object
   }
 )
