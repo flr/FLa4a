@@ -91,13 +91,25 @@ setValidity("submodels",
 #  accessor methods
 #
 
+setMethod("[",
+    signature(x = "submodels"),
+    function (x, i, j, ..., drop = TRUE) 
+    {
+      out <- x[i]
+      out@name <- x@name
+      out    
+    }
+)
+
 #' @rdname submodels-class
 #' @aliases [[
 setMethod("[[",
   signature(x = "submodels"),
   function (x, i, j, ...) {
     out <- x@.Data[[i]]
-    out@covariates <- x@covariates
+    if (.hasSlot(x, "covariates") && .hasSlot(out, "covariates")) {
+      out@covariates <- x@covariates
+    }
     out
   }
 )
@@ -199,7 +211,12 @@ setMethod("[[<-",
 
 setMethod("show", "submodels",
   function(object) {
-    cat("    ", name(object), ":\n", sep = "")
+    if (.hasSlot(object, "name")) {
+      objname <- name(object)      
+    } else {
+      objname <- "submodels"
+    }
+    cat("    ", objname, ":\n", sep = "")
     if (length(object) == 0) {
       cat("\tempty object\n")
     } else {

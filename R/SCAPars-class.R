@@ -74,16 +74,36 @@ setMethod("SCAPars", signature(object = "missing"),
 # accessors
 
 #' @rdname SCAPars-class
+#' @aliases covariates covatiates-methods
+setGeneric("covariates", function(object, ...) standardGeneric("covariates"))
+#' @rdname SCAPars-class
+setMethod("covariates", "SCAPars",
+  function(object) {
+    if (.hasSlot(object, "covariates")) {
+      return(object@covariates)
+    } else {
+      FLQuants()
+    }
+  }
+)
+
+
+
+
+#' @rdname SCAPars-class
 #' @aliases stkmodel stkmodel-methods
 setGeneric("stkmodel", function(object, ...) standardGeneric("stkmodel"))
 #' @rdname SCAPars-class
 setMethod("stkmodel", "SCAPars",
   function(object) {
     out <- object@stkmodel
-    out@covariates <- object@covariates
+    if (.hasSlot(object, "covariates") && .hasSlot(out, "covariates")) {
+      out@covariates <- object@covariates
+    }
     out
   }
 )
+
 
 #' @rdname SCAPars-class
 setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
@@ -95,7 +115,6 @@ setMethod("n1Mod", "SCAPars", function(object) n1Mod(stkmodel(object)))
 
 #' @rdname SCAPars-class
 setMethod("rmodel", "SCAPars", function(object) rmodel(stkmodel(object)))
-
 
 #' @rdname SCAPars-class
 #' @aliases srmodel srmodel-methods
@@ -111,7 +130,10 @@ setGeneric("qmodel", function(object, ...) standardGeneric("qmodel"))
 setMethod("qmodel", "SCAPars",
   function(object) {
     out <- object@qmodel
-    out@covariates <- object@covariates
+    if (.hasSlot(object, "covariates") && .hasSlot(out, "covariates")) {
+      out@covariates <- object@covariates
+    }
+    out@name <- "qmodel"
     out
   }
 )
@@ -129,7 +151,10 @@ setGeneric("vmodel", function(object, ...) standardGeneric("vmodel"))
 setMethod("vmodel", "SCAPars",
   function(object) {
     out <- object@vmodel
-    out@covariates <- object@covariates
+    if (.hasSlot(object, "covariates") && .hasSlot(out, "covariates")) {
+      out@covariates <- object@covariates
+    }
+    out@name <- "vmodel"
     out
   }
 )

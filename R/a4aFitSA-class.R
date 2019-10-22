@@ -127,6 +127,9 @@ setMethod("vmodel", signature(object = "a4aFitSA"),
 setMethod("vMod", signature(object = "a4aFitSA"),
   function(object) vMod(pars(object)))
 
+#' @rdname a4aFitSA-class
+setMethod("covariates", "a4aFitSA",
+  function(object) covariates(pars(object)))
 
 
 
