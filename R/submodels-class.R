@@ -9,9 +9,7 @@
 submodels <-
   setClass("submodels",
     contains = "FLComps",
-    slots = c(corBlocks  = "list",
-              name       = "character",
-              covariates = "FLQuants"))
+    slots = c(corBlocks  = "list"))
 
 #' @rdname submodels-class
 #' @template Constructors
@@ -24,8 +22,7 @@ setMethod("initialize", "submodels",
            ...,
            corBlocks,
            names,
-           name       = "",
-           covariates = FLQuants()
+           desc = ""
           ) {
       .Object <- callNextMethod(.Object, ...)
       if (!missing(names)) {
@@ -37,12 +34,11 @@ setMethod("initialize", "submodels",
       }
       # this is needed to avoid attempted evaluation of names argument
       # when calling the names function in following if statment
-      names <- ""
-      if (any(is.na(names(.Object)) | names(.Object) == "")) {
-        names(.Object) <- unname(sapply(.Object, slot, "name"))
+      if (any(is.na(.Object@names) | identical(.Object@names, ""))) {
+        .Object@names <- unname(sapply(.Object, slot, "name"))
       }
       # finally check for corrupt submodels and apply a simple naming scheme
-      if (any(names(.Object) == "")) {
+      if (any(.Object@names == "")) {
         names <- names(.Object)
         names[names == ""] <- letters[1:sum(names == "")]
         .Object <- new("submodels", as(.Object, "list"), corBlocks = corBlocks, names = make.unique(names))
@@ -65,12 +61,11 @@ setMethod("initialize", "submodels",
                                     npar[modelpairs[2, i]],
                                     iter = 1),
                             dimnames = c(parnames[modelpairs[, i]], "1")))
-          names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(names(.Object)[x], collapse = "."))
+          names(.Object@corBlocks) <- apply(modelpairs, 2, function(x) paste(.Object@names[x], collapse = "."))
         }
       }
-      # finally add a name and covariates
-      .Object@name <- name
-      .Object@covariates <- covariates
+      # finally add a desc
+      .Object@desc <- desc
       .Object
 })
 
@@ -107,9 +102,6 @@ setMethod("[[",
   signature(x = "submodels"),
   function (x, i, j, ...) {
     out <- x@.Data[[i]]
-    if (.hasSlot(x, "covariates") && .hasSlot(out, "covariates")) {
-      out@covariates <- x@covariates
-    }
     out
   }
 )
@@ -119,7 +111,7 @@ setMethod("[[",
   function (x, i, j, ...) {
     int_i <- which(i == names(x))
     if (length(int_i) == 0) return(NULL)
-    x[[int_i]]
+    x[[int_i[1]]]
   }
 )
 
@@ -145,9 +137,6 @@ setMethod("sMod", "submodels", function(object) lapply(object, sMod))
 
 #' @rdname submodels-class
 setMethod("formula", "submodels", function(x) lapply(x, formula))
-
-#' @rdname submodels-class
-setMethod("name", "submodels", function(object) object@name)
 
 #
 #  assignment methods
@@ -189,7 +178,7 @@ setMethod("[[<-",
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
-    new("submodels", lst, corBlocks = x@corBlocks, name = x@name)
+    new("submodels", lst, corBlocks = x@corBlocks, desc = x@desc)
   }
 )
 
@@ -200,7 +189,7 @@ setMethod("[[<-",
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
-    new("submodels", lst, corBlocks = x@corBlocks, name = x@name)
+    new("submodels", lst, corBlocks = x@corBlocks, desc = x@desc)
   }
 )
 
@@ -211,11 +200,7 @@ setMethod("[[<-",
 
 setMethod("show", "submodels",
   function(object) {
-    if (.hasSlot(object, "name")) {
-      objname <- name(object)      
-    } else {
-      objname <- "submodels"
-    }
+    objname <- object@desc      
     cat("    ", objname, ":\n", sep = "")
     if (length(object) == 0) {
       cat("\tempty object\n")
@@ -271,7 +256,7 @@ setMethod("propagate",
         out
       })
 
-    new("submodels", lst, corBlocks = corBlocks, name = name(object))
+    new("submodels", lst, corBlocks = corBlocks, desc = object@desc)
   }
 )
 

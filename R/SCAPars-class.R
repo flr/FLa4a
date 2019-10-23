@@ -11,10 +11,9 @@
 #' }
 #' @aliases SCAPars-class
 setClass("SCAPars",
-        slots = c(stkmodel   = "a4aStkParams",
-                  qmodel     = "submodels",
-                  vmodel     = "submodels",
-                  covariates = "FLQuants")
+        slots = c(stkmodel  = "a4aStkParams",
+                  qmodel    = "submodels",
+                  vmodel    = "submodels")
 )
 
 setValidity("SCAPars",
@@ -28,24 +27,22 @@ setValidity("SCAPars",
 })
 
 setMethod("initialize", "SCAPars",
-  function(.Object,
+  function(.Object, 
            stkmodel = new("a4aStkParams"),
-           qmodel = new("submodels", name = "qmodel"),
-           vmodel = new("submodels", name = "vmodel"),
-           covariates = new("FLQuants")
+           qmodel = new("submodels", desc = "qmodel"),
+           vmodel = new("submodels", desc = "vmodel")
            ) {
       # initialize FLComp slots
       .Object <- callNextMethod()
       # ensure correct names in q nd v models
-      qmodel@name <- "qmodel"
-      vmodel@name <- "vmodel"
+      qmodel@desc <- "qmodel"
+      vmodel@desc <- "vmodel"
       # initialize remaining slots
       .Object@stkmodel <- stkmodel
       .Object@qmodel <- qmodel
       .Object@vmodel <- vmodel
-      .Object@covariates <- covariates
       .Object
-})
+}) 
 
 
 
@@ -65,7 +62,7 @@ setMethod("SCAPars", signature(object = "missing"),
     # or not
     } else {
       args <- list(...)
-    args$Class <- "SCAPars"
+      args$Class <- 'SCAPars'
       do.call("new", args)
     }
   }
@@ -74,40 +71,10 @@ setMethod("SCAPars", signature(object = "missing"),
 # accessors
 
 #' @rdname SCAPars-class
-#' @aliases covariates covatiates-methods
-setGeneric("covariates", function(object, ...) standardGeneric("covariates"))
-#' @rdname SCAPars-class
-setMethod("covariates", "SCAPars",
-  function(object) {
-    if (.hasSlot(object, "covariates")) {
-      return(object@covariates)
-    } else {
-      FLQuants()
-    }
-  }
-)
-
-
-
-
-#' @rdname SCAPars-class
 #' @aliases stkmodel stkmodel-methods
 setGeneric("stkmodel", function(object, ...) standardGeneric("stkmodel"))
 #' @rdname SCAPars-class
-setMethod("stkmodel", "SCAPars",
-  function(object) {
-    out <- object@stkmodel
-    if (.hasSlot(object, "covariates") && .hasSlot(out, "covariates")) {
-      out@covariates <- object@covariates
-    }
-    out
-  }
-)
-
-
-#' @rdname SCAPars-class
-setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
-setMethod("fMod", "SCAPars", function(object) fMod(stkmodel(object)))
+setMethod("stkmodel", "SCAPars", function(object) object@stkmodel)
 
 #' @rdname SCAPars-class
 setMethod("n1model", "SCAPars", function(object) n1model(stkmodel(object)))
@@ -124,16 +91,17 @@ setMethod("srmodel", "SCAPars", function(object) srmodel(stkmodel(object)))
 setMethod("srMod", "SCAPars", function(object) srMod(stkmodel(object)))
 
 #' @rdname SCAPars-class
+setMethod("fmodel", "SCAPars", function(object) fmodel(stkmodel(object)))
+setMethod("fMod", "SCAPars", function(object) fMod(stkmodel(object)))
+
+#' @rdname SCAPars-class
 #' @aliases qmodel qmodel-methods
 setGeneric("qmodel", function(object, ...) standardGeneric("qmodel"))
 #' @rdname SCAPars-class
 setMethod("qmodel", "SCAPars",
   function(object) {
     out <- object@qmodel
-    if (.hasSlot(object, "covariates") && .hasSlot(out, "covariates")) {
-      out@covariates <- object@covariates
-    }
-    out@name <- "qmodel"
+    out@desc <- "qmodel"
     out
   }
 )
@@ -151,10 +119,7 @@ setGeneric("vmodel", function(object, ...) standardGeneric("vmodel"))
 setMethod("vmodel", "SCAPars",
   function(object) {
     out <- object@vmodel
-    if (.hasSlot(object, "covariates") && .hasSlot(out, "covariates")) {
-      out@covariates <- object@covariates
-    }
-    out@name <- "vmodel"
+    out@desc <- "vmodel"
     out
   }
 )
@@ -193,7 +158,7 @@ setGeneric("fPars", function(object, ...) standardGeneric("fPars"))
 setMethod("fPars", "SCAPars", function(object) {
   stkmodel_coefficients <- coef(stkmodel(object))
   idx <- grep("fMod:", rownames(stkmodel_coefficients))
-  stkmodel_coefficients[idx, ]
+  stkmodel_coefficients[idx,]
 })
 
 #' @rdname SCAPars-class
@@ -245,10 +210,10 @@ setGeneric("vFrml", function(object, ...) standardGeneric("vFrml"))
 setMethod("vFrml", "SCAPars", function(object) object@vmodel@model)
 
 #' @rdname SCAPars-class
-setMethod("m", signature(object = "SCAPars"), function(object) m(stkmodel(object)))
+setMethod("m", signature(object="SCAPars"), function(object) m(stkmodel(object)))
 
 #' @rdname SCAPars-class
-setMethod("wt", signature(object = "SCAPars"), function(object) wt(stkmodel(object)))
+setMethod("wt", signature(object="SCAPars"), function(object) wt(stkmodel(object)))
 
 
 
@@ -256,7 +221,7 @@ setMethod("wt", signature(object = "SCAPars"), function(object) wt(stkmodel(obje
 
 #' @rdname SCAPars-class
 #' @param iter the number of iterations to create
-#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
 setMethod("propagate",
   signature(object = "SCAPars"),
   function (object, iter, fill.iter = TRUE) {

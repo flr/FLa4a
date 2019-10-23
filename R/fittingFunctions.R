@@ -1100,7 +1100,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       submodels(
         qmodels,
         names = names(indices),
-        name = "qmodel"
+        desc = "qmodel"
       )
 
     # fill up v submodels
@@ -1144,7 +1144,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       submodels(
         vmodels,
         names = fleet.names,
-        name = "vmodel"
+        desc = "vmodel"
       )
 
     # collect into an SCAPars class
@@ -1152,8 +1152,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
       SCAPars(
         stkmodel = stkmodel,
         qmodel = qmodels,
-        vmodel = vmodels,
-        covariates = if (missing(covar)) FLQuants() else covar
+        vmodel = vmodels
       )
 
     # create an a4aFitSA class

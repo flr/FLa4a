@@ -45,7 +45,7 @@ vmodel(testfit)[[2]]
 qmodel(testfit)[["BTS"]]
 vmodel(testfit)[["catch"]]
 
-covariates(testfit)
+#covariates(testfit)
 
 m(testfit)
 wt(testfit)

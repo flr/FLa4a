@@ -239,6 +239,39 @@ flq_from_range <- function(object) {
   }
 }
 
+formula_has_covariates <- function(x, ok_vars) {
+  # asssign default value  
+  if (missing(ok_vars)) {
+    ok_vars <- c("age", "year", "unit", "season", "area", "iter")
+  }
+  covars <- setdiff(all.vars(x), ok_vars)
+  length(covars) > 0
+}
+
+
+formula_has_covariate_factors <- function(x, ok_vars, warnings = TRUE) {
+  # asssign default value  
+  if (missing(ok_vars)) {
+    ok_vars <- c("age", "year", "unit", "season", "area", "iter")
+  }
+
+  funcs <- setdiff(all.names(x), all.vars(x))
+  if ("factor" %in% funcs) {
+    trms <- terms(x, specials = "factor")
+    facs <- attr(trms, "term.labels")[attr(trms, "specials")$factor]
+    # only warn if thre are factors for covars
+    fac_vars <- sapply(facs, function(form) all.vars(as.formula(paste("~", form))))
+    cov_facs <- setdiff(fac_vars, ok_vars)
+
+    if (length(cov_facs)) {
+      if (warnings) warning("factor() found! - need to deal with this!")
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
+
 
 dropMatrixIter <- function(object, iter = 1) {
   dims <- dim(object)

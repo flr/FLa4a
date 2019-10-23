@@ -33,8 +33,7 @@ setClass("a4aStkParams",
       mat          = "FLQuant",
       units        = "character",
       link         = "function",
-      linkinv      = "function",
-      covariates   = "FLQuants"
+      linkinv      = "function"
     )
 )
 
@@ -65,7 +64,6 @@ setMethod("initialize", "a4aStkParams",
             units        = "NA",
             link         = log,
             linkinv      = exp,
-            covariates   = FLQuants(),
             ...) {
     # initialize FLComp slots
     .Object <- callNextMethod(.Object, ...)
@@ -96,7 +94,6 @@ setMethod("initialize", "a4aStkParams",
     .Object@units <- units
     .Object@link <- link
     .Object@linkinv <- linkinv
-    .Object@covariates <- covariates
     .Object
   }
 )
@@ -425,8 +422,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "submodels"),
     stk_submodel <-
       submodels(list(fsubmodel, n1submodel, rsubmodel),
                 names = c("fmodel", "n1model", "rmodel"),
-                name = "stkmodel",
-                covariates = from@covariates)
+                desc = "stkmodel")
 
     # calculate correlation matrix for each iter
     # if vmat is NA, it will not be numeric and cov2cor will fail

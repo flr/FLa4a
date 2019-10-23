@@ -9,39 +9,35 @@
 #' @aliases getX getX-methods
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
 
+
 #' @rdname getX-methods
 setMethod("getX", "submodel",
   function(object) {
-    # make empty FLQuant and make a data.frame from it
-    flq <- flq_from_range(object)
-    df <- as.data.frame(flq)
 
-    # add in covariates
-    if (length(object@covariates) > 0) {
-      covar <- object@covariates
-      # add in covariates to data.frame
-      tmp <- lapply(seq_along(covar), function(i) {
-        x <- as.data.frame(covar[[i]])[c("age", "year", "data")]
-        if (length(unique(x$age)) == 1) x <- x[names(x) != "age"]
-        if (length(unique(x$year)) == 1) x <- x[names(x) != "year"]
-        names(x) <- gsub("data", names(covar)[i], names(x))
-        x
-      })
-      covar.df <- tmp[[1]]
-      for (i in seq_along(tmp[-1]))
-        covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
-
-      df <- merge(df, covar.df, all.x = TRUE, all.y = FALSE)
+    # get data - maybe check that there are no non age and year
+    # based covariates...
+    if (formula_has_covariates(formula(object))) {
+      stop("this model requires covariates to be evaluated.")
     }
 
     # get design matrix
-    getX(formula(object), df)
+    getX(formula(object), as.data.frame(object))
+  }
+)
+
+
+
+#' @rdname getX-methods
+setMethod("getX", "submodel_sim",
+  function(object) {
+    # get design matrix
+    getX(formula(object), as.data.frame(object))
   }
 )
 
 #' @rdname getX-methods
 setMethod("getX", "formula",
-  function(object, df) {
+  function(object, df, check = TRUE) {
     opts <-
       options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
 
@@ -200,15 +196,17 @@ setMethod("getX", "formula",
       stop("something went wrong - check for NAs in covariates")
 
     # check model for redundant parameters
-    qr.X <- qr(X)
-    rank.deficient <- qr.X$pivot[abs(diag(qr.X$qr)) < 1e-7]
-    if (length(rank.deficient)) {
-      droppar <- paste(colnames(X)[rank.deficient], collapse = "\n\t")
-      warning("*** ", model.type, " has ",  length(rank.deficient),
-              " too many parameter(s)!!\n",
-              "    i will remove the redundant ones:\n\t",
-              droppar, call. = FALSE)
-      X <- X[, -rank.deficient]
+    if (check) {
+      qr.X <- qr(X)
+      rank.deficient <- qr.X$pivot[abs(diag(qr.X$qr)) < 1e-7]
+      if (length(rank.deficient)) {
+        droppar <- paste(colnames(X)[rank.deficient], collapse = "\n\t")
+        warning("*** ", model.type, " has ",  length(rank.deficient),
+                " too many parameter(s)!!\n",
+                "    i will remove the redundant ones:\n\t",
+                droppar, call. = FALSE)
+        X <- X[, -rank.deficient]
+      }
     }
 
     # reset options

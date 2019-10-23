@@ -29,8 +29,7 @@ setClass("submodel",
             centering    = "FLPar",
             distr        = "character",
             link         = "function",
-            linkinv      = "function",
-            covariates   = "FLQuants")
+            linkinv      = "function")
 )
 
 setValidity("submodel",
@@ -56,8 +55,7 @@ setMethod("initialize", "submodel",
            centering = FLPar(centering = 0),
            distr = "norm",
            link = log,
-           linkinv = exp,
-           covariates = FLQuants()
+           linkinv = exp
            ) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
@@ -101,7 +99,7 @@ setMethod("submodel", signature(object = "missing"),
     # or not
     } else {
       args <- list(...)
-    args$Class <- "submodel"
+      args$Class <- "submodel"
       do.call("new", args)
     }
   }
@@ -205,10 +203,38 @@ setGeneric("formula<-", function(object, value) standardGeneric("formula<-"))
 setMethod("formula<-", c("submodel", "formula"),
   function(object, value) {
     object@formula <- value
-    # recalc coefficients?
-    Xmat <- getX(object)
+
+    # cannot deal with factors at the moment
+    stopifnot(!formula_has_covariate_factors(value))
+
+    # recalc coefficients
+    df <- as.data.frame(object)
+
+    vars <- all.vars(value)
+    vars <- setdiff(vars, names(df))
+    args <- sapply(vars, function(x) rnorm(nrow(df)), simplify = FALSE)
+    if (length(vars)) {
+      df <- cbind.data.frame(df, args)
+    }
+    Xmat <- getX(value, df, check = FALSE)
+
     coef(object) <- 
-      FLPar(structure(rep(0, ncol(Xmat)),names = colnames(Xmat)))    
+      FLPar(structure(rep(0, ncol(Xmat)),names = colnames(Xmat)))
+
     object
+  }
+)
+
+
+
+
+setMethod("as.data.frame",
+  signature(x = "submodel", row.names = "missing", optional = "missing"),
+  function (x, ...) 
+  {
+    flq <- flq_from_range(x)
+    df <- as.data.frame(flq)
+
+    df
   }
 )
