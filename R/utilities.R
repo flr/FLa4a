@@ -290,3 +290,16 @@ getTPL <- function(dir){
 	file.copy(from, to)
 }
 
+
+
+#====================================================================
+# get years with missing catch
+#====================================================================
+
+getMissingCatchYears <- function(object) {
+  stopifnot("FLStock" %in% is(object))
+
+  c.n <- catch.n(object)
+  filt <- apply(c.n@.Data, 2, function(x) all(is.na(x)))
+  as.numeric(dimnames(c.n)$year[filt])
+}
