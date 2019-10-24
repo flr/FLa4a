@@ -21,6 +21,8 @@ setClass("a4aFitResiduals", contain="FLQuants")
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 setMethod("residuals", signature(object="a4aFit"), function(object, stock, indices, ...) {
 	args <- list(...)
+	if(!("type" %in% names(args))) args$type <- "standardized"
+	if(args$type!="standardized") stop("Can't compute other than standardized residuals")
     if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
 	# object holder
 	lst <- list()
@@ -35,11 +37,71 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 	lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
 	# out
 	names(lst) <- c("catch.n", names(indices), "catch")
-	new("a4aFitResiduals", FLQuants(lst))
+	new("a4aFitResiduals", new("FLQuants", lst, desc="standardized residuals"))
   }
 )
 
-#' @title Standardized log residuals
+#' @rdname a4aFitSAResiduals-class
+#' @aliases a4aFitSAResiduals a4aFitSAResiduals-methods residuals,a4aFitSA-method
+#' @template bothargs
+#' @param stock \code{FLStock} object used to fit the model
+#' @param indices \code{FLIndices} object used to fit the model
+#' @param type \code{character} the type of residuals which should be returned. The alternatives are: "standardized" (by age, default), "pearson", "deviances". All in the log scale
+#' @examples
+#' data(ple4)
+#' data(ple4.index)
+#' obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
+#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, indices, type="standardized", ...) {
+	args <- list(...)
+    if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
+	# object holder
+	lst <- list()
+	length(lst) <- length(indices) + 2	
+
+	if(type=="standardized"){
+		# catch
+		lst[[1]] <- stdlogres(catch.n(stock), catch.n(object))
+		# indices
+		idx <- index(object)
+		for(i in 1:length(indices)){
+			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]])
+		}
+		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
+		desc <- "standardized residuals"
+	} 
+	if(type=="pearson"){
+		sdlog <- predict(fit)$vmodel
+		# catch
+		lst[[1]] <- stdlogres(catch.n(stock), catch.n(object), sdlog=sdlog[[1]])
+		# indices
+		idx <- index(object)
+		for(i in 1:length(indices)){
+			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]], sdlog=sdlog[[i+1]])
+		}
+		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=quantSums(sdlog[[1]]))
+		desc <- "pearson residuals"
+	} 
+	if(type=="deviances"){
+		sdlog <- 1
+		# catch
+		lst[[1]] <- stdlogres(catch.n(stock), catch.n(object), sdlog=sdlog)
+		# indices
+		idx <- index(object)
+		for(i in 1:length(indices)){
+			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]], sdlog=sdlog)
+		}
+		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=1)
+		desc <- "deviances"
+	} 
+
+	# out
+	names(lst) <- c("catch.n", names(indices), "catch")
+	new("a4aFitResiduals", new("FLQuants", lst, desc=desc))
+  }
+)
+
+#' @title Standardized log residuals 
 #' @description Method to compute the standardized residuals on the log scale for index- and catch-at-age residuals in the a4a stock assessment framework.
 #' @name stdlogres
 #' @docType methods
@@ -64,9 +126,13 @@ setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 
 #' @rdname stdlogres-methods
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
-	flq <- log(obs/fit)
-	#res <- apply(flq, c(1,3:6), scale, center=FALSE)
-	res <- flq %/% sqrt(yearVars(flq))
+	args <- list(...)
+	flq <- log(obs/fit)	
+	if("sdlog" %in% names(args)){
+		res <- flq / args$sdlog
+	} else {
+		res <- flq %/% sqrt(yearVars(flq))
+	}
 	dimnames(res) <- dimnames(flq)
 	as(res, "FLQuant")
 })
@@ -97,7 +163,7 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxlin
 	args$groups <- quote(qname)
 	args$cex=0.3
 	args$lwd=2
-	args$ylab="standardized residuals"
+	args$ylab=x@desc
 	args$xlab=""
 	args$panel=function(x,y,...){
 		panel.abline(h=0, col.line="gray80")
