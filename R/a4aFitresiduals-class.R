@@ -71,7 +71,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		desc <- "standardized residuals"
 	} 
 	if(type=="pearson"){
-		sdlog <- predict(fit)$vmodel
+		sdlog <- predict(object)$vmodel
 		# catch
 		lst[[1]] <- stdlogres(catch.n(stock), catch.n(object), sdlog=sdlog[[1]])
 		# indices
