@@ -290,3 +290,57 @@ getTPL <- function(dir){
 	file.copy(from, to)
 }
 
+##====================================================================
+## total catch diagnostics
+##====================================================================
+
+##' @title total catch diagnostics
+##' @name total catch diagnostics
+##' @docType methods
+##' @rdname diagnc
+##' @aliases catch_diagnotics catch_diagnotics-methods catch_diagnotics,a4aFitSA,FLStock-method
+##' @description Method to compute and plot a bunch of diagnoctics for the total catch.
+##' @param x an \code{a4aFitSA} object with the fitted values
+##' @param y an \code{FLStock} object with the observed values
+##' @param ... additional argument list that might never be used
+##' @return a \code{plot} with fitted and observed catch numbers-at-age
+##' @examples
+##' data(ple4)
+##' data(ple4.index)
+##' obj <- sca(ple4, FLIndices(ple4.index))
+##' catch_diagnotics(obj, ple4)
+#setGeneric("catch_diagnotics", function(object, stock, ...) standardGeneric("catch_diagnotics"))
+##' @rdname diagnc
+
+#setMethod("catch_diagnotics", c("a4aFitSA", "FLStock"), function(object, stock, ...){
+#	args <- list(...)
+#	flqs <- FLa4a::tcDgn(object, stock)
+#	browser()
+#})
+
+##====================================================================
+## workhorse for total catch diagnostics, not exported
+##====================================================================
+#tcDgn <- function(object, stock, ...){
+#		it <- 500
+#		pred <- predict(object)
+#		fits <- simulate(object, it)
+#		stk_new <- stock + object
+#		cth_est <- catch(stk_new)
+#		cth_obs <- catch(stock)
+#		# sim with observation error
+#		flqoe <- quantSums(rlnorm(it, log(catch.n(object)), pred$vmodel$catch)*catch.wt(stock))
+#		# sim with estimation error
+#		flqee <- catch(stock + fits)
+#		# both
+#		flqe <- quantSums(rlnorm(it, log(catch.n(object)), sqrt(pred$vmodel$catch^2 + iterVars(log(catch.n(fits)))))*catch.wt(stock))
+#		# standardized residuals
+#		resstd <- stdlogres(cth_obs, cth_est)
+#		# pearson residuals
+#		sdlog <- sqrt(iterVars(log(flqoe)))
+#		resprs <- stdlogres(cth_obs, cth_est, sdlog=sdlog)
+#		# deviances
+#		devs <- log(cth_obs/cth_est)
+#		FLQuants(list(obs = cth_obs, est = cth_est, oe=flqoe, ee=flqee, oee=flqe, resstd=resstd, resprs=resprs, resraw=devs))
+#}
+

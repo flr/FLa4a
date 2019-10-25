@@ -79,7 +79,10 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		for(i in 1:length(indices)){
 			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]], sdlog=sdlog[[i+1]])
 		}
-		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=quantSums(sdlog[[1]]))
+		# for total catch variance is derived by simulation
+		flq <- rlnorm(500, log(catch.n(object)), sdlog$catch)
+		sdlog <- sqrt(iterVars(log(quantSums(flq*catch.wt(stock)))))
+		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=sdlog)
 		desc <- "pearson residuals"
 	} 
 	if(type=="deviances"){
