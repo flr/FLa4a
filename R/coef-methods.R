@@ -32,13 +32,16 @@ setMethod("coef", signature(object = "SCAPars"),
 #' @rdname coef-methods
 setMethod("coef", signature(object = "a4aStkParams"),
   function(object) {
-      object @ coefficients
+      object@coefficients
   })
 
 #' @rdname coef-methods
 setMethod("coef", signature(object = "submodels"),
   function(object) {
-      lapply(object, coef)
+      lst <- lapply(object, coef)
+      out <- FLPars(lst)
+      out@desc <- object@desc
+      out
   })
 
 
