@@ -474,6 +474,7 @@ setMethod("sca", signature("FLStock", "FLIndices"),
     # CHECK: NOT SURE WE NEED PROPAGATE HERE
       out@pars@stkmodel@m         <- propagate(outi@pars@stkmodel@m, it)
       out@pars@stkmodel@wt        <- propagate(outi@pars@stkmodel@wt, it)
+      out@pars@stkmodel@mat        <- propagate(outi@pars@stkmodel@mat, it)
       out@pars@stkmodel@units     <- units(catch.n(stock))
       # qmodel
       out@pars@qmodel             <- outi@pars@qmodel

@@ -77,11 +77,11 @@ setMethod("initialize", "a4aStkParams",
     .Object@centering <- centering
     .Object@distr <- distr
     # if missing set dimensions of of m and wt based on range
-    if (missing(m) || missing(wt))
+    if (missing(m) || missing(wt) || missing(mat))
       flq <- flq_from_range(.Object)
     .Object@m <- if (missing(m)) flq else m
     .Object@wt <- if (missing(wt)) flq else wt
-    .Object@wt <- if (missing(mat)) flq else mat
+    .Object@mat <- if (missing(mat)) flq else mat
     # throw error if range from FLComp doesn't match FLQuants
     # (can't check this in setValidity due to callNextMethod resulting in an
     # invalid a4aStkParams object when range is supplied)
@@ -318,9 +318,15 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
     # get FLSR definition
     expr_model <- a4aSRmodelDefinitions(srmodel)
 
+    # substitute centered ssb
+    expr_model <- deparse(expr_model, width.cutoff = 500)
+    #uncentered_ssb <- paste0("(ssb / ", c(exp(from@centering)), ")")
+    #expr_model <- paste(c(exp(from@centering)), "*", gsub("ssb", uncentered_ssb, expr_model))
+    uncentered_ssb <- "(ssb / scale)"
+    expr_model <- paste0("scale * ", gsub("ssb", uncentered_ssb, expr_model))
+
     # build skeleton FLSR
-    # flsr <- FLSR(formula(paste("rec ~ (", deparse(expr_model, width.cutoff = 500), ") *", exp(from@centering))))
-    flsr <- FLSR(formula(paste("rec ~ ", deparse(expr_model, width.cutoff = 500))))
+    flsr <- FLSR(formula(paste("rec ~ ", expr_model)))
 
     # get SR pars
     cnames <- rownames(coef(from))
@@ -328,25 +334,64 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
     if (npars == 1) {
       # then a geomean model (only one SR parameter)
       which <- grep("sraMod", cnames)
-      params(flsr) <- FLPar(a = exp(coef(from)[which]))
-      params(flsr)["a",] <- params(flsr)["a",] * exp(from@centering)
-      vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
-      dimnames(vcov(flsr)) <- list("a", "a")
+      params(flsr) <- FLPar(a = exp(coef(from)[which]), 
+                            scale = exp(from@centering))
+      V <- vcov(from)[which,which,,drop=FALSE]
+      # add on scale par to vcov with zero variance
+      dimV <- dim(V)
+      dim(V) <- c(dimV[1] * dimV[2],  dimV[3])
+      for (i in 1:dimV[1]) V <- rbind(V,0)
+      dim(V) <- c(dimV[1], dimV[2] + 1,  dimV[3])
+      V <- aperm(V, c(2, 1, 3))
+      dim(V) <- c((dimV[1] + 1) * dimV[2],  dimV[3])
+      for (i in 1:(dimV[1] + 1)) V <- rbind(V,0)
+      dim(V) <- c(dimV[1] + 1, dimV[2] + 1,  dimV[3])
+      dimnames(V) <- list(c("a", "scale"), c("a", "scale"))
+      
+      vcov(flsr) <- V
     } else {
       params(flsr) <- FLPar(a = exp(coef(from)[grep("sraMod", cnames)]),
-                            b = exp(coef(from)[grep("srbMod", cnames)]))
-      params(flsr)["a",] <- params(flsr)["a",] * exp(from@centering)
+                            b = exp(coef(from)[grep("srbMod", cnames)]),
+                            scale = exp(from@centering))
       which <- c(grep("sraMod", cnames), grep("srbMod", cnames))
-      vcov(flsr) <- vcov(from)[which,which,,drop=FALSE]
-      dimnames(vcov(flsr)) <- list(c("a", "b"), c("a", "b"))
+      V <- vcov(from)[which,which,,drop=FALSE]
+      # add on scale par to vcov with zero variance
+      dimV <- dim(V)
+      dim(V) <- c(dimV[1] * dimV[2],  dimV[3])
+      for (i in 1:dimV[1]) V <- rbind(V,0)
+      dim(V) <- c(dimV[1], dimV[2] + 1,  dimV[3])
+      V <- aperm(V, c(2, 1, 3))
+      dim(V) <- c((dimV[1] + 1) * dimV[2],  dimV[3])
+      for (i in 1:(dimV[1] + 1)) V <- rbind(V,0)
+      dim(V) <- c(dimV[1] + 1, dimV[2] + 1,  dimV[3])
+      dimnames(V) <- list(c("a", "b", "scale"), c("a", "b", "scale"))
+
+      vcov(flsr) <- V
     }
 
     flqs <- genFLQuant(from, type="response")
-    rec(flsr) <- flqs$stock.n[1,]
+
+    rec.age <- dims(flqs$stock.n)$min
+
+    rec <- flqs$stock.n[as.character(rec.age),]
+
+    # ssb - note we don't keep m.spawn and harvest.spwn
+    #ssb <- quantSums(flqs$stock.n * exp(-(flqs$harvest * 
+    #          harvest.spwn(from) + m(from) * m.spwn(from))) * 
+    #          wt(from) * mat(from))
 
     ssb <- quantSums(flqs$stock.n * mat(from) * wt(from))
+    # remove last recruitments and set units
+    rec <- rec[, (1 + rec.age):dim(rec)[2]]
+    units(rec) <- units(flqs$stock.n)
+
+    # remove first ssbs 
+    ssb <- ssb[, 1:(dim(ssb)[2] - rec.age)]
+    units(ssb) <- units(wt(from))
+
     ssb(flsr) <- ssb
-    fitted(flsr) <- ssb/ssb * eval(expr_model, c(as(params(flsr), "list"), ssb = ssb))
+    rec(flsr) <- rec
+    fitted(flsr) <- ssb/ssb * eval(parse(text=expr_model), c(as(params(flsr), "list"), ssb = ssb))
     units(fitted(flsr)) <- units(rec(flsr))
 
     residuals(flsr) <- log(rec(flsr)) - log(fitted(flsr))
@@ -355,6 +400,7 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
     name(flsr) <- name(from)
     desc(flsr) <- desc(from)
 
+    validObject(flsr)
     flsr
   }
 )
