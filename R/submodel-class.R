@@ -234,7 +234,13 @@ setMethod("as.data.frame",
   {
     flq <- flq_from_range(x)
     df <- as.data.frame(flq)
+    par_df <- as.data.frame(x@centering)
+    par_df <- reshape(par_df, timevar = "params", idvar = "iter", direction = "wide")
 
+    df$`_id` <- 1:nrow(df)
+    df <- merge(df, par_df)
+    df <- df[order(df$`_id`),]
+    df <- df[setdiff(names(df), "_id")]
     df
   }
 )

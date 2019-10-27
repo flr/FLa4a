@@ -10,6 +10,31 @@
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
 
 
+
+#' @rdname getX-methods
+setMethod("getX", "submodels",
+  function(object) {
+
+    # get data - maybe check that there are no non age and year
+    # based covariates...
+    if (any(sapply(formula(object), formula_has_covariates))) {
+      stop("these models require covariates to be evaluated.")
+    }
+
+    # get design matrix
+    dat <- as.data.frame(object)
+    Xs <- lapply(object, function(x) getX(formula(x), as.data.frame(x)))
+    X <- as.matrix(do.call(bdiag, Xs))
+
+    # get column names to fit with coefs
+    colnames(X) <- dimnames(do.call("rbind", coef(object)))$params
+
+    X
+  }
+)
+
+
+
 #' @rdname getX-methods
 setMethod("getX", "submodel",
   function(object) {
