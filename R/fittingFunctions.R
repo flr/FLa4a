@@ -308,7 +308,6 @@ setMethod("sca", signature("FLStock", "FLIndices"),
       out@fitSumm <- array(0, c(dim(tmpSumm), niters), c(dimnames(tmpSumm), list(iters = 1:niters)))
     }
     out@fitSumm[,i] <- outi@fitSumm
-
     if (fit == "MP") {
       # copy results
       out@harvest[,, grid$unit[i], grid$area[i], , grid$iter[i]] <- harvest(outi)
@@ -449,7 +448,6 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #                center = TRUE, mcmc=missing)
 a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = defaultQmod(indices), srmodel = defaultSRmod(stock), n1model = defaultN1mod(stock), vmodel = defaultVmod(stock, indices), covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment", center = TRUE, mcmc=missing)
 {
-
   # first check permissions of executable
   #	exeok <- check.executable()
   #	if (!exeok) stop("a4a executable has wrong permissions.")
@@ -847,7 +845,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 		dim(out$cov) <- c(dim(out$cov), 1)
 		dimnames(out$cov) <- list(unlist(pnames), unlist(pnames), 1)
 		stkactive <- active
-		stkactive[2:3] <- FALSE
+		if (convergence>0) stkactive[c(2,3,7)] <- FALSE else stkactive[c(2,3)] <- FALSE
 		a4aout@pars@stkmodel@coefficients <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
 		units(a4aout@pars@stkmodel@coefficients) <- "NA"
 		a4aout@pars@stkmodel@distr <- "norm"

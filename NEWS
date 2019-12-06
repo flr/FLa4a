@@ -4,6 +4,7 @@
 - pearson and raw residuals
 
  BUG FIXES:
+- problem dealing with iters that don't converged fixed. Related with 'active'.
 
  FLa4a 1.6.x:
 
