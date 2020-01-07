@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>+ methods — addition • FLa4a</title>
+<title>Call a separable SA inside the mp function — sep.sa • FLa4a</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="+ methods — addition" />
-<meta property="og:description" content="Update FLStock and FLIndex objects with stock assessment results." />
+<meta property="og:title" content="Call a separable SA inside the mp function — sep.sa" />
+<meta property="og:description" content="This function provides an interface to a call to a separable model based on
+sca() to be used inside the mp() function of the mse package." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -109,44 +110,57 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>+ methods</h1>
+    <h1>Call a separable SA inside the mp function</h1>
     
-    <div class="hidden name"><code>addition-methods.Rd</code></div>
+    <div class="hidden name"><code>sep.sa.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Update <code>FLStock</code> and <code>FLIndex</code> objects with stock assessment results.</p>
+    <p>This function provides an interface to a call to a separable model based on
+sca() to be used inside the mp() function of the mse package.</p>
     </div>
 
-    <pre class="usage"># S4 method for FLStock,a4aFit
-+(e1, e2)
-
-# S4 method for FLIndices,a4aFit
-+(e1, e2)</pre>
+    <pre class="usage"><span class='fu'>sep.sa</span>(<span class='no'>stk</span>, <span class='no'>idx</span>, <span class='no'>genArgs</span>, <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>dfm</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.75</span>, <span class='fl'>0.75</span>), <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>e1</th>
-      <td><p>the original <code>FLStock</code> or <code>FLIndex</code> object</p></td>
+      <th>stk</th>
+      <td><p>The FLStock input object.</p></td>
     </tr>
     <tr>
-      <th>e2</th>
-      <td><p>a <code>a4aFit</code> object from where the new <code>FLStock</code> or <code>FLIndex</code> slots will be extracted.</p></td>
+      <th>idx</th>
+      <td><p>The FLIndices input object.</p></td>
+    </tr>
+    <tr>
+      <th>genArgs</th>
+      <td><p>The mse arguments used by mp().</p></td>
+    </tr>
+    <tr>
+      <th>update</th>
+      <td><p>Should the fmodel be updated with the default?</p></td>
+    </tr>
+    <tr>
+      <th>dfm</th>
+      <td><p>data points fraction to be used to set the spline ks.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Any other arguments to sca()</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If both objects have the same number of iterations, the <code>FLStock</code> slots will be replaced by the <code>a4aFit</code> slots, in the case of 1 iter, or <code>a4aFitSA</code> slots, in the case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the <code>a4aFitSA</code> object to update the slots of the <code>FLStock</code> object.</p>
+    <p>A list containing the estimated stock (stk, of class FLStock), and the tracking FLQuant, including convergence flags.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
+      <li><a href="#value">Value</a></li>
     </ul>
 
   </div>
