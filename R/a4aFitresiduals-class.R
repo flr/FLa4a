@@ -160,7 +160,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth",...){
 	args <- list()
-	args$data <- as.data.frame(x)
+	args$data <- as.data.frame(x[names(x)!="catch"])
 	args$x <- as.formula("data~year|factor(age)*qname")
 	args$type=c("p", auxline)
 	args$groups <- quote(qname)

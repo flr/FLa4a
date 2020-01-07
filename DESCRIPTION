@@ -20,10 +20,12 @@ Depends:
     FLCore (>= 2.6.4),
     triangle,
     copula,
-    coda
+    coda,
+    grid,
+    gridExtra,
+    latticeExtra    
 Additional_repositories: http://flr-project.org/R
 Suggests:
-    latticeExtra,
     knitr,
     formatR,
     XML,
