@@ -5,6 +5,7 @@
 
  BUG FIXES:
 - problem dealing with iters that don't converged fixed. Related with 'active'.
+- sca.sa fixed to be compatible with mse 2.0
 
  FLa4a 1.6.x:
 
