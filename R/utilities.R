@@ -290,6 +290,53 @@ getTPL <- function(dir){
 	file.copy(from, to)
 }
 
+#' @title Assorted methods needed by FLa4a
+#' @docType methods
+#' @name assorted methods
+#' @description Assorted methods needed by FLa4a
+#' @rdname assorted-methods
+#' @aliases replaceZeros replaceZeros-methods
+#' @template bothargs
+#' @section replaceZeros:
+#' Replaces observations of 0 by a fraction of the minimum observed. It takes an \code{FLQuant} object and \code{numeric} of min fraction and returns a \code{FLQuant} with zeros replaced to be added to the \code{FLStock} or \code{FLIndex} objects.
+#' @examples
+#' #Example use of getYidx:
+#' data(ple4)
+#' flq <- catch(ple4)
+#' flq <- replaceZeros(flq, 0.25)
+#' catch(ple4) <- flq
+
+setGeneric("replaceZeros", function(object, ...) standardGeneric("replaceZeros"))
+#' @rdname assorted-methods
+#' @param fraction \code{numeric} with fraction of minimum to replace zeros
+setMethod("replaceZeros", "FLQuant", function(object, fraction=0.25) {
+	suppressWarnings(object[object==0] <- min(object[object>0])*fraction)
+	object
+})
+
+#' @rdname assorted-methods
+#' @param fraction \code{numeric} with fraction of minimum to replace zeros
+setMethod("replaceZeros", "FLStock", function(object, fraction) {
+	catch.n(object) <- replaceZeros(catch.n(object), fraction)
+	object
+})
+
+#' @rdname assorted-methods
+#' @param fraction \code{numeric} with fraction of minimum to replace zeros
+setMethod("replaceZeros", "FLIndex", function(object, fraction) {
+	index(object) <- replaceZeros(index(object), fraction)
+	object
+})
+
+#' @rdname assorted-methods
+#' @param fraction \code{numeric} with fraction of minimum to replace zeros
+setMethod("replaceZeros", "FLIndices", function(object, fraction) {
+	for(i in 1:length(object)){
+		object[[i]] <- replaceZeros(object[[i]], fraction)
+	}
+	object
+})
+
 ##====================================================================
 ## total catch diagnostics
 ##====================================================================

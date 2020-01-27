@@ -1,7 +1,9 @@
- FLa4a 1.7.x:
+ FLa4a 1.8.x:
 
  NEW FEATURES
 - pearson and raw residuals
+- method replaceZeros for stock and index objects
+- mse sca now replaces zeros before calling fit
 
  BUG FIXES:
 - problem dealing with iters that don't converged fixed. Related with 'active'.

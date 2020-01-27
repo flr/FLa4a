@@ -68,6 +68,12 @@ sep.sa <- function(stk, idx, args, update=TRUE, dfm=c(0.75, 0.75), ...){
 		}
 		args0$fmodel <- fmodel
 	}
+	
+	# replace zeros
+	stk <- replaceZeros(stk)
+	idx <- replaceZeros(idx)
+
+	# add to args	
 	args0$stock <- stk
 	args0$indices <- idx
 	if(is.null(args0$fit)) args0$fit <- 'MP'
