@@ -22,6 +22,8 @@
 sca.sa <- function(stk, idx, args, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args0 <- list(...)
 	if(update) args0$fmodel <- defaultFmod(stk, dfm=dfm)
+	stk <- replaceZeros(stk)
+	idx <- replaceZeros(idx)
 	args0$stock <- stk
 	args0$indices <- idx
 	if(is.null(args0$fit)) args0$fit <- 'MP'
