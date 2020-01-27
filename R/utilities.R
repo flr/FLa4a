@@ -316,21 +316,21 @@ setMethod("replaceZeros", "FLQuant", function(object, fraction=0.25) {
 
 #' @rdname assorted-methods
 #' @param fraction \code{numeric} with fraction of minimum to replace zeros
-setMethod("replaceZeros", "FLStock", function(object, fraction) {
+setMethod("replaceZeros", "FLStock", function(object, fraction=0.25) {
 	catch.n(object) <- replaceZeros(catch.n(object), fraction)
 	object
 })
 
 #' @rdname assorted-methods
 #' @param fraction \code{numeric} with fraction of minimum to replace zeros
-setMethod("replaceZeros", "FLIndex", function(object, fraction) {
+setMethod("replaceZeros", "FLIndex", function(object, fraction=0.25) {
 	index(object) <- replaceZeros(index(object), fraction)
 	object
 })
 
 #' @rdname assorted-methods
 #' @param fraction \code{numeric} with fraction of minimum to replace zeros
-setMethod("replaceZeros", "FLIndices", function(object, fraction) {
+setMethod("replaceZeros", "FLIndices", function(object, fraction=0.25) {
 	for(i in 1:length(object)){
 		object[[i]] <- replaceZeros(object[[i]], fraction)
 	}
