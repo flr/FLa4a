@@ -32,6 +32,7 @@ setClass("submodel",
             linkinv      = "function")
 )
 
+
 setValidity("submodel",
   function(object) {
     # no unit, area, season fits
@@ -49,37 +50,42 @@ setValidity("submodel",
 setMethod("initialize", "submodel",
   function(.Object,
            ...,
-           formula = ~ 1,
-           coefficients,
-           vcov,
-           centering = FLPar(centering = 0),
-           distr = "norm",
-           link = log,
-           linkinv = exp
+           formula = .Object@formula,
+           coefficients = .Object@coefficients,
+           vcov = .Object@vcov,
+           centering = .Object@centering,
+           distr = .Object@distr,
+           link = .Object@link,
+           linkinv = .Object@linkinv
            ) {
       # initialize FLComp slots
       .Object <- callNextMethod(.Object, ...)
-       # initialize remaining slots
-      formula(.Object) <- formula
-      if (!missing(coefficients)) {
-        coef(.Object) <- coefficients
-      }
-      # need hard assignment first time round
-      npar <- length(coef(.Object))
-      parnames <- rownames(coef(.Object))
-      .Object@vcov <- array(NA, dim = c(npar, npar, 1),
-                            dimnames = list(parnames, parnames, 1))
-      .Object@vcov[] <- diag(npar)
 
-      # check dims in the following?
-      if (!missing(vcov)) vcov(.Object) <- vcov
+      # set defaults if needed, 
+      # otherwise use supplied as args on in previous .Object
+      if (!length(.Object@desc)) .Object@desc <- ""
+      if (!length(formula)) formula <- ~ 1
+      if (is.na(centering)) centering <- FLPar(0)
+      if (!length(distr)) distr <- "norm"
+      if (is.null(body(link))) link <- log
+      if (is.null(body(linkinv))) linkinv <- exp
+
+      # do assignments
+      if (length(coefficients) == 1 && is.na(coefficients)) {
+        formula(.Object) <- formula
+      } else {
+        .Object@formula <- formula
+      }
+
+      .Object@coefficients <- coefficients
+      .Object@vcov <- vcov
       .Object@centering <- centering
       .Object@distr <- distr
       .Object@link <- link
       .Object@linkinv <- linkinv
+
       .Object
 })
-
 
 
 
@@ -90,6 +96,7 @@ setMethod("initialize", "submodel",
 #' @aliases submodel submodel-methods
 setGeneric("submodel", function(object, ...)
   standardGeneric("submodel"))
+
 #' @rdname submodel-class
 setMethod("submodel", signature(object = "missing"),
   function(...) {
@@ -124,6 +131,50 @@ setMethod("show", "submodel",
   function(object) {
     cat(paste0("\t", name(object),": ", sep = ""))
     print(formula(object), showEnv = FALSE)
+  }
+)
+
+
+setClass("summary.submodel",
+  contains = "matrix"
+)
+
+# method.skeleton("summary", "submodel",  file = stdout())
+
+setMethod("summary", "submodel",
+  function (object, iter = 1, ...) 
+  {
+    est <- c(coef(object)[,,iter])
+    se <- sqrt(diag(vcov(object)[,,iter]))
+    tval <- est / se
+    
+    # get an approximate residual degrees of freedom for the submodel
+    rng <- range(object)
+    nobs <- (rng["max"] - rng["min"] + 1) * (rng["maxyear"] - rng["minyear"] + 1)
+    rdf <- nobs - length(est)
+
+    # form summary table
+    out <- 
+      cbind(
+        Estimate = est, 
+        `Std. Error` = se, 
+        `t value` = tval, 
+        `Pr(>|t|)^` = 2 * pt(abs(tval), rdf, lower.tail = FALSE)
+      )
+    
+    new("summary.submodel", out)
+  }
+)
+
+setMethod("show", "summary.submodel",
+  function(object) {
+    stats::printCoefmat(
+      object, 
+      digits = max(3L, getOption("digits") - 3L), 
+      signif.stars = getOption("show.signif.stars"), 
+      na.print = "NA")
+    # add cautionary note
+    cat("---\n^:  Note, Pr(>|t|) is a rough approximation and is for guidance only!\n")
   }
 )
 
@@ -226,21 +277,47 @@ setMethod("formula<-", c("submodel", "formula"),
 )
 
 
+setMethod("formula<-", c("submodel", "formula"),
+  function(object, value) {
+    object@formula <- value
+
+    # cannot deal with factors at the moment
+    stopifnot(!formula_has_covariate_factors(value))
+
+    # recalc coefficients
+    df <- as.data.frame(object)
+
+    vars <- all.vars(value)
+    vars <- setdiff(vars, names(df))
+    args <- sapply(vars, function(x) rnorm(nrow(df)), simplify = FALSE)
+    if (length(vars)) {
+      df <- cbind.data.frame(df, args)
+    }
+    Xmat <- getX(value, df, check = FALSE)
+
+    object@coefficients <- 
+      FLPar(structure(rep(0, ncol(Xmat)),names = colnames(Xmat)))
+
+    object
+  }
+)
+
 
 
 setMethod("as.data.frame",
   signature(x = "submodel", row.names = "missing", optional = "missing"),
-  function (x, ...) 
+  function (x, drop = FALSE, ...) 
   {
     flq <- flq_from_range(x)
-    df <- as.data.frame(flq)
-    par_df <- as.data.frame(x@centering)
-    par_df <- reshape(par_df, timevar = "params", idvar = "iter", direction = "wide")
+    df <- as.data.frame(flq, drop = drop)
+    df <- df[names(df) != "data"]
+    #par_df <- as.data.frame(x@centering, drop = drop)
+    #par_df <- reshape(par_df, timevar = "params", idvar = "iter", direction = "wide")
 
-    df$`_id` <- 1:nrow(df)
-    df <- merge(df, par_df)
-    df <- df[order(df$`_id`),]
-    df <- df[setdiff(names(df), "_id")]
+    #df$`_id` <- 1:nrow(df)
+    #df <- merge(df, par_df)
+    #df <- df[order(df$`_id`),]
+    #df <- df[setdiff(names(df), "_id")]
     df
   }
 )

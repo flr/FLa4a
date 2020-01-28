@@ -215,6 +215,7 @@ setMethod("getX", "formula",
       }
       X <- G$X
       colnames(X) <- G$term.names
+      #lapply(G$smooth, "[", c("first.para", "last.para", "S"))
     }
     # a double check
     if (nrow(X) != nrow(df))
@@ -263,3 +264,22 @@ getCov <- function(n, model, tau) {
 
   as(tau * Matrix::Diagonal(n), "CsparseMatrix")
 }
+
+
+#' @title Breakpoints
+#' @name breakpts
+#' @rdname breakpts
+#' @description Method to set breakpoints in submodels
+#' @param var a \code{numeric} object that defines the variable to be "broken"
+#' @param breaks a \code{numeric} object that defines the breakpoints
+#' @template dots
+#' @return a \code{factor} with levels according to the defined breaks
+#' @aliases breakpts breakpts-methods
+setGeneric("breakpts", function(var, ...) standardGeneric("breakpts"))
+#' @rdname breakpts
+setMethod("breakpts", "numeric", function(var, breaks, ...) {
+  if (min(var, na.rm = TRUE) < min(breaks)) breaks <- c(min(var, na.rm = TRUE) - 1, breaks)
+  if (max(var, na.rm = TRUE) > max(breaks)) breaks <- c(breaks, max(var, na.rm = TRUE))
+  label <- paste0("(", breaks[-length(breaks)], ",", breaks[-1], "]")
+  cut(var, breaks = breaks, label = label)
+})

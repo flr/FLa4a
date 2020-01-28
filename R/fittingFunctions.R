@@ -146,7 +146,7 @@ collapseSeasons <- function (stock) {
 #'                time series
 #' @param vmodel a list of formula objects depicting the model for the variance of fishing mortality
 #'               and the indices
-#' @param covar a list with covariates to be used by the submodels. The formula must have an element
+#' @param covariates a list with covariates to be used by the submodels. The formula must have an element
 #'              with the same name as the list element.
 #' @param wkdir used to set a working directory for the admb optimiser; if wkdir is set, all admb
 #'              files are saved to this folder, otherwise they are deleted.
@@ -252,7 +252,7 @@ setMethod("sca", signature("FLStock", "FLIndex"),
 #' @rdname sca
 setMethod("sca", signature("FLStock", "FLIndices"),
   function(stock, indices, fmodel = missing, qmodel = missing, srmodel = missing,
-           n1model = missing, vmodel = missing, covar = missing, wkdir = missing,
+           n1model = missing, vmodel = missing, covariates = missing, wkdir = missing,
            verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing,
            useTotalCatch = TRUE, useTotalCatchVar = FALSE,
            totalCatchVarMethod = 1) {
@@ -347,35 +347,27 @@ setMethod("sca", signature("FLStock", "FLIndices"),
     })
     iindices <- FLIndices(iindices)
 
+    if (!missing(covariates)) {
+      icovar <- subset(covariates, unit = grid$unit[i], area = grid$area[i], iter = min(grid$iter[i], dims(x)$iter))
+    }
+
     # check: do we need indices to have matching units, areas?
-    if (!missing(covar) & !missing(wkdir)) {
-      icovar <-
-        lapply(
-          covar,
-          function(x)
-            x[,, grid$unit[i], grid$area[i],, min(grid$iter[i], dims(x)$iter)]
-        )
+    if (!missing(covariates) & !missing(wkdir)) {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,
                           n1model = n1model, vmodel = vmodel, stock = istock,
-                          indices = iindices, covar = icovar, wkdir = wkdir,
+                          indices = iindices, covariates = icovar, wkdir = wkdir,
                           verbose = verbose, fit = ifit, center = center,
                           mcmc = mcmc, useTotalCatch = useTotalCatch,
                           useTotalCatchVar = useTotalCatchVar,
                           totalCatchVarMethod = totalCatchVarMethod)
-    } else if (!missing(covar) & missing(wkdir)) {
-      icovar <-
-        lapply(
-          covar,
-          function(x)
-            x[,, grid$unit[i], grid$area[i],, min(grid$iter[i], dims(x)$iter)]
-        )
+    } else if (!missing(covariates) & missing(wkdir)) {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel,
                           n1model = n1model, vmodel = vmodel, stock = istock,
-                          indices = iindices, covar = icovar, verbose = verbose,
+                          indices = iindices, covariates = icovar, verbose = verbose,
                           fit = ifit, center = center, mcmc = mcmc,
                           useTotalCatch = useTotalCatch, useTotalCatchVar = useTotalCatchVar,
                           totalCatchVarMethod = totalCatchVarMethod)
-    } else if (missing(covar) & !missing(wkdir)) {
+    } else if (missing(covariates) & !missing(wkdir)) {
       outi <- a4aInternal(fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model,
                           vmodel = vmodel, stock = istock, indices = iindices, wkdir = wkdir,
                           verbose = verbose, fit = ifit, center = center, mcmc = mcmc,
@@ -520,7 +512,7 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #'               mortality variance
 #' @param stock an FLStock object containing catch and stock information
 #' @param indices an FLIndices object containing survey indices
-#' @param covar a list with covariates
+#' @param covariates a list with covariates
 #' @param wkdir used to set a working directory for the admb optimiser.  If wkdir is set all admb
 #'              files are saved to this folder otherwise they are deleted.
 #' @param verbose if true admb fitting information is printed to the screen
@@ -545,11 +537,11 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 #                srmodel = ~ factor(year),
 #                n1model = ~ factor(age),
 #                vmodel  = lapply(seq(length(indices) + 1), function(i) ~ 1),
-#                covar=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
+#                covariates=missing, wkdir=missing, verbose = FALSE, fit = "assessment",
 #                center = TRUE, mcmc=missing)
 a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = defaultQmod(indices),
                         srmodel = defaultSRmod(stock), n1model = defaultN1mod(stock),
-                        vmodel = defaultVmod(stock, indices), covar = missing, wkdir = missing,
+                        vmodel = defaultVmod(stock, indices), covariates = missing, wkdir = missing,
                         verbose = FALSE, fit = "assessment", center = TRUE, mcmc = missing,
                         useTotalCatch = TRUE, useTotalCatchVar = FALSE, totalCatchVarMethod = 1) {
 
@@ -593,10 +585,9 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # what kind of run is this
   fit <- match.arg(fit, c("MP", "assessment", "MCMC", "setup"))
 
-  # check covariates are FLQuants
-  if (!missing(covar) && !inherits(covar, "FLQuants")) {
-    message("Converting 'covar' to FLQuants class using FLQuants(covar).")
-    covar <- FLQuants(covar)
+  # check covariates is a data.frames?
+  if (!missing(covariates)) {
+    message("need to write a check for covariates")
   }
 
   #========================================================================
@@ -696,7 +687,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     stop("You need to define startf and endf for each index!!")
 
   #========================================================================
-  # Make a full data.frame and add in covariates and observations
+  # Make a full data.frame with observations and another including covariates
   #========================================================================
 
   # build a full data frame first
@@ -708,23 +699,6 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
              function(i)
                cbind(fleet = i,
                      make.df(i, stock = stock, indices = indices))))
-
-  # add covariates onto full data frame
-  if (!missing(covar)) {
-    # add in covariates to data.frame
-    tmp <- lapply(seq_along(covar), function(i) {
-      x <- as.data.frame(covar[[i]])[c("age", "year", "data")]
-      if (length(unique(x$age)) == 1) x <- x[names(x) != "age"]
-      if (length(unique(x$year)) == 1) x <- x[names(x) != "year"]
-      names(x) <- gsub("data", names(covar)[i], names(x))
-      x
-    })
-    covar.df <- tmp[[1]]
-    for (i in seq_along(tmp[-1]))
-      covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
-
-    full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
-  }
 
   # add in data ?
   full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
@@ -794,11 +768,22 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # or check before the merge that there are covars and m and mat for requested predictions
   full.df[is.na(full.df)] <- 0
 
+  # add covariates onto full data frame
+  covar.df <- full.df
+  if (!missing(covariates)) {
+    covar.df <- merge(full.df, covariates, all.x = TRUE, all.y = FALSE, sort = FALSE)
+  }
+  covar.df <- covar.df[order(covar.df$ord),]
+  covar.df <- covar.df[!names(covar.df) %in% "ord"]
+  rownames(covar.df) <- NULL
+  covar.df <- covar.df[c(3, 1, 2, 4:ncol(covar.df))]
+
   # order df
   full.df <- full.df[order(full.df$ord),]
-  full.df <- full.df[!names(full.df) %in% "df"]
+  full.df <- full.df[!names(full.df) %in% "ord"]
   rownames(full.df) <- NULL
   full.df <- full.df[c(3, 1, 2, 4:ncol(full.df))]
+
 
   # TODO stop if some obs have no parameter - it should be quite rare ...
 
@@ -807,7 +792,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   #========================================================================
 
   # F model matrix
-  Xf <- getX(fmodel, subset(full.df, fleet == "catch"))
+  Xf <- getX(fmodel, subset(covar.df, fleet == "catch"))
   # F model offsets
   # ...
 
@@ -815,7 +800,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   fleet.names <- c("catch", names(indices))
   Xqlist <-
     lapply(seq_along(indices),
-           function(i) getX(qmodel[[i]], subset(full.df, fleet == fleet.names[i + 1])))
+           function(i) getX(qmodel[[i]], subset(covar.df, fleet == fleet.names[i + 1])))
   Xq <- as.matrix(do.call(bdiag, Xqlist))
   # Q model offsets
   # ...
@@ -823,13 +808,13 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # var model matrix
   Xvlist <-
     lapply(1:length(fleet.names),
-           function(i) getX(vmodel[[i]], subset(full.df, fleet == fleet.names[i])))
+           function(i) getX(vmodel[[i]], subset(covar.df, fleet == fleet.names[i])))
   Xv <- as.matrix(do.call(bdiag, Xvlist))
   # var model offsets
   # ...
 
   # initial age structure model matrix
-  Xny1 <- getX(n1model, subset(full.df, year == min(year) & age > min(age) & fleet == "catch"))
+  Xny1 <- getX(n1model, subset(covar.df, year == min(year) & age > min(age) & fleet == "catch"))
 
   #-------------------------------------------------------------------------
   # NOTE: how are covars being passed ?
@@ -851,8 +836,8 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     #  eval(parse(text = paste("~", as.character(srr$amodel)[length(srr$amodel)],
     #                          "+", paste(facs[!a4as], collapse = " + ")) ))
   }
-  Xsra <- getX(srr$a, subset(full.df, fleet == "catch" & age == dims(stock)$min))
-  Xsrb <- getX(srr$b, subset(full.df, fleet == "catch" & age == dims(stock)$min))
+  Xsra <- getX(srr$a, subset(covar.df, fleet == "catch" & age == dims(stock)$min))
+  Xsrb <- getX(srr$b, subset(covar.df, fleet == "catch" & age == dims(stock)$min))
 
   # can we do a quick check for identifiability of the srr model? ...
   if (ncol(Xsra) + ncol(Xsrb) > dims(stock)$year)
@@ -862,7 +847,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # it is not the same as the sr mdevtools::load_all(pkg)odel which is the model for the relationship
   # between the recruitments and SSB
   if (sum(a4as) == 0) rmodel <- srmodel else rmodel <- ~ factor(year)
-  Xr <- getX(rmodel, subset(full.df, age == min(age) & fleet == "catch"))
+  Xr <- getX(rmodel, subset(covar.df, age == min(age) & fleet == "catch"))
 
   #========================================================================
   # Fit the model and return a list of objects detailing the fit
@@ -1258,23 +1243,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   return(a4aout)
 }
 
-#' @title Breakpoints
-#' @name breakpts
-#' @rdname breakpts
-#' @description Method to set breakpoints in submodels
-#' @param var a \code{numeric} object that defines the variable to be "broken"
-#' @param breaks a \code{numeric} object that defines the breakpoints
-#' @template dots
-#' @return a \code{factor} with levels according to the defined breaks
-#' @aliases breakpts breakpts-methods
-setGeneric("breakpts", function(var, ...) standardGeneric("breakpts"))
-#' @rdname breakpts
-setMethod("breakpts", "numeric", function(var, breaks, ...) {
-  if (min(var, na.rm = TRUE) < min(breaks)) breaks <- c(min(var, na.rm = TRUE) - 1, breaks)
-  if (max(var, na.rm = TRUE) > max(breaks)) breaks <- c(breaks, max(var, na.rm = TRUE))
-  label <- paste0("(", breaks[-length(breaks)], ",", breaks[-1], "]")
-  cut(var, breaks = breaks, label = label)
-})
+
 
 
 

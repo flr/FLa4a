@@ -20,9 +20,9 @@ setGeneric("submodels")
 setMethod("initialize", "submodels",
   function(.Object,
            ...,
-           corBlocks,
-           names,
-           desc = ""
+           corBlocks = .Object@corBlocks,
+           names = .Object@names,
+           desc = .Object@desc
           ) {
       .Object <- callNextMethod(.Object, ...)
       if (!missing(names)) {

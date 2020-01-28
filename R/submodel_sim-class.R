@@ -29,57 +29,22 @@
 #' }
 #' @aliases submodel_sim-class
 setClass("submodel_sim",
-  contains = c("FLComp", "submodel"),
-  slots = c(covariates   = "FLQuants")
-)
-
-setValidity("submodel_sim",
-  function(object) {
-    # no unit, area, season fits
-    if (length(dim(coef(object))) > 2 | length(dim(object@vcov)) > 3) {
-      "Params or vcov have unit, area or season. Can't work with that!"
-    } else
-    if (FALSE) {
-      "coefficients do not match formula"
-    } else {
-      # Everything is fine
-      TRUE
-    }
-})
+    contains = "submodel",
+    slots = c(covariates   = "data.frame")
+  )
 
 setMethod("initialize", "submodel_sim",
-    function(.Object,
-             ...,
-            covariates = FLQuants()) {
-      .Object <- callNextMethod(.Object, ...)
-      .Object@covariates <- covariates
-      .Object
-})
+  function(.Object, 
+           ..., 
+           covariates = .Object@covariates) 
+  {
+    .Object <- callNextMethod(.Object, ...)
 
-
-
-
-#' @rdname submodel-class
-#' @template Accessors
-#' @template Constructors
-#' @template bothargs
-#' @aliases submodel submodel-methods
-setGeneric("submodel_sim", function(object, covariates, ...)
-  standardGeneric("submodel_sim"))
-#' @rdname submodel-class
-setMethod("submodel_sim", signature(object = "missing", covariates = "missing"),
-  function(...) {
-    # empty
-    if (missing(...)) {
-      new("submodel_sim")
-    # or not
-    } else {
-      args <- list(...)
-      args$Class <- "submodel_sim"
-      do.call("new", args)
-    }
-  }
-)
+    # do assignments
+    .Object@covariates <- covariates
+    
+    .Object
+  })
 
 
 
@@ -90,27 +55,18 @@ setMethod("submodel_sim", signature(object = "missing", covariates = "missing"),
 
 setMethod("as.data.frame",
   signature(x = "submodel_sim", row.names = "missing", optional = "missing"),
-  function (x, ...) 
+  function (x, drop = FALSE, ...) 
   {
-    flq <- flq_from_range(x)
-    df <- as.data.frame(flq)
-
+    #flq <- flq_from_range(x)
+    #df <- as.data.frame(flq, drop = drop)
+    df <- callNextMethod(x, drop = drop, ...)
+    
     # add in covariates
-    if (length(x@covariates) > 0) {
-      covar <- x@covariates
-      # add in covariates to data.frame
-      tmp <- lapply(seq_along(covar), function(i) {
-        x <- as.data.frame(covar[[i]])[c("age", "year", "data")]
-        if (length(unique(x$age)) == 1) x <- x[names(x) != "age"]
-        if (length(unique(x$year)) == 1) x <- x[names(x) != "year"]
-        names(x) <- gsub("data", names(covar)[i], names(x))
-        x
-      })
-      covar.df <- tmp[[1]]
-      for (i in seq_along(tmp[-1]))
-        covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
-
-      df <- merge(df, covar.df, all.x = TRUE, all.y = FALSE)
+    if (nrow(x@covariates) > 0) {
+      df$`_id` <- 1:nrow(df)
+      df <- merge(df, x@covariates, all.x = TRUE, all.y = FALSE, sort = FALSE)
+      df <- df[order(df$`_id`),]
+      df <- df[setdiff(names(df), "_id")]
     }
 
     df
