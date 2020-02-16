@@ -269,8 +269,9 @@ setMethod(
         dim = c(ncol(Xmat), ncol(Xmat), 1),
         dimnames = list(colnames(Xmat), colnames(Xmat), 1)
       )
+
     # set as diagonal to begin with
-    object@vcov[,,1] <- diag(ncol(Xmat))
+    vcov(object) <- diag(ncol(Xmat))
 
     object
   }
@@ -386,3 +387,52 @@ setMethod("params", "submodel", function(object) object@coefficients)
 setGeneric("sMod", function(object, ...) standardGeneric("sMod"))
 #' @rdname submodel-class
 setMethod("sMod", "submodel", function(object) object@formula)
+
+
+
+# summary submodel
+
+setClass("summary.submodel",
+  contains = "matrix"
+)
+
+# method.skeleton("summary", "submodel",  file = stdout())
+
+setMethod(
+  "summary", "submodel",
+  function(object, iter = 1, ...) {
+    est <- c(coef(object)[, , iter])
+    se <- sqrt(diag(vcov(object)[, , iter]))
+    tval <- est / se
+
+    # get an approximate residual degrees of freedom for the submodel
+    rng <- range(object)
+    nobs <- (rng["max"] - rng["min"] + 1) * (rng["maxyear"] - rng["minyear"] + 1)
+    rdf <- nobs - length(est)
+
+    # form summary table
+    out <-
+      cbind(
+        Estimate = est,
+        `Std. Error` = se,
+        `t value` = tval,
+        `Pr(>|t|)^` = 2 * pt(abs(tval), rdf, lower.tail = FALSE)
+      )
+
+    new("summary.submodel", out)
+  }
+)
+
+setMethod(
+  "show", "summary.submodel",
+  function(object) {
+    stats::printCoefmat(
+      object,
+      digits = max(3L, getOption("digits") - 3L),
+      signif.stars = getOption("show.signif.stars"),
+      na.print = "NA"
+    )
+    # add cautionary note
+    cat("---\n^:  Note, Pr(>|t|) is a rough approximation and is for guidance only!\n")
+  }
+)
