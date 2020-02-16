@@ -57,9 +57,10 @@ setMethod(
 
 setMethod("as.data.frame",
   signature(x = "submodel_sim", row.names = "missing", optional = "missing"),
-  function (x, drop = FALSE, ...)
+  function (x, drop = FALSE, fill, ...)
   {
-    df <- callNextMethod(x, drop = drop, ...)
+    # ignore fill arg for submodel_sim
+    df <- callNextMethod(x, drop = drop, fill = FALSE, ...)
 
     # add in covariates
     if (nrow(x@covariates) > 0) {

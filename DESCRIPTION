@@ -69,5 +69,6 @@ Collate:
     'southern_hake-data.R'
     'a4amse-sa.R'
     'a4aFitCatchDiagn-class.R'
+    'smoother_constructors.R'
 RoxygenNote: 6.1.1
 Encoding: UTF-8
