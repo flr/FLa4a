@@ -23,7 +23,7 @@ Depends:
     coda,
     grid,
     gridExtra,
-    latticeExtra    
+    latticeExtra
 Additional_repositories: http://flr-project.org/R
 Suggests:
     knitr,
@@ -59,7 +59,7 @@ Collate:
     'internal.R'
     'data.R'
     'redfish-data.R'
-    'setupModel.R'
+    'getX-methods.R'
     'fittingFunctions.R'
     'l2a-methods.R'
     'ma-methods.R'
