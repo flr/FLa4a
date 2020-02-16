@@ -165,7 +165,7 @@ setMethod("genFLQuant", "submodel",
       # predict accross all iters (if dimensions don't match then coefs are the wrong length!)
       pred <- sweep(X %*% as(b, "matrix"), 2, object@centering, "+")
       # make empty FLQuant
-      flq <- as.FLQuant(object)
+      flq <- propagate(as.FLQuant(object), niter)
       # add into flq
       flq[] <- as(pred, "vector")
       # transform if asked
