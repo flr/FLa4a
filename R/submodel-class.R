@@ -305,8 +305,7 @@ setMethod(
     # add centering if present
     cdf <- as.data.frame(x@centering, drop = FALSE)
     iter_idx <- as.numeric(df$iter)
-    if (is.null(iter_idx)) iter_idx <- rep(1, nrow(df))
-
+    if (is.null(iter_idx) || length(iter_idx) == 0) iter_idx <- rep(1, nrow(df))
 
     cbind.data.frame(
       df[names(df) != "data"],
