@@ -297,6 +297,34 @@ setMethod(
   }
 )
 
+setMethod(
+  "as.FLQuant", "submodel",
+  function(x, ...) {
+    range <- range(x)
+    if (all(is.na(range[c("min", "max")])) |
+      isTRUE(attr(x, "FLIndexBiomass"))) {
+      # fix for biomass indices or any quant that has "all" for the first dim
+      df <-
+        data.frame(
+          age = "all",
+          year = range["minyear"]:range["maxyear"],
+          data = NA
+        )
+    } else {
+      # the normal case
+      df <-
+        expand.grid(
+          age = range["min"]:range["max"],
+          year = range["minyear"]:range["maxyear"],
+          data = NA,
+          stringsAsFactors = FALSE
+        )
+    }
+    as.FLQuant(df)
+  }
+)
+
+
 
 # as data.frame
 # fill = TRUE means extra columns added to cover covars in formula
@@ -305,8 +333,8 @@ setMethod(
   signature(
     x = "submodel", row.names = "missing", optional = "missing"
   ),
-  function(x, drop = FALSE, fill = FALSE, ...) {
-    flq <- flq_from_range(x)
+  function(x, drop = FALSE, fill = FALSE, centering = FALSE, ...) {
+    flq <- as.FLQuant(x)
     df <- as.data.frame(flq, drop = drop)
 
     if (fill) {
@@ -324,14 +352,19 @@ setMethod(
     }
 
     # add centering if present
-    cdf <- as.data.frame(x@centering, drop = FALSE)
-    iter_idx <- as.numeric(df$iter)
-    if (is.null(iter_idx) || length(iter_idx) == 0) iter_idx <- rep(1, nrow(df))
+    if (centering) {
+      cdf <- as.data.frame(x@centering, drop = FALSE)
+      iter_idx <- as.numeric(df$iter)
+      if (is.null(iter_idx) || length(iter_idx) == 0) iter_idx <- rep(1, nrow(df))
 
-    cbind.data.frame(
-      df[names(df) != "data"],
-      centering = cdf$data[iter_idx]
-    )
+      cbind.data.frame(
+        df[names(df) != "data"],
+        centering = cdf$data[iter_idx]
+      )
+    } else
+    {
+      df[names(df) != "data"]
+    }
   }
 )
 

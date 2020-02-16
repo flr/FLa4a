@@ -188,36 +188,6 @@ par2mat <- function(object){
 	m0
 }
 
-flq_from_range <- function(object) {
-  range <- range(object)
-  if (all(is.na(range[c("min", "max")])) |
-    isTRUE(attr(object, "FLIndexBiomass"))) {
-    # fix for biomass indices or any quant that has "all" for the first dim
-    FLQuant(
-      matrix(NA,
-        nrow = 1,
-        ncol = range["maxyear"] - range["minyear"] + 1
-      ),
-      dimnames = list(
-        age = "all",
-        year = range["minyear"]:range["maxyear"]
-      )
-    )
-  } else {
-    # the normal case
-    FLQuant(
-      matrix(NA,
-        nrow = range["max"] - range["min"] + 1,
-        ncol = range["maxyear"] - range["minyear"] + 1
-      ),
-      dimnames = list(
-        age = range["min"]:range["max"],
-        year = range["minyear"]:range["maxyear"]
-      )
-    )
-  }
-}
-
 formula_has_covariates <- function(x, ok_vars) {
   # asssign default value
   if (missing(ok_vars)) {
