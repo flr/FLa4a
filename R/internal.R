@@ -21,13 +21,13 @@
     stop("a4a executable in this package has been compiled for a 64 bit OS,
       please get the i386 version on the FLa4a release page at
       https://github.com/flr/FLa4a/releases")
-  
+
   #
   check.executable()
 }
 
 # returns the location on the file system of the ADMB executable
-a4a.dir <- function () 
+a4a.dir <- function ()
 {
   if (os.type("linux")) {
     fnm <- system.file("bin/linux", package = "FLa4a")
@@ -51,8 +51,8 @@ a4a.dir <- function ()
 
 
 # returns TRUE if correct operating system is passed as an argument
-#os.type <- function (type = c("linux", "mac", "windows", "else")) 
-os.type <- function (type = c("linux", "windows", "osx", "else")) 
+#os.type <- function (type = c("linux", "mac", "windows", "else"))
+os.type <- function (type = c("linux", "windows", "osx", "else"))
 {
   type = match.arg(type)
   if (type == "windows") {
@@ -81,7 +81,7 @@ os.type <- function (type = c("linux", "windows", "osx", "else"))
 }
 
 # finds the size of the operating system addresses
-os.32or64bit <- function () 
+os.32or64bit <- function ()
 {
   return(ifelse(.Machine$sizeof.pointer == 4, "32", "64"))
 }
@@ -101,11 +101,11 @@ check.executable <- function() {
        "if you installed under sudo you will have to run:\n",
        "\tsudo chmod a+x ", a4a.dir(), "/a4a"))
      }
-   
+
    return(is.x)
  } else { # windows
     return(TRUE)
- }   
+ }
 }
 
 # utility to convert to a 2d array
@@ -115,7 +115,7 @@ quant2mat <- function(x) {
 	dim(out) <- dim(x)[1:2]
 	dimnames(out) <- dimnames(x)[1:2]
 	if (nrow(out) == 1 && dimnames(out)[[1]] == "all") dimnames(out)[[1]] <- NA_character_  # "all" denotes a biomass survey
-	out 
+	out
 }
 
 # convert to dataframe
@@ -142,7 +142,7 @@ list2df <- function(fleet, list.obs, list.var, center.log) {
 # build a full data frame first (we will use this for the variance model so it is not a waste)
 make.df <- function(fleet, stock, indices) {
 	thing <- if (fleet == 1) stock else indices[[fleet - 1]]
-	expand.grid(age = if (is(thing, 'FLIndexBiomass') ) NA else range(thing)["min"]:range(thing)["max"], 
+	expand.grid(age = if (is(thing, 'FLIndexBiomass') ) NA else range(thing)["min"]:range(thing)["max"],
 				year = range(thing)["minyear"]:range(thing)["maxyear"])[2:1]
 }
 
@@ -151,10 +151,10 @@ write.t <- function(x, file, ...) write.table(x, row.names = FALSE, col.names = 
 
 write.t.sparse <- function(x, file, ...) {
 	x <- as(x, "dsCMatrix")
-	cat("\n# i\n", x @ i, "\n# p\n", x @ p, "\n# x\n", x @ x, file = file, append = TRUE)  
-}  
+	cat("\n# i\n", x @ i, "\n# p\n", x @ p, "\n# x\n", x @ x, file = file, append = TRUE)
+}
 
-  
+
 # simulate mvnorm with empirical T (fixes bug in mvrnorm)
 
 mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical=TRUE){
@@ -163,12 +163,12 @@ mvrEmpT <- function(n, mu, Sigma, tol = 1e-6, empirical=TRUE){
 			mm <- mvrnorm(n, mu, Sigma, tol=tol, empirical=T)
 		} else {
 			mm <- mvrnorm(length(mu)+1, mu, Sigma, tol=tol, empirical=T)
-			mm <- mm[1:n,]	
+			mm <- mm[1:n,]
 		}
 	} else {
 			mm <- mvrnorm(n, mu, Sigma, tol=tol, empirical=FALSE)
 	}
-	
+
 	# output with right dims for FLPar
 	if(is(mm, "matrix")) t(mm) else (t(t(mm)))
 
@@ -184,34 +184,69 @@ par2mat <- function(object){
 		dimnames(m0)[[2]] <- dimnames(p0)[[1]]
 	} else {
 		m0 <- t(p0[drop=T])
-	} 
+	}
 	m0
 }
 
-flqFromRange <- function(object) {
+flq_from_range <- function(object) {
   range <- range(object)
-#  if (all(is.na(range[c("min", "max")]))) {
-  if (all(is.na(range[c("min", "max")])) | isTRUE(attr(object, "FLIndexBiomass"))) {
+  if (all(is.na(range[c("min", "max")])) |
+    isTRUE(attr(object, "FLIndexBiomass"))) {
     # fix for biomass indices or any quant that has "all" for the first dim
     FLQuant(
       matrix(NA,
         nrow = 1,
-        ncol = range["maxyear"] - range["minyear"] + 1),
-        dimnames = list(age = "all",
-                        year = range["minyear"]:range["maxyear"]
+        ncol = range["maxyear"] - range["minyear"] + 1
+      ),
+      dimnames = list(
+        age = "all",
+        year = range["minyear"]:range["maxyear"]
       )
-    ) 
+    )
   } else {
     # the normal case
     FLQuant(
       matrix(NA,
         nrow = range["max"] - range["min"] + 1,
-        ncol = range["maxyear"] - range["minyear"] + 1),
-        dimnames = list(age = range["min"]:range["max"],
-                        year = range["minyear"]:range["maxyear"]
+        ncol = range["maxyear"] - range["minyear"] + 1
+      ),
+      dimnames = list(
+        age = range["min"]:range["max"],
+        year = range["minyear"]:range["maxyear"]
       )
-    )      
+    )
   }
+}
+
+formula_has_covariates <- function(x, ok_vars) {
+  # asssign default value
+  if (missing(ok_vars)) {
+    ok_vars <- c("age", "year", "unit", "season", "area", "iter")
+  }
+  covars <- setdiff(all.vars(x), ok_vars)
+  length(covars) > 0
+}
+
+formula_has_covariate_factors <- function(x, ok_vars, warnings = TRUE) {
+  # asssign default value
+  if (missing(ok_vars)) {
+    ok_vars <- c("age", "year", "unit", "season", "area", "iter")
+  }
+
+  funcs <- setdiff(all.names(x), all.vars(x))
+  if ("factor" %in% funcs) {
+    trms <- terms(x, specials = "factor")
+    facs <- attr(trms, "term.labels")[attr(trms, "specials")$factor]
+    # only warn if thre are factors for covars
+    fac_vars <- sapply(facs, function(form) all.vars(as.formula(paste("~", form))))
+    cov_facs <- setdiff(fac_vars, ok_vars)
+
+    if (length(cov_facs)) {
+      if (warnings) warning("factor() found! - need to deal with this!")
+      return(TRUE)
+    }
+  }
+  return(FALSE)
 }
 
 
@@ -225,7 +260,7 @@ dropMatrixIter <- function(object, iter = 1) {
 }
 
 
-# these are left over from when you could set linear models for SR params 
+# these are left over from when you could set linear models for SR params
   #bevholt <- function(a = ~ 1, b = ~ 1, CV = 0.5) {
   #  if (CV <= 0) stop ("CV in stock recruit relationship cannot be less than zero")
   #  list(srr = "bevholt", a = a, b = b, SPR0 = 1, srrCV = CV, ID = 1)
@@ -252,7 +287,7 @@ dropMatrixIter <- function(object, iter = 1) {
 #
 #  bevholt, ricker, geomean share definitions with FLSR
 #  the others need to be defined by the FLa4a package
-#  
+#
 #  It is the responsibility of FLa4a to maintain the defninition of
 #  these SR functoions in the tpl file to match the definition in FLCore
 #
@@ -328,5 +363,3 @@ geta4aSRmodel <- function(srMod) {
   if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
   if (sum(a4as) == 0) "none()" else facs[a4as]
 }
-
-
