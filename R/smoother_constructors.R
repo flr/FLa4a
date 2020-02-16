@@ -138,3 +138,33 @@ Drw1 <- function (n, cyclic = FALSE)
         out
     else out[-n, ]
 }
+
+# need some documentation
+smooth.construct.totalCatch.smooth.spec <- function (
+  object, data, knots) {
+
+    # na catch data
+    na_catch <- abs(data[[ object$term[2] ]] - 1) < 1e-5
+    year <- data[[ object$term[1] ]]
+
+    # prep for cgmrf smoother
+    if (is.na(object$p.order)) {
+      # default to linear
+      object$p.order <- 2
+    }
+    object$term <- object$term[1]
+    object$dim <- 1
+    class(object) <- "cgmrf.smooth.spec"
+    object$xt <-
+      list(
+        missing = year[which(na_catch)],
+        weight = 0.01,
+        xrange = range(year)
+      )
+
+    data <- data[object$term[1]]
+
+    object <- smooth.construct.cgmrf.smooth.spec(object, data, knots)
+    class(object) <- "cgmrf.smooth"
+    object
+  }
