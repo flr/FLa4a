@@ -33,8 +33,8 @@ setMethod("predict", signature(object = "SCAPars"),
   # run predict
     lst <- list(
       stkmodel = predict.stkpars(sm),
-      qmodel   = predict.submods(qm, type = "response"),
-      vmodel   = predict.submods(vm, type = "response")
+      qmodel   = genFLQuant(qm, type = "response"),
+      vmodel   = genFLQuant(vm, type = "response")
     )
   # rec is being estimated from the srmodel so the n1model doesn't
   # have a recruitment estimate, need to update from rec predictions
@@ -87,13 +87,4 @@ predict.stkpars <- function(object) {
       units=object@units)
 
   FLQuants(harvest = harvest, rec = rec, ny1 = ny1)
-}
-
-
-predict.submods <- function(object, ...) {
-  genFLQuant(object, ...)
-}
-
-predict.submod <- function(object, ...) {
-  genFLQuant(object, ...)
 }
