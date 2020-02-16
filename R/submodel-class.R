@@ -110,17 +110,43 @@ setMethod(
     } else {
       formula(.Object) <- ~1
     }
+
     # set up coefficients and vcov structure
     if (!missing(coefficients)) {
-      .Object@coefficients[] <- coefficients
+      # warn if coefficients are wrong length
+      tryCatch(
+        .Object@coefficients[] <- coefficients,
+        error = function(e) {
+          warning(
+            "Error assigning coefficients, check length of vector.",
+            call. = FALSE
+          )
+        }
+      )
     }
     if (!missing(vcov)) {
-      .Object@vcov[] <- vcov
+      tryCatch(
+        .Object@vcov[] <- vcov,
+        error = function(e) {
+          warning(
+            "Error assigning vcov, check dimensions.",
+            call. = FALSE
+          )
+        }
+      )
     }
     .Object@centering <-
       FLPar(structure(0, names = "centering"))
     if (!missing(centering)) {
-      .Object@centering[] <- centering
+      tryCatch(
+        .Object@centering[] <- centering,
+        error = function(e) {
+          warning(
+            "Error assigning centering.",
+            call. = FALSE
+          )
+        }
+      )
     }
 
     # process left over dots
@@ -241,10 +267,10 @@ setMethod(
       array(
         NA,
         dim = c(ncol(Xmat), ncol(Xmat), 1),
-        dimnames <- list(colnames(Xmat), colnames(Xmat), 1)
+        dimnames = list(colnames(Xmat), colnames(Xmat), 1)
       )
     # set as diagonal to begin with
-    object@vcov[] <- diag(ncol(Xmat))
+    object@vcov[,,1] <- diag(ncol(Xmat))
 
     object
   }
@@ -278,10 +304,11 @@ setMethod(
 
     # add centering if present
     cdf <- as.data.frame(x@centering, drop = FALSE)
-    iter_idx <- df$iter
+    iter_idx <- as.numeric(df$iter)
     if (is.null(iter_idx)) iter_idx <- rep(1, nrow(df))
 
-    cbind(
+
+    cbind.data.frame(
       df[names(df) != "data"],
       centering = cdf$data[iter_idx]
     )
