@@ -43,6 +43,7 @@ Collate:
     'a4aGr-methods.R'
     'a4aStkParams-class.R'
     'submodel-class.R'
+    'submodel_sim-class.R'
     'submodels-class.R'
     'SCAPars-class.R'
     'SCAMCMC-class.R'
