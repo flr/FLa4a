@@ -198,7 +198,8 @@ setMethod(
       # or not
     } else {
       args <- list(...)
-      args$Class <- "submodel"
+      args$Class <-
+        if (is.null(args$covariates)) "submodel" else "submodel_sim"
       do.call("new", args)
     }
   }
@@ -214,7 +215,8 @@ setMethod(
       # or not
     } else {
       args <- c(object, list(...))
-      args$Class <- "submodel"
+      args$Class <-
+        if (is.null(args$covariates)) "submodel" else "submodel_sim"
       do.call("new", args)
     }
   }
@@ -239,7 +241,7 @@ setMethod("iter", "submodel", function(obj, it) {
 
 #' @rdname submodel-class
 #' @param iter the number of iterations to create
-#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)q
 setMethod(
   "propagate", signature(object = "submodel"),
   function(object, iter, fill.iter = TRUE) {
