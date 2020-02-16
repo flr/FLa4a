@@ -126,7 +126,7 @@ setMethod(
     # initialise submodel
     if (!missing(formula)) {
       formula(.Object) <- formula
-    } else {
+    } else if (identical(.Object@formula, new("formula"))) {
       formula(.Object) <- ~1
     }
 
@@ -204,6 +204,21 @@ setMethod(
   }
 )
 
+#' @rdname submodel-class
+setMethod(
+  "submodel", signature(object = "submodel"),
+  function(object, ...) {
+    # empty
+    if (missing(...)) {
+      new("submodel", object)
+      # or not
+    } else {
+      args <- c(object, list(...))
+      args$Class <- "submodel"
+      do.call("new", args)
+    }
+  }
+)
 
 #' @rdname submodel-class
 #' @param obj the object to be subset
