@@ -5,16 +5,26 @@
 #' @template ClassDescription
 #' @section Slot:
 #' \describe{
+#'  \item{\code{Mod}}
+#'    {\code{formula} describing the model}
 #'
-#'  \item{\code{Mod}}{\code{formula} describing the model}
+#'  \item{\code{params}}
+#'    {\code{FLPar} with model parameters}
 #'
-#'  \item{\code{params}}{\code{FLPar} with model parameters}
+#'  \item{\code{vcov}}
+#'    {
+#'      \code{array} with variance covariance paramaters related to
+#'      the variance model
+#'    }
 #'
-#'  \item{\code{vcov}}{\code{array} with variance covariance paramaters related to the variance model}
+#'  \item{\code{centering}}
+#'    {\code{numeric} value used for centering the data}
 #'
-#'  \item{\code{centering}}{\code{numeric} value used for centering the data}
-#'
-#'  \item{\code{distr}}{a character with the parameters' statistical distribution; it must match a known distribution for R (\emph{e.g.} "norm" for gaussian) so that \code{rnorm} can be called}
+#'  \item{\code{distr}}
+#'    {
+#'      a character with the parameters' statistical distribution;
+#'      it must match a known distribution for R (\emph{e.g.} "norm"
+#'      for gaussian) so that \code{rnorm} can be called}
 #' }
 #' @aliases submodel-class
 setClass(
@@ -47,6 +57,15 @@ setValidity(
     }
   }
 )
+
+# old show method
+#setMethod(
+#  "show", "submodel",
+#  function(object) {
+#    cat(paste0("\t", name(object), ": ", sep = ""))
+#    print(formula(object), showEnv = FALSE)
+#  }
+#)
 
 # show
 setMethod(
@@ -168,6 +187,7 @@ setMethod(
 setGeneric("submodel", function(object, ...) {
   standardGeneric("submodel")
 })
+
 #' @rdname submodel-class
 setMethod(
   "submodel", signature(object = "missing"),
