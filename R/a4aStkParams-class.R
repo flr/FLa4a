@@ -299,6 +299,98 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
 )
 
 
+setMethod(
+  "coerce",
+  signature(from = "a4aStkParams", to = "submodels"),
+  function (from, to, strict = TRUE) {
+
+    # extract come bits from stkmodel
+    b <- coef(from)
+    vmat <- vcov(from)
+    f_which <- which(grepl("fMod", rownames(b)))
+    r_which <- which(grepl("rMod", rownames(b)))
+    n1_which <- which(grepl("n1Mod", rownames(b)))
+
+    # note fmodel has no centering (only abundance was centered)
+    # so fmodel submodel used default of FLPar(centering = 0)
+    fsubmodel <-
+      submodel(
+        formula = fMod(from),
+        coefficients = b[f_which],
+        vcov = vmat[f_which, f_which,, drop = FALSE],
+        distr = from@distr,
+        link = from@link,
+        linkinv = from@linkinv,
+        range = range(from)
+      )
+    n1range <- range(from)
+    n1range["maxyear"] <- n1range["minyear"]
+    n1range["min"] <- n1range["min"] + 1
+    n1submodel <-
+      submodel(
+        formula = n1Mod(from),
+        coefficients = b[n1_which],
+        vcov = vmat[n1_which, n1_which,, drop = FALSE],
+        centering = from@centering,
+        distr = from@distr,
+        link = from@link,
+        linkinv = from@linkinv,
+        range = n1range
+      )
+    # note that the r model is a bit complicated to get at due
+    # do the joint purpose of srmodel argument contaning both
+    # the SR model OR a linear model for recruitment
+    srmodel <- srMod(from)
+    rmodel <-
+      if (sum(isPresenta4aSRmodel(srmodel)) == 0) {
+        srmodel
+      } else {
+        ~ factor(year)
+      }
+    rrange <- range(from)
+    rrange["max"] <- rrange["min"]
+    rsubmodel <-
+      submodel(
+        formula = rmodel,
+        coefficients = b[r_which],
+        vcov = vmat[r_which, r_which,, drop = FALSE],
+        centering = from@centering,
+        distr = from@distr,
+        link = from@link,
+        linkinv = from@linkinv,
+        range = rrange
+      )
+
+    # construct submodels
+    stk_submodel <-
+      submodels(
+        list(fsubmodel, n1submodel, rsubmodel),
+        names = c("fmodel", "n1model", "rmodel"),
+        desc = "stkmodel"
+      )
+
+    # calculate correlation matrix for each iter
+    # if vmat is NA, it will not be numeric and cov2cor will fail
+    if (!is.numeric(vmat)) vmat[] <- as.numeric(vmat)
+    corrmat <- vmat
+    for (i in 1:dim(vmat)[3]) {
+      corrmat[,, i] <- cov2cor(vmat[,, i])
+    }
+    # f and r correlation
+    stk_submodel@corBlocks$fmodel.n1model[] <-
+      corrmat[f_which, n1_which,, drop = FALSE]
+    # f and n1 model correlation
+    stk_submodel@corBlocks$fmodel.rmodel[] <-
+      corrmat[f_which, r_which,, drop = FALSE]
+    # r and n1 model correlation
+    stk_submodel@corBlocks$n1model.rmodel[] <-
+      corrmat[n1_which, r_which,, drop = FALSE]
+
+    stk_submodel
+  }
+)
+
+
 
 #' @rdname a4aStkParams-class
 #' @param iter the number of iterations to create
@@ -347,4 +439,3 @@ setMethod("iter", "a4aStkParams", function(obj, it){
 	obj@centering <- iter(obj@centering, it)
 	obj
 })
-
