@@ -192,6 +192,133 @@ setMethod("genFLQuant", "submodels",
 )
 
 
+#' @rdname genFLQuant-methods
+# if nsim > 0 the simulate nsim times
+setMethod(
+  "genFLQuant",
+  "stk_submodel",
+  function(object, type = c("link", "response"), nsim = 0,
+    seed = NULL, simulate.recruitment = FALSE)
+  {
+    flqs <-
+      genFLQuant(
+        as(object, "submodels"),
+        type = "response", nsim = nsim, seed = seed
+      )
+    # get dims
+    dms <- dims(object)
+
+    # Do we want to simulate from the stock recruitment model?
+    if (simulate.recruitment) {
+      # simulate N based on new recruitments about the estimated SR model
+      # this will results in catches and survey indices quite different form that observed
+
+      # get SR model
+      srmodel <- geta4aSRmodel(formula(object$srmod))
+
+      # get FLSR definition
+      expr_model <- a4aSRmodelDefinitions(srmodel)
+
+      # get SR pars
+      cnames <- rownames(coef(object))
+      parList <- list(
+        a = exp(coef(object)[grep("sraMod", cnames)]),
+        b = exp(coef(object)[grep("srbMod", cnames)])
+      )
+      srrCV <- eval(parse(text = srmodel))$srrCV
+
+      # define the SR prediction
+      recPred <- function(ssb) {
+        # if ssb is an FLQuant, the return will be an FLQuant
+        # stdev = sqrt(cv^2 + 1)
+        ssb / ssb * eval(expr_model, c(parList, ssb = ssb)) *
+          exp(rnorm(dms$iter, 0, sqrt(log(srrCV^2 + 1)))) * # random noise
+          exp(object@centering)
+      }
+
+      # set up N quant
+      N <- flqs$harvest
+      N[] <- NA
+      units(N) <- "1000"
+
+      # initial age structure
+      N[1, 1] <- flqs$rec[1, 1]
+      N[-1, 1] <- flqs$ny1[-1, ]
+
+      # ssb per individual by age and year
+      ssbay <- mat(object) * wt(object)
+      Z <- flqs$harvest + m(object)
+
+      for (i in 2:dms$year) {
+        # predict recruitment
+        N[1, i] <- recPred(quantSums(N[, i - 1] * ssbay[, i - 1]))
+
+        # do some killing
+        Nleft <- N[, i - 1] * exp(-Z[, i - 1])
+        N[-1, i] <- Nleft[-dms$age]
+        N[dms$age, i] <- N[dms$age, i] + Nleft[dms$age]
+        # repeat!
+      }
+
+      # a quick debugging check - all looks good
+      # plot(quantSums(N * ssbay)[,-dms$year], flqs$rec[,-1], ylim = c(0, max(flqs$rec)))
+      # points(quantSums(N * ssbay)[,-dms$year], N[1,-1], col = "red")
+    } else {
+      # simulate N conditional on the estimated recruitment
+
+      # compute cumulative Z
+      cumsumNA <- function(x) {
+        x[!is.na(x)] <- cumsum(x[!is.na(x)])
+        x
+      }
+      Z <- flqs$fmod + m(object)
+
+      cumZ <- apply(FLCohort(Z), c(2:6), cumsumNA)
+
+      # expand variability into [N] by R*[F]
+
+      Ns <- FLCohort(flqs$fmod)
+      Ns[, -(1:(dms$age))] <- flqs$srmod[rep(1, dms$age)]
+
+      Ns[, 1:(dms$age - 1)] <-
+        apply(
+          FLCohort(flqs$n1mod),
+          2:6, sum, na.rm = TRUE
+        )[rep(1, dms$age), 1:(dms$age - 1)]
+
+      Ns <- Ns * exp(-cumZ)
+
+      # convert back from cohort shape
+      Ns <- as(Ns, "FLQuant")
+
+      # add in recruits and initial age
+      N <- Ns
+      # [R]
+      N[1,-1] <- flqs$srmod
+      # [N]
+      N[-1, -1] <- Ns[-dms$age, -dms$year]
+      # [N,1]
+      N[, 1] <- flqs$n1mod
+      # plus group
+      for (y in seq(2, dms$year)) {
+        N[dms$age, y] <- Ns[dms$age - 1, y - 1] + N[dms$age, y - 1] * exp(-Z[dms$age, y - 1])
+      }
+    }
+    # [C]
+    Z <- flqs$fmod + m(object)
+    C <- flqs$fmod / Z * (1 - exp(-Z)) * N
+
+    # out
+    if (type == "response") {
+      FLQuants(harvest = flqs$fmod, stock.n = N, catch.n = C)
+    } else {
+      FLQuants(harvest = object@link(flqs$fmod), stock.n = object@link(N), catch.n = object@link(C))
+    }
+  }
+)
+
+
+
 
 #' @rdname genFLQuant-methods
 # if nsim > 0 the simulate nsim times
