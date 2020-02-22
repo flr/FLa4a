@@ -12,6 +12,12 @@
 \alias{niters,FLModelSim-method}
 \alias{niters,a4aGr-method}
 \alias{dims,a4aStkParams-method}
+\alias{replaceZeros}
+\alias{replaceZeros-methods}
+\alias{replaceZeros,FLQuant-method}
+\alias{replaceZeros,FLStock-method}
+\alias{replaceZeros,FLIndex-method}
+\alias{replaceZeros,FLIndices-method}
 \title{Assorted methods needed by FLa4a}
 \usage{
 getYidx(object, ...)
@@ -27,6 +33,16 @@ niters(object, ...)
 \S4method{niters}{a4aGr}(object)
 
 \S4method{dims}{a4aStkParams}(obj)
+
+replaceZeros(object, ...)
+
+\S4method{replaceZeros}{FLQuant}(object, fraction = 0.25)
+
+\S4method{replaceZeros}{FLStock}(object, fraction = 0.25)
+
+\S4method{replaceZeros}{FLIndex}(object, fraction = 0.25)
+
+\S4method{replaceZeros}{FLIndices}(object, fraction = 0.25)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}
@@ -36,8 +52,12 @@ niters(object, ...)
 \item{year}{\code{numeric} with year to be extracted}
 
 \item{obj}{an object}
+
+\item{fraction}{\code{numeric} with fraction of minimum to replace zeros}
 }
 \description{
+Assorted methods needed by FLa4a
+
 Assorted methods needed by FLa4a
 }
 \section{getYidx}{
@@ -58,6 +78,11 @@ Compute number of iterations. Takes an object of any \code{FLR} class and return
 \section{dims}{
 
 Extracts the dims of the parameters.
+}
+
+\section{replaceZeros}{
+
+Replaces observations of 0 by a fraction of the minimum observed. It takes an \code{FLQuant} object and \code{numeric} of min fraction and returns a \code{FLQuant} with zeros replaced to be added to the \code{FLStock} or \code{FLIndex} objects.
 }
 
 \examples{
@@ -82,4 +107,9 @@ vbObj <- mvrnorm(100,vbObj)
 niters(vbObj)
 #Example use of dims:
 dims(FLPar())
+#Example use of getYidx:
+data(ple4)
+flq <- catch(ple4)
+flq <- replaceZeros(flq, 0.25)
+catch(ple4) <- flq
 }
