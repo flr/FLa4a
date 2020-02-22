@@ -41,10 +41,11 @@ Collate:
     'a4aM-methods.R'
     'a4aGr-class.R'
     'a4aGr-methods.R'
-    'a4aStkParams-class.R'
     'submodel-class.R'
     'submodel_sim-class.R'
     'submodels-class.R'
+    'stk_submodels-class.R'
+    'a4aStkParams-class.R'
     'SCAPars-class.R'
     'SCAMCMC-class.R'
     'a4aFit-class.R'
@@ -70,5 +71,5 @@ Collate:
     'a4amse-sa.R'
     'a4aFitCatchDiagn-class.R'
     'smoother_constructors.R'
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Encoding: UTF-8
