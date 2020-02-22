@@ -28,7 +28,12 @@ setMethod(
     X <- as.matrix(do.call(bdiag, Xs))
 
     # get column names to fit with coefs
-    colnames(X) <- dimnames(do.call("rbind", coef(object)))$params
+    colnames(X) <-
+      paste(
+        rep(names(Xs), sapply(Xs, ncol)),
+        sapply(Xs, colnames),
+        sep = ":"
+      )
 
     X
   }

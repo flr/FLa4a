@@ -165,15 +165,16 @@ setMethod("simulate", signature(object = "a4aStkParams"),
 setMethod("simulate", signature(object = "submodels"),
   function(object, nsim = 1, seed = NULL, empirical = TRUE) {
     # get the joined up coefficients
-    blist <- lapply(object, coef)
+    b <- coef(object)
 
     # get parameter variance matrices
     V <- vcov(object)
 
     # iters and objects
-    pitr <- sapply(blist, function(x) dims(x)$iter)
-    if (!all(pitr[1] == pitr)) stop("Not valid object, all submodels should have the same iterations!")
-    pitr <- unique(pitr)
+    #pitr <- sapply(blist, function(x) dims(x)$iter)
+    #if (!all(pitr[1] == pitr)) stop("Not valid object, all submodels should have the same iterations!")
+    # pitr <- unique(pitr)
+    pitr <- dims(b)$iter
     if (length(dim(V)) == 2) dim(V) <- c(dim(V), 1)
     vitr <- dim(V)[3]
     mitr <- max(c(nsim, pitr, vitr))
@@ -190,13 +191,6 @@ setMethod("simulate", signature(object = "submodels"),
     distr <- unique(sapply(object, slot, "distr"))
     if (length(distr) > 1) stop("For now all submodels must have the same distribution")
     simfunc <- match.fun(paste0("mvr", distr))
-
-    # combine blist into a single FLPar
-    if (length(blist) == 1) {
-      b <- blist[[1]]
-    } else {
-      b <- do.call(rbind, blist)
-    }
 
     # if there are iters in pars or vcov simulation must be done by iter
     if (pitr != 1 || vitr != 1) {
@@ -235,7 +229,7 @@ setMethod("simulate", signature(object = "submodels"),
     # add to object and return
     if (mitr > pitr) {
       for (i in seq_along(object)) {
-        coef(object[[i]]) <- propagate(coef(object)[[i]], mitr)
+        coef(object[[i]]) <- propagate(coef(object[[i]]), mitr)
       }
     }
     npar <- c(0, sapply(object, function(x) nrow(coef(x))))
@@ -309,4 +303,3 @@ setMethod("simulate", signature(object = "submodel"),
     coef(object) <- as(parsim, "vector")
     object
   })
-

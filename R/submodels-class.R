@@ -166,7 +166,7 @@ setMethod("show", "submodels",
     if (length(object) == 0) {
       cat("empty object\n")
     } else {
-      fmt <- paste0("\t %", max(nchar(sapply(object, name))), "smodel: ")
+      fmt <- paste0("\t %", max(nchar(sapply(object, name))), "s: ")
       for (i in object) {
         cat(sprintf(fmt, name(i))); print(formula(i), showEnv = FALSE)
       }
@@ -184,7 +184,7 @@ setMethod("show", "submodels",
 # method.skeleton("propagate", "submodels",  file = stdout())
 #' @rdname submodels-class
 #' @param iter the number of iterations to create
-#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE) 
+#' @param fill.iter should the new iterations be filled with values (TRUE) or NAs (FALSE)
 setMethod("propagate",
   signature(object = "submodels"),
   function (object, iter, fill.iter = TRUE)
@@ -231,5 +231,3 @@ setMethod("iter", "submodels", function(obj, it){
   names(out) <- names(obj)
   out
 })
-
-

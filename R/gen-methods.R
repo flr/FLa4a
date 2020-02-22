@@ -181,15 +181,15 @@ setMethod("genFLQuant", "submodel",
 # if nsim > 0 the simulate nsim times
 setMethod("genFLQuant", "submodels",
   function(object, type = c("link", "response"), nsim = 0, seed = NULL) {
-      type <- match.arg(type)
-      # simulate from submodels?
-      if (nsim > 0) {
-        object <- simulate(object, nsim = nsim, seed = seed)
-      }
-      # convert submodels to FLQuants
-      FLQuants(lapply(object, genFLQuant, type = type))
+    type <- match.arg(type)
+    # simulate from submodels?
+    if (nsim > 0) {
+      object <- simulate(object, nsim = nsim, seed = seed)
     }
- )
+    # convert submodels to FLQuants
+    FLQuants(lapply(object, genFLQuant, type = type))
+  }
+)
 
 
 

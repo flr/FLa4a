@@ -1,6 +1,6 @@
-#==================================================================== 
+#====================================================================
 #    coef  methods
-#==================================================================== 
+#====================================================================
 
 #' @title coefficients extract and replacement
 #' @name coef
@@ -15,7 +15,7 @@ setGeneric("coef", function(object, ...) useAsDefault=stats::coef)
 #' @rdname coef-methods
 setMethod("coef", signature(object = "a4aFitSA"),
   function(object) {
-	  coef(pars(object))
+    coef(pars(object))
   })
 
 
@@ -32,14 +32,26 @@ setMethod("coef", signature(object = "SCAPars"),
 #' @rdname coef-methods
 setMethod("coef", signature(object = "a4aStkParams"),
   function(object) {
-      object @ coefficients
+      object@coefficients
   })
 
 #' @rdname coef-methods
-setMethod("coef", signature(object = "submodels"),
+setMethod(
+  "coef",
+  "submodels",
   function(object) {
-      lapply(object, coef)
-  })
+    coef_list <- lapply(object, coef)
+    coefs <- do.call(rbind, coef_list)
+    cnames <-
+      paste(
+        rep(names(object), sapply(coef_list, dim)[1, ]),
+        dimnames(coefs)[[1]],
+        sep = ":"
+      )
+    dimnames(coefs)[[1]] <- cnames
+    coefs
+  }
+)
 
 
 #' @rdname coef-methods
@@ -48,9 +60,9 @@ setMethod("coef", "submodel",
       object@coefficients
   })
 
-#==================================================================== 
+#====================================================================
 #    coef<-  methods
-#==================================================================== 
+#====================================================================
 
 #' @rdname coef-methods
 #' @param value the new object
@@ -70,7 +82,7 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
     v <- coef(object)
     old <- unlist(v)
     new <- rep_len(unlist(value), length.out = length(old))
-    
+
     coef(object @ stkmodel) <- new[grep("stkmodel", names(old))]
     coef(object @ qmodel) <- new[grep("qmodel.", names(old))]
     coef(object @ vmodel) <- new[grep("vmodel.", names(old))]
@@ -81,7 +93,7 @@ setMethod("coef<-", signature(object = "SCAPars", value = "numeric"),
 
 #' @rdname coef-methods
 setMethod("coef<-", signature(object = "a4aStkParams", value = "numeric"),
-  function(object, ..., value) {    
+  function(object, ..., value) {
     object @ coefficients[] <- value
     object
   })
@@ -92,9 +104,9 @@ setMethod("coef<-", signature(object = "submodels", value = "numeric"),
     v <- coef(object)
     old <- unlist(v)
     new <- rep_len(unlist(value), length.out = length(old))
-    
+
     for (i in seq_along(object)) {
-      object[[i]] @ coefficients[] <- new[grep(object[[i]] @ name, names(old))]  
+      object[[i]] @ coefficients[] <- new[grep(object[[i]] @ name, names(old))]
     }
     object
   })

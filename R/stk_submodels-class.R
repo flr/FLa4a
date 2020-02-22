@@ -1,7 +1,7 @@
 #' @title Stock submodels class
 #' @docType class
-#' @name stk_submodels
-#' @rdname stk_submodels-class
+#' @name stk_submodel
+#' @rdname stk_submodel-class
 #' @template ClassDescription
 #' @section Slot:
 #' \describe{
@@ -12,10 +12,10 @@
 #'  \item{\code{wt}}{stock weights \code{FLQuant}}
 #'  \item{\code{units}}{data units \code{character}}
 #' }
-#' @aliases a4aStkModel-class
+#' @aliases a4astkmodel-class
 
 setClass(
-  "stk_submodels",
+  "stk_submodel",
   contains = c("FLComp", "submodels"),
   slots =
     c(
@@ -27,89 +27,164 @@ setClass(
     )
 )
 
-#' @rdname a4aStkModel-class
-#' @aliases a4aStkModel a4aStkModel-methods
+#' @rdname stk_submodel-class
+#' @aliases stk_submodel stk_submodel-methods
 #' @template Accessors
 #' @template Constructors
-setGeneric("stk_submodels")
+setGeneric("stk_submodel", function(object, ...) {
+  standardGeneric("stk_submodel")
+})
 
 setMethod(
   "initialize",
-  "stk_submodels",
-  function(.Object, ..., m, wt, mat) {
-      # fill up FLComp slots first
-      .Object <- callNextMethod(.Object, ...)
-      if (length(.Object) == 0) {
-        .Object@.Data <-
-          list(
-            f = submodel(name = "f"),
-            n1 = submodel(name = "n1"),
-            sr = submodel(name = "sr")
-          )
-      }
-      if (length(.Object) < 3) {
-        stop("There must be 3 submodels named f, n1, and sr")
-      }
-      # if missing set dimensions of of m and wt based on range slot
-      if (missing(m) || missing(wt)) {
-        range <- range(.Object)
-        df <-
-          expand.grid(
-            age = range["min"]:range["max"],
-            year = range["minyear"]:range["maxyear"],
-            data = NA,
-            stringsAsFactors = FALSE
-          )
-        flq <- as.FLQuant(df)
-      }
-      .Object@m <- if (missing(m)) flq else m
-      .Object@wt <- if (missing(wt)) flq else wt
-      # throw error if range from FLComp doesn't match FLQuants
-      # (can't check this in setValidity due to callNextMethod resulting in an invalid a4aStkParams object when range is supplied)
-      if (
-        abs(as.numeric(dimnames(.Object@m)$year[1]) -
-          .Object@range["minyear"]) > 1e-9 ||
-        abs(as.numeric(dimnames(.Object@m)$year[dim(.Object@m)[2]]) -
-          .Object@range["maxyear"]) > 1e-9
-        ) {
-            stop("range does not match supplied m and wt dimensions")
-      }
-      if (!missing(vcov)) .Object@vcov <- vcov
-      if (!missing(units)).Object@units <- units
-      .Object
-    })
+  "stk_submodel",
+  function(.Object, ..., fmod, n1mod, srmod) {
+    # initialize FLComp slots
+    .Object <- callNextMethod(.Object, ...)
 
-setValidity(
-  "stk_submodels",
-  function(object) {
-    # the following is not throwing errors somehow...
-    #if (length(object) == 0) {
-    #  "There must be 3 submodels named f, n1, and sr"
-    #} else
-    # check dimensions of m and wt are the same as f submodel
-    if (
-      !identical(
-        unlist(dimnames(object@m)[2:5]),
-        unlist(dimnames(object@wt)[2:5])
-        )) {
-      "m and wt elements must share dimensions 2 to 5"
-    } else {
-      TRUE
+    # fill in missing FLComp slots
+    if (length(name(.Object)) == 0 || name(.Object) == "") {
+      name(.Object) <- "stk_submodel"
     }
+
+    # there must be at least 2 years, to allow for an SR model
+    rng <- range(.Object)
+    if (rng["maxyear"] == rng["minyear"]) {
+      warning("increasing maxyear by 1")
+      .Object@range["maxyear"] <- .Object@range["maxyear"] + 1
+    }
+
+    # fill in submodels
+    if (missing(fmod)) {
+      fmod <-
+        submodel(
+          range = range(.Object)
+        )
+    }
+    if (missing(n1mod)) {
+      n1range <- range(.Object)[c("min", "max", "minyear", "maxyear")]
+      n1range["maxyear"] <- n1range["minyear"]
+      n1mod <-
+        submodel(
+          range = n1range
+        )
+    }
+    if (missing(srmod)) {
+      srrange <- range(.Object)[c("min", "max", "minyear", "maxyear")]
+      srrange["max"] <- srrange["min"]
+      srrange["minyear"] <- srrange["minyear"] + 1
+      srmod <-
+        submodel(
+          range = srrange
+        )
+    }
+
+    .Object@.Data <-
+      list(
+        fmod = submodel(fmod, name = "fmod"),
+        n1mod = submodel(n1mod, name = "n1mod"),
+        srmod = submodel(srmod, name = "srmod")
+      )
+
+    tmp <- new("submodels", .Object@.Data)
+    .Object@corBlocks <- tmp@corBlocks
+
+    # fill in missing m, stock.wt or mat, etc.
+    dots <- list(...)
+    flqnames <- c("m", "mat", "stock.wt", "harvest.spwn", "m.spwn")
+    if (!all(flqnames %in% names(dots))) {
+      range <- range(.Object)
+      df <-
+        expand.grid(
+          age = range["min"]:range["max"],
+          year = range["minyear"]:range["maxyear"],
+          data = NA,
+          stringsAsFactors = FALSE
+        )
+      emptyflq <- as.FLQuant(df)
+    }
+    for (flqname in flqnames) {
+      if (!flqname %in% names(dots)) {
+        slot(.Object, flqname) <- emptyflq
+      }
+    }
+
+    # set range of object if range not supplied?
+
+    # deal with corBlocks
+
+    .Object
   }
 )
 
+
+#setValidity(
+#  "stk_submodels",
+#  function(object) {
+#    # the following is not throwing errors somehow...
+#    #if (length(object) == 0) {
+#    #  "There must be 3 submodels named f, n1, and sr"
+#    #} else
+#    # check dimensions of m and wt are the same as f submodel
+#    if (length(.Object) < 3) {
+#      stop("There must be 3 submodels named f, n1, and sr")
+#    }
+#    if (
+#      !identical(
+#        unlist(dimnames(object@m)[2:5]),
+#        unlist(dimnames(object@stock.wt)[2:5])
+#        )) {
+#      "m and wt elements must share dimensions 2 to 5"
+#    } else {
+#      TRUE
+#    }
+#  }
+#)
+
+#
+# coerce methods
+#
+
+# coerce from FLStock to stk_submodel
 
 #
 #  accessor methods
 #
 
+#' @rdname stk_submodels-class
+setMethod(
+  "m",
+  "stk_submodel",
+  function(object) object@m
+)
 
 #' @rdname stk_submodels-class
-setMethod("m", "stk_submodels", function(object) object@m)
+setMethod(
+  "mat",
+  "stk_submodel",
+  function(object) object@mat
+)
 
 #' @rdname stk_submodels-class
-setMethod("wt", "stk_submodels", function(object) object@wt)
+setMethod(
+  "stock.wt",
+  "stk_submodel",
+  function(object) object@stock.wt
+)
+
+#' @rdname stk_submodels-class
+setMethod(
+  "harvest.spwn",
+  "stk_submodel",
+  function(object) object@harvest.spwn
+)
+
+#' @rdname stk_submodels-class
+setMethod(
+  "m.spwn",
+  "stk_submodel",
+  function(object) object@m.spwn
+)
 
 
 #
@@ -119,11 +194,26 @@ setMethod("wt", "stk_submodels", function(object) object@wt)
 #' @rdname stk_submodels-class
 setMethod(
   "show",
-  "stk_submodels",
+  "stk_submodel",
   function(object)
   {
     cat("a4a stock model for:", object@name, "\n")
-    show(submodels(object))
+    show(as(object, "submodels"))
+  }
+)
+
+
+#
+# Coercion
+#
+
+setMethod(
+  "as.data.frame",
+  signature(
+    x = "stk_submodel", row.names = "missing", optional = "missing"
+  ),
+  function(x, drop = FALSE, fill = FALSE, centering = FALSE, ...) {
+    as.data.frame(as(x, "submodels"))
   }
 )
 
@@ -132,12 +222,12 @@ setMethod(
 # Other methods
 #
 
-#' @rdname a4aStkParams-class
+#' @rdname stk_submodels-class
 #' @param obj the object to be subset
 #' @param it iteration to be extracted
 setMethod(
   "iter",
-  "stk_submodels",
+  "stk_submodel",
   function(obj, it){
     obj@vcov <- obj@vcov[,,it, drop=FALSE]
     obj@m <- iter(obj@m, it)
