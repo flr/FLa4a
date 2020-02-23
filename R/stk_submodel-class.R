@@ -21,8 +21,9 @@ setClass(
     c(
       "srmod" = "sr_submodel",
       "m" = "FLQuant",
-      "stock.wt" = "FLQuant",
       "mat" = "FLQuant",
+      "stock.wt" = "FLQuant",
+      "catch.wt" = "FLQuant",
       "harvest.spwn" = "FLQuant",
       "m.spwn" = "FLQuant"
     )
@@ -73,10 +74,15 @@ setMethod(
     }
 
     # convert srmod to submodels, and add into main submodels
+    # note rmod is a placeholder for the realised recruitments
     .Object@.Data <-
       list(
         fmod = submodel(fmod, name = "fmod"),
         n1mod = submodel(n1mod, name = "n1mod"),
+        rmod =
+          submodel(
+            srmod$a, name = "rmod", formula = ~ factor(year) - 1
+          ),
         sramod = submodel(srmod$a, name = "sramod"),
         srbmod = submodel(srmod$b, name = "srbmod")
       )
@@ -88,7 +94,10 @@ setMethod(
 
     # fill in missing m, stock.wt or mat, etc.
     dots <- list(...)
-    flqnames <- c("m", "mat", "stock.wt", "harvest.spwn", "m.spwn")
+    flqnames <-
+      c(
+        "m", "mat", "stock.wt", "catch.wt", "harvest.spwn", "m.spwn"
+      )
     if (!all(flqnames %in% names(dots))) {
       range <- range(.Object)
       df <-
@@ -105,10 +114,6 @@ setMethod(
         slot(.Object, flqname) <- emptyflq
       }
     }
-
-    # set range of object if range not supplied?
-
-    # deal with corBlocks
 
     .Object
   }
@@ -191,6 +196,13 @@ setMethod(
   "stock.wt",
   "stk_submodel",
   function(object) object@stock.wt
+)
+
+#' @rdname stk_submodels-class
+setMethod(
+  "catch.wt",
+  "stk_submodel",
+  function(object) object@catch.wt
 )
 
 #' @rdname stk_submodels-class
