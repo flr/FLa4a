@@ -19,6 +19,7 @@ setClass(
   contains = c("FLComp", "submodels"),
   slots =
     c(
+      "srmod" = "sr_submodel",
       "m" = "FLQuant",
       "stock.wt" = "FLQuant",
       "mat" = "FLQuant",
@@ -26,14 +27,6 @@ setClass(
       "m.spwn" = "FLQuant"
     )
 )
-
-#' @rdname stk_submodel-class
-#' @aliases stk_submodel stk_submodel-methods
-#' @template Accessors
-#' @template Constructors
-setGeneric("stk_submodel", function(object, ...) {
-  standardGeneric("stk_submodel")
-})
 
 setMethod(
   "initialize",
@@ -74,20 +67,24 @@ setMethod(
       srrange["max"] <- srrange["min"]
       srrange["minyear"] <- srrange["minyear"] + 1
       srmod <-
-        submodel(
+        sr_submodel(
           range = srrange
         )
     }
 
+    # convert srmod to submodels, and add into main submodels
     .Object@.Data <-
       list(
         fmod = submodel(fmod, name = "fmod"),
         n1mod = submodel(n1mod, name = "n1mod"),
-        srmod = submodel(srmod, name = "srmod")
+        sramod = submodel(srmod$a, name = "sramod"),
+        srbmod = submodel(srmod$b, name = "srbmod")
       )
 
     tmp <- new("submodels", .Object@.Data)
     .Object@corBlocks <- tmp@corBlocks
+
+    .Object@srmod <- srmod
 
     # fill in missing m, stock.wt or mat, etc.
     dots <- list(...)
@@ -117,8 +114,32 @@ setMethod(
   }
 )
 
+#' @rdname stk_submodel-class
+#' @aliases stk_submodel stk_submodel-methods
+#' @template Accessors
+#' @template Constructors
+setGeneric("stk_submodel", function(object, ...) {
+  standardGeneric("stk_submodel")
+})
 
-#setValidity(
+#' @rdname submodel-class
+setMethod(
+  "stk_submodel", signature(object = "missing"),
+  function(...) {
+    # empty
+    if (missing(...)) {
+      new("stk_submodel")
+      # or not
+    } else {
+      args <- list(...)
+      args$Class <- "stk_submodel"
+      do.call("new", args)
+    }
+  }
+)
+
+
+# setValidity(
 #  "stk_submodels",
 #  function(object) {
 #    # the following is not throwing errors somehow...
@@ -139,7 +160,7 @@ setMethod(
 #      TRUE
 #    }
 #  }
-#)
+# )
 
 #
 # coerce methods
@@ -195,8 +216,7 @@ setMethod(
 setMethod(
   "show",
   "stk_submodel",
-  function(object)
-  {
+  function(object) {
     cat("a4a stock model for:", object@name, "\n")
     show(as(object, "submodels"))
   }
@@ -228,8 +248,8 @@ setMethod(
 setMethod(
   "iter",
   "stk_submodel",
-  function(obj, it){
-    obj@vcov <- obj@vcov[,,it, drop=FALSE]
+  function(obj, it) {
+    obj@vcov <- obj@vcov[, , it, drop = FALSE]
     obj@m <- iter(obj@m, it)
     obj@wt <- iter(obj@wt, it)
     obj
