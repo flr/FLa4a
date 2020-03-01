@@ -261,6 +261,7 @@ setMethod(
   "iter",
   "stk_submodel",
   function(obj, it) {
+    message("todo - update ")
     obj@vcov <- obj@vcov[, , it, drop = FALSE]
     obj@m <- iter(obj@m, it)
     obj@wt <- iter(obj@wt, it)

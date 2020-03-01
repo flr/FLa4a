@@ -35,6 +35,7 @@ setMethod("coef", signature(object = "a4aStkParams"),
       object@coefficients
   })
 
+# should depreciate this
 #' @rdname coef-methods
 setMethod(
   "coef",
