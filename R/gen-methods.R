@@ -152,7 +152,7 @@ setMethod(
         stock.n(out)[1, i] <-
           recPred(
             ssb(out[, i - 1]),
-            a = a[, 1], b = b[, 1]
+            a = a[, i - 1], b = b[, i - 1]
           )
 
         # do some killing
