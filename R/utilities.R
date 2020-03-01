@@ -29,7 +29,7 @@ setMethod("getYidx", "FLQuant", function(object, year) {
 		}
 	} else {
 		length(yrs)+year+1
-	} 
+	}
 
 })
 
@@ -181,8 +181,8 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	args$scales=list(y=list(relation="free", draw=FALSE))
 	args$auto.key <- list(points=FALSE, lines=TRUE, columns=2)
 	args$par.settings=list(
-		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
-		strip.background=list(col="gray90"), 
+		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)),
+		strip.background=list(col="gray90"),
 		strip.border=list(col="black"))
 	args$main="fitted and observed catch-at-age"
 	do.call("xyplot", args)
@@ -209,7 +209,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	if(sum(v)>0){
 		warning("Biomass indices will be removed, can't plot age based estimates.")
 		y <- y[!v]
-	}	
+	}
 	args <- list()
 	dfx <- as.data.frame(index(x))
 	dfy <- as.data.frame(lapply(y, index))
@@ -225,8 +225,8 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 	args$scales=list(y=list(relation="free", draw=FALSE))
 	args$auto.key=list(lines=TRUE, points=FALSE, columns=2)
 	args$par.settings=list(
-		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)), 
-		strip.background=list(col="gray90"), 
+		superpose.line=list(col=c("gray70", "black"), lty=1, lwd=c(2,1)),
+		strip.background=list(col="gray90"),
 		strip.border=list(col="black"))
 	args$main="fitted and observed index-at-age"
 	if(length(index(x))>1){
@@ -237,7 +237,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 			print(do.call("xyplot", args))
 		}
 	} else {
-		args$data <- df0 
+		args$data <- df0
 		args$layout <- c(0,length(unique(args$data$year)))
 		do.call("xyplot", args)
 	}
@@ -250,10 +250,10 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 #' @rdname wireframe
 #' @aliases wireframe,FLQuant-method wireframe,FLQuant,missing-method
 #' @description Method to 3D plot \code{FLQuant} objects.
-#' @param x a \code{FLQuant} 
+#' @param x a \code{FLQuant}
 #' @param y missing
-#' @param screen list with numeric components 'x','y' and 'z' to change the 3D perspective 
-#' @param ... additional argument list for the lattice engine 
+#' @param screen list with numeric components 'x','y' and 'z' to change the 3D perspective
+#' @param ... additional argument list for the lattice engine
 #' @return a 3D surface plot
 #' @examples
 #' data(ple4)
@@ -264,7 +264,7 @@ setMethod("wireframe", c("FLQuant", "missing"), function(x, y, screen=list(x = -
 	args$data <- as.data.frame(x)
 	args$x <- data~age*year
 	args$screen = screen
-	args$par.settings = list(axis.line = list(col = 'transparent'), box.3d=list(col="transparent")) 
+	args$par.settings = list(axis.line = list(col = 'transparent'), box.3d=list(col="transparent"))
 	args$scales=list(col=1)
 	do.call("wireframe", args)
 })
@@ -273,7 +273,7 @@ setMethod("wireframe", c("FLQuant", "missing"), function(x, y, screen=list(x = -
 # get tpl
 #====================================================================
 
-#' @title Get TPL with ADMB code 
+#' @title Get TPL with ADMB code
 #' @name getTPL
 #' @docType methods
 #' @rdname getTPL
@@ -337,6 +337,45 @@ setMethod("replaceZeros", "FLIndices", function(object, fraction=0.25) {
 	object
 })
 
+
+#' @title Collapse seasons
+#' @name collapseSeasons
+#' @docType methods
+#' @rdname collapseSeasons
+#' @description Method to collapse seasons of \code{FLStock} objects. M and catch-at-age are summed while mean weights at age, maturity at age and mortalities before spawning are averaged.
+#' @param stock an FLStock object
+#' @return a FLStock object
+#' @aliases collapseSeasons
+collapseSeasons <- function (stock) {
+
+  if (dims(stock)$season == 1) return (stock) # do nothing
+
+  out <- FLStock(catch.n      = seasonSums(catch.n(stock)),
+                 # straight forward averages
+                 m.spwn       = seasonMeans(m.spwn(stock)),
+                 harvest.spwn = seasonMeans(harvest.spwn(stock)),
+                 # weighted averages
+                 catch.wt     = seasonSums(catch.n(stock) * catch.wt(stock)) / seasonSums(catch.n(stock)),
+                 #landings.wt  = seasonSums(landings.n(stock) * landings.wt(stock)) / seasonSums(landings.n(stock)),
+                 #discards.wt  = seasonSums(discards.n(stock) * discards.wt(stock)) / seasonSums(discards.n(stock)),
+                 # should be weighted means but we do not have stock.n
+                 # should be:
+                 #stock.wt(res) <- seasonSums(stock.n(stock) * stock.wt(stock)) / seasonSums(stock.n(stock))
+                 #mat(res)      <- seasonSums(stock.n(stock) * mat(stock)) / seasonSums(stock.n(stock))
+                 # but we do:
+                 stock.wt    = seasonMeans(stock.wt(stock)),
+                 mat         = seasonMeans(mat(stock)),
+                 m           = seasonSums(m(stock))
+                )
+  units(harvest(out)) <- units(harvest(stock))
+
+  message("Note: Seasonal M's are summed: i.e. we assume that the values are M * season length.")
+  message("Note: we do not use stock.n to weight the seasonal stock.wt or maturity.")
+
+  out
+}
+
+
 ##====================================================================
 ## total catch diagnostics
 ##====================================================================
@@ -390,4 +429,3 @@ setMethod("replaceZeros", "FLIndices", function(object, fraction=0.25) {
 #		devs <- log(cth_obs/cth_est)
 #		FLQuants(list(obs = cth_obs, est = cth_est, oe=flqoe, ee=flqee, oee=flqe, resstd=resstd, resprs=resprs, resraw=devs))
 #}
-
