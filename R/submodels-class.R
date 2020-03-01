@@ -138,7 +138,8 @@ setMethod("[[<-",
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
-    new("submodels", lst, corBlocks = x@corBlocks)
+    x@.Data <- lst
+    x
   }
 )
 
@@ -150,7 +151,8 @@ setMethod("[[<-",
     lst <- as(x, "list")
     names(lst) <- names(x)
     lst[[i]] <- value
-    new("submodels", lst, corBlocks = x@corBlocks)
+    x@.Data <- lst
+    x
   }
 )
 
