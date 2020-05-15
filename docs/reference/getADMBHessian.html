@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.2</span>
       </span>
     </div>
 
@@ -145,7 +145,7 @@
 <span class='co'># choose a working directory</span>
 <span class='no'>wkdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
 <span class='co'># do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>,<span class='kw'>indices</span><span class='kw'>=</span><span class='no'>ple4.indices</span>,<span class='kw'>wkdir</span><span class='kw'>=</span><span class='no'>wkdir</span>)</div><div class='output co'>#&gt; Model and results are stored in working directory [/tmp/Rtmpevhvnq/file18257f7119aa]</div><div class='input'><span class='no'>hessInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>getADMBHessian</span>(<span class='no'>wkdir</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sca.html'>sca</a></span>(<span class='kw'>stock</span><span class='kw'>=</span><span class='no'>ple4</span>,<span class='kw'>indices</span><span class='kw'>=</span><span class='no'>ple4.indices</span>,<span class='kw'>wkdir</span><span class='kw'>=</span><span class='no'>wkdir</span>)</div><div class='output co'>#&gt; Model and results are stored in working directory [/tmp/Rtmp1gdtZK/file372573236ba4]</div><div class='input'><span class='no'>hessInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>getADMBHessian</span>(<span class='no'>wkdir</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>hessInfo</span>)</div><div class='output co'>#&gt; List of 4
 #&gt;  $ num.pars           : int 287
 #&gt;  $ hes                : num [1:287, 1:287] 1442752 28482 23352 28406 27457 ...

@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FLa4a</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.2</span>
       </span>
     </div>
 
@@ -242,7 +242,7 @@ for sizing, but not for populating any slot.</p>
 #&gt; 
 #&gt; Time used:
 #&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.5263171       8.1296883       0.1815593       8.8375647 
+#&gt;       0.9851532      10.9797597       0.2584660      12.2233789 
 #&gt; 
 #&gt; Submodels:
 #&gt; 	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
@@ -255,21 +255,21 @@ for sizing, but not for populating any slot.</p>
 #&gt; 	   BTS-Combined (all): ~1</div><div class='input'>
 <span class='fu'>slotNames</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  [1] "pars"    "call"    "clock"   "fitSumm" "stock.n" "harvest" "catch.n"
 #&gt;  [8] "index"   "name"    "desc"    "range"  </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>clock</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;  Pre-processing     Running a4a Post-processing           Total 
-#&gt;       0.5263171       8.1296883       0.1815593       8.8375647 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
+#&gt;       0.9851532      10.9797597       0.2584660      12.2233789 </div><div class='input'><span class='fu'><a href='a4aFit-class.html'>fitSumm</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt;              iters
 #&gt;                           1
 #&gt;   nopar        2.540000e+02
-#&gt;   nlogl       -1.015242e+03
-#&gt;   maxgrad      4.634203e-04
+#&gt;   nlogl       -1.008543e+03
+#&gt;   maxgrad      1.278680e-03
 #&gt;   nobs         8.300000e+02
-#&gt;   gcv          1.072679e-01
+#&gt;   gcv          8.858002e-02
 #&gt;   convergence  0.000000e+00
 #&gt;   accrate                NA
-#&gt;   nlogl_comp1 -1.070550e+03
-#&gt;   nlogl_comp2  5.531180e+01</div><div class='input'>
+#&gt;   nlogl_comp1 -1.063960e+03
+#&gt;   nlogl_comp2  5.541910e+01</div><div class='input'>
 <span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>stock.n</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] "FLQuant"   "FLArray"   "array"     "structure" "vector"   </div><div class='input'><span class='no'>flq</span> <span class='kw'>&lt;-</span> <span class='fu'>index</span>(<span class='no'>obj</span>)
 <span class='fu'>is</span>(<span class='no'>flq</span>)</div><div class='output co'>#&gt; [1] "FLQuants" "FLlst"    "list"     "vector"  </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; 'log Lik.' 1015.242 (df=254)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -1522.484</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>BIC</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -323.2414</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; 'log Lik.' 1008.543 (df=254)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -1509.087</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>BIC</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] -309.8444</div><div class='input'>
 <span class='fu'>is</span>(<span class='fu'>pars</span>(<span class='no'>obj</span>))</div><div class='output co'>#&gt; [1] "SCAPars"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
