@@ -12,17 +12,19 @@
 \usage{
 genFLQuant(object, ...)
 
-\S4method{genFLQuant}{FLQuant}(object, cv = 0.2, method = "ac",
-  niter = 250)
+\S4method{genFLQuant}{FLQuant}(object, cv = 0.2, method = "ac", niter = 250)
 
-\S4method{genFLQuant}{submodel}(object, type = c("link", "response"),
-  nsim = 0, seed = NULL)
+\S4method{genFLQuant}{submodel}(object, type = c("link", "response"), nsim = 0, seed = NULL)
 
-\S4method{genFLQuant}{submodels}(object, type = c("link", "response"),
-  nsim = 0, seed = NULL)
+\S4method{genFLQuant}{submodels}(object, type = c("link", "response"), nsim = 0, seed = NULL)
 
-\S4method{genFLQuant}{a4aStkParams}(object, type = c("link", "response"),
-  nsim = 0, seed = NULL, simulate.recruitment = FALSE)
+\S4method{genFLQuant}{a4aStkParams}(
+  object,
+  type = c("link", "response"),
+  nsim = 0,
+  seed = NULL,
+  simulate.recruitment = FALSE
+)
 }
 \arguments{
 \item{object}{an FLQuant}

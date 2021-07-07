@@ -10,6 +10,7 @@
 \alias{mcmc}
 \alias{mcmc-methods}
 \alias{mcmc,SCAMCMC-method}
+\alias{getADMBCallArgs-methods}
 \alias{getADMBCallArgs,SCAMCMC-method}
 \alias{getN}
 \alias{getN-methods}

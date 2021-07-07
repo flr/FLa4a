@@ -4,7 +4,9 @@
 \name{hakeGSA7.idx}
 \alias{hakeGSA7.idx}
 \title{hakeGSA7.idx}
-\format{an \code{FLIndices} object}
+\format{
+an \code{FLIndices} object
+}
 \source{
 GFCM - STECF - MEDITS
 }

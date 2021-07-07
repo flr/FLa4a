@@ -4,7 +4,9 @@
 \name{index_sp_len}
 \alias{index_sp_len}
 \title{index_sp_len}
-\format{an \code{FLIndex} object}
+\format{
+an \code{FLIndex} object
+}
 \usage{
 index_sp_len
 }

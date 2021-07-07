@@ -4,7 +4,9 @@
 \name{index_pt_len}
 \alias{index_pt_len}
 \title{index_pt_len}
-\format{an \code{FLIndex} object}
+\format{
+an \code{FLIndex} object
+}
 \usage{
 index_pt_len
 }

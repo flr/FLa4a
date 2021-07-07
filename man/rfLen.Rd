@@ -4,12 +4,14 @@
 \name{rfLen}
 \alias{rfLen}
 \title{redfish length data}
-\format{an \code{FLStock}.}
+\format{
+An \code{FLStock}.
+}
 \source{
 Daniel Howell
 }
 \usage{
-rfLen
+data(rfLen)
 }
 \description{
 Simulated length data for redfish.  Simulations were done using GADGET.

@@ -4,7 +4,9 @@
 \name{hakeGSA7}
 \alias{hakeGSA7}
 \title{hakeGSA7}
-\format{an \code{FLStock} object}
+\format{
+an \code{FLStock} object
+}
 \source{
 GFCM - STECF
 }

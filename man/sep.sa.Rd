@@ -4,20 +4,20 @@
 \alias{sep.sa}
 \title{Call a separable SA inside the mp function}
 \usage{
-sep.sa(stk, idx, genArgs, update = TRUE, dfm = c(0.75, 0.75), ...)
+sep.sa(stk, idx, args, update = TRUE, dfm = c(0.75, 0.75), ...)
 }
 \arguments{
 \item{stk}{The FLStock input object.}
 
 \item{idx}{The FLIndices input object.}
 
-\item{genArgs}{The mse arguments used by mp().}
-
 \item{update}{Should the fmodel be updated with the default?}
 
 \item{dfm}{data points fraction to be used to set the spline ks.}
 
 \item{...}{Any other arguments to sca()}
+
+\item{genArgs}{The mse arguments used by mp().}
 }
 \value{
 A list containing the estimated stock (stk, of class FLStock), and the tracking FLQuant, including convergence flags.

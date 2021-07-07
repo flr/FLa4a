@@ -7,8 +7,7 @@
 \alias{wireframe,FLQuant,missing-method}
 \title{wireframe plot for FLQuant}
 \usage{
-\S4method{wireframe}{FLQuant,missing}(x, y, screen = list(x = -90, y =
-  -45), ...)
+\S4method{wireframe}{FLQuant,missing}(x, y, screen = list(x = -90, y = -45), ...)
 }
 \arguments{
 \item{x}{a \code{FLQuant}}

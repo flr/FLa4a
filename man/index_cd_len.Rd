@@ -4,7 +4,9 @@
 \name{index_cd_len}
 \alias{index_cd_len}
 \title{index_cd_len}
-\format{an \code{FLIndex} object}
+\format{
+an \code{FLIndex} object
+}
 \usage{
 index_cd_len
 }

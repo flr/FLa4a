@@ -4,12 +4,14 @@
 \name{southernHakeLen}
 \alias{southernHakeLen}
 \title{Southern hake length data}
-\format{an \code{FLStockLen} and three \code{FLIndex} objects.}
+\format{
+an \code{FLStockLen} and three \code{FLIndex} objects.
+}
 \source{
 Santiago Cervino
 }
 \usage{
-southernHakeLen
+data(southernHakeLen)
 }
 \description{
 Length based stock and three indices data for Southern hake.

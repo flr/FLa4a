@@ -4,7 +4,9 @@
 \name{shake_len}
 \alias{shake_len}
 \title{shake_len}
-\format{an \code{FLStock} object}
+\format{
+an \code{FLStock} object
+}
 \usage{
 shake_len
 }
