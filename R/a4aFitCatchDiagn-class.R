@@ -1,3 +1,4 @@
+
 #' @title S4 class \code{a4aFitCatchDiagn}
 #' @description The \code{a4aFitCatchDiagn} class extends \code{FLQuants} to store information to run diagnostics on aggregated catch estimated  by the a4a stock assessment fit.
 #' @docType class
@@ -10,7 +11,7 @@ setClass("a4aFitCatchDiagn", contain="FLQuants")
 
 
 #' @rdname a4aFitCatchDiagn-class
-#' @aliases a4aFitCatchDiagn a4aFitCatchDiagn-methods computeCatchDiagnostics,a4aFit-method
+#' @aliases a4aFitCatchDiagn a4aFitCatchDiagn-methods
 #' @template bothargs
 #' @param stock \code{FLStock} object used to fit the model
 #' @param indices \code{FLIndices} object used to fit the model

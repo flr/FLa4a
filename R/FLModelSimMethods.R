@@ -1,3 +1,4 @@
+
 #' @title Simulation with a copula model and triangular distributions
 #' @description Simulates model parameters using elliptical copulas and triangular marginals.
 #' @param n the number of iterations
@@ -13,7 +14,6 @@
 #' md <- ~linf*(1-exp(-k*(t-t0)))
 #' prs <- FLPar(linf=120, k=0.3, t0=0.1, units=c("cm","yr^-1","yr"))
 #' vb <- FLModelSim(model=md, params=prs, vcov=mm, distr="norm")
-#'
 #' # Simulate from a multivariate normal distribution...
 #'   set.seed(1)
 #'   vbSim <- mvrnorm(10000, vb)
@@ -30,16 +30,14 @@
 #'   pars <- list(list(a=90, b=125, c=120), list(a=0.2, b=0.4), list(a=0, b=0.4, c=0.1))
 #'   vbSim2 <- mvrtriangle(10000, vb, paramMargins=pars)
 #'   mm2 <- predict(vbSim2, t=0:20+0.5)
-#'
 #' # Plot the results
 #' par(mfrow=c(3,1))
 #' boxplot(t(mm), main="normal")
 #' boxplot(t(mm1), main="triangular")
 #' boxplot(t(mm2), main="triangular2")
-#' splom(data.frame(t(params(vbSim)@@.Data)), pch=".")
-#' splom(data.frame(t(params(vbSim1)@@.Data)), pch=".")
-#' splom(data.frame(t(params(vbSim2)@@.Data)), pch=".")
-
+#' splom(data.frame(t(params(vbSim)@.Data)), pch=".")
+#' splom(data.frame(t(params(vbSim1)@.Data)), pch=".")
+#' splom(data.frame(t(params(vbSim2)@.Data)), pch=".")
 
 setGeneric("mvrtriangle", function(n, object, ...) standardGeneric("mvrtriangle"))
 #' @rdname mvrtriangle

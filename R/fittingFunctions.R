@@ -212,7 +212,6 @@ setMethod("sca", signature("FLStock", "FLIndices"),
 
   #-----------------------------------------------------------------
   # set models if missing
-
   if(missing(fmodel)) fmodel <- defaultFmod(stock)
   if(missing(qmodel)) qmodel <- defaultQmod(indices)
   if(missing(n1model)) n1model <- defaultN1mod(stock)

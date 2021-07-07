@@ -119,7 +119,6 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 #' data(ple4.index)
 #' obj <- sca(ple4, FLIndices(ple4.index))
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
-#'
 #' stdlogres(catch.n(ple4), catch.n(obj))
 #' # which is the same as the following (because residuals() uses stdlogres):
 #' flqs$catch.n

@@ -2,9 +2,9 @@
 #' @title redfish length data
 #' @description Simulated length data for redfish.  Simulations were done using GADGET.
 #' @docType data
-#' @usage rfLen
-#' @format an \code{FLStock}.
+#' @format An \code{FLStock}.
 #' @source Daniel Howell
 #' @author Ernesto Jardim
+#' @usage data(rfLen)
 NULL
 

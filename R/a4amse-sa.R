@@ -20,18 +20,29 @@
 #' @keywords classes
 
 sca.sa <- function(stk, idx, args, update=TRUE, dfm=c(0.75, 0.75), ...){
-	args0 <- list(...)
-	if(update) args0$fmodel <- defaultFmod(stk, dfm=dfm)
+	
+  args0 <- list(...)
+	
+  if(update)
+    args0$fmodel <- defaultFmod(stk, dfm=dfm)
+
 	stk <- replaceZeros(stk)
 	idx <- replaceZeros(idx)
-	args0$stock <- stk
+	
+  args0$stock <- stk
 	args0$indices <- idx
-	if(is.null(args0$fit)) args0$fit <- 'MP'
-	tracking <- args0$tracking
+	
+  if(is.null(args0$fit))
+    args0$fit <- 'MP'
+
+  tracking <- args0$tracking
 	args0$tracking <- NULL
-	fit <- do.call('sca', args0)
+	
+  fit <- do.call('sca', args0)
 	stk <- stk + fit
-	tracking["conv.est",ac(range(stk)["maxyear"] + 1)] <- fit@fitSumm["maxgrad",]
+
+	track(tracking, "conv.est", ac(range(stk)["maxyear"] + 1)) <- fit@fitSumm["maxgrad",]
+
 	list(stk = stk, tracking = tracking)
 }
 
@@ -83,50 +94,8 @@ sep.sa <- function(stk, idx, args, update=TRUE, dfm=c(0.75, 0.75), ...){
 	args0$tracking <- NULL
 	fit <- do.call('sca', args0)
 	stk <- stk + fit
-	tracking["conv.est",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
+	
+  track(tracking, "conv.est", ac(range(stk)["maxyear"] + 1)) <- fit@fitSumm["maxgrad",]
+	
 	list(stk = stk, tracking = tracking)
 }
-
-
-
-scaold.sa <- function(stk, idx, genArgs, update=TRUE, dfm=c(0.75, 0.75), ...){
-	args <- list(...)
-	if(update) args$fmodel <- defaultFmod(stk, dfm=dfm)
-	args$stock <- stk
-	args$indices <- idx
-	if(is.null(args$fit)) args$fit <- 'MP'
-	tracking <- args$tracking
-	args$tracking <- NULL
-	fit <- do.call('sca', args)
-	stk <- stk + fit
-	tracking["conv.est",ac(range(stk)["maxyear"] + 1)] <- fit@fitSumm["maxgrad",]
-	list(stk = stk, tracking = tracking)
-}
-
-sepold.sa <- function(stk, idx, genArgs, update=TRUE, dfm=c(0.75, 0.75), ...){
-	args <- list(...)
-	# set model
-	if(update){
-		dis <- dims(stk)
-		KY=floor(dfm[1] * dis$year)
-		KA=ceiling(dfm[2] * dis$age)
-		if (KA >= 3) {
-			KA <- min(max(3, KA), 6)
-			KB <- min(max(3, KA), 10)
-			fmodel <- formula(paste("~s(year, k =", KY,") + s(age, k=", KB, ")"))
-		} else {
-			fmodel <- formula(paste("~ age + s(year, k = ", KY,")"))
-		}
-		args$fmodel <- fmodel
-	}
-	args$stock <- stk
-	args$indices <- idx
-	if(is.null(args$fit)) args$fit <- 'MP'
-	tracking <- args$tracking
-	args$tracking <- NULL
-	fit <- do.call('sca', args)
-	stk <- stk + fit
-	tracking["conv.est",ac(range(stk)["maxyear"]+1)] <- fit@fitSumm["maxgrad",]
-	list(stk = stk, tracking = tracking)
-}
-
