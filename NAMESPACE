@@ -138,13 +138,31 @@ exportMethods(wireframe)
 exportMethods(wt)
 import("methods")
 import("FLCore")
-import("copula")
 import("mgcv")
 importFrom("triangle", dtriangle, ptriangle, qtriangle)
-importFrom("lattice",qqmath, panel.xyplot, panel.abline, prepanel.qqmathline, panel.qqmathline, panel.qqmath)
-importFrom("Matrix",bdiag,Diagonal,Matrix)
-importClassesFrom("Matrix",dsCMatrix,Matrix)
-importFrom("coda", mcmc, as.mcmc)
-importFrom("utils", capture.output, read.table, write.table, sessionInfo)
-importFrom("stats", runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm, as.formula, "nlminb", "optimHess")
-importFrom("utils", "combn")
+importFrom("copula",
+  ellipCopula,
+  archmCopula,
+  rMvdc,
+  mvdc)
+importFrom("lattice",
+  qqmath, panel.xyplot, panel.abline, prepanel.qqmathline, panel.qqmathline,
+  panel.qqmath, panel.grid, panel.polygon, panel.segments)
+importFrom("Matrix",
+  bdiag,Diagonal,Matrix)
+importClassesFrom("Matrix",
+  dsCMatrix,Matrix)
+importFrom("coda", 
+  mcmc, as.mcmc)
+importFrom("utils", 
+  capture.output, read.table, write.table, sessionInfo)
+importFrom("stats", 
+  runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm,
+  as.formula, "nlminb", "optimHess")
+importFrom("utils",
+  "combn")
+importFrom("grid",
+  textGrob)
+importFrom("gridExtra",
+  grid.arrange)
+import("latticeExtra")

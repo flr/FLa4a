@@ -564,7 +564,7 @@ PROCEDURE_SECTION
       for(int y=minYear+minAge; y<=maxYear; ++y){
         h = mfexp(ra(y)) / (1 + mfexp(ra(y))) * 0.8 + 0.2;
         v = mfexp(rb(y));
-        predLogR =  log(6 * h * v * ssb(y-minAge)) - log( spr0 * ((h + 1)*v + (5*h - 1)*ssb(y-minAge)) ); // spr0 is provided by user
+        predLogR =  log(6 * h * v * ssb(y-minAge)) - log( spr0 * ((h + 1) * v + (5 * h - 1) * ssb(y-minAge)) ); // spr0 is provided by user
         varLogR = log(pow(srCV,2)+1);
         nll += nldnorm(r(y), predLogR, varLogR);
         nllikcomp(nsurveys+2) += nldnorm(r(y), predLogR, varLogR);
