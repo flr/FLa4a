@@ -19,7 +19,7 @@
 #' @aliases sca.sa
 #' @keywords classes
 
-sca.sa <- function(stk, idx, args, update=TRUE, dfm=c(0.75, 0.75), ...){
+sca.sa <- function(stk, idx, update=TRUE, dfm=c(0.75, 0.75), args, tracking, ...){
 	
   args0 <- list(...)
 	
@@ -35,9 +35,6 @@ sca.sa <- function(stk, idx, args, update=TRUE, dfm=c(0.75, 0.75), ...){
   if(is.null(args0$fit))
     args0$fit <- 'MP'
 
-  tracking <- args0$tracking
-	args0$tracking <- NULL
-	
   fit <- do.call('sca', args0)
 	stk <- stk + fit
 
