@@ -162,7 +162,8 @@ importFrom("stats",
 importFrom("utils",
   "combn")
 importFrom("grid",
-  textGrob)
+  textGrob,
+  gpar)
 importFrom("gridExtra",
   grid.arrange)
 import("latticeExtra")
