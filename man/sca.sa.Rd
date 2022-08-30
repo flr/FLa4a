@@ -4,7 +4,7 @@
 \alias{sca.sa}
 \title{Call sca inside the mp function}
 \usage{
-sca.sa(stk, idx, args, update = TRUE, dfm = c(0.75, 0.75), ...)
+sca.sa(stk, idx, update = TRUE, dfm = c(0.75, 0.75), args, tracking, ...)
 }
 \arguments{
 \item{stk}{The FLStock input object.}

@@ -28,7 +28,6 @@ setMethod("simulate", signature(object = "a4aFitSA"),
   function(object, nsim = 1, seed = NULL, empirical=TRUE) {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
-
     # now get catch.n, stock.n, harvest and index
     preds <- predict(out)
     out @ harvest <- preds $ stkmodel $  harvest

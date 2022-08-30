@@ -1,3 +1,35 @@
+import("methods")
+import("FLCore")
+import("mgcv")
+import("triangle")
+importFrom("copula",
+  ellipCopula,
+  archmCopula,
+  rMvdc,
+  mvdc)
+importFrom("lattice",
+  qqmath, panel.xyplot, panel.abline, prepanel.qqmathline, panel.qqmathline,
+  panel.qqmath, panel.grid, panel.polygon, panel.segments)
+importFrom("Matrix",
+  bdiag,Diagonal,Matrix)
+importClassesFrom("Matrix",
+  dsCMatrix,Matrix)
+importFrom("coda", 
+  mcmc, as.mcmc)
+importFrom("utils", 
+  capture.output, read.table, write.table, sessionInfo)
+importFrom("stats", 
+  runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm,
+  as.formula, "nlminb", "optimHess")
+importFrom("utils",
+  "combn")
+importFrom("grid",
+  textGrob,
+  gpar)
+importFrom("gridExtra",
+  grid.arrange)
+import("latticeExtra")
+
 export(collapseSeasons)
 export(getADMBHessian)
 export(getADMBCovariance)
@@ -16,6 +48,7 @@ export(sep.sa)
 #export(os.32or64bit)
 #export(os.type)
 #export(plotIters)
+
 exportClasses(a4aFit)
 exportClasses(a4aFitResiduals)
 exportClasses(a4aFitSA)
@@ -29,6 +62,7 @@ exportClasses(SCAPars)
 exportClasses(a4aStkParams)
 exportClasses(submodel)
 exportClasses(submodels)
+
 exportMethods("distr<-")
 exportMethods("grInvMod<-")
 exportMethods("grMod<-")
@@ -136,34 +170,4 @@ exportMethods(vmodel)
 exportMethods(vPars)
 exportMethods(wireframe)
 exportMethods(wt)
-import("methods")
-import("FLCore")
-import("mgcv")
-importFrom("triangle", dtriangle, ptriangle, qtriangle)
-importFrom("copula",
-  ellipCopula,
-  archmCopula,
-  rMvdc,
-  mvdc)
-importFrom("lattice",
-  qqmath, panel.xyplot, panel.abline, prepanel.qqmathline, panel.qqmathline,
-  panel.qqmath, panel.grid, panel.polygon, panel.segments)
-importFrom("Matrix",
-  bdiag,Diagonal,Matrix)
-importClassesFrom("Matrix",
-  dsCMatrix,Matrix)
-importFrom("coda", 
-  mcmc, as.mcmc)
-importFrom("utils", 
-  capture.output, read.table, write.table, sessionInfo)
-importFrom("stats", 
-  runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm,
-  as.formula, "nlminb", "optimHess")
-importFrom("utils",
-  "combn")
-importFrom("grid",
-  textGrob,
-  gpar)
-importFrom("gridExtra",
-  grid.arrange)
-import("latticeExtra")
+

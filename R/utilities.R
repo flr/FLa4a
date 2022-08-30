@@ -310,7 +310,7 @@ setGeneric("replaceZeros", function(object, ...) standardGeneric("replaceZeros")
 #' @rdname assorted-methods
 #' @param fraction \code{numeric} with fraction of minimum to replace zeros
 setMethod("replaceZeros", "FLQuant", function(object, fraction=0.25) {
-	suppressWarnings(object[object==0] <- min(object[object>0])*fraction)
+	suppressWarnings(object[object==0] <- min(object[object>0], na.rm=TRUE)*fraction)
 	object
 })
 
@@ -355,7 +355,7 @@ setMethod("replaceZeros", "FLIndices", function(object, fraction=0.25) {
 ##' data(ple4)
 ##' data(ple4.index)
 ##' obj <- sca(ple4, FLIndices(ple4.index))
-##' catch_diagnotics(obj, ple4)
+##' catch_diagnostics(obj, ple4)
 #setGeneric("catch_diagnotics", function(object, stock, ...) standardGeneric("catch_diagnotics"))
 ##' @rdname diagnc
 

@@ -1,6 +1,5 @@
 # FLa4a
-- Version: 1.8.2
-- Date: 2019-04-01
+- Version: 1.8.3
 - Author: Colin P. Millar and Ernesto Jardim
 - Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>
 - Repository: <https://github.com/flr/FLa4a/>
@@ -39,7 +38,7 @@ or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases
 - [All releases](https://github.com/flr/FLCore/releases/)
 
 ## License
-Copyright (c) 2012-2016 European Union. European Commission Joint Research Centre D.02. Released under the [EUPL 1.1](https://joinup.ec.europa.eu/community/eupl/home).
+Copyright (c) 2012-2022 European Union. European Commission Joint Research Centre D.02. Released under the [EUPL 1.1](https://joinup.ec.europa.eu/community/eupl/home).
 
 ## Contact
 You are welcome to:
