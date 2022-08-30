@@ -1,7 +1,10 @@
 import("methods")
 import("FLCore")
 import("mgcv")
-import("triangle")
+importFrom("triangle",
+  dtriangle,
+  ptriangle,
+  qtriangle)
 importFrom("copula",
   ellipCopula,
   archmCopula,
