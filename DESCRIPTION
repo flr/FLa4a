@@ -13,7 +13,6 @@ Imports:
   methods,
   lattice,
   Matrix,
-  triangle,
   copula,
   coda,
   grid,
@@ -22,7 +21,8 @@ Imports:
   mgcv
 Depends:
   R (>= 4.0),
-  FLCore (>= 2.6.15)
+  FLCore (>= 2.6.15),
+  triangle,
 Additional_repositories: http://flr-project.org/R
 Suggests:
     knitr,
