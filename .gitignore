@@ -19,3 +19,4 @@ src/a4a.o
 # built vignettes
 inst/doc/*
 
+docs/manual/cache/*
