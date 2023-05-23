@@ -150,7 +150,7 @@ make.df <- function(fleet, stock, indices) {
 write.t <- function(x, file, ...) write.table(x, row.names = FALSE, col.names = FALSE, quote = FALSE, sep = '\t', file = file, append = TRUE)
 
 write.t.sparse <- function(x, file, ...) {
-	x <- as(x, "dsCMatrix")
+	x <- as(x, "symmetricMatrix")
 	cat("\n# i\n", x @ i, "\n# p\n", x @ p, "\n# x\n", x @ x, file = file, append = TRUE)  
 }  
 
