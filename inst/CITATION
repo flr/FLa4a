@@ -17,16 +17,19 @@ citEntry(entry = "Manual",
                 vers, "."))
 
 citEntry(entry   = "Article",
-         title   = "a4a: A flexible and robust stock assessment framework",
-         journal = "Subbmitted to PLOSone",
-         volume  = "xx",
-         number  = "x",
-         pages   = "xx-xx",
-         year    = "201x",
-         author  = personList(as.person("Colin P. Millar"),
-                             as.person("Ernesto Jardim"),
-                             as.person("G. Chato Osio"),
-                             as.person("Iago Mosqueira")),
-
-         textVersion="Millar, C.P., Jardim, E., Osio G.C., Mosqueira, I. 201x. a4a: A flexible and robust stock assessment framework. Submitted to PLOSone." )
-
+  title = " What if stock assessment is as simple as a linear model? The a4a initiative",
+  journal = "ICES Journal of Marine Science",
+  volume  = "72",
+  number  = "1",
+  pages   = "232–236",
+  year    = "2015",
+  author  = personList(
+    as.person("Ernesto Jardim"),
+    as.person("Colin P. Millar"),
+    as.person("Iago Mosqueira"),
+    as.person("Finlay Scott"),
+    as.person("G. Chato Osio"),
+    as.person("Marco Ferretti"),
+    as.person("Nekane Alzorriz"),
+    as.person("Alessandro Orio")),
+  textVersion="Ernesto Jardim, Colin P. Millar, Iago Mosqueira, Finlay Scott, Giacomo Chato Osio, Marco Ferretti, Nekane Alzorriz, Alessandro Orio, What if stock assessment is as simple as a linear model? The a4a initiative, ICES Journal of Marine Science, Volume 72, Issue 1, January 2015, Pages 232–236, https://doi.org/10.1093/icesjms/fsu050.")
