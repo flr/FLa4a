@@ -148,6 +148,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param y ignored
 #' @param auxline a string defining the type of line to be added, by default uses 'smooth', a common alternative is to use 'r', a regression, or leave it empty ''
+#' @param by a string defining the type of plot to be depicted. At the moment accepts only 'age', the default, or 'year'.
 #' @param ... additional argument list that might never be used
 #' @return a \code{plot} with stardardized log residuals
 #' @examples
@@ -157,12 +158,12 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' plot(flqs)
 
-setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth", by="age", ...){
+setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth", by="year", ...){
 	args <- list()
 	args$data <- as.data.frame(x[names(x)!="catch"])
-    if(by=="age") 
-        args$x <- as.formula("data~year|factor(age)*qname") 
     if(by=="year") 
+        args$x <- as.formula("data~year|factor(age)*qname") 
+    if(by=="age") 
         args$x <- as.formula("data~age|factor(year)*qname")
 	args$type=c("p", auxline)
 	args$groups <- quote(qname)
