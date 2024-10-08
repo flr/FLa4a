@@ -157,10 +157,13 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
 #' plot(flqs)
 
-setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth",...){
+setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth", by="age", ...){
 	args <- list()
 	args$data <- as.data.frame(x[names(x)!="catch"])
-	args$x <- as.formula("data~year|factor(age)*qname")
+    if(by=="age") 
+        args$x <- as.formula("data~year|factor(age)*qname") 
+    if(by=="year") 
+        args$x <- as.formula("data~age|factor(year)*qname")
 	args$type=c("p", auxline)
 	args$groups <- quote(qname)
 	args$cex=0.3
