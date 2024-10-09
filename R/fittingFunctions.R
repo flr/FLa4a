@@ -537,10 +537,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 			x
 		})
 		covar.df <- tmp[[1]]
-		for (i in seq_along(tmp[-1])) covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
-
+		for (i in tmp[-1]) covar.df <- merge(covar.df, i, all = TRUE, sort = FALSE)
 		full.df <- merge(full.df, covar.df, all.x = TRUE, all.y = FALSE)
 	}
+
 	#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	# add in data
 	full.df <- merge(full.df, df.data, all.x = TRUE, all.y = FALSE)
@@ -627,7 +627,7 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	a4as <- isPresenta4aSRmodel(srmodel)
 	if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
 	srrmod <- geta4aSRmodel(srmodel)
-	if (sum(a4as) == 0 && max(full.df$year) > max(df.data$year)) stop("you need to specify a stock recruitment relationship to forecast with out survey information.")
+    if (sum(a4as) == 0 && max(full.df$year) > max(df.data$year)) stop("you need to specify a stock recruitment relationship to forecast without survey information.")
 
 	# extract a and b model formulas and add on any extra bits to amodel.
 	# NB SRR models should be parametrised so that amodel is the level of recruitment!!!

@@ -315,14 +315,16 @@ a4aSRmodelDefinitions <- function(srmodel) {
 
 
 isPresenta4aSRmodel <- function(srMod) {
-  facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+  #facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+  facs <- as.character(srMod)[2]
   facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
   grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
 }
 
 
 geta4aSRmodel <- function(srMod) {
-  facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+  #facs <- strsplit(as.character(srMod)[length(srMod)], "[+]")[[1]]
+  facs <- as.character(srMod)[2]
   facs <- gsub("(^ )|( $)", "", facs) # remove leading and trailing spaces
   a4as <- grepl(paste("(^",a4aSRmodelList,"[(])", collapse = "|", sep = ""), facs)
   if (sum(a4as) > 1) stop("you can only specify one type of stock recruit relationship.")
