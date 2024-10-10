@@ -905,7 +905,6 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	if (fit == "MCMC") {
 
     #if (!useADMB) stop("not implemented in TMB version")
-
 		# coerce into a4aFitMCMC
 		a4aout <- a4aFitMCMC(a4aout, mcmc=mcmc)
 		# fill parameters
@@ -1460,7 +1459,6 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
   }
 
   if (fit == "MCMC") {
-
     # get number of iters (CHECK WITH NITERS  which are not being used )
     nit <- getN(mcmc)
 
