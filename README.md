@@ -1,7 +1,7 @@
 # FLa4a
-- Version: 1.8.3
+- Version: 1.9.0
 - Author: Colin P. Millar and Ernesto Jardim
-- Maintainer: Ernesto Jardim <ernesto.jardim AT jrc.ec.europa.eu>
+- Maintainer: Colin P. Millar <colin.millar AT ices.dk>
 - Repository: <https://github.com/flr/FLa4a/>
 - Bug reports: <https://github.com/flr/FLa4a/issues>
 

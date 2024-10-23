@@ -12,3 +12,4 @@ tests/wcsam.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
 docs/
+^README\.Rmd$

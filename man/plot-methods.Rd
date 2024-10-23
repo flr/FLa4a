@@ -7,7 +7,7 @@
 \alias{plot,a4aFitResiduals,missing-method}
 \title{Plot of standardized log residuals}
 \usage{
-\S4method{plot}{a4aFitResiduals,missing}(x, y = missing, auxline = "smooth", ...)
+\S4method{plot}{a4aFitResiduals,missing}(x, y = missing, auxline = "smooth", by = "year", ...)
 
 \S4method{plot}{a4aFitCatchDiagn,missing}(x, y = missing, ...)
 }
@@ -17,6 +17,8 @@
 \item{y}{ignored}
 
 \item{auxline}{a string defining the type of line to be added, by default uses 'smooth', a common alternative is to use 'r', a regression, or leave it empty ''}
+
+\item{by}{a string defining the type of plot to be depicted. At the moment accepts only 'age', the default, or 'year'.}
 
 \item{...}{additional argument list that might never be used}
 }

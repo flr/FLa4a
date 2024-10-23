@@ -1,3 +1,23 @@
+# FLa4a 1.9.x:
+
+## NEW FEATURES
+- plot for residuals by age
+- multisca method to run several sca
+
+## BUG FIXES:
+- sca use of covariates fixed
+
+# FLa4a 1.8.x:
+
+## NEW FEATURES
+- pearson and raw residuals
+- method replaceZeros for stock and index objects
+- mse sca now replaces zeros before calling fit
+
+## BUG FIXES:
+- problem dealing with iters that don't converged fixed. Related with 'active'.
+- sca.sa fixed to be compatible with mse 2.0
+
 # FLa4a 1.6.5:
 
 ## NEW FEATURES
