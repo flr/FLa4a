@@ -18,8 +18,8 @@ setClass("a4aFitCatchDiagn", contain="FLQuants")
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
-#' obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
-#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+#' fit <- sca(ple4, ple4.index)
+#' flqs <- computeCatchDiagnostics(fit, ple4)
 setGeneric("computeCatchDiagnostics", function(object, ...) standardGeneric("computeCatchDiagnostics"))
 
 #' @rdname a4aFit-class
@@ -51,22 +51,21 @@ setMethod("computeCatchDiagnostics", signature(object="a4aFit"), function(object
   }
 )
 
-#' @title Plot of standardized log residuals
-#' @name plot of residuals
+#' @title Plot of aggregated catch standardized log residuals
+#' @name plot of catch residuals
 #' @docType methods
-#' @rdname plot-methods
-##' @aliases plot,a4aFitResiduals,missing-method
-#' @description Method to produce scatterplots of standardized residuals
-#' @param x an \code{a4aFitResiduals} object with the standardized residuals
-#' @param y ignored
-#' @param auxline a string defining the type of line to be added, by default uses 'smooth', a common alternative is to use 'r', a regression, or leave it empty ''
+#' @rdname plot-catch
+#' @aliases plot,a4aFitCatchDiagn,missing-method
+#' @description Method to produce scatterplots of aggregated catch residuals
+#' @param x an \code{a4aFit} object with the model fit
+#' @param y the \code{FLStock} object used to fit the model
 #' @param ... additional argument list that might never be used
 #' @return a \code{plot} with stardardized log residuals
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
-#' obj <- sca(ple4, FLIndices(ple4.index))
-#' flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+#' fit <- sca(ple4, ple4.index)
+#' flqs <- computeCatchDiagnostics(fit, ple4)
 #' plot(flqs)
 
 setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
@@ -174,9 +173,4 @@ setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
 	grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 3, as.table=FALSE, top=textGrob("Aggregated catch diagnostics \n", gp=gpar(fontface = "bold", cex=2)), bottom=textGrob("(shaded area = CI80%, dashed line = median, solid line = observed) \n", gp=gpar(cex=1.25)))
 
 })
-
-
-
-
-
 

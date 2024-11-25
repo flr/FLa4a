@@ -29,7 +29,7 @@ Suggests:
     formatR,
     XML,
     reshape2,
-    testthat
+    testthat (>= 3.0.0)
 LazyLoad: yes
 LazyData: yes
 VignetteBuilder: knitr
@@ -69,3 +69,4 @@ Collate:
     'a4aFitCatchDiagn-class.R'
 RoxygenNote: 7.3.2
 Encoding: UTF-8
+Config/testthat/edition: 3

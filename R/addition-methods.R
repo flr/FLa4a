@@ -35,18 +35,6 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   e1
 })
 
-##' @rdname addition-methods
-##' @aliases +,FLStock,a4aFitSA-method
-#setMethod("+", c("FLStock", "a4aFitSA"), function(e1, e2)
-#{
-#  nit1 <- dims(e1) $ iter
-#  nit2 <- dims(qmodel(pars(e2))[[1]]@params)$iter
-#  v <- c(nit1, nit2)
-#  if(min(v)==max(v)) e1 <- e1 + as(e2, "a4aFit") else e1 <- e1 * e2
-#  e1
-#})
-
-#' @rdname addition-methods
 setMethod("+", c("FLIndices", "a4aFit"), function(e1, e2) 
 {
 

@@ -4,7 +4,7 @@
 \name{plot for fitted indices-at-age}
 \alias{plot for fitted indices-at-age}
 \alias{plot,a4aFit,FLIndices-method}
-\title{testing}
+\title{Plot for fitted indices-at-age}
 \usage{
 \S4method{plot}{a4aFit,FLIndices}(x, y, ...)
 }

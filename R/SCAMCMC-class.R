@@ -92,7 +92,7 @@ setMethod("SCAMCMC", signature(object="missing"),
 #' @rdname SCAMCMC-class
 #' @aliases getADMBCallArgs getADMBCallArgs-methods
 setGeneric("getADMBCallArgs", function(object, ...) standardGeneric("getADMBCallArgs"))
-#' @rdname SCAMCMC-class
+
 setMethod("getADMBCallArgs", signature(object="SCAMCMC"),
   function(object, ...) {
 	slts <- getSlots("SCAMCMC")

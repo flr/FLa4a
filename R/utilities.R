@@ -188,7 +188,7 @@ setMethod("plot", c("a4aFit", "FLStock"), function(x, y, ...){
 	do.call("xyplot", args)
 })
 
-##' @title testing
+#' @title Plot for fitted indices-at-age
 #' @name plot for fitted indices-at-age
 #' @docType methods
 #' @rdname ploti
@@ -244,7 +244,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 })
 
 
-##' @title wireframe plot for FLQuant
+#' @title wireframe plot for FLQuant
 #' @name wireframe plot for FLQuant
 #' @docType methods
 #' @rdname wireframe

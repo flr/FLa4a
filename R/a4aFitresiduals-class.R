@@ -142,8 +142,8 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 #' @title Plot of standardized log residuals
 #' @name plot of residuals
 #' @docType methods
-#' @rdname plot-methods
-##' @aliases plot,a4aFitResiduals,missing-method
+#' @rdname plot-res
+#' @aliases plot,a4aFitResiduals,missing-method
 #' @description Method to produce scatterplots of standardized residuals
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param y ignored
@@ -189,7 +189,7 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxlin
 #' @name qqplot of residuals
 #' @docType methods
 #' @rdname qqmath-methods
-##' @aliases qqmath,a4aFitResiduals,missing-method
+#' @aliases qqmath,a4aFitResiduals,missing-method
 #' @description Method to produce qqplots of standardized residuals
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param data ignored
@@ -228,7 +228,7 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 #' @name bubble plot of residuals
 #' @docType methods
 #' @rdname bubbles-methods
-##' @aliases bubbles,a4aFitResiduals,missing-method
+#' @aliases bubbles,a4aFitResiduals,missing-method
 #' @description Method to produce bubble plots of standardized residuals
 #' @param x an \code{a4aFitResiduals} object with the standardized residuals
 #' @param data ignored

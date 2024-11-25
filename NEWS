@@ -3,9 +3,11 @@
  NEW FEATURES
 - plot for residuals by age
 - multisca method to run several sca
+- plot for multiple fits
 
  BUG FIXES:
 - sca use of covariates fixed
+- several man pages issues fixed
 
  FLa4a 1.8.x:
 

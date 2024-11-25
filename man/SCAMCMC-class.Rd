@@ -11,7 +11,6 @@
 \alias{mcmc-methods}
 \alias{mcmc,SCAMCMC-method}
 \alias{getADMBCallArgs-methods}
-\alias{getADMBCallArgs,SCAMCMC-method}
 \alias{getN}
 \alias{getN-methods}
 \alias{getN,SCAMCMC-method}
@@ -22,8 +21,6 @@ SCAMCMC(object, ...)
 \S4method{SCAMCMC}{missing}(object, ...)
 
 getADMBCallArgs(object, ...)
-
-\S4method{getADMBCallArgs}{SCAMCMC}(object, ...)
 
 getN(object, ...)
 
