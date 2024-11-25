@@ -32,7 +32,7 @@ multisca(
 
 \item{...}{all other arguments to be passed to \code{sca}}
 
-\item{stock}{an \code{FLStocks} object, each component with a \ciode{FLStock} object containing catch and stock information}
+\item{stock}{an \code{FLStocks} object, each component with a \code{FLStock} object containing catch and stock information}
 }
 \value{
 an \code{a4aFits} or \code{a4aFitSAs} or \code{a4aFitMCMCs} depending on the argument \code{fit}

@@ -52,6 +52,40 @@ setMethod("+", c("FLIndices", "a4aFit"), function(e1, e2)
   e1
 })
 
+
+#' + methods
+#' @name addition
+#' @description Update \code{FLStocks} objects with multiple stock assessment results in a \code{a4aFits}.
+#' @param e1 the original \code{FLStocks} object
+#' @param e2 a \code{a4aFits} object from where the new \code{FLStock} slots will be extracted.
+#' @details If both objects have the same number of iterations, the \code{FLStocks} slots will be replaced by the \code{a4aFits} slots, in the case of 1 iter, or \code{a4aFitSA} slots, in the case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the \code{a4aFitSA} object to update the slots of the \code{FLStock} object.
+#' @rdname addition-methods
+#' @aliases +,FLStocks,a4aFits-method
+setMethod("+", c("FLStocks", "a4aFits"), function(e1, e2)
+{
+
+	# checks 1 or n
+	ns <- length(e1)
+	nf <- length(e2)
+	if(ns!=1 & nf!= 1 & ns!=nf) stop("objects must be of equal size or of size 1")
+
+	# set same sizes
+	n <- max(ns, nf)
+	if(n>1 & ns==1){ 
+		e1[1:n] <- e1[1]
+		names(e1) <- rep(names(e1[1]), n)
+		} else if(n>1 & nf==1){
+		e2[1:n] <- e2[1]
+		names(e2) <- rep(names(e2[1]), n)
+		}
+	
+	# call +
+	for(i in 1:n) e1[[i]] <- e1[[i]] + e2[[i]]
+
+	# out	
+	e1
+})
+
 #==================================================================== 
 # "*" methods
 #==================================================================== 
