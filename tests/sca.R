@@ -519,4 +519,3 @@ fit2 <- sca(ple4, ple4.indices, center=1)
 identical(fitSumm(fit0)["nlogl",], fitSumm(fit1)["nlogl",])
 identical(fitSumm(fit0)["nlogl",], fitSumm(fit2)["nlogl",])
 identical(fitSumm(fit1)["nlogl",], fitSumm(fit2)["nlogl",])
-

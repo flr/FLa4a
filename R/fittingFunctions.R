@@ -1499,7 +1499,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 #' @param srmodel a list of \code{srmodel} objects, each with a formula object depicting the model for log recruitment
 #' @param n1model a list of \code{n1model} objects, each with a formula object depicting the model for the first year of catch data
 #' @param vmodel a list of \code{vmodel} objects, each with a list of formula objects depicting the models for log survey and log fishing mortality variance
-#' @param stock an \code{FLStocks} object, each component with a \ciode{FLStock} object containing catch and stock information
+#' @param stock an \code{FLStocks} object, each component with a \code{FLStock} object containing catch and stock information
 #' @param combination.all  bolean parameter (default is FALSE) to define if a full factorial across all stocks, indices, and submodel is run or just a sequence of runs. 
 #' @param ... all other arguments to be passed to \code{sca}
 #' @return an \code{a4aFits} or \code{a4aFitSAs} or \code{a4aFitMCMCs} depending on the argument \code{fit}
@@ -1577,8 +1577,12 @@ multisca <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmod
 		do.call("sca", args)
   })
  
- names(fits) <- paste0("fit", c(1:length(fits)))
- return(a4aFitSAs(fits))
+  names(fits) <- paste0("fit", c(1:length(fits)))
+  # the sequqnce of the following commands matter
+  if(is(fits[[1]], "a4aFitMCMC")) return(a4aFitMCMCs(fits))
+  if(is(fits[[1]], "a4aFitSA")) return(a4aFitSAs(fits))
+  if(is(fits[[1]], "a4aFit")) return(a4aFits(fits))
+  
 }
 
 

@@ -6,7 +6,7 @@
 #' @aliases a4aFitSAs-class
 
 setClass("a4aFitSAs",
-  contains="FLComps"
+  contains="a4aFits"
 )
 
 setValidity("a4aFitSAs",
@@ -17,7 +17,6 @@ setValidity("a4aFitSAs",
       TRUE
     }
 })
-
 
 #' @rdname a4aFitSA-class
 #' @aliases a4aFitSAs a4aFitSAs-methods
@@ -77,44 +76,4 @@ setMethod("a4aFitSAs", signature(object="missing"),
   }
 )
 
-
-#' @title Plot of metrics of multiple fits
-#' @name plot metrics of multiple fits
-#' @docType methods
-#' @rdname plot-mfits
-#' @aliases plot,a4aFitSAs, missing-method
-#' @description Method to plot fitting statistics of multiple fits, useful to compare fits.
-#' @param x an \code{a4aFitSAs} object with multiple fits
-#' @param y ignored
-#' @param ... additional argument list that might never be used
-#' @return a \code{plot} with fitting statistics
-#' @examples
-#' data(ple4)
-#' data(ple4.index)
-#' qmods <- list(list(~s(age, k=6)))
-#' fmods = list()
-#' for(i in 1:6) {
-#'   fmods[[paste0(i)]] <- as.formula(paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)"))
-#' }
-#' myFits <- FLa4a:::multisca(FLStocks(ple4), list(FLIndices(ple4.index)), fmodel = fmods, qmodel=qmods)
-#' plot(myFits)
-
-setMethod("plot", c("a4aFitSAs", "missing"), function(x, y=missing, ...){
-	args <- list()
-	par(mar=c(5, 4, 4, 4) + 0.1)
-	gcv = lapply(x,function(x) fitSumm(x)['gcv',])
-	bic = lapply(x, function(x) BIC(x))
-	df <- data.frame(unlist(gcv), unlist(bic))
-	df$fit <- as.numeric(gsub("fit", "",names(gcv)))
-	names(df) <- c("GCV","BIC","fit")
-	df <- df[complete.cases(df),]
-	plot(df$fit, df$GCV, type = "b", col = "blue", ylab = "GCV", xlab = "fit", main="Analysis of fit metrics")
-	par(new = TRUE)
-	plot(df$fit, df$BIC, type = "b", col = "red", axes = FALSE, xlab = "", ylab = "")
-	axis(4)
-	mtext("BIC", side=4, line=3)
-	abline(v=df[min(df$GCV)==df$GCV,]$fit, col = "blue",lty = 2)
-	abline(v=df[min(df$BIC)==df$BIC,]$fit, col = "red",lty = 2)
-	legend("topleft", legend = c("GCV", "BIC"), col = c("blue", "red"), lty = 1, bg="white")
-})
 

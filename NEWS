@@ -4,6 +4,8 @@
 - plot for residuals by age
 - multisca method to run several sca
 - plot for multiple fits
+- new classes for plural fit objects
+
 
  BUG FIXES:
 - sca use of covariates fixed
