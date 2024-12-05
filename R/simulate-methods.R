@@ -95,6 +95,8 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
 		}
     }
+
+    units(out) <- units(object)
     out
 })
 
