@@ -323,7 +323,7 @@ setMethod("replaceZeros", "FLStock", function(object, fraction=0.25) {
 
 #' @rdname assorted-methods
 #' @param fraction \code{numeric} with fraction of minimum to replace zeros
-setMethod("replaceZeros", "FLIndex", function(object, fraction=0.25) {
+setMethod("replaceZeros", "FLI", function(object, fraction=0.25) {
 	index(object) <- replaceZeros(index(object), fraction)
 	object
 })
