@@ -257,6 +257,10 @@ setMethod("coerce", signature(from = "a4aStkParams", to = "FLSR"),
     # get FLSR definition
     expr_model <- a4aSRmodelDefinitions(srmodel)
 
+    if (is.null(expr_model)) {
+      stop("Cannot create FLSR object from a4aStkParams object as no stock-recruitment model was used")
+    }
+
     # build skeleton FLSR
     # flsr <- FLSR(formula(paste("rec ~ (", deparse(expr_model, width.cutoff = 500), ") *", exp(from@centering))))
     flsr <- FLSR(formula(paste("rec ~ ", deparse(expr_model, width.cutoff = 500))))

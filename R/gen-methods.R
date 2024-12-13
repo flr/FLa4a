@@ -221,7 +221,11 @@ setMethod("genFLQuant", "a4aStkParams",
 
       # get FLSR definition
       expr_model <- a4aSRmodelDefinitions(srmodel)
-      
+
+      if (is.null(expr_model)) {
+        stop("Cannot simulate recruitment from SR relationship as no stock-recruitment model was used")
+      }
+
       # get SR pars
       cnames <- rownames(coef(object))
       parList <- list(a = exp(coef(object)[grep("sraMod", cnames)]), 

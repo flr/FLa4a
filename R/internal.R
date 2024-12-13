@@ -308,6 +308,7 @@ a4aSRmodelDefinitions <- function(srmodel) {
     switch(srmodelName,
       bevholtSV = (~ (6*h*b*ssb) / (spr0* (((a/(1+a)*0.8 + 0.2) + 1)*b + (5*(a/(1+a)*0.8 + 0.2) - 1)*ssb) ))[[2]], # spr0 is provided by user,
       hockey = (~ a * (ssb + sqrt(b^2 + 0.0025) - sqrt((ssb - b)^2 + 0.0025)))[[2]],
+      none = NULL,
       stop("unknown SR model")
     )
   }
