@@ -18,6 +18,10 @@ multisca(
 )
 }
 \arguments{
+\item{stocks}{an \code{FLStocks} object containing catch and stock information}
+
+\item{indicess}{a list of \code{FLIndices} objects containing survey indices}
+
 \item{fmodel}{a list of \code{fmodel} objects, each with a formula object depicting the model for log fishing mortality at age}
 
 \item{qmodel}{a list of \code{qmodel} objects, each with a list of formula objects depicting the models for log survey catchability at age}

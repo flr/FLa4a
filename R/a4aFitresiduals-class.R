@@ -1,7 +1,9 @@
 setGeneric("qqmath", function(x, data, ...) useAsDefault=lattice::qqmath)
 
-#' @title S4 class \code{a4aFitResiduals}
-#' @description The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default, these should be log residuals of catches and indices.
+#' S4 class \code{a4aFitResiduals}
+#'
+#' The \code{a4aFitResiduals} class extends \code{FLQuants} to store residuals of the a4a stock assessment fit. By default, these should be log residuals of catches and indices.
+#'
 #' @docType class
 #' @name a4aFitResiduals-class
 #' @rdname a4aFitResiduals-class
@@ -26,7 +28,7 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
     if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
 	# object holder
 	lst <- list()
-	length(lst) <- length(indices) + 2	
+	length(lst) <- length(indices) + 2
 	# catch
 	lst[[1]] <- stdlogres(catch.n(stock), catch.n(object))
 	# indices
@@ -57,7 +59,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
     if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
 	# object holder
 	lst <- list()
-	length(lst) <- length(indices) + 2	
+	length(lst) <- length(indices) + 2
 
 	if(type=="standardized"){
 		# catch
@@ -69,7 +71,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		}
 		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
 		desc <- "standardized residuals"
-	} 
+	}
 	if(type=="pearson"){
 		sdlog <- predict(object)$vmodel
 		# catch
@@ -84,7 +86,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		sdlog <- sqrt(iterVars(log(quantSums(flq*catch.wt(stock)))))
 		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=sdlog)
 		desc <- "pearson residuals"
-	} 
+	}
 	if(type=="deviances"){
 		sdlog <- 1
 		# catch
@@ -96,7 +98,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		}
 		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=1)
 		desc <- "deviances"
-	} 
+	}
 
 	# out
 	names(lst) <- c("catch.n", names(indices), "catch")
@@ -104,7 +106,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
   }
 )
 
-#' @title Standardized log residuals 
+#' @title Standardized log residuals
 #' @description Method to compute the standardized residuals on the log scale for index- and catch-at-age residuals in the a4a stock assessment framework.
 #' @name stdlogres
 #' @docType methods
@@ -129,7 +131,7 @@ setGeneric("stdlogres", function(obs, fit, ...) standardGeneric("stdlogres"))
 #' @rdname stdlogres-methods
 setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	args <- list(...)
-	flq <- log(obs/fit)	
+	flq <- log(obs/fit)
 	if("sdlog" %in% names(args)){
 		res <- flq / args$sdlog
 	} else {
@@ -137,7 +139,7 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 	}
 	dimnames(res) <- dimnames(flq)
 	as(res, "FLQuant")
-}) 
+})
 
 #' @title Plot of standardized log residuals
 #' @name plot of residuals
@@ -161,9 +163,9 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth", by="year", ...){
 	args <- list()
 	args$data <- as.data.frame(x[names(x)!="catch"])
-    if(by=="year") 
-        args$x <- as.formula("data~year|factor(age)*qname") 
-    if(by=="age") 
+    if(by=="year")
+        args$x <- as.formula("data~year|factor(age)*qname")
+    if(by=="age")
         args$x <- as.formula("data~age|factor(year)*qname")
 	args$type=c("p", auxline)
 	args$groups <- quote(qname)
@@ -176,10 +178,10 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxlin
 		panel.xyplot(x,y,...)
 		}
 	args$par.settings=list(
-		superpose.symbol=list(col=1, pch=19, cex=0.2), 
-		superpose.line=list(col="gray75", lty=1, lwd=2), 
-		strip.background=list(col="gray90"), 
-		strip.border=list(col="black"), 
+		superpose.symbol=list(col=1, pch=19, cex=0.2),
+		superpose.line=list(col="gray75", lty=1, lwd=2),
+		strip.background=list(col="gray90"),
+		strip.border=list(col="black"),
 		box.rectangle=list(col="gray90"))
 	args$main="log residuals of catch and abundance indices by age"
 	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("xyplot", args)) else do.call("xyplot", args)
@@ -214,7 +216,7 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 	}
 	args$par.settings <- list(
 		strip.background=list(col="gray90")
-	#	superpose.symbol=list(col="gray50", pch=19, cex=0.2), 
+	#	superpose.symbol=list(col="gray50", pch=19, cex=0.2),
 	#	superpose.line=list(col=1, lty=1, lwd=2)
 	)
 	args$pch <- 19
@@ -243,5 +245,3 @@ setMethod("qqmath", c("a4aFitResiduals", "missing"), function(x, data=missing, .
 setMethod("bubbles", c("a4aFitResiduals", "missing"), function(x, data=missing, ...){
 	bubbles(age~year|qname, data=x, main="log residuals of catch and abundance indices", ...)
 })
-
-

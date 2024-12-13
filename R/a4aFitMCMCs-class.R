@@ -93,9 +93,16 @@ setMethod("a4aFitMCMCs", signature(object="missing"),
 #' qmods <- list(list(~s(age, k=6)))
 #' fmods = list()
 #' for(i in 1:6) {
-#'   fmods[[paste0(i)]] <- as.formula(paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)"))
+#'   fmods[[paste0(i)]] <-
+#'     as.formula(
+#'       paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)")
+#'     )
 #' }
-#' myFits <- FLa4a:::multisca(FLStocks(ple4), list(FLIndices(ple4.index)), fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+#' myFits <-
+#'   FLa4a:::multisca(
+#'     FLStocks(ple4), list(FLIndices(ple4.index)),
+#'     fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC()
+#'   )
 #' plot(myFits)
 
 setMethod("plot", c("a4aFitMCMCs", "missing"), function(x, y=missing, ...){
@@ -108,4 +115,3 @@ setMethod("plot", c("a4aFitMCMCs", "missing"), function(x, y=missing, ...){
 	plot(df$fit, df$accrate, type = "b", col = "blue", ylab = "accrate", xlab = "fit", main="Analysis of fit metrics", ylim=c(0.1,0.5))
 	abline(h=0.3, col = "blue",lty = 2)
 })
-

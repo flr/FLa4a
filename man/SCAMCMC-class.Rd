@@ -7,9 +7,6 @@
 \alias{SCAMCMC-methods}
 \alias{SCAMCMC,missing-method}
 \alias{getADMBCallArgs}
-\alias{mcmc}
-\alias{mcmc-methods}
-\alias{mcmc,SCAMCMC-method}
 \alias{getADMBCallArgs-methods}
 \alias{getN}
 \alias{getN-methods}
@@ -35,7 +32,7 @@ getN(object, ...)
 Class definition (slots), constructors, accessors, replacement (when relevant) and common methods.
 }
 \section{Slot}{
- 
+
 \describe{
 
 \item{\code{mcmc N}}{Run N MCMC iterations}

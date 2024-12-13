@@ -14,5 +14,5 @@ index_pt_len
 Survey abundance index for hake in Portuguese continental waters. Lenth frequencies.
 }
 \author{
-Santiago Cervi\~no
+Santiago Cervino
 }

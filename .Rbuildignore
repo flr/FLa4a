@@ -13,3 +13,4 @@ tests/wcsam.R
 ^\.Rproj\.user$
 docs/
 ^README\.Rmd$
+^BinaryFiles$

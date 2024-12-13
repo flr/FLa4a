@@ -94,9 +94,16 @@ setMethod("a4aFits", signature(object="missing"),
 #' qmods <- list(list(~s(age, k=6)))
 #' fmods = list()
 #' for(i in 1:6) {
-#'   fmods[[paste0(i)]] <- as.formula(paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)"))
+#'   fmods[[paste0(i)]] <-
+#'     as.formula(
+#'       paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)")
+#'     )
 #' }
-#' myFits <- FLa4a:::multisca(FLStocks(ple4), list(FLIndices(ple4.index)), fmodel = fmods, qmodel=qmods, fit="MP")
+#' myFits <-
+#'   FLa4a:::multisca(
+#'     FLStocks(ple4), list(FLIndices(ple4.index)),
+#'     fmodel = fmods, qmodel=qmods, fit="MP"
+#'   )
 #' plot(myFits)
 
 setMethod("plot", c("a4aFits", "missing"), function(x, y=missing, ...){
@@ -117,4 +124,3 @@ setMethod("plot", c("a4aFits", "missing"), function(x, y=missing, ...){
 	abline(v=df[min(df$BIC)==df$BIC,]$fit, col = "red",lty = 2)
 	legend("topleft", legend = c("GCV", "BIC"), col = c("blue", "red"), lty = 1, bg="white")
 })
-

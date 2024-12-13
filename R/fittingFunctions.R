@@ -1493,24 +1493,25 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 #' @docType methods
 #' @rdname multisca
 #' @description Internal method to run several stock assessment fits with different stocks, indices and submodels
-#'
+#' @param stocks an \code{FLStocks} object containing catch and stock information
+#' @param indicess a list of \code{FLIndices} objects containing survey indices
 #' @param fmodel a list of \code{fmodel} objects, each with a formula object depicting the model for log fishing mortality at age
 #' @param qmodel a list of \code{qmodel} objects, each with a list of formula objects depicting the models for log survey catchability at age
 #' @param srmodel a list of \code{srmodel} objects, each with a formula object depicting the model for log recruitment
 #' @param n1model a list of \code{n1model} objects, each with a formula object depicting the model for the first year of catch data
 #' @param vmodel a list of \code{vmodel} objects, each with a list of formula objects depicting the models for log survey and log fishing mortality variance
 #' @param stock an \code{FLStocks} object, each component with a \code{FLStock} object containing catch and stock information
-#' @param combination.all  bolean parameter (default is FALSE) to define if a full factorial across all stocks, indices, and submodel is run or just a sequence of runs. 
+#' @param combination.all  bolean parameter (default is FALSE) to define if a full factorial across all stocks, indices, and submodel is run or just a sequence of runs.
 #' @param ... all other arguments to be passed to \code{sca}
 #' @return an \code{a4aFits} or \code{a4aFitSAs} or \code{a4aFitMCMCs} depending on the argument \code{fit}
 #' @aliases multisca
-# multisca <- function(stocks, indicess, 
-#	fmodel = missing, 
-#	qmodel = missing, 
-#	srmodel = missing, 
-#	n1model = missing, 
-#	vmodel = missing, 
-#	combination.all = FALSE, 
+# multisca <- function(stocks, indicess,
+#	fmodel = missing,
+#	qmodel = missing,
+#	srmodel = missing,
+#	n1model = missing,
+#	vmodel = missing,
+#	combination.all = FALSE,
 #	...)
 
 multisca <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, combination.all = FALSE, ...){
@@ -1519,35 +1520,35 @@ multisca <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmod
 
 	#-----------------------------------------------------------------
 	# check stocks and indices are lists
-	if(!is(stocks, "FLStocks")) 
-		stop("The stock object must be a FLStocks")	
-	
+	if(!is(stocks, "FLStocks"))
+		stop("The stock object must be a FLStocks")
+
 	if(sum(unlist(lapply(indicess, is, "FLIndices")))!=length(indicess))
 		stop("The indices object must be a list of FLIndices")
-	
+
 	if(length(stocks)!=length(indicess))
 		stop("The number of FLStock and FLIndices provided to run sca must be the same")
-	
+
 	# set models if missing
 	if(missing(fmodel)) fmodel <- lapply(stocks, defaultFmod)
 	if(missing(qmodel)) qmodel <- lapply(indicess, defaultQmod)
 	if(missing(n1model)) n1model <- lapply(stocks, defaultN1mod)
 	if(missing(vmodel)){
 		vmodel <- list()
-		length(vmodel) <- length(stocks)  
+		length(vmodel) <- length(stocks)
 		for(i in length(stocks)){
 			vmodel[[i]] <- defaultVmod(stocks[[i]], indicess[[i]])
 		}
-	} 
+	}
 	if(missing(srmodel)) srmodel <- lapply(stocks, defaultSRmod)
-  
+
 	maxlen <- max(length(stocks), length(indicess), length(fmodel), length(qmodel), length(n1model), length(vmodel), length(srmodel))
 
 	dm <- data.frame(
-		stk = c(1:length(stock),rep(1, maxlen - length(stock))), 
-	  	idx = c(1:length(indicess),rep(1, maxlen - length(indicess))), 
+		stk = c(1:length(stock),rep(1, maxlen - length(stock))),
+	  	idx = c(1:length(indicess),rep(1, maxlen - length(indicess))),
 	  	fm = c(1:length(fmodel),rep(1, maxlen - length(fmodel))),
-		qm = c(1:length(qmodel),rep(1, maxlen - length(qmodel))),                    
+		qm = c(1:length(qmodel),rep(1, maxlen - length(qmodel))),
 		n1 = c(1:length(n1model),rep(1, maxlen - length(n1model))),
 		vm = c(1:length(vmodel),rep(1, maxlen - length(vmodel))),
 		srm = c(1:length(srmodel),rep(1, maxlen - length(srmodel)))
@@ -1557,33 +1558,30 @@ multisca <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmod
 		dm <- expand.grid(
 		1:length(stock),
     	1:length(indicess),
-    	1:length(fmodel), 
+    	1:length(fmodel),
         1:length(qmodel),
         1:length(n1model),
         1:length(vmodel),
         1:length(srmodel))
     }
-  	
+
   	dm <- as.data.frame(t(as.matrix(dm)))
-  
+
 	fits <- lapply(dm, function(x){
 		args$stock <- stocks[[x[1]]]
 		args$indices <- indicess[[x[2]]]
-		args$fmodel <- fmodel[[x[3]]] 
-		args$qmodel <- qmodel[[x[4]]] 
-		args$n1model <- n1model[[x[5]]] 
-		args$vmodel <- vmodel[[x[6]]] 
-		args$srmodel <- srmodel[[x[7]]] 
+		args$fmodel <- fmodel[[x[3]]]
+		args$qmodel <- qmodel[[x[4]]]
+		args$n1model <- n1model[[x[5]]]
+		args$vmodel <- vmodel[[x[6]]]
+		args$srmodel <- srmodel[[x[7]]]
 		do.call("sca", args)
   })
- 
+
   names(fits) <- paste0("fit", c(1:length(fits)))
   # the sequqnce of the following commands matter
   if(is(fits[[1]], "a4aFitMCMC")) return(a4aFitMCMCs(fits))
   if(is(fits[[1]], "a4aFitSA")) return(a4aFitSAs(fits))
   if(is(fits[[1]], "a4aFit")) return(a4aFits(fits))
-  
+
 }
-
-
-

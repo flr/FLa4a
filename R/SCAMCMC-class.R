@@ -3,7 +3,7 @@
 #' @name SCAMCMC
 #' @rdname SCAMCMC-class
 #' @template ClassDescription
-#' @section Slot: 
+#' @section Slot:
 #' \describe{
 #'
 #'	\item{\code{mcmc N}}{Run N MCMC iterations}
@@ -64,7 +64,7 @@ setClass("SCAMCMC",
 #' @aliases SCAMCMC SCAMCMC-methods
 #' @template Accessors
 #' @template Constructors
-#' @param object a \code{SCAMCMC} object 
+#' @param object a \code{SCAMCMC} object
 #' @param ... extra arguments
 setGeneric("SCAMCMC", function(object, ...) standardGeneric("SCAMCMC"))
 #' @rdname SCAMCMC-class
@@ -84,10 +84,6 @@ setMethod("SCAMCMC", signature(object="missing"),
 
 # accessors
 
-##' @rdname SCAMCMC-class
-##' @aliases mcmc mcmc-methods mcmc,SCAMCMC-method
-#setGeneric("mcmc", function(object, ...) standardGeneric("mcmc"))
-#setMethod("mcmc", "SCAMCMC", function(object) object @ mcmc)
 
 #' @rdname SCAMCMC-class
 #' @aliases getADMBCallArgs getADMBCallArgs-methods
@@ -119,21 +115,3 @@ setMethod("getN", signature(object="SCAMCMC"),
 	floor(object@mcmc/object@mcsave)
   }
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -28,8 +28,15 @@ data(ple4.index)
 qmods <- list(list(~s(age, k=6)))
 fmods = list()
 for(i in 1:6) {
-  fmods[[paste0(i)]] <- as.formula(paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)"))
+  fmods[[paste0(i)]] <-
+    as.formula(
+      paste0("~te(age, year, k = c(6,", i+14,"), bs = 'tp') + s(age, k = 6)")
+    )
 }
-myFits <- FLa4a:::multisca(FLStocks(ple4), list(FLIndices(ple4.index)), fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+myFits <-
+  FLa4a:::multisca(
+    FLStocks(ple4), list(FLIndices(ple4.index)),
+    fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC()
+  )
 plot(myFits)
 }

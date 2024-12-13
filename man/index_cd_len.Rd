@@ -14,5 +14,5 @@ index_cd_len
 Survey abundance index for hake in the Gulf of Cadiz. Lenth frequencies.
 }
 \author{
-Santiago Cervi\~no
+Santiago Cervino
 }

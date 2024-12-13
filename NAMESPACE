@@ -7,6 +7,8 @@ importFrom("copula",
   archmCopula,
   rMvdc,
   mvdc)
+importFrom("graphics",
+  abline, axis, legend, mtext, par)
 importFrom("lattice",
   qqmath, panel.xyplot, panel.abline, prepanel.qqmathline, panel.qqmathline,
   panel.qqmath, panel.grid, panel.polygon, panel.segments)
@@ -14,13 +16,13 @@ importFrom("Matrix",
   bdiag,Diagonal,Matrix)
 importClassesFrom("Matrix",
   dsCMatrix,Matrix)
-importFrom("coda", 
+importFrom("coda",
   mcmc, as.mcmc)
-importFrom("utils", 
+importFrom("utils",
   capture.output, read.table, write.table, sessionInfo)
-importFrom("stats", 
+importFrom("stats",
   runif, cor, complete.cases, cov2cor, formula, model.matrix, qnorm,
-  as.formula, "nlminb", "optimHess")
+  as.formula, "nlminb", "optimHess", "BIC")
 importFrom("utils",
   "combn")
 importFrom("grid",
@@ -174,4 +176,3 @@ exportMethods(vmodel)
 exportMethods(vPars)
 exportMethods(wireframe)
 exportMethods(wt)
-
