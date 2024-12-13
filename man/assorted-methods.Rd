@@ -16,7 +16,7 @@
 \alias{replaceZeros-methods}
 \alias{replaceZeros,FLQuant-method}
 \alias{replaceZeros,FLStock-method}
-\alias{replaceZeros,FLIndex-method}
+\alias{replaceZeros,FLI-method}
 \alias{replaceZeros,FLIndices-method}
 \title{Assorted methods needed by FLa4a}
 \usage{
@@ -40,7 +40,7 @@ replaceZeros(object, ...)
 
 \S4method{replaceZeros}{FLStock}(object, fraction = 0.25)
 
-\S4method{replaceZeros}{FLIndex}(object, fraction = 0.25)
+\S4method{replaceZeros}{FLI}(object, fraction = 0.25)
 
 \S4method{replaceZeros}{FLIndices}(object, fraction = 0.25)
 }
