@@ -34,7 +34,7 @@ for(i in 1:6) {
     )
 }
 myFits <-
-  FLa4a:::multisca(
+  scax(
     FLStocks(ple4), list(FLIndices(ple4.index)),
     fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC()
   )

@@ -99,7 +99,7 @@ setMethod("a4aFitMCMCs", signature(object="missing"),
 #'     )
 #' }
 #' myFits <-
-#'   FLa4a:::multisca(
+#'   scax(
 #'     FLStocks(ple4), list(FLIndices(ple4.index)),
 #'     fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC()
 #'   )

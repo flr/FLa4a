@@ -2,7 +2,7 @@
 
  NEW FEATURES
 - plot for residuals by age
-- multisca method to run several sca
+- scax method to run several sca
 - plot for multiple fits
 - new classes for plural fit objects
 

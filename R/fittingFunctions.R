@@ -1489,9 +1489,9 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 }
 
 #' @title Run several stock assessments in a single run
-#' @name multisca
+#' @name scax
 #' @docType methods
-#' @rdname multisca
+#' @rdname scax
 #' @description Internal method to run several stock assessment fits with different stocks, indices and submodels
 #' @param stocks an \code{FLStocks} object containing catch and stock information
 #' @param indicess a list of \code{FLIndices} objects containing survey indices
@@ -1504,8 +1504,8 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 #' @param combination.all  bolean parameter (default is FALSE) to define if a full factorial across all stocks, indices, and submodel is run or just a sequence of runs.
 #' @param ... all other arguments to be passed to \code{sca}
 #' @return an \code{a4aFits} or \code{a4aFitSAs} or \code{a4aFitMCMCs} depending on the argument \code{fit}
-#' @aliases multisca
-# multisca <- function(stocks, indicess,
+#' @aliases scax
+# scax <- function(stocks, indicess,
 #	fmodel = missing,
 #	qmodel = missing,
 #	srmodel = missing,
@@ -1514,7 +1514,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 #	combination.all = FALSE,
 #	...)
 
-multisca <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, combination.all = FALSE, ...){
+scax <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, combination.all = FALSE, ...){
 
 	args <- list(...)
 

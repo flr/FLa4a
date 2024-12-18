@@ -22,7 +22,7 @@ idxss <- list(FLIndices(ple4.index))
 # MP 
 #--------------------------------------------------------------------
 
-fits <- FLa4a:::multisca(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
+fits <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
 
 is(fits, "a4aFits")
 is(fits[[1]], "a4aFit")
@@ -32,7 +32,7 @@ is(fits[[1]], "a4aFit")
 # SA 
 #--------------------------------------------------------------------
 
-fitsa <- FLa4a:::multisca(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
+fitsa <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
 
 is(fitsa, "a4aFitSAs")
 is(fitsa[[1]], "a4aFitSA")
@@ -41,7 +41,7 @@ is(fitsa[[1]], "a4aFitSA")
 # MCMC 
 #--------------------------------------------------------------------
 
-fitsm <- FLa4a:::multisca(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+fitsm <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
 
 is(fitsm, "a4aFitMCMCs")
 is(fitsm[[1]], "a4aFitMCMC")
@@ -74,10 +74,6 @@ stks.mc <- stks + fitsm
 length(stks.mc) == length(fitsm)
 identical(stks.mc[[2]], stks[[1]] + fitsm[[2]])
 
-
-
-
-
 #====================================================================
 # run fits sca multiple stocks and indices
 #====================================================================
@@ -89,7 +85,7 @@ idxss[1:j] <- idxss[1]
 # MP 
 #--------------------------------------------------------------------
 
-fits <- FLa4a:::multisca(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
+fits <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
 
 is(fits, "a4aFits")
 is(fits[[1]], "a4aFit")
@@ -99,7 +95,7 @@ is(fits[[1]], "a4aFit")
 # SA 
 #--------------------------------------------------------------------
 
-fitsa <- FLa4a:::multisca(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
+fitsa <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
 
 is(fitsa, "a4aFitSAs")
 is(fitsa[[1]], "a4aFitSA")
@@ -108,7 +104,7 @@ is(fitsa[[1]], "a4aFitSA")
 # MCMC 
 #--------------------------------------------------------------------
 
-fitsm <- FLa4a:::multisca(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+fitsm <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
 
 is(fitsm, "a4aFitMCMCs")
 is(fitsm[[1]], "a4aFitMCMC")
