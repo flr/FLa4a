@@ -22,7 +22,7 @@ idxss <- list(FLIndices(ple4.index))
 # MP 
 #--------------------------------------------------------------------
 
-fits <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
+fits <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
 
 is(fits, "a4aFits")
 is(fits[[1]], "a4aFit")
@@ -32,7 +32,7 @@ is(fits[[1]], "a4aFit")
 # SA 
 #--------------------------------------------------------------------
 
-fitsa <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
+fitsa <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
 
 is(fitsa, "a4aFitSAs")
 is(fitsa[[1]], "a4aFitSA")
@@ -41,7 +41,7 @@ is(fitsa[[1]], "a4aFitSA")
 # MCMC 
 #--------------------------------------------------------------------
 
-fitsm <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+fitsm <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
 
 is(fitsm, "a4aFitMCMCs")
 is(fitsm[[1]], "a4aFitMCMC")
@@ -85,7 +85,7 @@ idxss[1:j] <- idxss[1]
 # MP 
 #--------------------------------------------------------------------
 
-fits <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
+fits <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MP")
 
 is(fits, "a4aFits")
 is(fits[[1]], "a4aFit")
@@ -95,7 +95,7 @@ is(fits[[1]], "a4aFit")
 # SA 
 #--------------------------------------------------------------------
 
-fitsa <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
+fitsa <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="assessment")
 
 is(fitsa, "a4aFitSAs")
 is(fitsa[[1]], "a4aFitSA")
@@ -104,7 +104,7 @@ is(fitsa[[1]], "a4aFitSA")
 # MCMC 
 #--------------------------------------------------------------------
 
-fitsm <- scax(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+fitsm <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
 
 is(fitsm, "a4aFitMCMCs")
 is(fitsm[[1]], "a4aFitMCMC")

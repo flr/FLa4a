@@ -100,7 +100,7 @@ setMethod("a4aFits", signature(object="missing"),
 #'     )
 #' }
 #' myFits <-
-#'   scax(
+#'   scas(
 #'     FLStocks(ple4), list(FLIndices(ple4.index)),
 #'     fmodel = fmods, qmodel=qmods, fit="MP"
 #'   )
