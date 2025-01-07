@@ -34,7 +34,7 @@ for(i in 1:6) {
     )
 }
 myFits <-
-  scax(
+  scas(
     FLStocks(ple4), list(FLIndices(ple4.index)),
     fmodel = fmods, qmodel=qmods, fit="MP"
   )
