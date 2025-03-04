@@ -21,7 +21,7 @@ citEntry(entry   = "Article",
   journal = "ICES Journal of Marine Science",
   volume  = "72",
   number  = "1",
-  pages   = "232–236",
+  pages   = "232-236",
   year    = "2015",
   author  = personList(
     as.person("Ernesto Jardim"),
