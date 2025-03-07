@@ -163,10 +163,14 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth", by="year", ...){
 	args <- list()
 	args$data <- as.data.frame(x[names(x)!="catch"])
-    if(by=="year")
+    if(by=="year"){
         args$x <- as.formula("data~year|factor(age)*qname")
-    if(by=="age")
+	args$main="log residuals of catch and abundance indices by year"
+    }
+    if(by=="age"){
         args$x <- as.formula("data~age|factor(year)*qname")
+	args$main="log residuals of catch and abundance indices by age"
+    }
 	args$type=c("p", auxline)
 	args$groups <- quote(qname)
 	args$cex=0.3
@@ -183,7 +187,6 @@ setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxlin
 		strip.background=list(col="gray90"),
 		strip.border=list(col="black"),
 		box.rectangle=list(col="gray90"))
-	args$main="log residuals of catch and abundance indices by age"
 	if(is(latticeExtra::useOuterStrips, "function")) latticeExtra::useOuterStrips(do.call("xyplot", args)) else do.call("xyplot", args)
 })
 
