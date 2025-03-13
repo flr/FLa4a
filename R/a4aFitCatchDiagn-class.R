@@ -96,6 +96,10 @@ setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
 	  labs(x = "Year")+
 	  theme(text=element_text(size=18))
 	
+	#----------------------------------------------------------------
+	# residuals
+	#----------------------------------------------------------------
+	
 	
 	# build datasets residuals
 	res1 <- as.data.frame(x$resstd)%>%mutate(test="Standardized residuals")%>%
