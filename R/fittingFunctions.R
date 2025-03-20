@@ -1545,7 +1545,7 @@ scas <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel =
 	maxlen <- max(length(stocks), length(indicess), length(fmodel), length(qmodel), length(n1model), length(vmodel), length(srmodel))
 
 	dm <- data.frame(
-		stk = c(1:length(stock),rep(1, maxlen - length(stock))),
+		stk = c(1:length(stocks),rep(1, maxlen - length(stocks))),
 	  	idx = c(1:length(indicess),rep(1, maxlen - length(indicess))),
 	  	fm = c(1:length(fmodel),rep(1, maxlen - length(fmodel))),
 		qm = c(1:length(qmodel),rep(1, maxlen - length(qmodel))),
@@ -1556,7 +1556,7 @@ scas <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel =
 
 	if(combination.all){
 		dm <- expand.grid(
-		1:length(stock),
+		1:length(stocks),
     	1:length(indicess),
     	1:length(fmodel),
         1:length(qmodel),
