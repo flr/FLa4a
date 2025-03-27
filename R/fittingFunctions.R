@@ -898,8 +898,6 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
                     my.time.used, verbose)
 {
 
-browser()
-
   # ========================================================================
   # Prepare data
   # ========================================================================
@@ -930,33 +928,41 @@ browser()
   srvMaxAge[is.na(srvMaxAge)] <- range(full.df$age)[2]
   names(srvMaxAge) <- names(indices)
 
-  df.aux <- unique(full.df[c("year", "age", "m", "m.spwn", "harvest.spwn", "mat.wt", "stock.wt")])
+  df.aux <- unique(full.df[c("year", "age", "m", "m.spwn", "harvest.spwn", "mat", "stock.wt")])
 
   Ldat <- list(
-    ageRange = range(full.df$age),
-    yearRange = range(full.df$year),
-    surveyMinAge = srvMinAge,
-    surveyMaxAge = srvMaxAge,
-    surveyTimes = surveytime,
-    fbarRange = fbar,
-    obs = as.matrix(df.data),
+    logObs = df.data$obs,
+    #    weights = df.data$weights,
+    aux = as.matrix(df.data[, 1:3]),
+    minYear = min(full.df$year),
+    minAge = min(full.df$age),
+    nsurveys = length(srvMinAge),
+    surveyMinAges = srvMinAge,
+    surveyMaxAges = srvMaxAge,
+    fleetTypes = c(1, rep(2, length(srvMinAge))),
+    sampleTimes = surveytime,
     aux = as.matrix(df.aux),
+    M = matrix(df.aux[, "m"], 61, 10, byrow = TRUE),
+    SW = matrix(df.aux[, "stock.wt"], 61, 10, byrow = TRUE),
+    MO = matrix(df.aux[, "mat"], 61, 10, byrow = TRUE),
+    PF = matrix(df.aux[, "harvest.spwn"], 61, 10, byrow = TRUE),
+    PM = matrix(df.aux[, "m.spwn"], 61, 10, byrow = TRUE),
     designF = Xf,
     designQ = Xq,
-    designV = Xv,
-    designNy1 = Xny1,
+    designN1 = Xny1,
     designR = Xr,
+    designV = Xv,
     designRa = Xsra,
     designRb = Xsrb,
-    srCV = srr$srrCV, # if (srr$srrCV < 0) 100 else srr$srrCV,
-    spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
-    Rmodel = srr$ID,
-    isPlusGrp = plusgroup
+    RmodelId = srr$ID,
+    #   isPlusGrp = plusgroup,
+    spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0)
   )
 
-  Ldat$locFleetVec = Ldat$obs[, 1]
-  Ldat$locYearVec = Ldat$obs[, 2]
-  Ldat$locAgeVec = Ldat$obs[, 3]
+
+  Ldat$locFleetVec = Ldat$aux[, 1]
+  Ldat$locYearVec = Ldat$aux[, 2]
+  Ldat$locAgeVec = Ldat$aux[, 3]
 
   Lpin <- list(
     fpar = rep(0, ncol(Ldat$designF)),
