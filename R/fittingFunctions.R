@@ -965,15 +965,15 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   Ldat$locAgeVec = Ldat$aux[, 3]
 
   Lpin <- list(
-    fpar = rep(0, ncol(Ldat$designF)),
-    qpar = rep(0, ncol(Ldat$designQ)),
-    vpar = rep(0, ncol(Ldat$designV)),
-    ny1par = rep(0, ncol(Ldat$designNy1)),
-    rpar = rep(0, ncol(Ldat$designR)),
-    rapar = rep(0, ncol(Ldat$designRa)),
-    rbpar = rep(0, ncol(Ldat$designRb))
+    Fpar = rep(0, ncol(Ldat$designF)),
+    Qpar = rep(0, ncol(Ldat$designQ)),
+    N1par = rep(0, ncol(Ldat$designN1)),
+    Rpar = rep(0, ncol(Ldat$designR)),
+    Vpar = rep(0, ncol(Ldat$designV)),
+    Rapar = rep(0, ncol(Ldat$designRa)),
+    Rbpar = rep(0, ncol(Ldat$designRb)),
+    logSrCV = log(srr$srrCV)
   )
-
 
   res <- list(Ldat = Ldat, Lpin = Lpin)
 
