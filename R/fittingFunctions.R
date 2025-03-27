@@ -941,28 +941,22 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     surveyMaxAges = srvMaxAge,
     fleetTypes = c(1, rep(2, length(srvMinAge))),
     sampleTimes = surveytime,
-    aux = as.matrix(df.aux),
-    M = matrix(df.aux[, "m"], 61, 10, byrow = TRUE),
+    M = matrix(exp(df.aux[, "m"]), 61, 10, byrow = TRUE),
     SW = matrix(df.aux[, "stock.wt"], 61, 10, byrow = TRUE),
     MO = matrix(df.aux[, "mat"], 61, 10, byrow = TRUE),
     PF = matrix(df.aux[, "harvest.spwn"], 61, 10, byrow = TRUE),
     PM = matrix(df.aux[, "m.spwn"], 61, 10, byrow = TRUE),
-    designF = Xf,
-    designQ = Xq,
-    designN1 = Xny1,
-    designR = Xr,
-    designV = Xv,
-    designRa = Xsra,
-    designRb = Xsrb,
+    designF = unname(Xf),
+    designQ = unname(Xq),
+    designN1 = unname(Xny1),
+    designR = unname(Xr),
+    designV = unname(Xv),
+    designRa = unname(Xsra),
+    designRb = unname(Xsrb),
     RmodelId = srr$ID,
     #   isPlusGrp = plusgroup,
     spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0)
   )
-
-
-  Ldat$locFleetVec = Ldat$aux[, 1]
-  Ldat$locYearVec = Ldat$aux[, 2]
-  Ldat$locAgeVec = Ldat$aux[, 3]
 
   Lpin <- list(
     Fpar = rep(0, ncol(Ldat$designF)),
@@ -972,12 +966,44 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     Vpar = rep(0, ncol(Ldat$designV)),
     Rapar = rep(0, ncol(Ldat$designRa)),
     Rbpar = rep(0, ncol(Ldat$designRb)),
-    logSrCV = log(srr$srrCV)
+    logSrCV = 0 # log(srr$srrCV)
   )
 
-  res <- list(Ldat = Ldat, Lpin = Lpin)
+  # ========================================================================
+  # Is recruitment random effect or fixed effect with user specified CV
+  # ========================================================================
 
-  return(res)
+  estimateCV <- srr$ID > 0 && srr$srrCV < 0
+
+  if (estimateCV) {
+    # random effect recruitment, estimating CV
+    random <- "Rpar"
+    map <- NULL
+    Lpin$logSrCV <- 0
+    Ldat$designR <- diag(nrow(Ldat$designR))
+    warning("Random effect recruitment ignores covariates in recruitment model.")
+    # if we change designR, we need to convert params back
+    # and also return the converted hessian...
+    # so do we do the conversion inside TMB?
+    # invRpar <- solve(Ldat$designR)
+  } else {
+    # fixed effect recruitment with user specified CV
+    random <- NULL
+    map <- list(logSrCV = factor(NA))
+    Lpin$logSrCV <- srr$srrCV
+  }
+
+#  if (srr$srrCV < 0) {
+#    # we have no SR model
+#    map <- list(Rapar = factor(NA), Rbpar = factor(NA))
+#  } else if (srr$ID == 4) {
+#    # its the geomean model
+#    map <- list(Rbpar = factor(NA))
+#  } else {
+#    map <- NULL
+#  }
+
+
 
   # ========================================================================
   # run model
@@ -985,20 +1011,14 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   # run a4a split
   my.time.used[2] <- Sys.time()
 
-  if (srr$srrCV < 0) {
-    # we have no SR model
-    map <- list()
-    map$rapar <- factor(NA)
-    map$rbpar <- factor(NA)
-    obj <- MakeADFun(res$Ldat, res$Lpin, DLL = "FLa4a", silent = !verbose, map = map)
-  } else if (srr$ID == 4) {
-    # its the geomean model
-    map <- list()
-    map$rbpar <- factor(NA)
-    obj <- MakeADFun(res$Ldat, res$Lpin, DLL = "FLa4a", silent = !verbose, map = map)
-  } else {
-    obj <- MakeADFun(res$Ldat, res$Lpin, DLL = "FLa4a", silent = !verbose)
-  }
+  obj <-
+    MakeADFun(
+      data, parameters,
+      DLL = "FLa4a",
+      map = map,
+      random = random,
+      silent = FALSE
+    )
 
   if (fit == "setup") {
     return(obj)
@@ -1023,6 +1043,9 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   sdrep <- sdreport(obj, opt$par)
   sdrep$cov <- NULL # this is the cvov of the model predictions
 
+  if (fit == "setup") {
+    return(list(obj = obj, opt = opt, sdrep = sdrep, Ldat = Ldat, Lpin = Lpin))
+  }
 
   # ========================================================================
   # Post process
