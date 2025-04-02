@@ -69,108 +69,59 @@ setMethod("computeCatchDiagnostics", signature(object="a4aFit"), function(object
 #' plot(flqs)
 
 setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
-	args <- list()
-
-	#----------------------------------------------------------------
-	# lattice stores the code for the plot not the plot itself, which means
-	# one has to have datasets for each plot and formulas must match
-	#----------------------------------------------------------------
 
 	#----------------------------------------------------------------
 	# absolute catches
 	#----------------------------------------------------------------
 	
-	# build datasets
+	# build datasets catch
 	probs <- c(0.10, 0.50, 0.90)
-	d1 <- as.data.frame(quantile(x$oe, probs))
-	d2 <- as.data.frame(quantile(x$ee, probs))
-	d3 <- as.data.frame(quantile(x$oee, probs))
-	obs <- x$obs
-
-	# these are absolute catches which should be in a similar scale
-	# ylimits across catch plots
-	v1 <- c(d1$data, d2$data, d3$data)
-	mn1 <- min(v1)*.95
-	mx1 <- max(v1)*1.05
-
-	# arguments for xyplot
-	pset <- list(regions=list(col="gray95"), axis.line = list(col = "gray75"))
-	pfun <- function(x,y,subscripts,groups,...){
-		panel.polygon(c(x[groups=="10%"],rev(x[groups=="90%"])), c(y[groups=="10%"],rev(y[groups=="90%"])), col="gray85", border=0)
-		panel.grid(col="gray95")
-		panel.xyplot(x[groups=="50%"], y[groups=="50%"], lty=2, col=1, lwd=1.5, ...)
-		panel.xyplot(dimnames(obs)[[2]], c(obs), type="l", col=1, lwd=1.5)
-	}
-
-	# oe
-	p1 <- xyplot(data~year, groups=iter, data=d1, type="l", par.settings=pset, panel=pfun, xlab="", ylab="", main="Observation error", ylim=c(mn1, mx1)) 
-
-	# ee
-	p2 <- xyplot(data~year, groups=iter, data=d2, type="l", par.settings=pset, panel=pfun, xlab="", ylab="", main="Estimation error", ylim=c(mn1, mx1)) 
-
-	# oee
-	p3 <- xyplot(data~year, groups=iter, data=d3, type="l", par.settings=pset, panel=pfun, xlab="", ylab="", main="Prediction error", ylim=c(mn1, mx1)) 
-
-	#----------------------------------------------------------------
-	# catch residuals
-	#----------------------------------------------------------------
-
-	# these are residuals, which should be around a N(0,1) scale, and
-	# have negative values
-	# ylimits across residual plots
-	v2 <- max(abs(unlist(x[c("resprs","resstd","resraw")])))*1.05
-	mn2 <- -v2
-	mx2 <- v2
-
-	# build dataset
-	y1 <- x1 <- x2 <- as.numeric(dimnames(x$obs)[[2]])
-	y1[] <- 0
-	df0 <- data.frame(x1=x1, x2=x2, y1=y1, resprs=c(x$resprs), resstd=c(x$resstd), resraw=c(x$resraw))
-
-	# arguments for xyplot
-	args <- list(...)
-	args$x = y1~x1
-	args$data = df0
-	args$type="p"
-	args$cex=0.5
-	args$pch=19
-	args$col=1
-	args$ylim=c(mn2, mx2)
-	args$ylab=""
-	args$xlab=""
-	args$par.settings=list(axis.line = list(col = "gray75"))
-
-	# pearson
-	args$panel=function(x1, y1, ...){
-		panel.grid(col="gray95")
-		panel.segments(df0$x1, df0$y1, df0$x2, df0$resprs, ...)
-		panel.xyplot(df0$x1, df0$resprs, ...)
-		}
-	args$main="Pearson residuals"
-	p4 <- do.call("xyplot", args)
-
-	# standardized
-	args$panel=function(x1, y1, ...){
-		panel.grid(col="gray95")
-		panel.segments(df0$x1, df0$y1, df0$x2, df0$resstd, ...)
-		panel.xyplot(df0$x1, df0$resstd, ...)
-		}
-	args$main="Standardized residuals"
-	p5 <- do.call("xyplot", args)
-
-	# deviances
-	args$panel=function(x1, y1, ...){
-		panel.grid(col="gray95")
-		panel.segments(df0$x1, df0$y1, df0$x2, df0$resraw, ...)
-		panel.xyplot(df0$x1, df0$resraw, ...)
-		}
-	args$main="Raw residuals (deviances)"
-	p6 <- do.call("xyplot", args)
+	d1 <- as.data.frame(quantile(x$oe, probs))%>%mutate(test="Observation error")%>%
+	  pivot_wider(names_from = iter, values_from = data)%>%rename(median=`50%`)
+	d2 <- as.data.frame(quantile(x$ee, probs))%>%mutate(test="Estimation error")%>%
+	  pivot_wider(names_from = iter, values_from = data)%>%rename(median=`50%`)
+	d3 <- as.data.frame(quantile(x$oee, probs))%>%mutate(test="Prediction error")%>%
+	  pivot_wider(names_from = iter, values_from = data)%>%rename(median=`50%`)
+	obs <- as.data.frame(x$obs)%>%select(year,data)%>%rename(observed=data)
+	plot_data<-rbind(d1,d2,d3)%>%left_join(obs,by="year")%>%
+	  select(year,test,`10%`,`90%`,median,observed)%>%
+	  pivot_longer(!c("year","test","10%","90%"),names_to="CI 80%",values_to="Catch (t)")
+	
+	# plot catch
+	plot_catch<-ggplot(plot_data,aes(x=year,y=`Catch (t)`,linetype=`CI 80%`))+
+	  geom_line()+
+	  theme_bw()+
+	  geom_ribbon(aes(ymin=`10%`, ymax=`90%`), fill = "grey",alpha = 0.3)+
+	  facet_wrap(~factor(test,levels=c("Observation error","Prediction error","Estimation error")),ncol=1)+
+	  labs(x = "Year")+
+	  theme(text=element_text(size=18))
 	
 	#----------------------------------------------------------------
-	# build plot
+	# residuals
 	#----------------------------------------------------------------
-	grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 3, as.table=FALSE, top=textGrob("Aggregated catch diagnostics \n", gp=gpar(fontface = "bold", cex=2)), bottom=textGrob("(shaded area = CI80%, dashed line = median, solid line = observed) \n", gp=gpar(cex=1.25)))
+	
+	
+	# build datasets residuals
+	res1 <- as.data.frame(x$resstd)%>%mutate(test="Standardized residuals")%>%
+	  pivot_wider(names_from = iter, values_from = data)
+	res2 <- as.data.frame(x$resprs)%>%mutate(test="Pearson residuals")%>%
+	  pivot_wider(names_from = iter, values_from = data)
+	res3 <- as.data.frame(x$resraw, probs)%>%mutate(test="Raw residuals (deviances)")%>%
+	  pivot_wider(names_from = iter, values_from = data)
+	plot_data_res<-rbind(res1,res2,res3)%>%
+	  select(year,test,`1`)
+	
+	# plot residuals
+	plot_res<-ggplot(plot_data_res, aes(x = year, y = `1`)) +
+	  geom_segment(aes(x = year, xend = year, y = 0, yend = `1`), color = "black") +
+	  theme_bw()+geom_hline(yintercept=0, linetype='dashed')+
+	  geom_point(size = 2) +facet_wrap(~test,ncol=1)+
+	  labs(y = "Residuals",x = "Year")+
+	  theme(text=element_text(size=18))
+	
+	#join plot
+	final_plot<-ggarrange(plot_catch,plot_res,common.legend = T, ncol=2,legend="bottom")
+	annotate_figure(final_plot,top = text_grob("Aggregated catch",size=18))
 
 })
 
