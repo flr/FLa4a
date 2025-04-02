@@ -57,7 +57,7 @@ setMethod("ma", "a4aFitSAs", function(object, stock, FUN, nsim = 1000){
 
 	stock.sim <- propagate(stock, nsim)
 	for (i in seq_along(object)) {
-		if (sum(sim == i)) stock.sim[,,,,,sim == i] <- stock.sim[,,,,,sim == i] + object[[i]]
+		if (sum(sim == i)) stock.sim[,,,,,sim == i] <- stock.sim[,,,,,sim == i] + simulate(object[[i]], sum(sim==i))
 	}
 	# DONE !!
 	stock.sim

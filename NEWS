@@ -10,6 +10,7 @@
  BUG FIXES:
 - sca use of covariates fixed
 - several man pages issues fixed
+- ma simulation from fits fixed
 
  FLa4a 1.8.x:
 
