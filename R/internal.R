@@ -127,8 +127,9 @@ list2df <- function(fleet, list.obs, list.var, center.log) {
 	obs <- log(as.vector(x)) - center.log[fleet]
 	if (all(is.na(v))) {
 		wts <- 1
-	} else { # use inverse variance weighting
-		wts <-  1 / v # inverse variance weigting
+	} else {
+		#wts <- 1 / v # inverse variance weigting of likelihood, up to v191
+		wts <- v # variance weighting from v192
 	}
 	ret <- data.frame(fleet = fleet, year = year, age = age, obs = obs, weights = wts)
 	ret <- ret[!is.na(ret $ obs), ]
