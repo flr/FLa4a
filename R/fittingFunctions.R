@@ -690,9 +690,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   if (fit == "setup") {
     return(fitList)
   }
+
   out <- fitList$out
   my.time.used <- fitList$my.time.used
-  wkdir <- fitList$wkdir
+
   convergence <- fitList$convergence
   pnames <- fitList$pnames
   ages <- fitList$ages
@@ -802,11 +803,13 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     a4aout@pars@stkmodel@units <- units(catch.n(stock))
     pars <- out$par.est
     active <- sapply(out$par.std, length) > 0
+    pnames <- pnames[1:length(active)]
     # add in iter dimension
     dim(out$cov) <- c(dim(out$cov), 1)
     dimnames(out$cov) <- list(unlist(pnames), unlist(pnames), 1)
     stkactive <- active
-    if (convergence > 0) stkactive[c(2, 3, 7)] <- FALSE else stkactive[c(2, 3)] <- FALSE
+    # if (convergence > 0) stkactive[c("Qpar", "Vpar", 7)] <- FALSE else stkactive[c("Qpar", "Vpar")] <- FALSE
+    stkactive[c("Qpar", "Vpar")] <- FALSE
     a4aout@pars@stkmodel@coefficients <- FLPar(structure(unlist(pars[stkactive]), names = unlist(pnames[stkactive])))
     units(a4aout@pars@stkmodel@coefficients) <- "NA"
     a4aout@pars@stkmodel@distr <- "norm"
@@ -819,12 +822,13 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
     a4aout@pars@stkmodel@vcov <- out$cov[whichcol, whichcol, 1, drop = FALSE]
 
     # fill up qmodel
+    names(pnames) <- names(pars)
     qmodels <- lapply(seq_along(indices), function(i) {
-      which <- sapply(strsplit(pnames[[2]], split = ":"), "[[", 2) %in% fleet.names[i + 1]
+      which <- sapply(strsplit(pnames[["Qpar"]], split = ":"), "[[", 2) %in% fleet.names[i + 1]
       submodel(
         formula = qmodel[[i]],
-        coefficients = FLPar(structure(pars[[2]][which], names = pnames[[2]][which])),
-        vcov = out$cov[pnames[[2]][which], pnames[[2]][which], 1, drop = FALSE],
+        coefficients = FLPar(structure(pars[["Qpar"]][which], names = pnames[["Qpar"]][which])),
+        vcov = out$cov[pnames[["Qpar"]][which], pnames[["Qpar"]][which], 1, drop = FALSE],
         distr = "norm",
         # centering = FLPar(centering = center.log[i+1] - center.log[1]), # must also subtract catch scaling
         centering = FLPar(centering = center.log[i + 1]), # must not! subtract catch scaling
@@ -841,11 +845,11 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 
     # fill up vmodel
     vmodels <- lapply(seq_along(fleet.names), function(i) {
-      which <- sapply(strsplit(pnames[[3]], split = ":"), "[[", 2) %in% fleet.names[i]
+      which <- sapply(strsplit(pnames[["Vpar"]], split = ":"), "[[", 2) %in% fleet.names[i]
       submodel(
         formula = vmodel[[i]],
-        coefficients = FLPar(structure(pars[[3]][which], names = pnames[[3]][which])),
-        vcov = out$cov[pnames[[3]][which], pnames[[3]][which], 1, drop = FALSE],
+        coefficients = FLPar(structure(pars[["Vpar"]][which], names = pnames[["Vpar"]][which])),
+        vcov = out$cov[pnames[["Vpar"]][which], pnames[["Vpar"]][which], 1, drop = FALSE],
         distr = "norm",
         centering = FLPar(centering = 0),
         name = fleet.names[i],
@@ -901,16 +905,14 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   # ========================================================================
   # Prepare data
   # ========================================================================
-  # change NA to -1 for admb
-  # df.data$age <- with(df.data, replace(age, is.na(age), -1))
 
-  # set up variable names
+  # set up variable names (same order as TMB input pars)
   pnames <- list(
     paste0("fMod:", colnames(Xf)),
     paste0("qMod:", unlist(sapply(1:length(indices), function(i) paste0(fleet.names[i + 1], ":", colnames(Xqlist[[i]]))))),
-    paste0("vMod:", unlist(sapply(1:length(fleet.names), function(i) paste0(fleet.names[i], ":", colnames(Xvlist[[i]]))))),
     paste0("n1Mod:", colnames(Xny1)),
     paste0("rMod:", colnames(Xr)),
+    paste0("vMod:", unlist(sapply(1:length(fleet.names), function(i) paste0(fleet.names[i], ":", colnames(Xvlist[[i]]))))),
     paste0("sraMod:", colnames(Xsra)),
     paste0("srbMod:", colnames(Xsrb))
   )
@@ -955,7 +957,8 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     designRb = unname(Xsrb),
     RmodelId = srr$ID,
     #   isPlusGrp = plusgroup,
-    spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0)
+    spr0 = ifelse(!is.null(srr$SPR0), srr$SPR0, 0),
+    estimateCV = srr$ID > 0 && srr$srrCV < 0
   )
 
   Lpin <- list(
@@ -966,16 +969,15 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     Vpar = rep(0, ncol(Ldat$designV)),
     Rapar = rep(0, ncol(Ldat$designRa)),
     Rbpar = rep(0, ncol(Ldat$designRb)),
-    logSrCV = 0 # log(srr$srrCV)
+    logSrCV = 0
   )
 
   # ========================================================================
   # Is recruitment random effect or fixed effect with user specified CV
   # ========================================================================
 
-  estimateCV <- srr$ID > 0 && srr$srrCV < 0
 
-  if (estimateCV) {
+  if (Ldat$estimateCV) {
     # random effect recruitment, estimating CV
     random <- "Rpar"
     map <- NULL
@@ -990,20 +992,16 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     # fixed effect recruitment with user specified CV
     random <- NULL
     map <- list(logSrCV = factor(NA))
-    Lpin$logSrCV <- srr$srrCV
+    Lpin$logSrCV <- log(srr$srrCV)
   }
 
-#  if (srr$srrCV < 0) {
-#    # we have no SR model
-#    map <- list(Rapar = factor(NA), Rbpar = factor(NA))
-#  } else if (srr$ID == 4) {
-#    # its the geomean model
-#    map <- list(Rbpar = factor(NA))
-#  } else {
-#    map <- NULL
-#  }
-
-
+  # adjust map based on srr model
+  if (srr$ID == 4) {
+    map <- c(map, list(Rbpar = factor(NA)))
+  } else
+  if (srr$ID == 0) {
+    map <- c(map, list(Rapar = factor(NA), Rbpar = factor(NA)))
+  }
 
   # ========================================================================
   # run model
@@ -1013,22 +1011,19 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
 
   obj <-
     MakeADFun(
-      data, parameters,
+      Ldat, Lpin,
       DLL = "FLa4a",
       map = map,
       random = random,
-      silent = FALSE
+      silent = !verbose
     )
 
-  if (fit == "setup") {
-    return(obj)
-  }
-
   opt <- nlminb(obj$par, obj$fn, obj$gr, control = list(iter.max = 10000, eval.max = 10000))
+
   if (fit != "MP") {
     # The accuracy is good without these steps
     # but more consistent with these extra iterations
-    newtonsteps <- 3 # fix to 3 for now...
+    newtonsteps <- 3 # fix to 5 for now...
     # this is required, otherwise we do not get the same
     # accuracy as the ADMB optimiser
     for (i in seq_len(newtonsteps)) { # Take a few extra newton steps borrowed from Anders/Casper!
@@ -1040,11 +1035,11 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   }
 
   # rep <- obj$report()
-  sdrep <- sdreport(obj, opt$par)
+  sdrep <- TMB::sdreport(obj, opt$par)
   sdrep$cov <- NULL # this is the cvov of the model predictions
 
   if (fit == "setup") {
-    return(list(obj = obj, opt = opt, sdrep = sdrep, Ldat = Ldat, Lpin = Lpin))
+    #return(list(obj = obj, opt = opt, sdrep = sdrep, Ldat = Ldat, Lpin = Lpin))
   }
 
   # ========================================================================
@@ -1053,62 +1048,61 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   # post processing split
   my.time.used[3] <- Sys.time()
 
-  if (fit %in% c("MP", "assessment", "MCMC")) {
-    # read admb output from file
-    out <- list()
+  # read admb output from file
+  out <- list()
 
-    # get .par file equivalents
-    out$nopar <- length(opt$par)
-    out$nlogl <- opt$objective
-    out$maxgrad <- max(abs(sdrep$gradient.fixed))
+  # get .par file equivalents
+  out$nopar <- length(opt$par)
+  out$nlogl <- opt$objective
+  out$nlogl_comps <- obj$report()$nllpart
+  out$maxgrad <- max(abs(sdrep$gradient.fixed))
 
-    if (srr$srrCV < 0) {
-      # we have no SR model
-      out$par.est <- as.list(sdrep, "Est")[-c(6, 7)]
-    } else if (srr$ID == 4) {
-      # geomean
-      out$par.est <- as.list(sdrep, "Est")[-7]
+  if (srr$ID == 0) {
+    # we have no SR model
+    out$par.est <- as.list(sdrep, "Est")[-c(6, 7, 8)]
+  } else if (srr$ID == 4) {
+    # geomean
+    out$par.est <- as.list(sdrep, "Est")[-c(7, 8)]
+  } else {
+    out$par.est <- as.list(sdrep, "Est")[-8]
+  }
+
+  ages <- sort(unique(full.df$age))
+  years <- sort(unique(full.df$year))
+
+  # set up basic return values
+  convergence <- opt$convergence
+  out$N <- matrix(sdrep$value[names(sdrep$value) == "N"], length(years), length(ages))
+  out$F <- matrix(sdrep$value[names(sdrep$value) == "F"], length(years), length(ages))
+  out$Q <- matrix(sdrep$value[names(sdrep$value) == "Q"], length(years) * length(indices), length(ages))
+  dim(out$Q) <- c(length(indices), length(years), length(ages))
+  out$Q <- aperm(out$Q, c(3, 2, 1))
+  colnames(out$N) <- colnames(out$F) <- ages
+  rownames(out$N) <- rownames(out$F) <- years
+  dimnames(out$Q) <- list(ages, years, names(indices))
+
+  if (fit != "MP") {
+    # return hessian and standard errors
+    if (!sdrep$pdHess) {
+      # if model was not identifiable make sure return values are NAs
+      warning("Hessian was not positive definite.")
+      out$N[] <- NA
+      out$F[] <- NA
+      out$Q[] <- NA
+      out$cov <- sdrep$cov.fixed
+      out$cov[] <- NA
     } else {
-      out$par.est <- as.list(sdrep, "Est")
-    }
-
-    ages <- sort(unique(full.df$age))
-    years <- sort(unique(full.df$year))
-
-    # set up basic return values
-    convergence <- opt$convergence
-    out$N <- matrix(sdrep$value[names(sdrep$value) == "expn"], length(years), length(ages))
-    out$F <- matrix(sdrep$value[names(sdrep$value) == "expf"], length(years), length(ages))
-    out$Q <- matrix(sdrep$value[names(sdrep$value) == "q"], length(years) * length(indices), length(ages))
-    dim(out$Q) <- c(length(indices), length(years), length(ages))
-    out$Q <- aperm(out$Q, c(3, 2, 1))
-    colnames(out$N) <- colnames(out$F) <- ages
-    rownames(out$N) <- rownames(out$F) <- years
-    dimnames(out$Q) <- list(ages, years, names(indices))
-
-    if (fit != "MP") {
-      # return hessian and standard errors
-      if (!sdrep$pdHess) {
-        # if model was not identifiable make sure return values are NAs
-        warning("Hessian was not positive definite.")
-        out$N[] <- NA
-        out$F[] <- NA
-        out$Q[] <- NA
-        out$cov <- sdrep$cov.fixed
-        out$cov[] <- NA
+      out$logDetHess <- NA
+      if (srr$ID == 0) {
+        # we have no SR model
+        out$par.std <- as.list(sdrep, "Std")[-c(6, 7, 8)]
+      } else if (srr$ID == 4) {
+        # geomean
+        out$par.std <- as.list(sdrep, "Std")[-c(7, 8)]
       } else {
-        out$logDetHess <- NA
-        if (srr$srrCV < 0) {
-          # we have no SR model
-          out$par.std <- as.list(sdrep, "Std")[-c(6, 7)]
-        } else if (srr$ID == 4) {
-          # geomean
-          out$par.std <- as.list(sdrep, "Std")[-7]
-        } else {
-          out$par.std <- as.list(sdrep, "Std")
-        }
-        out$cov <- sdrep$cov.fixed
+        out$par.std <- as.list(sdrep, "Std")[-8]
       }
+      out$cov <- sdrep$cov.fixed
     }
   }
 

@@ -166,8 +166,9 @@ dropMatrixIter <- function(object, iter = 1) {
 check_cv <- function(CV) {
   if (!is.numeric(CV))
     stop("CV must be a numeric value not: ", capture.output(print(CV)))
-  if (CV <= 0)
-    stop ("CV in stock recruit relationship cannot be less than zero")
+  if (CV != -1 && CV <= 0) {
+    stop("CV in stock recruit relationship cannot be less than zero")
+  }
 }
 
 bevholt <- function(CV = 0.5, a = ~ 1, b = ~ 1) {
@@ -196,7 +197,7 @@ geomean <- function(CV = 0.5, a = ~ 1, ...) {
 }
 
 none <- function(...) {
-  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = -1, ID = 4)
+  list(srr = "geomean", a = ~ 1, b = ~ 1, SPR0 = 1, srrCV = 1, ID = 0)
 }
 
 a4aSRmodelList <- c("bevholt", "bevholtSV", "ricker", "hockey", "geomean")

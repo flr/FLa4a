@@ -1,7 +1,7 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 1.9.99-001
+Version: 1.9.99-002
 Authors@R: c(
   person("Colin P.", "Millar", email = "colin.millar@ices.dk", role = "aut"),
   person("Ernesto", "Jardim", email = "ernesto.jardim@msc.org", role = c("aut", "cre")))

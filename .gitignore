@@ -20,3 +20,5 @@ src/a4a.o
 inst/doc/*
 
 docs/manual/cache/*
+
+src/FLa4a.o

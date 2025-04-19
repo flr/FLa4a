@@ -31,6 +31,8 @@ importFrom("grid",
 importFrom("gridExtra",
   grid.arrange)
 import("latticeExtra")
+importFrom(TMB, MakeADFun)
+importFrom(TMB, sdreport)
 
 export(collapseSeasons)
 export(getADMBHessian)

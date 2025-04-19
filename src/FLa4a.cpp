@@ -48,6 +48,7 @@ Type objective_function<Type>::operator()()
   // What model are we working with:
   DATA_INTEGER(RmodelId)
   DATA_SCALAR(spr0)
+  DATA_INTEGER(estimateCV)
 
   // data summaries
   int nobs = logObs.size();
@@ -210,37 +211,40 @@ Type objective_function<Type>::operator()()
     Type h;
     Type v;
 
-    for (int y = minAge; y < nrow; ++y)
+    // calculate predictions of recruitment for year = minYear + minAge to maxYear
+    // this misses the first minAge years.
+    for (int y = 0; y < nrow - minAge; ++y)
     {
-      obsLogR(y - minAge) = logR(y);
+      // un penalised estimates of recriutment (our "observations")
+      obsLogR(y) = logR(y + minAge);
       switch (RmodelId)
       {
       case 1:
         // beverton holt
-        predLogR(y - minAge) = logRa(y) + log(ssb(y - minAge)) - log(exp(logRb(y)) + ssb(y - minAge));
+        predLogR(y) = logRa(y + minAge) + log(ssb(y)) - log(exp(logRb(y + minAge)) + ssb(y));
         break;
 
       case 2:
         // ricker
-        predLogR(y - minAge) = logRa(y) + log(ssb(y - minAge)) - exp(logRb(y)) * ssb(y - minAge);
+        predLogR(y) = logRa(y + minAge) + log(ssb(y)) - exp(logRb(y + minAge)) * ssb(y);
         break;
 
       case 3:
         // smooth hockey stick (Mesnil and Rochet, gamma = 0.1)
-        predLogR(y - minAge) = logRa(y) + log(ssb(y - minAge) + sqrt(exp(2.0 * logRb(y)) + 0.0025) - sqrt(pow(ssb(y - minAge) - exp(logRb(y)), 2.0) + 0.0025));
+        predLogR(y) = logRa(y + minAge) + log(ssb(y) + sqrt(exp(2.0 * logRb(y + minAge)) + 0.0025) - sqrt(pow(ssb(y) - exp(logRb(y + minAge)), 2.0) + 0.0025));
         break;
 
       case 4:
         // geometric mean
-        predLogR(y - minAge) = logRa(y);
+        predLogR(y) = logRa(y + minAge);
         break;
 
       case 5:
         // bevholt with steepness: ra is a transform of h; rb is a transform of v
         // spr0 is provided by user
-        h = exp(logRa(y)) / (1 + exp(logRa(y))) * 0.8 + 0.2;
-        v = exp(logRb(y));
-        predLogR(y - minAge) = log(6 * h * v * ssb(y - minAge)) - log(spr0 * ((h + 1) * v + (5 * h - 1) * ssb(y - minAge)));
+        h = exp(logRa(y + minAge)) / (1 + exp(logRa(y + minAge))) * 0.8 + 0.2;
+        v = exp(logRb(y + minAge));
+        predLogR(y) = log(6 * h * v * ssb(y)) - log(spr0 * ((h + 1) * v + (5 * h - 1) * ssb(y)));
         break;
 
       default:
@@ -250,31 +254,47 @@ Type objective_function<Type>::operator()()
         break;
       }
     }
+    // calculate the likelihood of the recruitment estimates
     nllpart(nsurvey + 1) = -sum(dnorm(obsLogR, predLogR, varSDPredR, true));
     jnll += -sum(dnorm(obsLogR, predLogR, varSDPredR, true));
 
     if (RmodelId == 4)
     {
       // include in first years
-      for (int y = 0; y < minAge; ++y)
+      for (int y = 1; y < minAge; ++y)
       {
         nllpart(nsurvey + 1) += -dnorm(logR(y), logRa(y), varSDPredR, true);
         jnll += -dnorm(logR(y), logRa(y), varSDPredR, true);
       }
     }
-    else
-    {
-      // first years are geomean
-      for (int y = 0; y < minAge; ++y)
-      {
-        Type meanLogR = predLogR.sum() / predLogR.size();
-        nllpart(nsurvey + 1) += -dnorm(logR(y), meanLogR, varSDPredR, true);
-        jnll += -dnorm(logR(y), logRa(y), varSDPredR, true);
-      }
-    }
+
+    // if (estimateCV > 0)
+    // {
+    //   if (RmodelId == 4)
+    //   {
+    //     // include in first years
+    //     for (int y = 0; y < minAge-1; ++y)
+    //     {
+    //       nllpart(nsurvey + 1) += -dnorm(logR(y), logRa(y), varSDPredR, true);
+    //       jnll += -dnorm(logR(y), logRa(y), varSDPredR, true);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     first years are geomean if CV is being estimated
+    //     for (int y = 0; y < minAge; ++y)
+    //     {
+    //       Type meanLogR = predLogR.sum() / predLogR.size();
+    //       nllpart(nsurvey + 1) += -dnorm(logR(y), meanLogR, varSDPredR, true);
+    //       jnll += -dnorm(logR(y), logRa(y), varSDPredR, true);
+    //     }
+    //   }
+    // }
   }
 
-  vector<Type> R = exp(logR);
+  vector<Type> F = exp(expandedF);
+  matrix<Type> N = exp(logN.array());
+  vector<Type> Q = exp(expandedQ);
 
   REPORT(jnll);
   REPORT(nllpart)
@@ -286,10 +306,11 @@ Type objective_function<Type>::operator()()
   REPORT(logN);
   REPORT(logQ);
   REPORT(logV);
-  REPORT(logSrCV)
+  REPORT(logSrCV);
 
-  ADREPORT(ssb);
-  ADREPORT(R);
+  ADREPORT(F);
+  ADREPORT(N);
+  ADREPORT(Q);
 
   return jnll;
 
