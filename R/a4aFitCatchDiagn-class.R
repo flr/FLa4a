@@ -68,7 +68,7 @@ setMethod("computeCatchDiagnostics", signature(object="a4aFit"), function(object
 #' flqs <- computeCatchDiagnostics(fit, ple4)
 #' plot(flqs)
 
-setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
+setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, probs=c(0.1, 0.9), type="all", ...){
 	args <- list()
 
 	#----------------------------------------------------------------
@@ -81,11 +81,15 @@ setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
 	#----------------------------------------------------------------
 	
 	# build datasets
-	probs <- c(0.10, 0.50, 0.90)
+	ci <- probs[2] - probs[1]
+	probs <- c(probs[1], 0.5, probs[2])
 	d1 <- as.data.frame(quantile(x$oe, probs))
 	d2 <- as.data.frame(quantile(x$ee, probs))
 	d3 <- as.data.frame(quantile(x$oee, probs))
 	obs <- x$obs
+	d1$iter <- factor(d1$iter, labels=c("l","m","u"))
+	d2$iter <- factor(d2$iter, labels=c("l","m","u"))
+	d3$iter <- factor(d3$iter, labels=c("l","m","u"))
 
 	# these are absolute catches which should be in a similar scale
 	# ylimits across catch plots
@@ -96,14 +100,14 @@ setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
 	# arguments for xyplot
 	pset <- list(regions=list(col="gray95"), axis.line = list(col = "gray75"))
 	pfun <- function(x,y,subscripts,groups,...){
-		panel.polygon(c(x[groups=="10%"],rev(x[groups=="90%"])), c(y[groups=="10%"],rev(y[groups=="90%"])), col="gray85", border=0)
+		panel.polygon(c(x[groups=="l"],rev(x[groups=="u"])), c(y[groups=="l"],rev(y[groups=="u"])), col="gray85", border=0)
 		panel.grid(col="gray95")
-		panel.xyplot(x[groups=="50%"], y[groups=="50%"], lty=2, col=1, lwd=1.5, ...)
+		panel.xyplot(x[groups=="m"], y[groups=="m"], lty=2, col=1, lwd=1.5, ...)
 		panel.xyplot(dimnames(obs)[[2]], c(obs), type="l", col=1, lwd=1.5)
 	}
 
 	# oe
-	p1 <- xyplot(data~year, groups=iter, data=d1, type="l", par.settings=pset, panel=pfun, xlab="", ylab="", main="Observation error", ylim=c(mn1, mx1)) 
+	p1 <- xyplot(data~year, groups=iter, data=d1, type="l", par.settings=pset, panel=pfun, xlab="", ylab="", main="Observation error", ylim=c(mn1, mx1))
 
 	# ee
 	p2 <- xyplot(data~year, groups=iter, data=d2, type="l", par.settings=pset, panel=pfun, xlab="", ylab="", main="Estimation error", ylim=c(mn1, mx1)) 
@@ -170,7 +174,16 @@ setMethod("plot", c("a4aFitCatchDiagn", "missing"), function(x, y=missing, ...){
 	#----------------------------------------------------------------
 	# build plot
 	#----------------------------------------------------------------
-	grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 3, as.table=FALSE, top=textGrob("Aggregated catch diagnostics \n", gp=gpar(fontface = "bold", cex=2)), bottom=textGrob("(shaded area = CI80%, dashed line = median, solid line = observed) \n", gp=gpar(cex=1.25)))
 
+	subtext <- paste("(shaded area = CI", ci*100, "%, dashed line = median, solid line = observed \n", sep="")
+
+	if(type=="prediction"){
+		p3$sub <- list(label=subtext, cex=1)
+		p3$main <- list(label="Prediction error" , cex=1.5)
+		print(p3)
+	}
+	if(type=="all"){
+		grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 3, as.table=FALSE, top=textGrob("Aggregated catch diagnostics \n", gp=gpar(fontface = "bold", cex=1.5)), bottom=textGrob(subtext, gp=gpar(cex=1)))
+	}
 })
 
