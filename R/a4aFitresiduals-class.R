@@ -28,7 +28,8 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
     if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
 	# object holder
 	lst <- list()
-	length(lst) <- length(indices) + 2
+	#length(lst) <- length(indices) + 2
+	length(lst) <- length(indices) + 1
 	# catch
 	lst[[1]] <- stdlogres(catch.n(stock), catch.n(object))
 	# indices
@@ -36,9 +37,10 @@ setMethod("residuals", signature(object="a4aFit"), function(object, stock, indic
 	for(i in 1:length(indices)){
 		lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]])
 	}
-	lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
+	#lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
 	# out
-	names(lst) <- c("catch.n", names(indices), "catch")
+	#names(lst) <- c("catch.n", names(indices), "catch")
+	names(lst) <- c("catch.n", names(indices))
 	new("a4aFitResiduals", new("FLQuants", lst, desc="standardized residuals"))
   }
 )
@@ -59,7 +61,8 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
     if(is(indices, 'FLIndex')) indices <- FLIndices(indices)
 	# object holder
 	lst <- list()
-	length(lst) <- length(indices) + 2
+	#length(lst) <- length(indices) + 2
+	length(lst) <- length(indices) + 1
 
 	if(type=="standardized"){
 		# catch
@@ -69,7 +72,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		for(i in 1:length(indices)){
 			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]])
 		}
-		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
+		#lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
 		desc <- "standardized residuals"
 	}
 	if(type=="pearson"){
@@ -82,9 +85,9 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]], sdlog=sdlog[[i+1]])
 		}
 		# for total catch variance is derived by simulation
-		flq <- rlnorm(500, log(catch.n(object)), sdlog$catch)
-		sdlog <- sqrt(iterVars(log(quantSums(flq*catch.wt(stock)))))
-		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=sdlog)
+		#flq <- rlnorm(500, log(catch.n(object)), sdlog$catch)
+		#sdlog <- sqrt(iterVars(log(quantSums(flq*catch.wt(stock)))))
+		#lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=sdlog)
 		desc <- "pearson residuals"
 	}
 	if(type=="deviances"){
@@ -96,12 +99,13 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		for(i in 1:length(indices)){
 			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]], sdlog=sdlog)
 		}
-		lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=1)
+		#lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=1)
 		desc <- "deviances"
 	}
 
 	# out
-	names(lst) <- c("catch.n", names(indices), "catch")
+	#names(lst) <- c("catch.n", names(indices), "catch")
+	names(lst) <- c("catch.n", names(indices))
 	new("a4aFitResiduals", new("FLQuants", lst, desc=desc))
   }
 )
@@ -162,7 +166,8 @@ setMethod("stdlogres", c("FLQuant","FLQuant"), function(obs, fit, ...){
 
 setMethod("plot", c("a4aFitResiduals", "missing"), function(x, y=missing, auxline="smooth", by="year", ...){
 	args <- list()
-	args$data <- as.data.frame(x[names(x)!="catch"])
+	#args$data <- as.data.frame(x[names(x)!="catch"])
+	args$data <- as.data.frame(x)
     if(by=="year"){
         args$x <- as.formula("data~year|factor(age)*qname")
 	args$main="log residuals of catch and abundance indices by year"
