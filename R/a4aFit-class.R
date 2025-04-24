@@ -168,5 +168,27 @@ setMethod("coerce", signature(from = "a4aFit", to = "FLSR"),
   }
 )
 
+#' @rdname a4aFit-class
+#' @param x the object to be subset
+#' @param start initial year
+#' @param end final year
+#' @param extend if object is shorter than end-start extend to cover year range
+#' @param frequency interval between years if extended
+setMethod("window", signature(x="a4aFit"),
+  function(x, start=dims(x)$minyear, end=dims(x)$maxyear, extend=TRUE, frequency=1)
+  {
+    args <- list()
+    args$x <- x
+    args$start <- start
+    args$end <- end
+    args$extend <- extend
+    args$frequency <- frequency
+    x <- do.call("window", args)
+    args$x <- x@index
+    x@index <- do.call("window", args)
+    return(x)
+  }
+)
+
 
 

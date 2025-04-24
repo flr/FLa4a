@@ -11,6 +11,7 @@
 - sca use of covariates fixed
 - several man pages issues fixed
 - ma simulation from fits fixed
+- window method for a4aSA not windowing the index fixed
 
  FLa4a 1.8.x:
 
