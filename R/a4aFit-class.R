@@ -181,18 +181,6 @@ setMethod("window", signature(x="a4aFit"),
     x@index <- window(x@index, start=start, end=end, extend=extend, frequency=frequency)
     x@range["minyear"] <- as.numeric(dims(x)$minyear)
     x@range["maxyear"] <- as.numeric(dims(x)$maxyear)
-#
-#
-#
-#   args <- list()
-#     args$x <- x
-#     args$start <- start
-#     args$end <- end
-#     args$extend <- extend
-#     args$frequency <- frequency
-#     x <- do.call("window", args)
-#     args$x <- x@index
-#     x@index <- do.call("window", args)
     return(x)
   }
 )
