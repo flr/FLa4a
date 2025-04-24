@@ -177,15 +177,22 @@ setMethod("coerce", signature(from = "a4aFit", to = "FLSR"),
 setMethod("window", signature(x="a4aFit"),
   function(x, start=dims(x)$minyear, end=dims(x)$maxyear, extend=TRUE, frequency=1)
   {
-    args <- list()
-    args$x <- x
-    args$start <- start
-    args$end <- end
-    args$extend <- extend
-    args$frequency <- frequency
-    x <- do.call("window", args)
-    args$x <- x@index
-    x@index <- do.call("window", args)
+    x <- qapply(x, window, start=start, end=end, extend=extend, frequency=frequency)
+    x@index <- window(x@index, start=start, end=end, extend=extend, frequency=frequency)
+    x@range["minyear"] <- as.numeric(dims(x)$minyear)
+    x@range["maxyear"] <- as.numeric(dims(x)$maxyear)
+#
+#
+#
+#   args <- list()
+#     args$x <- x
+#     args$start <- start
+#     args$end <- end
+#     args$extend <- extend
+#     args$frequency <- frequency
+#     x <- do.call("window", args)
+#     args$x <- x@index
+#     x@index <- do.call("window", args)
     return(x)
   }
 )
