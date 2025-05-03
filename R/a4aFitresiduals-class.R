@@ -73,7 +73,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 			lst[[i+1]] <- stdlogres(index(indices[[i]]), idx[[i]])
 		}
 		#lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object))
-		desc <- "standardized residuals"
+		desc <- "standardized"
 	}
 	if(type=="pearson"){
 		sdlog <- predict(object)$vmodel
@@ -88,7 +88,7 @@ setMethod("residuals", signature(object="a4aFitSA"), function(object, stock, ind
 		#flq <- rlnorm(500, log(catch.n(object)), sdlog$catch)
 		#sdlog <- sqrt(iterVars(log(quantSums(flq*catch.wt(stock)))))
 		#lst[[length(lst)]] <- stdlogres(catch(stock), computeCatch(stock + object), sdlog=sdlog)
-		desc <- "pearson residuals"
+		desc <- "pearson"
 	}
 	if(type=="deviances"){
 		sdlog <- 1

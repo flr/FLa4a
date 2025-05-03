@@ -31,6 +31,9 @@ setMethod("genFLStock", c("FLStock", "missing", "FLQuant", "FLQuant"), function(
 
 #' @rdname genFLStock-methods
 setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(object, R, C, F, ...){
+
+  args <- list(...)
+
   # requires checking dimensions
   if(!identical(dim(catch.n(object))[-c(1,6)], dim(R)[-c(1,6)])) stop("Recruitment vector must have consistent dimensions with the stock object")
   if(!identical(dim(catch.n(object))[-6]    , dim(F)[-6])) stop("Harvest matrix must have consistent dimensions with the stock object")
@@ -41,19 +44,29 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   nages <- dms$age
   nyrs <- dms$year
   niters <- dim(R)[6]
+  minyr <- range(object)["minyear"]
   flq <- FLQuant(dimnames=dimnames(F))
 
   # compute cumulative Z
   Z <- FLCohort(F + m(object))
+  Z[is.na(Z)] <- 0
   Z[] <- apply(Z, c(2:6), cumsum)
-
   # expand variability into [N] by R*[F]
+  #ifelse(sum(tolower(names(args))=="ny1")==1, ny1 <- args$ny1, ny1 <- stock.n(object)[,1])
+  ny1 <- args$ny1
   Ns <- FLCohort(R[rep(1,nages)])
+
+  for(i in 2:nages){
+    Ns[,ac(minyr-i+1)] <- ny1[i,ac(minyr)]
+  }
+
   Ns <- Ns*exp(-Z)
   Ns <- as(Ns, "FLQuant")
 
   # Update object
   stock.n(object) <- flq
+  # ny1
+  stock.n(object)[,1] <- ny1
   # [R]
   stock.n(object)[1] <- R
   # [N]
