@@ -488,8 +488,8 @@ PROCEDURE_SECTION
         pred(i) = q(locFleet-1,locYear,locAge) - locZ * surveyTimes(locFleet-1) + n(locYear,locAge);
       }
       locVar = mfexp(2.0 * v(locFleet, locYear, locAge));
-      nll += nldnorm(locObs, pred(i), locVar * obsVec(5)); // or do we multiply the variance directly...
-      nllikcomp(locFleet) += obsVec(5) * nldnorm(locObs, pred(i), locVar * obsVec(5));
+      nll += obsVec(5) * nldnorm(locObs, pred(i), locVar); // or do we multiply the variance directly...
+      nllikcomp(locFleet) += obsVec(5) * nldnorm(locObs, pred(i), locVar);
     } else { // an observation of biomass
       pred(i) = 0; // not sure i need to but best to be safe
       for(int a=surveyMinAge(locFleet-1); a<=surveyMaxAge(locFleet-1); ++a) {
@@ -497,8 +497,8 @@ PROCEDURE_SECTION
         pred(i) += mfexp(q(locFleet-1, locYear, a)) * stkWt(locYear, a) * mfexp(n(locYear,a) - surveyTimes(locFleet-1) * locZ);
       }
       locVar = mfexp(2.0 * v(locFleet, locYear, minAge)); // note variance are stored in the minimum age column
-      nll += nldnorm(locObs, log(pred(i)), locVar * obsVec(5)); // or do we multiply the variance directly...
-      nllikcomp(locFleet) += nldnorm(locObs, log(pred(i)), locVar * obsVec(5));
+      nll += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...
+      nllikcomp(locFleet) += obsVec(5) * nldnorm(locObs, log(pred(i)), locVar); // or do we multiply the variance directly...
     }
   }
 
