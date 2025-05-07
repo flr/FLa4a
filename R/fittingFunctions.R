@@ -504,7 +504,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	# convert to dataframe. NOTE: list2df also logs the observations and centers
 	df.data <- do.call(rbind, lapply(1:length(list.obs), list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
 
-	if (any(df.data[,5] != 1) & fit != "MP") message("Note: Provided variances will be used to weight observations.\n\tWeighting assumes variances are on the log scale or equivalently log(CV^2 + 1).")
+    # invert and standardize weights to have mean of 1
+    df.data[, 5] <- df.data[, 5]/mean(df.data[, 5])
+
+	if (any(df.data[,5] != 1) & fit != "MP") message("Note: The provided variances will be used to weight the likelihood.\n\tThe scores will be inverted and standardized to have a mean of 1.")
 
 	# extract auxilliary stock info
 	fbar <-  unname(range(stock)[c("minfbar","maxfbar")])
