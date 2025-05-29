@@ -133,7 +133,7 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
  
     # check model for redundant parameters
     qr.X <- qr(X)
-    rank.deficient <- qr.X $ pivot[abs(diag(qr.X $ qr)) < 1e-7]
+    rank.deficient <- qr.X $ pivot[abs(diag(qr.X $ qr)) < 1e-4]
     if (length(rank.deficient)) {
       droppar <- paste(colnames(X)[rank.deficient], collapse = "\n\t")
       warning("*** ", model.type, " has ", length(rank.deficient)," too many parameter(s)!!\n    i will remove the redundant ones:\n\t", droppar, call. = FALSE)
