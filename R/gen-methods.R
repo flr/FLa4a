@@ -31,7 +31,6 @@ setMethod("genFLStock", c("FLStock", "missing", "FLQuant", "FLQuant"), function(
 
 #' @rdname genFLStock-methods
 setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(object, R, C, F, ...){
-
   args <- list(...)
 
   # requires checking dimensions
@@ -46,20 +45,29 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   niters <- dim(R)[6]
   minyr <- range(object)["minyear"]
   flq <- FLQuant(dimnames=dimnames(F))
+  # create id matrix for cohorts
+  flcid <- FLCohort(F)
+  flcid[!is.na(flcid)] <- 1
 
   # compute cumulative Z
-  Z <- FLCohort(F + m(object))
+  Z <- F + m(object)
+  Z <- FLCohort(Z)
   Z[is.na(Z)] <- 0
   Z[] <- apply(Z, c(2:6), cumsum)
+
   # expand variability into [N] by R*[F]
   #ifelse(sum(tolower(names(args))=="ny1")==1, ny1 <- args$ny1, ny1 <- stock.n(object)[,1])
   ny1 <- args$ny1
-  Ns <- FLCohort(R[rep(1,nages)])
+  Ns <- flq
+  Ns[1] <- R
+  Ns <- FLCohort(Ns)
+  Ns <- Ns[rep(1, nages)]
 
   for(i in 2:nages){
-    Ns[,ac(minyr-i+1)] <- ny1[i,ac(minyr)]
+    Ns[,nages-i+1] <- ny1[i]
   }
 
+  # survivors
   Ns <- Ns*exp(-Z)
   Ns <- as(Ns, "FLQuant")
 
@@ -72,7 +80,8 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   # [N]
   stock.n(object)[-1,-1] <- Ns[-nages,-nyrs]
   # plus group
-  stock.n(object)[nages,-1] <- Ns[nages,-1] + stock.n(object)[nages,-1]
+  stock.n(object)[nages,-1] <- Ns[nages,-nyrs] + stock.n(object)[nages,-1]
+  # catch
   stock(object) <- computeStock(object)
   # [F]
   harvest(object) <- F
