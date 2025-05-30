@@ -2,11 +2,10 @@
 
  NEW FEATURES
 - plot for residuals by age
-- scas method to run several sca in parallel
+- scas method to run several sca
 - plot for multiple fits
 - new classes for plural fit objects
 - addition method for FLStock and fit residuals
-- getX tolerance to id unindentifiable parameters changed from 1e-7 to 1e-4, drops more parameters.
 
  BUG FIXES:
 - sca use of covariates fixed

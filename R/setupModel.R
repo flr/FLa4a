@@ -10,7 +10,7 @@
 #' @aliases getX getX-methods
 setGeneric("getX", function(object, ...) standardGeneric("getX"))
 #' @rdname getX-methods
-setMethod("getX", "formula", function(object, df, newdf = df) {
+setMethod("getX", "formula", function(object, df, newdf = df, tol = 1e-4) {
     opts <- options(contrasts = c(unordered = "contr.sum", ordered = "contr.poly"))
   
     model <- object
@@ -133,7 +133,7 @@ setMethod("getX", "formula", function(object, df, newdf = df) {
  
     # check model for redundant parameters
     qr.X <- qr(X)
-    rank.deficient <- qr.X $ pivot[abs(diag(qr.X $ qr)) < 1e-4]
+    rank.deficient <- qr.X $ pivot[abs(diag(qr.X $ qr)) < tol]
     if (length(rank.deficient)) {
       droppar <- paste(colnames(X)[rank.deficient], collapse = "\n\t")
       warning("*** ", model.type, " has ", length(rank.deficient)," too many parameter(s)!!\n    i will remove the redundant ones:\n\t", droppar, call. = FALSE)
