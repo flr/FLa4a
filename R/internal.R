@@ -332,4 +332,31 @@ geta4aSRmodel <- function(srMod) {
   if (sum(a4as) == 0) "none()" else facs[a4as]
 }
 
+# -------------------------------------------------------------------
+# generates catch.n and stock.n from f, m, ny1 and rec
+# used by simulate and genFLStock
+# -------------------------------------------------------------------
+
+genStknCthn <- function(f, m, ny1, rec, plusgrp=TRUE){
+    dms <- dims(f)
+    stkn <- cthn <- f
+    stkn[1,] <- rec
+    stkn[-1,1] <- ny1[-1]
+
+	# fill stock.n (waste space save time)
+    Zs <- f + m
+    for (a in 2:dms $ age) {
+      stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
+    }
+    # if plus group
+    if (plusgrp) {
+      for (y in 1:(dms $ year-1))
+        stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
+    }
+
+    # calculate catch
+    zfrac <- f / Zs * (1 - exp(-Zs))
+    cthn <- zfrac * stkn
+    FLQuants(stock.n=stkn, catch.n=cthn)
+}
 

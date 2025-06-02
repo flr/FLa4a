@@ -38,57 +38,14 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   if(!identical(dim(catch.n(object))[-6]    , dim(F)[-6])) stop("Harvest matrix must have consistent dimensions with the stock object")
   if(dim(R)[6]!=dim(R)[6]) stop("R and F must have the same number of iterations")
 
-  # get dims and set flq
-  dms <- dims(object)
-  nages <- dms$age
-  nyrs <- dms$year
-  niters <- dim(R)[6]
-  minyr <- range(object)["minyear"]
-  flq <- FLQuant(dimnames=dimnames(F))
-  # create id matrix for cohorts
-  flcid <- FLCohort(F)
-  flcid[!is.na(flcid)] <- 1
-
-  # compute cumulative Z
-  Z <- F + m(object)
-  Z <- FLCohort(Z)
-  Z[is.na(Z)] <- 0
-  Z[] <- apply(Z, c(2:6), cumsum)
-
-  # expand variability into [N] by R*[F]
-  #ifelse(sum(tolower(names(args))=="ny1")==1, ny1 <- args$ny1, ny1 <- stock.n(object)[,1])
-  ny1 <- args$ny1
-  Ns <- flq
-  Ns[1] <- R
-  Ns <- FLCohort(Ns)
-  Ns <- Ns[rep(1, nages)]
-
-  for(i in 2:nages){
-    Ns[,nages-i+1] <- ny1[i]
-  }
-
-  # survivors
-  Ns <- Ns*exp(-Z)
-  Ns <- as(Ns, "FLQuant")
-
-  # Update object
-  stock.n(object) <- flq
-  # ny1
-  stock.n(object)[,1] <- ny1
-  # [R]
-  stock.n(object)[1] <- R
-  # [N]
-  stock.n(object)[-1,-1] <- Ns[-nages,-nyrs]
-  # plus group
-  stock.n(object)[nages,-1] <- Ns[nages,-nyrs] + stock.n(object)[nages,-1]
-  # catch
+  # workout stock.n and catch.n
+  flqs <- genStknCthn(F, m(object), args$ny1, R, plusgrp=TRUE)
+  object@catch.n <- Cs <- flqs$catch.n
+  object@stock.n <- flqs$stock.n
   stock(object) <- computeStock(object)
-  # [F]
+
+  # fill slots
   harvest(object) <- F
-  # [C]
-  Z <- harvest(object) + m(object)
-  Cs <- harvest(object)/Z*(1-exp(-Z))*stock.n(object)
-  catch.n(object) <- Cs
   catch(object) <- computeCatch(object)
   # [L] & [D] rebuilt from C
   # Ds=D/(D+L)*Cs where Cs is the simulated catch
@@ -98,7 +55,8 @@ setMethod("genFLStock", c("FLStock", "FLQuant", "missing", "FLQuant"), function(
   discards(object) <- computeDiscards(object)
   landings.n(object) <- Cs - discards.n(object)
   landings(object) <- computeLandings(object)
-  # out
+
+  # spit
   object
 })
 
@@ -342,9 +300,6 @@ setMethod("genFLQuant", "a4aStkParams",
     
   }
 )
-
-
-
 
 #' Methods to generate FLIndex objects
 #' @description This method produces an \code{FLIndex} object by using the \code{genFLQuant} method.

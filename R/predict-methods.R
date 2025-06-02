@@ -32,7 +32,7 @@ setMethod("predict", signature(object = "SCAPars"),
   vm <- vmodel(object)
   # run predict
     lst <- list(
-      stkmodel = predict.stkpars(sm),
+      stkmodel = suppressWarnings(predict.stkpars(sm)),
       qmodel   = predict.submods(qm, type = "response"),
       vmodel   = predict.submods(vm, type = "response")
     )

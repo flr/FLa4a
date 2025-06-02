@@ -28,37 +28,48 @@ setMethod("simulate", signature(object = "a4aFitSA"),
   function(object, nsim = 1, seed = NULL, empirical=TRUE) {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
-    # now get catch.n, stock.n, harvest and index
+    # now get harvest, rec, ny1 and index
     preds <- predict(out)
-    out @ harvest <- preds $ stkmodel $  harvest
-    out @ stock.n <- out @ catch.n <- out @ harvest
-    out @ stock.n[1,] <- preds $ stkmodel $  rec
-    out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
 
-    # plusgroup?
-    dms <- dims(object)
-    plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
+    #--------------------------------------------------------
+    # work out stock.n and catch.n
 
-	# fill stock.n (waste space save time)
-	stkn <- stock.n(out)
-    Zs <- harvest(out) + m(out)
-    for (a in 2:dms $ age) {
-      stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
-    }
-    # if plus group
-    if (plusgrp) {
-      for (y in 1:(dms $ year-1))
-        stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
-    }
+     out @ harvest <- preds $ stkmodel $  harvest
+     out @ stock.n <- out @ catch.n <- out @ harvest
+     out @ stock.n[1,] <- preds $ stkmodel $  rec
+     out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
+#
+#     # plusgroup?
+#     dms <- dims(object)
+#     plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
+#
+# 	# fill stock.n (waste space save time)
+# 	stkn <- stock.n(out)
+#     Zs <- harvest(out) + m(out)
+#     for (a in 2:dms $ age) {
+#       stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
+#     }
+#     # if plus group
+#     if (plusgrp) {
+#       for (y in 1:(dms $ year-1))
+#         stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
+#     }
+#
+#  	out@stock.n <- stkn
+#
+#     # calculate catch
+#     zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
+#     out @ catch.n <- zfrac * stkn
 
-	out@stock.n <- stkn
+    flqs <- genStknCthn(harvest(out), m(out), stock.n(out)[,1], stock.n(out)[1], plusgrp=TRUE)
+    out@catch.n <- flqs$catch.n
+    out@stock.n <- flqs$stock.n
 
-    # calculate catch
-    zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
-    out @ catch.n <- zfrac * stkn
-
+    #--------------------------------------------------------
     # work out indices
     out @ index <- idxs <- preds $ qmodel
+    Zs <- harvest(out) + m(out)
+    stkn <- out@stock.n
 
     for (i in seq(idxs)) {
     	idx <- idxs[[i]]
@@ -96,6 +107,8 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 		}
     }
 
+    #--------------------------------------------------------
+    # spit
     units(out) <- units(object)
     out
 })
