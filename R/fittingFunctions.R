@@ -1517,7 +1517,7 @@ fitADMB <- function(fit, wkdir, df.data, stock, indices, full.df,
 #	combination.all = FALSE,
 #	...)
 
-scas <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, combination.all = FALSE, ...){
+scas <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel = missing, n1model = missing, vmodel = missing, combination.all = FALSE, workers = 1, ...){
 
 	args <- list(...)
 
@@ -1570,21 +1570,32 @@ scas <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel =
 
   	dm <- as.data.frame(t(as.matrix(dm)))
 
-	fits <- lapply(dm, function(x){
-		args$stock <- stocks[[x[1]]]
-		args$indices <- indicess[[x[2]]]
-		args$fmodel <- fmodel[[x[3]]]
-		args$qmodel <- qmodel[[x[4]]]
-		args$n1model <- n1model[[x[5]]]
-		args$vmodel <- vmodel[[x[6]]]
-		args$srmodel <- srmodel[[x[7]]]
-		do.call("sca", args)
-  })
+  	cl <- parallel::makeCluster(workers)
+    #parallel::clusterEvalQ(cl, library(FLa4a))
 
-  names(fits) <- paste0("fit", c(1:length(fits)))
-  # the sequqnce of the following commands matter
-  if(is(fits[[1]], "a4aFitMCMC")) return(a4aFitMCMCs(fits))
-  if(is(fits[[1]], "a4aFitSA")) return(a4aFitSAs(fits))
-  if(is(fits[[1]], "a4aFit")) return(a4aFits(fits))
+    parallel::clusterEvalQ(cl, {
+  ok <- require(FLa4a, quietly = FALSE)
+  if (!ok) stop("FLa4a package not available on this worker.")
+  TRUE
+})
+
+
+    fits <- parallel::parLapply(cl, dm, function(x, stocks, indicess, fmodel, qmodel, srmodel, n1model, vmodel, args){
+      args$stock <- stocks[[x[1]]]
+      args$indices <- indicess[[x[2]]]
+      args$fmodel <- fmodel[[x[3]]]
+      args$qmodel <- qmodel[[x[4]]]
+      args$n1model <- n1model[[x[5]]]
+      args$vmodel <- vmodel[[x[6]]]
+      args$srmodel <- srmodel[[x[7]]]
+      do.call("sca", args)}, stocks = stocks, indicess = indicess, fmodel = fmodel, qmodel = qmodel, srmodel = srmodel, n1model = n1model, vmodel = vmodel, args = args)
+
+    parallel::stopCluster(cl)
+
+    names(fits) <- paste0("fit", c(1:length(fits)))
+    # the sequqnce of the following commands matter
+    if(is(fits[[1]], "a4aFitMCMC")) return(a4aFitMCMCs(fits))
+    if(is(fits[[1]], "a4aFitSA")) return(a4aFitSAs(fits))
+    if(is(fits[[1]], "a4aFit")) return(a4aFits(fits))
 
 }
