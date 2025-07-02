@@ -260,7 +260,7 @@ setMethod("plot", c("a4aFit", "FLIndices"), function(x, y, ...){
 #' wireframe(harvest(ple4))
 
 setMethod("wireframe", c("FLQuant", "missing"), function(x, y, screen=list(x = -90, y=-45), ...){
-	args <- list()
+	args <- list(...)
 	args$data <- as.data.frame(x)
 	args$x <- data~age*year
 	args$screen = screen
