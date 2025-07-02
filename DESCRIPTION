@@ -1,10 +1,12 @@
 Package: FLa4a
 Type: Package
 Title: A Simple and Robust Statistical Catch at Age Model
-Version: 1.9.3
+Version: 1.9.4
+Author: Colin P. Millar [aut], Ernesto Jardim [aut, cre]
+Maintainer: Ernesto Jardim <ernesto.jardim@gmail.com>
 Authors@R: c(
   person("Colin P.", "Millar", email = "colin.millar@ices.dk", role = "aut"),
-  person("Ernesto", "Jardim", email = "ernesto.jardim@msc.org", role = c("aut", "cre")))
+  person("Ernesto", "Jardim", email = "ernesto.jardim@gmail.com", role = c("aut", "cre")))
 Description: A simple and robust statistical Catch at Age model that is
     specifically designed for stocks with intermediate levels of data quantity and
     quality.
