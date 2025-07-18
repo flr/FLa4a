@@ -1539,7 +1539,7 @@ scas <- function(stocks, indicess, fmodel = missing, qmodel = missing, srmodel =
 	if(missing(vmodel)){
 		vmodel <- list()
 		length(vmodel) <- length(stocks)
-		for(i in length(stocks)){
+		for(i in 1:length(stocks)){
 			vmodel[[i]] <- defaultVmod(stocks[[i]], indicess[[i]])
 		}
 	}
