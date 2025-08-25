@@ -100,11 +100,11 @@ setMethod("+", c("FLStock", "a4aFitResiduals"), function(e1, e2)
   if(e2@desc!="deviances") warning("Residuals are not deviances, in which case sd=1.")
 
   # number of iterations will come from stock object
-  nit1 <- dims(e1)$iter
+  nit <- dims(e1)$iter
   # catch.n standard deviation
   flqsdc <- e1@catch.n
   flqsdc[] <- sqrt(yearVars(e2$catch.n, na.rm=TRUE))
-  e1@catch.n <- rlnorm(nsim, log(e1@catch.n), flqsdc)
+  e1@catch.n <- exp(log(e1@catch.n) + rnorm(nit, 0,flqsdc))
   # return
   e1
 })

@@ -42,7 +42,7 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     out@catch.n <- flqs$catch.n
     out@stock.n <- flqs$stock.n
     if(obserror){
-      out@catch.n <- rlnorm(nsim, log(out@catch.n), sqrt(preds$vmodel$catch))
+      out@catch.n <- exp(log(out@catch.n) + rnorm(nsim, 0, sqrt(preds$vmodel$catch)))
     }
 
     #--------------------------------------------------------
