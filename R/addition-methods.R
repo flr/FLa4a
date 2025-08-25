@@ -101,17 +101,10 @@ setMethod("+", c("FLStock", "a4aFitResiduals"), function(e1, e2)
 
   # number of iterations will come from stock object
   nit1 <- dims(e1)$iter
-  # catch.n variance for harvest, index variance for N
-  flq0 <- flqsdc <- e2$catch.n
-  flq0[]<- 0
+  # catch.n standard deviation
+  flqsdc <- e1@catch.n
   flqsdc[] <- sqrt(yearVars(e2$catch.n, na.rm=TRUE))
-  sds <- sqrt(var(unlist(lapply(e2[-1],"[", i=1)), na.rm=TRUE))
-  sn <- exp(log(stock.n(e1)) + rnorm(nit1, flq0, sds))
-  hrv <- exp(log(harvest(e1)) + rnorm(nit1, flq0, flqsdc))
-  units(hrv) <- "f"
-  # update object starting from R, NY1 and F so that iterations are consistent
-  e1 <- genFLStock(e1, F=hrv, R=sn[1], ny1=sn[,1])
-
+  e1@catch.n <- rlnorm(nsim, log(e1@catch.n), flqsdc)
   # return
   e1
 })

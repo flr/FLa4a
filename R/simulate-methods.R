@@ -25,7 +25,7 @@ setGeneric("simulate", useAsDefault = stats::simulate)
 #' @param empirical logical, shall the empirical method in MASS be used
 #' @template dots
 setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, seed = NULL, empirical=TRUE) {
+  function(object, nsim = 1, seed = NULL, empirical=TRUE, obserror=FALSE) {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
     # now get harvest, rec, ny1 and index
@@ -34,36 +34,16 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     #--------------------------------------------------------
     # work out stock.n and catch.n
 
-     out @ harvest <- preds $ stkmodel $  harvest
-     out @ stock.n <- out @ catch.n <- out @ harvest
-     out @ stock.n[1,] <- preds $ stkmodel $  rec
-     out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
-#
-#     # plusgroup?
-#     dms <- dims(object)
-#     plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
-#
-# 	# fill stock.n (waste space save time)
-# 	stkn <- stock.n(out)
-#     Zs <- harvest(out) + m(out)
-#     for (a in 2:dms $ age) {
-#       stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
-#     }
-#     # if plus group
-#     if (plusgrp) {
-#       for (y in 1:(dms $ year-1))
-#         stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
-#     }
-#
-#  	out@stock.n <- stkn
-#
-#     # calculate catch
-#     zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
-#     out @ catch.n <- zfrac * stkn
-
+    out @ harvest <- preds $ stkmodel $  harvest
+    out @ stock.n <- out @ catch.n <- out @ harvest
+    out @ stock.n[1,] <- preds $ stkmodel $  rec
+    out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
     flqs <- genStknCthn(harvest(out), m(out), stock.n(out)[,1], stock.n(out)[1], plusgrp=TRUE)
     out@catch.n <- flqs$catch.n
     out@stock.n <- flqs$stock.n
+    if(obserror){
+      out@catch.n <- rlnorm(nsim, log(out@catch.n), sqrt(preds$vmodel$catch))
+    }
 
     #--------------------------------------------------------
     # work out indices
@@ -83,10 +63,6 @@ setMethod("simulate", signature(object = "a4aFitSA"),
      	# if biomass index use ages in range or all ages have to be accounted
      	# WARNING: spagheti code
 	 	if(bioidx){
-#		if(missing(stock)){
-#		    warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
-#		    out @ index[[i]][] <- object@index[[i]][]
-#	    } else {
 			rng <- attr(index(object)[[i]], "range")
 			if(is.na(rng["min"])) iages <- dimnames(stkn)[[1]] else iages <- ac(rng["min"]:rng["max"])
 			stk <- stkn[iages]*exp(-Zs[iages] * when)
@@ -96,13 +72,14 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 			out @ index[[i]] <- stk * out @ index[[i]]
 			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
 			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
-
-#	    }
 	    # or else it's a age based index
 		} else {
 			stk <- (stkn * exp(-Zs * when))[iages, iyears]
 			out @ index[[i]] <- stk * out @ index[[i]]
-			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
+            if(obserror){
+              out @ index[[i]] <- rlnorm(nsim, log(out @ index[[i]]), sqrt(preds$vmodel[[i+1]]))
+            }
+            attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
 			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
 		}
     }
