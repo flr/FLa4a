@@ -1,6 +1,7 @@
  FLa4a 1.9.x:
 
  NEW FEATURES
+- add observation error to catch and indices based on vmodel estimates
 - plot for residuals by age
 - scas method to run several sca in parallel
 - plot for multiple fits
