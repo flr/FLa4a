@@ -94,20 +94,20 @@ setMethod("+", c("FLStocks", "a4aFits"), function(e1, e2)
 #' @details Random normal draws will be added to the log transformed stock.n and catch.n slots using the standard deviation computed from the residuals catch.n and index, for catch.n and stock.n respectively. Returns a \code{FLStock} object.
 #' @rdname addition-methods
 #' @aliases +,FLStocks,a4aFitResiduals-method
-setMethod("+", c("FLStock", "a4aFitResiduals"), function(e1, e2)
-{
-  # if not deviances sd is 1
-  if(e2@desc!="deviances") warning("Residuals are not deviances, in which case sd=1.")
-
-  # number of iterations will come from stock object
-  nit <- dims(e1)$iter
-  # catch.n standard deviation
-  flqsdc <- e1@catch.n
-  flqsdc[] <- sqrt(yearVars(e2$catch.n, na.rm=TRUE))
-  e1@catch.n <- exp(log(e1@catch.n) + rnorm(nit, 0,flqsdc))
-  # return
-  e1
-})
+# setMethod("+", c("FLStock", "a4aFitResiduals"), function(e1, e2)
+# {
+#   # if not deviances sd is 1
+#   if(e2@desc!="deviances") warning("Residuals are not deviances, in which case sd=1.")
+#
+#   # number of iterations will come from stock object
+#   nit <- dims(e1)$iter
+#   # catch.n standard deviation
+#   flqsdc <- e1@catch.n
+#   flqsdc[] <- sqrt(yearVars(e2$catch.n, na.rm=TRUE))
+#   e1@catch.n <- exp(log(e1@catch.n) + rnorm(nit, 0,flqsdc))
+#   # return
+#   e1
+# })
 
 
 #==================================================================== 

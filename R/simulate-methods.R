@@ -77,7 +77,7 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 			stk <- (stkn * exp(-Zs * when))[iages, iyears]
 			out @ index[[i]] <- stk * out @ index[[i]]
             if(obserror){
-              out @ index[[i]] <- rlnorm(nsim, log(out @ index[[i]]), sqrt(preds$vmodel[[i+1]]))
+              out @ index[[i]] <- exp(log(out @ index[[i]]) + rnorm(nsim, 0, sqrt(preds$vmodel[[i+1]])))
             }
             attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
 			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
