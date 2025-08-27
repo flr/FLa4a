@@ -2,10 +2,19 @@
 
 ## NEW FEATURES
 - plot for residuals by age
-- multisca method to run several sca
+- scas method to run several sca in parallel
+- plot for multiple fits
+- new classes for plural fit objects
+- addition method for FLStock and fit residuals
+- genFLStock now uses ny1 to compute the lower triangle N matrix in the beggining of the time series
 
 ## BUG FIXES:
 - sca use of covariates fixed
+- several man pages issues fixed
+- ma simulation from fits fixed
+- window method for a4aSA not windowing the index fixed
+- residuals don't compute aggregated catch anymore, use computeCatchDiagnostics
+- genFLStock plusgroup bug fixed
 
 # FLa4a 1.8.x:
 
