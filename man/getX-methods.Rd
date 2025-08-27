@@ -8,7 +8,7 @@
 \usage{
 getX(object, ...)
 
-\S4method{getX}{formula}(object, df, newdf = df)
+\S4method{getX}{formula}(object, df, newdf = df, tol = 1e-04)
 }
 \arguments{
 \item{object}{object of relevant class (see signature of method)}

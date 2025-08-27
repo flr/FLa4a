@@ -5,24 +5,37 @@
 \alias{+,FLStock,a4aFit-method}
 \alias{+,FLIndices,a4aFit-method}
 \alias{+,FLStocks,a4aFits-method}
+\alias{+,FLStocks,a4aFitResiduals-method}
+\alias{*}
+\alias{methods}
+\alias{*,FLStock,a4aFitSA-method}
+\alias{*,FLIndices,a4aFitSA-method}
 \title{+ methods}
 \usage{
 \S4method{+}{FLStock,a4aFit}(e1, e2)
 
 \S4method{+}{FLStocks,a4aFits}(e1, e2)
+
+\S4method{*}{FLStock,a4aFitSA}(e1, e2)
 }
 \arguments{
-\item{e1}{the original \code{FLStocks} object}
+\item{e1}{the original \code{FLStock} or \code{FLIndex} object}
 
-\item{e2}{a \code{a4aFits} object from where the new \code{FLStock} slots will be extracted.}
+\item{e2}{a \code{a4aFit} object from where the new \code{FLStock} or \code{FLIndex} slots will be extracted.}
 }
 \description{
 Update \code{FLStock} and \code{FLIndex} objects with stock assessment results.
 
 Update \code{FLStocks} objects with multiple stock assessment results in a \code{a4aFits}.
+
+Add residual uncertainty to \code{FLStock} objects.
+
+Update \code{FLStock} and \code{FLIndex} objects with simulations from stock assessment fits.
 }
 \details{
 If both objects have the same number of iterations, the \code{FLStock} slots will be replaced by the \code{a4aFit} slots, in the case of 1 iter, or \code{a4aFitSA} slots, in the case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the \code{a4aFitSA} object to update the slots of the \code{FLStock} object.
 
 If both objects have the same number of iterations, the \code{FLStocks} slots will be replaced by the \code{a4aFits} slots, in the case of 1 iter, or \code{a4aFitSA} slots, in the case of n iters. If one of the objects has 1 iter and the other n, the method will simulate using the fit results from the \code{a4aFitSA} object to update the slots of the \code{FLStock} object.
+
+Random normal draws will be added to the log transformed stock.n and catch.n slots using the standard deviation computed from the residuals catch.n and index, for catch.n and stock.n respectively. Returns a \code{FLStock} object.
 }

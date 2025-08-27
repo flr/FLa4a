@@ -14,6 +14,7 @@ scas(
   n1model = missing,
   vmodel = missing,
   combination.all = FALSE,
+  workers = 1,
   ...
 )
 }
