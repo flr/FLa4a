@@ -2,10 +2,19 @@
 
  NEW FEATURES
 - plot for residuals by age
-- multisca method to run several sca
+- scas method to run several sca in parallel
+- plot for multiple fits
+- new classes for plural fit objects
+- addition method for FLStock and fit residuals
+- genFLStock now uses ny1 to compute the lower triangle N matrix in the beggining of the time series
 
  BUG FIXES:
 - sca use of covariates fixed
+- several man pages issues fixed
+- ma simulation from fits fixed
+- window method for a4aSA not windowing the index fixed
+- residuals don't compute aggregated catch anymore, use computeCatchDiagnostics
+- genFLStock plusgroup bug fixed
 
  FLa4a 1.8.x:
 
@@ -18,12 +27,16 @@
 - problem dealing with iters that don't converged fixed. Related with 'active'.
 - sca.sa fixed to be compatible with mse 2.0
 
- FLa4a 1.6.5:
+ FLa4a 1.6.x:
 
  NEW FEATURES
-
+- burnin for MCMC fixed to rename iters names
 - Likelihood is now returned by component
 - sca.sa and sep.sa functions to make sca() available to the mp function in the mse package
+
+	BUG FIXES:
+- Centering was not properly reported for MCMCM qmodels
+
 
  FLa4a 1.0.0:
 
@@ -135,4 +148,3 @@
 - method a4aSCA uses an age range for biomass indices that is set in the range slot of the index
 - method a4aSCA tags the index FLQuant using attr with info about the range and if it is a biomass index
 - method simulate takes into account the range of the biomass index	
-
