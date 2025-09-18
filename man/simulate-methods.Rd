@@ -11,7 +11,7 @@
 \usage{
 simulate(object, nsim = 1, seed = NULL, ...)
 
-\S4method{simulate}{a4aFitSA}(object, nsim = 1, seed = NULL, empirical = TRUE)
+\S4method{simulate}{a4aFitSA}(object, nsim = 1, seed = NULL, empirical = TRUE, obserror = FALSE)
 
 \S4method{simulate}{SCAPars}(object, nsim = 1, seed = NULL, empirical = TRUE)
 

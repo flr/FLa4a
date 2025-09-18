@@ -19,6 +19,7 @@
 \alias{show,a4aFit-method}
 \alias{logLik,a4aFit-method}
 \alias{iter,a4aFit-method}
+\alias{window,a4aFit-method}
 \alias{a4aFits-class}
 \alias{a4aFits}
 \alias{a4aFits-methods}
@@ -54,6 +55,14 @@ fitSumm(object, ...)
 
 \S4method{iter}{a4aFit}(obj, it)
 
+\S4method{window}{a4aFit}(
+  x,
+  start = dims(x)$minyear,
+  end = dims(x)$maxyear,
+  extend = TRUE,
+  frequency = 1
+)
+
 a4aFits(object, ...)
 
 \S4method{a4aFits}{list}(object, ...)
@@ -72,6 +81,16 @@ a4aFits(object, ...)
 \item{obj}{the object to be subset}
 
 \item{it}{iteration to be extracted}
+
+\item{x}{the object to be subset}
+
+\item{start}{initial year}
+
+\item{end}{final year}
+
+\item{extend}{if object is shorter than end-start extend to cover year range}
+
+\item{frequency}{interval between years if extended}
 }
 \description{
 The \code{a4aFit} class was built to store the a4a stock assessment fits.

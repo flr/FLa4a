@@ -6,7 +6,7 @@
 \alias{plot,a4aFitCatchDiagn,missing-method}
 \title{Plot of aggregated catch standardized log residuals}
 \usage{
-\S4method{plot}{a4aFitCatchDiagn,missing}(x, y = missing, ...)
+\S4method{plot}{a4aFitCatchDiagn,missing}(x, y = missing, probs = c(0.1, 0.9), type = "all", ...)
 }
 \arguments{
 \item{x}{an \code{a4aFit} object with the model fit}

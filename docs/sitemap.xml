@@ -1,261 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index (copy).html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SCAMCMC-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SCAPars-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4a.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aFit-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aFitCatchDiagn-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aFitMCMC-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aFitResiduals-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aFitSA-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aGr-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aInternal.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aM-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aSCA.html</loc>
-  </url>
-  <url>
-    <loc>/reference/a4aStkParams-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/addition-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/assorted-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/breakpts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/bubbles-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/coef-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/collapseSeasons.html</loc>
-  </url>
-  <url>
-    <loc>/reference/defaultsubmodels.html</loc>
-  </url>
-  <url>
-    <loc>/reference/deprecated.html</loc>
-  </url>
-  <url>
-    <loc>/reference/genFLIndex-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/genFLQuant-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/genFLStock-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getADMBHessian.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getAcor-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getCov-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getK.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getTPL.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getX-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hakeGSA7.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hakeGSA7.idx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index_cd_len.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index_pt_len.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index_sp_len.html</loc>
-  </url>
-  <url>
-    <loc>/reference/l2a.html</loc>
-  </url>
-  <url>
-    <loc>/reference/m.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ma-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/multiplication-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mvnorm-a4aM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mvrcop-a4aGr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mvrcop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mvrnorm-a4aGr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mvrtriangle-a4aGr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mvrtriangle.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pars2dim-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plotc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ploti.html</loc>
-  </url>
-  <url>
-    <loc>/reference/predict-a4aGr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/predict-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/qqmath-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/range-a4aM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rfLen.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rfLen.stk.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rfTrawl.idx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rfTrawlJmp.idx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rfTrawlTrd.idx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rngage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rnglen.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rngmbar.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rngquant.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rngyear.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sca.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sca.sa.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sep.sa.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shake_len.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simulate-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/southernHakeLen.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stdlogres-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/submodel-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/submodels-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vcov-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vecage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/veclen.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vecmbar.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vecquant.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vecyear.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wireframe.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/index (copy).html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/SCAMCMC-class.html</loc></url>
+<url><loc>/reference/SCAPars-class.html</loc></url>
+<url><loc>/reference/a4a.html</loc></url>
+<url><loc>/reference/a4aFit-class.html</loc></url>
+<url><loc>/reference/a4aFitCatchDiagn-class.html</loc></url>
+<url><loc>/reference/a4aFitMCMC-class.html</loc></url>
+<url><loc>/reference/a4aFitResiduals-class.html</loc></url>
+<url><loc>/reference/a4aFitSA-class.html</loc></url>
+<url><loc>/reference/a4aGr-class.html</loc></url>
+<url><loc>/reference/a4aInternal.html</loc></url>
+<url><loc>/reference/a4aM-class.html</loc></url>
+<url><loc>/reference/a4aStkParams-class.html</loc></url>
+<url><loc>/reference/addition-methods.html</loc></url>
+<url><loc>/reference/assorted-methods.html</loc></url>
+<url><loc>/reference/breakpts.html</loc></url>
+<url><loc>/reference/bubbles-methods.html</loc></url>
+<url><loc>/reference/coef-methods.html</loc></url>
+<url><loc>/reference/collapseSeasons.html</loc></url>
+<url><loc>/reference/defaultsubmodels.html</loc></url>
+<url><loc>/reference/deprecated.html</loc></url>
+<url><loc>/reference/dps567.html</loc></url>
+<url><loc>/reference/dps567.idx.html</loc></url>
+<url><loc>/reference/genFLIndex-methods.html</loc></url>
+<url><loc>/reference/genFLQuant-methods.html</loc></url>
+<url><loc>/reference/genFLStock-methods.html</loc></url>
+<url><loc>/reference/getADMBHessian.html</loc></url>
+<url><loc>/reference/getAcor-methods.html</loc></url>
+<url><loc>/reference/getCov-methods.html</loc></url>
+<url><loc>/reference/getK.html</loc></url>
+<url><loc>/reference/getTPL.html</loc></url>
+<url><loc>/reference/getX-methods.html</loc></url>
+<url><loc>/reference/hakeGSA7.html</loc></url>
+<url><loc>/reference/hakeGSA7.idx.html</loc></url>
+<url><loc>/reference/hke1567.html</loc></url>
+<url><loc>/reference/hke1567.idx.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/index_cd_len.html</loc></url>
+<url><loc>/reference/index_pt_len.html</loc></url>
+<url><loc>/reference/index_sp_len.html</loc></url>
+<url><loc>/reference/l2a.html</loc></url>
+<url><loc>/reference/m.html</loc></url>
+<url><loc>/reference/ma-methods.html</loc></url>
+<url><loc>/reference/multiplication-methods.html</loc></url>
+<url><loc>/reference/mut09.html</loc></url>
+<url><loc>/reference/mut09.idx.html</loc></url>
+<url><loc>/reference/mvnorm-a4aM.html</loc></url>
+<url><loc>/reference/mvrcop-a4aGr.html</loc></url>
+<url><loc>/reference/mvrcop.html</loc></url>
+<url><loc>/reference/mvrnorm-a4aGr.html</loc></url>
+<url><loc>/reference/mvrtriangle-a4aGr.html</loc></url>
+<url><loc>/reference/mvrtriangle.html</loc></url>
+<url><loc>/reference/pars2dim-methods.html</loc></url>
+<url><loc>/reference/plot-catch.html</loc></url>
+<url><loc>/reference/plot-methods.html</loc></url>
+<url><loc>/reference/plot-mfits.html</loc></url>
+<url><loc>/reference/plot-mmcfits.html</loc></url>
+<url><loc>/reference/plot-res.html</loc></url>
+<url><loc>/reference/plotc.html</loc></url>
+<url><loc>/reference/ploti.html</loc></url>
+<url><loc>/reference/predict-a4aGr.html</loc></url>
+<url><loc>/reference/predict-methods.html</loc></url>
+<url><loc>/reference/qqmath-methods.html</loc></url>
+<url><loc>/reference/range-a4aM.html</loc></url>
+<url><loc>/reference/rfLen.html</loc></url>
+<url><loc>/reference/rfLen.stk.html</loc></url>
+<url><loc>/reference/rfTrawl.idx.html</loc></url>
+<url><loc>/reference/rfTrawlJmp.idx.html</loc></url>
+<url><loc>/reference/rfTrawlTrd.idx.html</loc></url>
+<url><loc>/reference/rngage.html</loc></url>
+<url><loc>/reference/rnglen.html</loc></url>
+<url><loc>/reference/rngmbar.html</loc></url>
+<url><loc>/reference/rngquant.html</loc></url>
+<url><loc>/reference/rngyear.html</loc></url>
+<url><loc>/reference/sca.html</loc></url>
+<url><loc>/reference/sca.sa.html</loc></url>
+<url><loc>/reference/scas.html</loc></url>
+<url><loc>/reference/sep.sa.html</loc></url>
+<url><loc>/reference/shake_len.html</loc></url>
+<url><loc>/reference/simulate-methods.html</loc></url>
+<url><loc>/reference/southernHakeLen.html</loc></url>
+<url><loc>/reference/stdlogres-methods.html</loc></url>
+<url><loc>/reference/submodel-class.html</loc></url>
+<url><loc>/reference/submodels-class.html</loc></url>
+<url><loc>/reference/vcov-methods.html</loc></url>
+<url><loc>/reference/vecage.html</loc></url>
+<url><loc>/reference/veclen.html</loc></url>
+<url><loc>/reference/vecmbar.html</loc></url>
+<url><loc>/reference/vecquant.html</loc></url>
+<url><loc>/reference/vecyear.html</loc></url>
+<url><loc>/reference/wireframe.html</loc></url>
 </urlset>
+

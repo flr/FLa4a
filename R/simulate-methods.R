@@ -38,22 +38,12 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     out @ stock.n <- out @ catch.n <- out @ harvest
     out @ stock.n[1,] <- preds $ stkmodel $  rec
     out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
-
-#     if(isTRUE(obserror)){
-#       # catch.n variance for harvest, index variance for N
-#     flq0 <- sdc <- preds$stkmodel$harvest
-#     flq0[]<- 0
-#     sdc[] <- sqrt(preds$vmodel$catch.n)/preds$stkmodel$catch.n
-#     sds <- sqrt(var(unlist(lapply(preds$vmodel[-1],"[", i=1)), na.rm=TRUE))
-#
-#     sn <- stock.n(e1) * rlnorm(nit1, flq0, sds)
-#     hrv <- harvest(e1) * rlnorm(nit1, flq0, sdc)
-#     }
-
-
     flqs <- genStknCthn(harvest(out), m(out), stock.n(out)[,1], stock.n(out)[1], plusgrp=TRUE)
     out@catch.n <- flqs$catch.n
     out@stock.n <- flqs$stock.n
+    if(obserror){
+      out@catch.n <- exp(log(out@catch.n) + rnorm(nsim, 0, sqrt(preds$vmodel$catch)))
+    }
 
     #--------------------------------------------------------
     # work out indices
@@ -73,10 +63,6 @@ setMethod("simulate", signature(object = "a4aFitSA"),
      	# if biomass index use ages in range or all ages have to be accounted
      	# WARNING: spagheti code
 	 	if(bioidx){
-#		if(missing(stock)){
-#		    warning("Can't simulate the biomass index. Please provide FLStock to get stock weights.")
-#		    out @ index[[i]][] <- object@index[[i]][]
-#	    } else {
 			rng <- attr(index(object)[[i]], "range")
 			if(is.na(rng["min"])) iages <- dimnames(stkn)[[1]] else iages <- ac(rng["min"]:rng["max"])
 			stk <- stkn[iages]*exp(-Zs[iages] * when)
@@ -86,13 +72,14 @@ setMethod("simulate", signature(object = "a4aFitSA"),
 			out @ index[[i]] <- stk * out @ index[[i]]
 			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
 			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
-
-#	    }
 	    # or else it's a age based index
 		} else {
 			stk <- (stkn * exp(-Zs * when))[iages, iyears]
 			out @ index[[i]] <- stk * out @ index[[i]]
-			attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
+            if(obserror){
+              out @ index[[i]] <- exp(log(out @ index[[i]]) + rnorm(nsim, 0, sqrt(preds$vmodel[[i+1]])))
+            }
+            attr(out@index[[i]], "FLIndexBiomass") <- attr(object@index[[i]], "FLIndexBiomass")
 			attr(out@index[[i]], "range") <- attr(object@index[[i]], "range")
 		}
     }
