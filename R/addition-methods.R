@@ -106,8 +106,11 @@ setMethod("+", c("FLStock", "a4aFitResiduals"), function(e1, e2)
   flq0[]<- 0
   flqsdc[] <- sqrt(yearVars(e2$catch.n, na.rm=TRUE))
   sds <- sqrt(var(unlist(lapply(e2[-1],"[", i=1)), na.rm=TRUE))
-  sn <- exp(log(stock.n(e1)) + rnorm(nit1, flq0, sds))
-  hrv <- exp(log(harvest(e1)) + rnorm(nit1, flq0, flqsdc))
+  #sn <- exp(log(stock.n(e1)) + rnorm(nit1, flq0, sds))
+  #hrv <- exp(log(harvest(e1)) + rnorm(nit1, flq0, flqsdc))
+  sn <- stock.n(e1) * rlnorm(nit1, flq0, sds)
+  hrv <- harvest(e1) * rlnorm(nit1, flq0, flqsdc)
+
   units(hrv) <- "f"
   # update object starting from R, NY1 and F so that iterations are consistent
   e1 <- genFLStock(e1, F=hrv, R=sn[1], ny1=sn[,1])

@@ -25,7 +25,7 @@ setGeneric("simulate", useAsDefault = stats::simulate)
 #' @param empirical logical, shall the empirical method in MASS be used
 #' @template dots
 setMethod("simulate", signature(object = "a4aFitSA"),
-  function(object, nsim = 1, seed = NULL, empirical=TRUE) {
+  function(object, nsim = 1, seed = NULL, empirical=TRUE, obserror=FALSE) {
     out <- object
     out @ pars <- simulate(pars(object), nsim = nsim, seed = seed, empirical=empirical)
     # now get harvest, rec, ny1 and index
@@ -34,32 +34,22 @@ setMethod("simulate", signature(object = "a4aFitSA"),
     #--------------------------------------------------------
     # work out stock.n and catch.n
 
-     out @ harvest <- preds $ stkmodel $  harvest
-     out @ stock.n <- out @ catch.n <- out @ harvest
-     out @ stock.n[1,] <- preds $ stkmodel $  rec
-     out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
+    out @ harvest <- preds $ stkmodel $  harvest
+    out @ stock.n <- out @ catch.n <- out @ harvest
+    out @ stock.n[1,] <- preds $ stkmodel $  rec
+    out @ stock.n[-1,1] <- preds $ stkmodel $ ny1[-1,]
+
+#     if(isTRUE(obserror)){
+#       # catch.n variance for harvest, index variance for N
+#     flq0 <- sdc <- preds$stkmodel$harvest
+#     flq0[]<- 0
+#     sdc[] <- sqrt(preds$vmodel$catch.n)/preds$stkmodel$catch.n
+#     sds <- sqrt(var(unlist(lapply(preds$vmodel[-1],"[", i=1)), na.rm=TRUE))
 #
-#     # plusgroup?
-#     dms <- dims(object)
-#     plusgrp <- !is.na(dms $ plusgroup) && dms $ plusgroup >= dms $ max
-#
-# 	# fill stock.n (waste space save time)
-# 	stkn <- stock.n(out)
-#     Zs <- harvest(out) + m(out)
-#     for (a in 2:dms $ age) {
-#       stkn[a,-1] <- stkn[a-1, 1:(dms $ year-1)] * exp( - Zs[a-1, 1:(dms $ year-1)] )
+#     sn <- stock.n(e1) * rlnorm(nit1, flq0, sds)
+#     hrv <- harvest(e1) * rlnorm(nit1, flq0, sdc)
 #     }
-#     # if plus group
-#     if (plusgrp) {
-#       for (y in 1:(dms $ year-1))
-#         stkn[a,y+1,] <- stkn[a,y+1,] + stkn[a, y,] * exp( - Zs[a, y,] )
-#     }
-#
-#  	out@stock.n <- stkn
-#
-#     # calculate catch
-#     zfrac <- harvest(out) / Zs * (1 - exp(-Zs))
-#     out @ catch.n <- zfrac * stkn
+
 
     flqs <- genStknCthn(harvest(out), m(out), stock.n(out)[,1], stock.n(out)[1], plusgrp=TRUE)
     out@catch.n <- flqs$catch.n

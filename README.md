@@ -1,5 +1,5 @@
 # FLa4a
-- Version: 1.9.0.9002
+- Version: 1.9.4
 - Author: Colin P. Millar and Ernesto Jardim
 - Maintainer: Colin P. Millar <colin.millar AT ices.dk>
 - Repository: <https://github.com/flr/FLa4a/>
@@ -8,16 +8,10 @@
 ## Overview
 FLa4a implements the Assesment For All (a4a) initiative stock assessment model, a simple and robust statistical catch-at-age model.
 
-For further information about the a4a initiative, please visit <https://fishreg.jrc.ec.europa.eu/web/a4a>.
-
 ## Installation
 To install this package, start R and enter:
 
-    install.packages(c("copula","triangle", "coda"))
-
-followed by
-
-	install.packages("FLa4a", repos="http://flr-project.org/R")
+    install.packages("FLa4a", repos=c(FLR="https://flr.r-universe.dev", CRAN="https://cloud.r-project.org"))
 
 or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases/latest)
 
