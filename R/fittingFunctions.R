@@ -504,8 +504,10 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
 	# convert to dataframe. NOTE: list2df also logs the observations and centers
 	df.data <- do.call(rbind, lapply(1:length(list.obs), list2df, list.obs=list.obs, list.var=list.var, center.log=center.log))
 
-    # invert and standardize weights to have mean of 1
+    # standardize weights to have mean of 1
     df.data[, 5] <- df.data[, 5]/mean(df.data[, 5])
+    # invert to be used in MVN variance
+    df.data[, 5] <- 1/df.data[, 5]
 
 	if (any(df.data[,5] != 1) & fit != "MP") message("Note: The provided variances will be used to weight the likelihood.\n\tThe scores will be inverted and standardized to have a mean of 1.")
 
@@ -812,7 +814,9 @@ a4aInternal <- function(stock, indices, fmodel = defaultFmod(stock), qmodel = de
   # comp1 is fleet 1 (catch), comp2 is fleet 2 (survey 1) etc.
   # if there is a SR relationship, it is the last comp
   nlogl_comps <- out$nlogl_comps
-  nlogl_comps_names <- paste0("nlogl_comp", 1:length(nlogl_comps))
+  nlogl_comps <- abs(nlogl_comps)/sum(abs(nlogl_comps))
+
+  nlogl_comps_names <- paste0("nlogl fraction: comp", 1:length(nlogl_comps))
 
 	a4aout@fitSumm <-
     array(c(tmpSumm, nlogl_comps),

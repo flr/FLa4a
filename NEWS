@@ -1,6 +1,7 @@
  FLa4a 1.9.x:
 
  NEW FEATURES
+- fitSumm reports proportion of likelihood by component
 - plot for residuals by age
 - scas method to run several sca in parallel
 - plot for multiple fits
