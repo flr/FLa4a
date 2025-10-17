@@ -1078,8 +1078,8 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   out$Q <- sdrep$value[names(sdrep$value) == "Q"]
   out$Q <- array(out$Q, 
                dim = c(length(ages), length(years), length(indices)))
-  dim(out$Q) <- c(length(indices), length(years), length(ages))
-  out$Q <- aperm(out$Q, c(3, 2, 1))
+  # dim(out$Q) <- c(length(indices), length(years), length(ages))
+  # out$Q <- aperm(out$Q, c(3, 2, 1))
   colnames(out$N) <- colnames(out$F) <- ages
   rownames(out$N) <- rownames(out$F) <- years
   dimnames(out$Q) <- list(ages, years, names(indices))
