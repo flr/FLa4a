@@ -1074,7 +1074,10 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   convergence <- opt$convergence
   out$N <- matrix(sdrep$value[names(sdrep$value) == "N"], length(years), length(ages))
   out$F <- matrix(sdrep$value[names(sdrep$value) == "F"], length(years), length(ages))
-  out$Q <- matrix(sdrep$value[names(sdrep$value) == "Q"], length(years) * length(indices), length(ages))
+  # out$Q <- matrix(sdrep$value[names(sdrep$value) == "Q"], length(years) * length(indices), length(ages))
+  out$Q <- sdrep$value[names(sdrep$value) == "Q"]
+  out$Q <- array(out$Q, 
+               dim = c(length(ages), length(years), length(indices)))
   dim(out$Q) <- c(length(indices), length(years), length(ages))
   out$Q <- aperm(out$Q, c(3, 2, 1))
   colnames(out$N) <- colnames(out$F) <- ages
