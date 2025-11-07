@@ -943,11 +943,11 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     surveyMaxAges = srvMaxAge,
     fleetTypes = c(1, rep(2, length(srvMinAge))),
     sampleTimes = surveytime,
-    M = matrix(exp(df.aux[, "m"]), 61, 10, byrow = TRUE),
-    SW = matrix(df.aux[, "stock.wt"], 61, 10, byrow = TRUE),
-    MO = matrix(df.aux[, "mat"], 61, 10, byrow = TRUE),
-    PF = matrix(df.aux[, "harvest.spwn"], 61, 10, byrow = TRUE),
-    PM = matrix(df.aux[, "m.spwn"], 61, 10, byrow = TRUE),
+    M = matrix(exp(df.aux[, "m"]), max(full.df$year) - min(full.df$year) +1, max(full.df$age) - min(full.df$age) +1, byrow = TRUE),
+    SW = matrix(df.aux[, "stock.wt"], max(full.df$year) - min(full.df$year) +1, max(full.df$age) - min(full.df$age) +1, byrow = TRUE),
+    MO = matrix(df.aux[, "mat"], max(full.df$year) - min(full.df$year) +1, max(full.df$age) - min(full.df$age) +1, byrow = TRUE),
+    PF = matrix(df.aux[, "harvest.spwn"], max(full.df$year) - min(full.df$year) +1, max(full.df$age) - min(full.df$age) +1, byrow = TRUE),
+    PM = matrix(df.aux[, "m.spwn"], max(full.df$year) - min(full.df$year) +1, max(full.df$age) - min(full.df$age) +1, byrow = TRUE),
     designF = unname(Xf),
     designQ = unname(Xq),
     designN1 = unname(Xny1),
@@ -1074,9 +1074,12 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
   convergence <- opt$convergence
   out$N <- matrix(sdrep$value[names(sdrep$value) == "N"], length(years), length(ages))
   out$F <- matrix(sdrep$value[names(sdrep$value) == "F"], length(years), length(ages))
-  out$Q <- matrix(sdrep$value[names(sdrep$value) == "Q"], length(years) * length(indices), length(ages))
-  dim(out$Q) <- c(length(indices), length(years), length(ages))
-  out$Q <- aperm(out$Q, c(3, 2, 1))
+  # out$Q <- matrix(sdrep$value[names(sdrep$value) == "Q"], length(years) * length(indices), length(ages))
+  out$Q <- sdrep$value[names(sdrep$value) == "Q"]
+  out$Q <- array(out$Q, 
+               dim = c(length(ages), length(years), length(indices)))
+  # dim(out$Q) <- c(length(indices), length(years), length(ages))
+  # out$Q <- aperm(out$Q, c(3, 2, 1))
   colnames(out$N) <- colnames(out$F) <- ages
   rownames(out$N) <- rownames(out$F) <- years
   dimnames(out$Q) <- list(ages, years, names(indices))

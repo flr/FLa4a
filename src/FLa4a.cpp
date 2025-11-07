@@ -292,9 +292,11 @@ Type objective_function<Type>::operator()()
     // }
   }
 
-  vector<Type> F = exp(expandedF);
+  //vector<Type> F = exp(expandedF);
+  matrix<Type> F = exp(logF.array());
   matrix<Type> N = exp(logN.array());
-  vector<Type> Q = exp(expandedQ);
+  //vector<Type> Q = exp(expandedQ);
+  vector<Type> Q = expandedQ;
 
   REPORT(jnll);
   REPORT(nllpart)
