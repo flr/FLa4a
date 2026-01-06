@@ -24,14 +24,15 @@ Imports:
 Depends:
   R (>= 4.0),
   FLCore (>= 2.6.15),
-  triangle,
+  triangle
 Additional_repositories: http://flrproject.org/R
 Suggests:
     knitr,
     formatR,
     XML,
     reshape2,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    ggplotFL
 LazyLoad: yes
 LazyData: yes
 VignetteBuilder: knitr
