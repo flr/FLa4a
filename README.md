@@ -5,6 +5,11 @@
 - Repository: <https://github.com/flr/FLa4a/>
 - Bug reports: <https://github.com/flr/FLa4a/issues>
 
+
+[![FLa4a status badge](https://flr.r-universe.dev/badges/FLa4a)](https://flr.r-universe.dev/FLa4a)
+![GitHub issues](https://img.shields.io/github/issues/flr/FLa4a)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/flr/FLa4a)
+
 ## Overview
 FLa4a implements the Assesment For All (a4a) initiative stock assessment model, a simple and robust statistical catch-at-age model.
 
