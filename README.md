@@ -22,8 +22,6 @@ followed by
 
 	install.packages("FLa4a", repos=c(FLR="https://flr.r-universe.dev", CRAN="https://cloud.r-project.org"))
 
-or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases/latest)
-
 ## Documentation
 - [Help pages](http://www.flrproject.org/FLa4a/reference/index.html)
 - [Vignettes](http://www.flrproject.org/FLa4a/articles/index.html)
