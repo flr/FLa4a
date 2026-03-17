@@ -5,6 +5,11 @@
 - Repository: <https://github.com/flr/FLa4a/>
 - Bug reports: <https://github.com/flr/FLa4a/issues>
 
+
+[![FLa4a status badge](https://flr.r-universe.dev/badges/FLa4a)](https://flr.r-universe.dev/FLa4a)
+![GitHub issues](https://img.shields.io/github/issues/flr/FLa4a)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/flr/FLa4a)
+
 ## Overview
 FLa4a implements the Assesment For All (a4a) initiative stock assessment model, a simple and robust statistical catch-at-age model.
 
@@ -16,8 +21,6 @@ To install this package, start R and enter:
 followed by
 
 	install.packages("FLa4a", repos=c(FLR="https://flr.r-universe.dev", CRAN="https://cloud.r-project.org"))
-
-or download from the [FLa4a releases page](https://github.com/flr/FLa4a/releases/latest)
 
 ## Documentation
 - [Help pages](http://www.flrproject.org/FLa4a/reference/index.html)
