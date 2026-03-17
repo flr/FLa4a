@@ -20,7 +20,7 @@ mm <- mm*cm
 # check that we have the intended correlation
 all.equal(cm, cov2cor(mm))
 # Create the a4aGr object as before but now we also include the vcov argument for the variance-covariance matrix
-vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=p["linf"], k=p["k"], t0=p["t0"], units=c("cm","ano-1","ano")), vcov=mm)
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=p["linf"], k=p["k"], t0=p["t0"], units=c("cm","year-1","year")), vcov=mm)
 
 # transform idx and stk
 aIdx <- l2a(rfTrawl.idx, vbObj)
@@ -32,4 +32,11 @@ sum(catch.n(rfTrawl.idx)*catch.wt(rfTrawl.idx), na.rm=T)==sum(catch.n(aIdx)*catc
 
 sum(catch.n(rfLen.stk), na.rm=T)==sum(catch.n(aStk), na.rm=T)
 sum(catch.n(rfLen.stk)*catch.wt(rfLen.stk), na.rm=T)==sum(catch.n(aStk)*catch.wt(aStk), na.rm=T)
+
+# predict returns a matrix with the correct dimnames in dim 1
+l <- 5:10
+sum(dimnames(predict(vbObj, len=l))[[1]] %in% l) == length(l)
+
+a <- 3:5
+sum(dimnames(predict(vbObj, t=a))[[1]] %in% a) == length(a)
 

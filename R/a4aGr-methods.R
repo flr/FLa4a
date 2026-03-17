@@ -147,7 +147,9 @@ setMethod("predict", "a4aGr", function(object, ...){
 	} else {
 		args$object <- FLModelSim(model=grMod(model), params=params(model), vcov=vcov(model), distr=distr(model))
 	}
-	do.call("predict", args)
+	obj0 <- do.call("predict", args)
+	dimnames(obj0)[[1]] <- args[[1]]
+	return(obj0)
 })
 
 

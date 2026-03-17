@@ -10,6 +10,8 @@
 - genFLStock now uses ny1 to compute the lower triangle N matrix in the beggining of the time series
 
  BUG FIXES:
+- a4aGR predict now gets the correct dimnames for dim 1
+- sca use of covariates fixed
 - sca use of covariates fixed
 - several man pages issues fixed
 - ma simulation from fits fixed
