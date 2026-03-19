@@ -119,7 +119,6 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 	return(out)
 })
 
-
 #' @rdname l2a 
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths,\n harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
@@ -176,6 +175,74 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
 
     return(stk)
 })
+
+#' @rdname l2a
+setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA, ...){
+	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths,\n harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
+    # Use the catch.n slot to build the resulting FLStock
+
+    if(!all.equal(dimnames(object)[[1]], dimnames(model)[[1]])) stop("Lengths must be the same in both objects. The ALK must have lengths in the first dimension")
+    if(length(dim(alk))>2) stop("The ALK must have 2 dimensions only, the first with lengths and the second with ages")
+
+    # length~age distribution
+    ald <- apply(model, 1, function(x) x/sum(x))
+
+    # Weight slots - weighted means: trick to use qapply
+    weighted_means_slots_names <- c("catch","discards","landings","stock")
+    for(slot_counter in weighted_means_slots_names){
+        slot(object,paste(slot_counter,".wt",sep="")) <- slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep=""))
+    }
+
+    stk <- qapply(object, function(x){
+        if(dim(x)[1]==1){
+            names(dimnames(x)[1]) <- "age"
+            x
+        } else {
+            xAge <- base::apply(x, c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
+            dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(x)[-1])
+            FLQuant(xAge, units=units(x))
+        }
+    })
+
+    # Other slots - mean: trick to use qapply a second time, not the most elegant code ...
+    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
+
+    ald <- ald
+    ald[ald>0] <- 1
+    ald <- ald/rowSums(ald)
+
+    stk0 <- qapply(object, function(x){
+        if(dim(x)[1]==1){
+            names(dimnames(x)[1]) <- "age"
+            x
+        } else {
+            xAge <- base::apply(x, c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
+            dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(x)[-1])
+            FLQuant(xAge, units=units(x))
+        }
+    })
+
+    for(slot_counter in mean_slots_names){
+        slot(stk,slot_counter) <- slot(stk0,slot_counter)
+    }
+
+    # washing up
+    stk <- as(stk, "FLStock")
+    stk@name <- object@name
+	stk@desc <- object@desc
+	units(harvest(stk)) <- units(object@harvest)
+    landings(stk) <- computeLandings(stk)
+    discards(stk) <- computeDiscards(stk)
+    catch(stk) <- computeCatch(stk)
+    stock(stk) <- computeStock(stk)
+	# set the plus group on the first non continuous age
+#     if(!is.na(plusgroup)){
+#         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
+#     }
+    return(stk)
+})
+
+
 
 #' @rdname l2a 
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
