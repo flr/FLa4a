@@ -183,54 +183,47 @@ setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA
 
     if(!all.equal(dimnames(object)[[1]], dimnames(model)[[1]])) stop("Lengths must be the same in both objects. The ALK must have lengths in the first dimension")
     if(length(dim(alk))>2) stop("The ALK must have 2 dimensions only, the first with lengths and the second with ages")
+    # get units for later
+    unts <- units(object)
 
+    # Use the catch.n slot to build the resulting FLStock
     # length~age distribution
     ald <- apply(model, 1, function(x) x/sum(x))
+    cth.n <- base::apply(catch.n(object), c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
+    dimnames(cth.n) <- c(list(age = dimnames(ald)[[1]]), dimnames(cth.n)[-1])
+    stk <- FLStock(catch.n=FLQuant(cth.n))
 
-    # Weight slots - weighted means: trick to use qapply
-    weighted_means_slots_names <- c("catch","discards","landings","stock")
-    for(slot_counter in weighted_means_slots_names){
-        slot(object,paste(slot_counter,".wt",sep="")) <- slot(object,paste(slot_counter,".wt",sep="")) * slot(object,paste(slot_counter,".n",sep=""))
+    # other abundance slots
+    sts <- c("discards.n","landings.n","stock.n")
+    for(slot_counter in sts){
+        xAge <- base::apply(slot(object, slot_counter), c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
+        dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(xAge)[-1])
+        slot(stk, slot_counter) <- FLQuant(xAge)
     }
 
-    stk <- qapply(object, function(x){
-        if(dim(x)[1]==1){
-            names(dimnames(x)[1]) <- "age"
-            x
-        } else {
-            xAge <- base::apply(x, c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
-            dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(x)[-1])
-            FLQuant(xAge, units=units(x))
-        }
-    })
-
-    # Other slots - mean: trick to use qapply a second time, not the most elegant code ...
-    mean_slots_names <- c("m","mat","harvest.spwn","m.spwn")
-
-    ald <- ald
+    # Other slots - simple means
     ald[ald>0] <- 1
     ald <- ald/rowSums(ald)
+    sts <- c("m","mat","harvest.spwn","m.spwn")
+    for(slot_counter in sts){
+        xAge <- base::apply(slot(object, slot_counter), c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
+        dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(xAge)[-1])
+        slot(stk, slot_counter) <- FLQuant(xAge)
+    }
 
-    stk0 <- qapply(object, function(x){
-        if(dim(x)[1]==1){
-            names(dimnames(x)[1]) <- "age"
-            x
-        } else {
-            xAge <- base::apply(x, c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
-            dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(x)[-1])
-            FLQuant(xAge, units=units(x))
-        }
-    })
-
-    for(slot_counter in mean_slots_names){
-        slot(stk,slot_counter) <- slot(stk0,slot_counter)
+    # Weight mean slots
+    ald <- apply(model, 2, function(x) x/sum(x))
+    sts <- c("catch.wt", "discards.wt","landings.wt","stock.wt")
+    for(slot_counter in sts){
+        xAge <- base::apply(slot(object, slot_counter), c(2, 3, 4, 5, 6), function(x) x %*% ald)
+        dimnames(xAge) <- c(list(age = dimnames(ald)[[2]]), dimnames(xAge)[-1])
+        slot(stk, slot_counter) <- FLQuant(xAge)
     }
 
     # washing up
-    stk <- as(stk, "FLStock")
     stk@name <- object@name
 	stk@desc <- object@desc
-	units(harvest(stk)) <- units(object@harvest)
+    units(stk) <- unts
     landings(stk) <- computeLandings(stk)
     discards(stk) <- computeDiscards(stk)
     catch(stk) <- computeCatch(stk)
@@ -242,9 +235,7 @@ setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA
     return(stk)
 })
 
-
-
-#' @rdname l2a 
+#' @rdname l2a
 setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Slots are treated differently
     # Sum: index, index.var, catch.n
@@ -255,7 +246,6 @@ setMethod("l2a", c("FLIndex", "a4aGr"), function(object, model, ...){
     # Start with index - most likely to not be empty
     index <- suppressWarnings(l2a(index(object), model, stat="sum", ...))
     idx <- FLIndex(index=index)
-
 
     sum_slots_names <- c("catch.n","index.var")
     for(slot_counter in sum_slots_names){
