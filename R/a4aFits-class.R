@@ -108,19 +108,36 @@ setMethod("a4aFits", signature(object="missing"),
 
 setMethod("plot", c("a4aFits", "missing"), function(x, y=missing, ...){
 	args <- list()
-	par(mar=c(5, 4, 4, 4) + 0.1)
-	gcv = lapply(x,function(x) fitSumm(x)['gcv',])
-	bic = lapply(x, function(x) BIC(x))
+	gcv = lapply(myFits,function(x) fitSumm(x)['gcv',])
+	bic = lapply(myFits, function(x) BIC(x))
 	df <- data.frame(unlist(gcv), unlist(bic))
 	df$fit <- as.numeric(gsub("fit", "",names(gcv)))
 	names(df) <- c("GCV","BIC","fit")
-	df <- df[complete.cases(df),]
-	plot(df$fit, df$GCV, type = "b", col = "blue", ylab = "GCV", xlab = "fit", main="Analysis of fit metrics")
+	col_gcv <- "#0072B2"  
+	col_bic <- "#D55E00"  
+	par(mar = c(5, 5, 4, 5)) 
+	gcv_lims <- range(pretty(df$GCV))
+	bic_lims <- range(pretty(df$BIC))
+	plot(df$fit, df$GCV, type = "n", axes = FALSE, 
+	     xlab = "", ylab = "", main = "Analysis of Fit Metrics",
+	     ylim = gcv_lims) 
+	grid(nx = NA, ny = NULL, col = "gray90", lty = 1, lwd = 1)
+	lines(df$fit, df$GCV, col = col_gcv, lwd = 2.5)
+	points(df$fit, df$GCV, col = col_gcv, pch = 16, cex = 1.2)
+	axis(2, col = col_gcv, col.axis = col_gcv, las = 1, lwd = 1.5)
+	mtext("GCV", side = 2, line = 3.5, col = col_gcv, font = 2)
 	par(new = TRUE)
-	plot(df$fit, df$BIC, type = "b", col = "red", axes = FALSE, xlab = "", ylab = "")
-	axis(4)
-	mtext("BIC", side=4, line=3)
-	abline(v=df[min(df$GCV)==df$GCV,]$fit, col = "blue",lty = 2)
-	abline(v=df[min(df$BIC)==df$BIC,]$fit, col = "red",lty = 2)
-	legend("topleft", legend = c("GCV", "BIC"), col = c("blue", "red"), lty = 1, bg="white")
+	plot(df$fit, df$BIC, type = "n", axes = FALSE, xlab = "", ylab = "",
+	     ylim = bic_lims) 
+	lines(df$fit, df$BIC, col = col_bic, lwd = 2.5)
+	points(df$fit, df$BIC, col = col_bic, pch = 16, cex = 1.2)
+	axis(4, col = col_bic, col.axis = col_bic, las = 1, lwd = 1.5)
+	mtext("BIC", side = 4, line = 3.5, col = col_bic, font = 2)
+	axis(1, at = df$fit, col = "gray30", col.axis = "gray30", lwd = 1.5)
+	mtext("Fit Index", side = 1, line = 3, font = 2, col = "gray30")
+	abline(v = df$fit[which.min(df$GCV)], col = col_gcv, lty = 2, lwd = 2)
+	abline(v = df$fit[which.min(df$BIC)], col = col_bic, lty = 2, lwd = 2)
+	legend("bottomleft", legend = c("GCV", "BIC"), 
+	       col = c(col_gcv, col_bic), lwd = 2.5, pch = 16, 
+	       bty = "n", inset = 0.02)
 })
