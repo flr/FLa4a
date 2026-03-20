@@ -122,6 +122,10 @@ setMethod("l2a", c("FLQuant", "a4aGr"),
 #' @rdname l2a 
 setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA, ...){
 	warning("Individual weights, M and maturity will be (weighted) averaged accross lengths,\n harvest is not computed and everything else will be summed.\n If this is not what you want, you'll have to deal with these slots by hand.")
+
+    # get units for later
+    unts <- units(object)
+
     # Use the catch.n slot to build the resulting FLStock
     catch.n <- suppressWarnings(l2a(catch.n(object), model, halfwidth=halfwidth(object), stat="sum", max_age=plusgroup+1, ...))
     stk <- FLStock(catch.n=catch.n)
@@ -163,7 +167,7 @@ setMethod("l2a", c("FLStockLen", "a4aGr"), function(object, model, plusgroup=NA,
     # washing up
 	stk@name <- object@name
 	stk@desc <- object@desc
-	units(harvest(stk)) <- units(object@harvest)
+    units(stk) <- unts
     landings(stk) <- computeLandings(stk)
     discards(stk) <- computeDiscards(stk)
     catch(stk) <- computeCatch(stk)
