@@ -233,9 +233,9 @@ setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA
     catch(stk) <- computeCatch(stk)
     stock(stk) <- computeStock(stk)
 	# set the plus group on the first non continuous age
-#     if(!is.na(plusgroup)){
-#         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
-#     }
+    if(!is.na(plusgroup)){
+        stk <- setPlusGroup(stk, plusgroup, na.rm=T)
+    }
     return(stk)
 })
 
