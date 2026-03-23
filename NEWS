@@ -1,6 +1,7 @@
  FLa4a 1.9.x:
 
  NEW FEATURES
+- plot for catch diagnostics improved
 - plot for a4aFits improved
 - new l2a method using ALKs
 - fitSumm reports proportion of likelihood by component
