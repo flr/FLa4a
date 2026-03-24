@@ -208,7 +208,7 @@ setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA
     # Other slots - simple means
     ald[ald>0] <- 1
     ald <- ald/rowSums(ald)
-    sts <- c("m","mat","harvest.spwn","m.spwn")
+    sts <- c("m","harvest.spwn","m.spwn")
     for(slot_counter in sts){
         xAge <- base::apply(slot(object, slot_counter), c(2, 3, 4, 5, 6), function(x) x %*% t(ald))
         dimnames(xAge) <- c(list(age = dimnames(ald)[[1]]), dimnames(xAge)[-1])
@@ -216,8 +216,8 @@ setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA
     }
 
     # Weight mean slots
-    ald <- apply(model, 2, function(x) x/sum(x))
-    sts <- c("catch.wt", "discards.wt","landings.wt","stock.wt")
+    ald <- apply(t(ald), 2, function(x) x/sum(x))
+    sts <- c("catch.wt", "discards.wt","landings.wt","stock.wt", "mat")
     for(slot_counter in sts){
         xAge <- base::apply(slot(object, slot_counter), c(2, 3, 4, 5, 6), function(x) x %*% ald)
         dimnames(xAge) <- c(list(age = dimnames(ald)[[2]]), dimnames(xAge)[-1])
@@ -233,9 +233,9 @@ setMethod("l2a", c("FLStockLen", "matrix"), function(object, model, plusgroup=NA
     catch(stk) <- computeCatch(stk)
     stock(stk) <- computeStock(stk)
 	# set the plus group on the first non continuous age
-#     if(!is.na(plusgroup)){
-#         stk <- setPlusGroup(stk, plusgroup, na.rm=T)
-#     }
+    if(!is.na(plusgroup)){
+        stk <- setPlusGroup(stk, plusgroup, na.rm=T)
+    }
     return(stk)
 })
 

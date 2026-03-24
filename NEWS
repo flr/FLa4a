@@ -1,7 +1,9 @@
  FLa4a 1.9.x:
 
  NEW FEATURES
- - new l2a method using ALKs
+- plot for catch diagnostics improved
+- plot for a4aFits improved
+- new l2a method using ALKs
 - fitSumm reports proportion of likelihood by component
 - plot for residuals by age
 - scas method to run several sca in parallel
@@ -11,7 +13,7 @@
 - genFLStock now uses ny1 to compute the lower triangle N matrix in the beggining of the time series
 
  BUG FIXES:
-- redfish length dataset added units
+- units added to the redfish length dataset 
 - a4aGR predict now gets the correct dimnames for dim 1
 - sca use of covariates fixed
 - sca use of covariates fixed
