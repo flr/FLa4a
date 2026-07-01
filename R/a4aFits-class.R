@@ -108,8 +108,8 @@ setMethod("a4aFits", signature(object="missing"),
 
 setMethod("plot", c("a4aFits", "missing"), function(x, y=missing, ...){
 	args <- list()
-	gcv = lapply(myFits,function(x) fitSumm(x)['gcv',])
-	bic = lapply(myFits, function(x) BIC(x))
+	gcv = lapply(x,function(x) fitSumm(x)['gcv',])
+	bic = lapply(x, function(x) BIC(x))
 	df <- data.frame(unlist(gcv), unlist(bic))
 	df$fit <- as.numeric(gsub("fit", "",names(gcv)))
 	names(df) <- c("GCV","BIC","fit")
