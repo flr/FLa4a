@@ -78,10 +78,10 @@ setMethod("getX", "formula", function(object, df, newdf = df, tol = 1e-4) {
 
 
     # evaluate by argument in gam elements
-    gams <- grepl("(^s[(])|(^te[(])", facs)
+    gams <- grepl("(^s[(])|(^te[(])|(^ti[(])", facs)
     if (any(gams)) {  
       tmp.sfunc <- function(..., by = NULL) eval(substitute(by), df)
-      dummy.gams <- gsub("(^s[(])|(^te[(])", "tmp.sfunc(", facs[gams])
+      dummy.gams <- gsub("(^s[(])|(^te[(])|(^ti[(])", "tmp.sfunc(", facs[gams])
       gmf <- lapply(dummy.gams, function(x) eval(parse(text = x)))
       bygams <- !sapply(gmf, is.null) 
       if (any(bygams)) { # if there are by arguments then add them to df otherwise do nothing
