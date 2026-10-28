@@ -22,19 +22,41 @@ setMethod("+", c("FLStock", "a4aFit"), function(e1, e2)
   }
 
   stock.n(e1) <- stock.n(e2)
-  landings.n(e1) <- landings.n(e1) * (catch.n(e2)/catch.n(e1))
-  discards.n(e1) <- discards.n(e1) * (catch.n(e2)/catch.n(e1))
-  catch.n(e1) <- catch.n(e2)
   harvest(e1) <- harvest(e2)
   
-  catch(e1) <- computeCatch(e1, na.rm=FALSE)
   stock(e1) <- computeStock(e1, na.rm=FALSE)
-  landings(e1) <- computeLandings(e1, na.rm=FALSE)
-  discards(e1) <- computeDiscards(e1, na.rm=FALSE)
   
   e1
 })
 
+#' @rdname addition-methods
+#' @aliases +,FLStock,a4aFit-method +,FLIndices,a4aFit-method
+setMethod("+", c("a4aFit", "FLStock"), function(e1, e2)
+{
+
+  nit1 <- dims(e1)$iter
+  nit2 <- dims(e2)$iter
+  if(nit1>nit2) {
+	e2 <- propagate(e2, nit1)
+  } else if(nit1<nit2){
+  	e1 <- propagate(e1, nit2)
+  }
+
+  stock.n(e2) <- stock.n(e1)
+  landings.n(e2) <- landings.n(e2) * (catch.n(e1)/catch.n(e2))
+  discards.n(e2) <- discards.n(e2) * (catch.n(e1)/catch.n(e2))
+  catch.n(e2) <- catch.n(e1)
+  harvest(e2) <- harvest(e1)
+  
+  catch(e2) <- computeCatch(e2, na.rm=FALSE)
+  stock(e2) <- computeStock(e2, na.rm=FALSE)
+  landings(e2) <- computeLandings(e2, na.rm=FALSE)
+  discards(e2) <- computeDiscards(e2, na.rm=FALSE)
+  
+  e2
+})
+
+#' @rdname addition-methods
 setMethod("+", c("FLIndices", "a4aFit"), function(e1, e2) 
 {
 
