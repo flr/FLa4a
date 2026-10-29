@@ -1,0 +1,160 @@
+26c26
+< This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+---
+> This is FLa4a 1.9.7. For overview type 'help(package="FLa4a")'
+49,85d48
+< Warning messages:
+< 1: *** ~te(age, year, k = c(6, 15), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 2: *** ~te(age, year, k = c(6, 16), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 3: *** ~te(age, year, k = c(6, 17), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 4: *** ~te(age, year, k = c(6, 18), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 5: *** ~te(age, year, k = c(6, 19), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 6: *** ~te(age, year, k = c(6, 20), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+98,134d60
+< Warning messages:
+< 1: *** ~te(age, year, k = c(6, 15), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 2: *** ~te(age, year, k = c(6, 16), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 3: *** ~te(age, year, k = c(6, 17), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 4: *** ~te(age, year, k = c(6, 18), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 5: *** ~te(age, year, k = c(6, 19), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 6: *** ~te(age, year, k = c(6, 20), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+194,230d119
+< Warning messages:
+< 1: *** ~te(age, year, k = c(6, 15), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 2: *** ~te(age, year, k = c(6, 16), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 3: *** ~te(age, year, k = c(6, 17), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 4: *** ~te(age, year, k = c(6, 18), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 5: *** ~te(age, year, k = c(6, 19), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 6: *** ~te(age, year, k = c(6, 20), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+243,279d131
+< Warning messages:
+< 1: *** ~te(age, year, k = c(6, 15), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 2: *** ~te(age, year, k = c(6, 16), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 3: *** ~te(age, year, k = c(6, 17), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 4: *** ~te(age, year, k = c(6, 18), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 5: *** ~te(age, year, k = c(6, 19), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< 6: *** ~te(age, year, k = c(6, 20), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+334c186
+<  51.687   0.196  51.891 
+---
+>   2.924   0.107  39.287 

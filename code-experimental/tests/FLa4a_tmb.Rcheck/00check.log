@@ -1,0 +1,208 @@
+* using log directory ‘/home/ernesto/github/FLa4a.Rcheck’
+* using R version 4.5.2 (2025-10-31)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (SUSE Linux) 15.1.1 20250714
+    GNU Fortran (SUSE Linux) 15.1.1 20250714
+* running under: openSUSE Leap 16.0
+* using session charset: UTF-8
+* checking for file ‘FLa4a/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘FLa4a’ version ‘1.9.99-002’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... INFO
+Vignette dependency required without any vignettes: ‘knitr’
+* checking if this is a source package ... WARNING
+Subdirectory ‘FLa4a/src’ contains apparent object files/libraries
+  FLa4a.o FLa4a.so
+Object files/libraries should not be included in a source package.
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .gitignore
+  docs/manual/.install_extras
+  .git
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... WARNING
+Found the following files with non-portable file names:
+  docs/articles/index (copy).html
+  docs/reference/bubble plot of residuals-2.png
+  docs/reference/mvrcop for a4aGr-2.png
+  docs/reference/mvrtriangle for a4aGr-2.png
+  docs/reference/mvrtriangle for a4aGr-4.png
+  docs/reference/plot for fitted catch-at-age-2.png
+  docs/reference/plot for fitted indices-at-age-2.png
+  docs/reference/plot of residuals-2.png
+  docs/reference/qqmath plot of residuals-2.png
+  docs/reference/qqplot of residuals-2.png
+  docs/reference/wireframe plot for FLQuant-2.png
+These are not fully portable file names.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘FLa4a’ can be installed ... OK
+* used C++ compiler: ‘g++ (SUSE Linux) 15.3.0’
+* checking installed package size ... INFO
+  installed size is 39.0Mb
+  sub-directories of 1Mb or more:
+    R      1.1Mb
+    libs  37.2Mb
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking whether startup messages can be suppressed ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+sca.sa: no visible global function definition for ‘track<-’
+sep.sa: no visible global function definition for ‘track<-’
+Undefined global functions or variables:
+  track<-
+* checking Rd files ... OK
+* checking Rd metadata ... WARNING
+Rd files with duplicated name 'plot metrics of multiple fits':
+  ‘plot-mfits.Rd’ ‘plot-mmcfits.Rd’
+Rd files with duplicated alias 'missing-method':
+  ‘plot-mfits.Rd’ ‘plot-mmcfits.Rd’
+Rd files with duplicated alias 'plot metrics of multiple fits':
+  ‘plot-mfits.Rd’ ‘plot-mmcfits.Rd’
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented S4 methods:
+  generic 'getADMBCallArgs' and siglist 'SCAMCMC'
+  generic 'plot' and siglist 'a4aFitMCMCs,missing'
+  generic 'plot' and siglist 'a4aFits,missing'
+  generic 'residuals' and siglist 'a4aFitSA'
+All user-level objects in a package (including S4 classes and methods)
+should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in Rd file 'a4aFit-class.Rd'
+  ‘stock’
+
+Documented arguments not in \usage in Rd file 'a4aFitCatchDiagn-class.Rd':
+  ‘stock’ ‘indices’
+
+Objects in \usage without \alias in Rd file 'plot-mfits.Rd':
+  ‘\S4method{plot}{a4aFits,missing}’
+
+Objects in \usage without \alias in Rd file 'plot-mmcfits.Rd':
+  ‘\S4method{plot}{a4aFitMCMCs,missing}’
+
+Undocumented arguments in Rd file 'sca.sa.Rd'
+  ‘args’ ‘tracking’
+Documented arguments not in \usage in Rd file 'sca.sa.Rd':
+  ‘genArgs’
+
+Documented arguments not in \usage in Rd file 'scas.Rd':
+  ‘stock’
+
+Undocumented arguments in Rd file 'sep.sa.Rd'
+  ‘args’
+Documented arguments not in \usage in Rd file 'sep.sa.Rd':
+  ‘genArgs’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... WARNING
+Found the following Makefile(s) with CR or CRLF line endings:
+  code-experimental/Makefile
+  code-experimental/makeTemplate/Makefile
+Some Unix ‘make’ programs require LF line endings.
+* checking for GNU extensions in Makefiles ... WARNING
+Found the following file(s) containing GNU extensions:
+  Makefile
+  code-experimental/Makefile
+  code-experimental/makeTemplate/Makefile
+Portable Makefiles do not use GNU extensions such as +=, :=, $(shell),
+$(wildcard), ifeq ... endif, .NOTPARALLEL See section ‘Writing portable
+packages’ in the ‘Writing R Extensions’ manual.
+* checking include directives in Makefiles ... OK
+* checking compiled code ... WARNING
+File ‘FLa4a/libs/FLa4a.so’:
+  Found ‘_ZSt4cout’, possibly from ‘std::cout’ (C++)
+    Object: ‘FLa4a.o’
+  Found ‘exit’, possibly from ‘exit’ (C)
+    Object: ‘FLa4a.o’
+
+Compiled code should not call entry points which might terminate R nor
+write to stdout/stderr instead of to the console, nor use Fortran I/O
+nor system RNGs nor [v]sprintf.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
+* checking examples ... ERROR
+Running examples in ‘FLa4a-Ex.R’ failed
+The error most likely occurred in:
+
+> ### Name: getADMBHessian
+> ### Title: Get ADMB Hessian
+> ### Aliases: getADMBHessian getADMBCovariance
+> 
+> ### ** Examples
+> 
+> # load some data
+> data(ple4)
+> data(ple4.indices)
+> # choose a working directory
+> wkdir <- tempfile()
+> # do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
+> fit <- sca(stock=ple4,indices=ple4.indices,wkdir=wkdir)
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> hessInfo <- getADMBHessian(wkdir)
+Error in file(paste0(wkdir, "/admodel.hes"), "rb") : 
+  cannot open the connection
+Calls: getADMBHessian -> file
+In addition: Warning message:
+In file(paste0(wkdir, "/admodel.hes"), "rb") :
+  cannot open file '/tmp/RtmpJemnsg/file15ab65367651/admodel.hes': No such file or directory
+Execution halted
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘addition.R’
+  Running ‘l2a.R’
+  Running ‘m.R’
+  Running ‘mcmc.R’
+  Running ‘predict.R’
+  Running ‘residuals.R’
+  Running ‘sca.R’
+  Running ‘scas.R’
+  Running ‘scssr.R’
+  Running ‘simulate.R’
+  Running ‘wcsam.R’
+* checking PDF version of manual ... OK
+* DONE
+Status: 1 ERROR, 8 WARNINGs, 3 NOTEs

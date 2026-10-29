@@ -1,0 +1,89 @@
+SCAMCMC                 MCMC settings class
+SCAPars                 Model parameters class
+a4aFit-class            S4 class 'a4aFit'
+a4aFitCatchDiagn-class
+                        S4 class 'a4aFitCatchDiagn'
+a4aFitMCMC-class        S4 class 'a4aFitMCMC'
+a4aFitResiduals-class   S4 class 'a4aFitResiduals'
+a4aFitSA-class          S4 class 'a4aFitSA'
+a4aGr                   Individual growth class
+a4aInternal             Stock assessment model advanced method
+a4aM                    Natural mortality class
+a4aStkParams            Stock parameters class
+addition                + methods
+assorted methods        Assorted methods needed by FLa4a
+breakpts                Breakpoints
+bubble plot of residuals
+                        Bubbles plot of standardized log residuals
+collapseSeasons         Collapse seasons
+defaultSubModels        Default sub-models
+deprecated              deprecated
+dps567                  dps567
+dps567.idx              dps567.idx
+formula<-               coefficients extract and replacement
+genFLIndex              Methods to generate FLIndex objects
+genFLQuant              Methods to generate FLQuant objects
+genFLStock              Methods to generate FLStock objects
+getADMBHessian          Get ADMB Hessian
+getAcor                 compute log-correlation matrix
+getCov                  Get covariance matrix
+getK                    Get K
+getTPL                  Get TPL with ADMB code
+getX                    Get model matrix
+hakeGSA7                hakeGSA7
+hakeGSA7.idx            hakeGSA7.idx
+hke1567                 hke1567
+hke1567.idx             hke1567.idx
+index_cd_len            index_cd_len
+index_pt_len            index_pt_len
+index_sp_len            index_sp_len
+l2a                     Method to convert length-based data to
+                        age-based
+m                       natural mortality
+ma                      Model averaging (experimental)
+mut09                   mut09
+mut09.idx               mut09.idx
+mvnorm                  natural mortality
+mvrcop                  Simulation using copula models
+mvrcop for a4aGr        mvrcop
+mvrnorm for a4aGR       mvrnorm
+mvrtriangle             Simulation with a copula model and triangular
+                        distributions
+mvrtriangle for a4aGr   mvrtriangle
+pars2dim                Check that the second dimension in params is
+                        "iter"
+plot for fitted catch-at-age
+                        plot for fitted catch-at-age
+plot for fitted indices-at-age
+                        Plot for fitted indices-at-age
+plot metrics of multiple fits
+                        Plot of metrics of multiple fits
+plot metrics of multiple fits
+                        Plot of metrics of multiple fits
+plot of catch residuals
+                        Plot of aggregated catch standardized log
+                        residuals
+plot of residuals       Plot of standardized log residuals
+predict for a4aGr       predict for 'a4aGr'
+predict for sca         Predict methods for SCA
+qqplot of residuals     qqplot of standardized log residuals
+range<-,a4aM,ANY,numeric-method
+                        range for a4aM objects
+rfLen                   redfish length data
+rfLen.stk               rfLen.stk
+rfTrawl.idx             rfTrawl.idx
+rfTrawlJmp.idx          rfTrawlJmp.idx
+rfTrawlTrd.idx          rfTrawlTrd.idx
+sca                     Statistical catch-at-age method
+sca.sa                  Call sca inside the mp function
+scas                    Run several stock assessments in a single run
+sep.sa                  Call a separable SA inside the mp function
+shake_len               shake_len
+simulate                Simulation methods for SCA
+southernHakeLen         Southern hake length data
+stdlogres               Standardized log residuals
+submodel                Submodel class
+submodels               Submodels class
+vcov                    Variance-covariance matrix
+wireframe plot for FLQuant
+                        wireframe plot for FLQuant

@@ -1,0 +1,535 @@
+Hmm ... looks like a package
+Converting parsed Rd's to LaTeX .......
+Creating pdf output from LaTeX ...
+
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+(./Rd2.tex
+(/usr/share/texmf/tex/latex/base/book.cls
+Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/bk10.clo))
+(/usr/local/R452/lib64/R/share/texmf/tex/latex/Rd.sty
+(/usr/share/texmf/tex/latex/base/ifthen.sty)
+(/usr/share/texmf/tex/generic/iftex/iftex.sty)
+(/usr/share/texmf/tex/latex/tools/longtable.sty)
+(/usr/share/texmf/tex/latex/tools/bm.sty)
+(/usr/share/texmf/tex/latex/base/alltt.sty)
+(/usr/share/texmf/tex/latex/tools/verbatim.sty)
+(/usr/share/texmf/tex/latex/url/url.sty)
+(/usr/share/texmf/tex/latex/base/textcomp.sty)
+(/usr/share/texmf/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf/tex/latex/amsmath/amstext.sty
+(/usr/share/texmf/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texmf/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texmf/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty)
+(/usr/share/texmf/tex/latex/amsfonts/amssymb.sty)
+(/usr/share/texmf/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/share/texmf/tex/latex/base/fontenc.sty)
+(/usr/share/texmf/tex/latex/psnfss/times.sty)
+(/usr/share/texmf/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texmf/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texmf/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texmf/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texmf/tex/latex/graphics/color.sty
+(/usr/share/texmf/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texmf/tex/latex/graphics-def/pdftex.def)
+(/usr/share/texmf/tex/latex/graphics/mathcolor.ltx))
+(/usr/share/texmf/tex/latex/hyperref/hyperref.sty
+(/usr/share/texmf/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/share/texmf/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/share/texmf/tex/generic/pdfescape/pdfescape.sty
+(/usr/share/texmf/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/share/texmf/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/share/texmf/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/share/texmf/tex/latex/hycolor/hycolor.sty)
+(/usr/share/texmf/tex/latex/auxhook/auxhook.sty)
+(/usr/share/texmf/tex/latex/hyperref/nameref.sty
+(/usr/share/texmf/tex/latex/refcount/refcount.sty)
+(/usr/share/texmf/tex/generic/gettitlestring/gettitlestring.sty
+(/usr/share/texmf/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/share/texmf/tex/latex/etoolbox/etoolbox.sty)
+(/usr/share/texmf/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texmf/tex/generic/intcalc/intcalc.sty)
+(/usr/share/texmf/tex/latex/hyperref/puenc.def)
+(/usr/share/texmf/tex/generic/bitset/bitset.sty
+(/usr/share/texmf/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/share/texmf/tex/latex/base/atbegshi-ltx.sty))
+(/usr/share/texmf/tex/latex/hyperref/hpdftex.def
+(/usr/share/texmf/tex/latex/base/atveryend-ltx.sty)
+(/usr/share/texmf/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/share/texmf/tex/generic/uniquecounter/uniquecounter.sty))))
+(/usr/share/texmf/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/share/texmf/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texmf/tex/latex/l3backend/l3backend-pdftex.def)
+No file Rd2.aux.
+(/usr/share/texmf/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texmf/tex/latex/inconsolata/t1zi4.fd)
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd)
+(/usr/share/texmf/tex/latex/jknapltx/ursfs.fd)
+(/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd)
+No file Rd2.toc.
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/en
+c/dvips/base/8r.enc}{/usr/share/texmf/fonts/enc/dvips/inconsolata/i4-t1-0.enc}]
+(/usr/share/texmf/tex/latex/inconsolata/ts1zi4.fd) [2{/usr/share/texmf/fonts/en
+c/dvips/inconsolata/i4-ts1.enc}] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+[13] [14]
+Underfull \vbox (badness 10000) has occurred while \output is active [15]
+[16] [17] [18] [19] [20] [21] [22] [23] [24] [25]
+Overfull \hbox (1.26762pt too wide) in paragraph at lines 1629--1630
+[]\T1/ptm/m/n/10 This method com-putes the []\T1/zi4/m/n/10 FLStock []\T1/ptm/m
+/n/10 slots con-sis-tently with the in-for-ma-tion pro-vided by the []\T1/zi4/m
+/n/10 FLQuant[]\T1/ptm/m/n/10 .
+[26] [27] [28] [29] [30] [31] [32] [33]
+Overfull \hbox (1.28835pt too wide) in paragraph at lines 2058--2059
+[]\T1/ptm/m/n/10 the max-i-mum age in the re-turned []\T1/zi4/m/n/10 FLQuant[]\
+T1/ptm/m/n/10 ; all ages above this are set to []\T1/zi4/m/n/10 max_age[]\T1/pt
+m/m/n/10 ;
+[34] [35]
+Overfull \hbox (15.76555pt too wide) in paragraph at lines 2177--2177
+ []  \T1/zi4/m/n/9 params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(
+params=c("k","t"), iter=1:2))),[] 
+[36]
+Overfull \hbox (3.74101pt too wide) in paragraph at lines 2182--2182
+ []\T1/zi4/m/n/9 # ...and with randomly generated iters (based on the medians f
+or params(mod2) and vcov(mod2))[] 
+[37] [38] [39] [40]
+Overfull \hbox (30.75021pt too wide) in paragraph at lines 2426--2426
+ []\T1/zi4/m/n/9 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=
+0.086), list(a=0, b=0.005, c=0.001))[] 
+[41] [42]
+Overfull \hbox (30.75021pt too wide) in paragraph at lines 2580--2580
+ []\T1/zi4/m/n/9 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=
+0.086), list(a=0, b=0.005, c=0.001))[] 
+[43] [44] [45] [46]
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.plot\040m
+etrics\040of\040multiple\040fits}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2752 ...ple fits}{plot metrics of multiple fits}
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.plot\040m
+etrics\040of\040multiple\040fits.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2752 ...ple fits}{plot metrics of multiple fits}
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.missing.R
+dash.method}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2753 ... of multiple fits}{missing.Rdash.method}
+                                                   [47] [48] [49] [50] [51]
+[52] [53] [54] [55]
+Overfull \hbox (0.74408pt too wide) in paragraph at lines 3227--3227
+ []\T1/zi4/m/n/9 fit6 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = rmodel
+, ple4, FLIndices(ple4.index))[] 
+
+Overfull \hbox (0.74408pt too wide) in paragraph at lines 3231--3231
+ []\T1/zi4/m/n/9 fit7 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = rmodel
+, ple4, FLIndices(ple4.index))[] 
+[56] [57] [58]
+Underfull \vbox (badness 10000) has occurred while \output is active [59]
+[60] [61] [62] [63] [64] [65] [66] [67] [68]
+No file Rd2.ind.
+[69] (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)</usr/share/texmf/fonts/typ
+e1/public/inconsolata/Inconsolata-zi4r.pfb></usr/share/texmf/fonts/type1/urw/ti
+mes/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/t
+exmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/type1/urw/times/u
+tmri8a.pfb>
+Output written on Rd2.pdf (69 pages, 196977 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2024] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (445 entries accepted, 0 rejected).
+Sorting entries......done (4269 comparisons).
+Generating output file Rd2.ind....done (860 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+(./Rd2.tex
+(/usr/share/texmf/tex/latex/base/book.cls
+Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/bk10.clo))
+(/usr/local/R452/lib64/R/share/texmf/tex/latex/Rd.sty
+(/usr/share/texmf/tex/latex/base/ifthen.sty)
+(/usr/share/texmf/tex/generic/iftex/iftex.sty)
+(/usr/share/texmf/tex/latex/tools/longtable.sty)
+(/usr/share/texmf/tex/latex/tools/bm.sty)
+(/usr/share/texmf/tex/latex/base/alltt.sty)
+(/usr/share/texmf/tex/latex/tools/verbatim.sty)
+(/usr/share/texmf/tex/latex/url/url.sty)
+(/usr/share/texmf/tex/latex/base/textcomp.sty)
+(/usr/share/texmf/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf/tex/latex/amsmath/amstext.sty
+(/usr/share/texmf/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texmf/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texmf/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty)
+(/usr/share/texmf/tex/latex/amsfonts/amssymb.sty)
+(/usr/share/texmf/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/share/texmf/tex/latex/base/fontenc.sty)
+(/usr/share/texmf/tex/latex/psnfss/times.sty)
+(/usr/share/texmf/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texmf/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texmf/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texmf/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texmf/tex/latex/graphics/color.sty
+(/usr/share/texmf/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texmf/tex/latex/graphics-def/pdftex.def)
+(/usr/share/texmf/tex/latex/graphics/mathcolor.ltx))
+(/usr/share/texmf/tex/latex/hyperref/hyperref.sty
+(/usr/share/texmf/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/share/texmf/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/share/texmf/tex/generic/pdfescape/pdfescape.sty
+(/usr/share/texmf/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/share/texmf/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/share/texmf/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/share/texmf/tex/latex/hycolor/hycolor.sty)
+(/usr/share/texmf/tex/latex/auxhook/auxhook.sty)
+(/usr/share/texmf/tex/latex/hyperref/nameref.sty
+(/usr/share/texmf/tex/latex/refcount/refcount.sty)
+(/usr/share/texmf/tex/generic/gettitlestring/gettitlestring.sty
+(/usr/share/texmf/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/share/texmf/tex/latex/etoolbox/etoolbox.sty)
+(/usr/share/texmf/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texmf/tex/generic/intcalc/intcalc.sty)
+(/usr/share/texmf/tex/latex/hyperref/puenc.def)
+(/usr/share/texmf/tex/generic/bitset/bitset.sty
+(/usr/share/texmf/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/share/texmf/tex/latex/base/atbegshi-ltx.sty))
+(/usr/share/texmf/tex/latex/hyperref/hpdftex.def
+(/usr/share/texmf/tex/latex/base/atveryend-ltx.sty)
+(/usr/share/texmf/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/share/texmf/tex/generic/uniquecounter/uniquecounter.sty))))
+(/usr/share/texmf/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/share/texmf/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texmf/tex/latex/l3backend/l3backend-pdftex.def)
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+(/usr/share/texmf/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+(/usr/share/texmf/tex/latex/inconsolata/t1zi4.fd)
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd)
+(/usr/share/texmf/tex/latex/jknapltx/ursfs.fd)
+(/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd)
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/u
+pdmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}{/usr/share/texm
+f/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2])
+(/usr/share/texmf/tex/latex/inconsolata/ts1zi4.fd) [3{/usr/share/texmf/fonts/en
+c/dvips/inconsolata/i4-ts1.enc}] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+[13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
+Overfull \hbox (1.26762pt too wide) in paragraph at lines 1629--1630
+[]\T1/ptm/m/n/10 This method com-putes the []\T1/zi4/m/n/10 FLStock []\T1/ptm/m
+/n/10 slots con-sis-tently with the in-for-ma-tion pro-vided by the []\T1/zi4/m
+/n/10 FLQuant[]\T1/ptm/m/n/10 .
+[27] [28] [29] [30] [31] [32] [33] [34]
+Overfull \hbox (1.28835pt too wide) in paragraph at lines 2058--2059
+[]\T1/ptm/m/n/10 the max-i-mum age in the re-turned []\T1/zi4/m/n/10 FLQuant[]\
+T1/ptm/m/n/10 ; all ages above this are set to []\T1/zi4/m/n/10 max_age[]\T1/pt
+m/m/n/10 ;
+[35] [36]
+Overfull \hbox (15.76555pt too wide) in paragraph at lines 2177--2177
+ []  \T1/zi4/m/n/9 params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(
+params=c("k","t"), iter=1:2))),[] 
+[37]
+Overfull \hbox (3.74101pt too wide) in paragraph at lines 2182--2182
+ []\T1/zi4/m/n/9 # ...and with randomly generated iters (based on the medians f
+or params(mod2) and vcov(mod2))[] 
+[38] [39] [40] [41]
+Overfull \hbox (30.75021pt too wide) in paragraph at lines 2426--2426
+ []\T1/zi4/m/n/9 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=
+0.086), list(a=0, b=0.005, c=0.001))[] 
+[42] [43]
+Overfull \hbox (30.75021pt too wide) in paragraph at lines 2580--2580
+ []\T1/zi4/m/n/9 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=
+0.086), list(a=0, b=0.005, c=0.001))[] 
+[44] [45] [46] [47]
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.plot\040m
+etrics\040of\040multiple\040fits}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2752 ...ple fits}{plot metrics of multiple fits}
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.plot\040m
+etrics\040of\040multiple\040fits.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2752 ...ple fits}{plot metrics of multiple fits}
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.missing.R
+dash.method}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2753 ... of multiple fits}{missing.Rdash.method}
+                                                   [48] [49] [50] [51] [52]
+[53] [54] [55] [56]
+Overfull \hbox (0.74408pt too wide) in paragraph at lines 3227--3227
+ []\T1/zi4/m/n/9 fit6 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = rmodel
+, ple4, FLIndices(ple4.index))[] 
+
+Overfull \hbox (0.74408pt too wide) in paragraph at lines 3231--3231
+ []\T1/zi4/m/n/9 fit7 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = rmodel
+, ple4, FLIndices(ple4.index))[] 
+[57] [58] [59]
+Underfull \vbox (badness 10000) has occurred while \output is active [60]
+[61] [62] [63] [64] [65] [66] [67] [68] [69]
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.ind [70]
+
+LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
+(Font)              using `T1/zi4/m/n' instead on input line 7.
+
+
+Overfull \hbox (5.8567pt too wide) in paragraph at lines 21--23
+[]\T1/zi4/m/it/10 [[<-,submodels,character,missing-method 
+[71]
+Overfull \hbox (0.8567pt too wide) in paragraph at lines 138--140
+[]\T1/zi4/m/it/10 bubbles,a4aFitResiduals,missing-method 
+
+Overfull \hbox (10.8567pt too wide) in paragraph at lines 199--201
+[]\T1/zi4/m/it/10 coefficients<-,a4aStkParams,FLPar-method 
+[72]
+Overfull \hbox (55.8567pt too wide) in paragraph at lines 319--321
+[]\T1/zi4/m/it/10 genFLStock,FLStock,FLQuant,FLQuant,missing-method 
+
+Overfull \hbox (55.8567pt too wide) in paragraph at lines 321--323
+[]\T1/zi4/m/it/10 genFLStock,FLStock,FLQuant,missing,FLQuant-method 
+
+Overfull \hbox (55.8567pt too wide) in paragraph at lines 323--325
+[]\T1/zi4/m/it/10 genFLStock,FLStock,missing,FLQuant,FLQuant-method 
+[73]
+Overfull \hbox (30.8567pt too wide) in paragraph at lines 472--474
+[]\T1/zi4/m/it/10 mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method 
+
+Overfull \hbox (105.8567pt too wide) in paragraph at lines 476--478
+[]\T1/zi4/m/it/10 mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
+[74] [75] [76]) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)</usr/share/texmf/fonts/typ
+e1/public/inconsolata/Inconsolata-zi4r.pfb></usr/share/texmf/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/type1/ur
+w/times/utmr8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (76 pages, 240037 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2024] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (445 entries accepted, 0 rejected).
+Sorting entries......done (4269 comparisons).
+Generating output file Rd2.ind....done (860 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+(./Rd2.tex
+(/usr/share/texmf/tex/latex/base/book.cls
+Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/bk10.clo))
+(/usr/local/R452/lib64/R/share/texmf/tex/latex/Rd.sty
+(/usr/share/texmf/tex/latex/base/ifthen.sty)
+(/usr/share/texmf/tex/generic/iftex/iftex.sty)
+(/usr/share/texmf/tex/latex/tools/longtable.sty)
+(/usr/share/texmf/tex/latex/tools/bm.sty)
+(/usr/share/texmf/tex/latex/base/alltt.sty)
+(/usr/share/texmf/tex/latex/tools/verbatim.sty)
+(/usr/share/texmf/tex/latex/url/url.sty)
+(/usr/share/texmf/tex/latex/base/textcomp.sty)
+(/usr/share/texmf/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf/tex/latex/amsmath/amstext.sty
+(/usr/share/texmf/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texmf/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texmf/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty)
+(/usr/share/texmf/tex/latex/amsfonts/amssymb.sty)
+(/usr/share/texmf/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/share/texmf/tex/latex/base/fontenc.sty)
+(/usr/share/texmf/tex/latex/psnfss/times.sty)
+(/usr/share/texmf/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/share/texmf/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texmf/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texmf/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texmf/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texmf/tex/latex/graphics/color.sty
+(/usr/share/texmf/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texmf/tex/latex/graphics-def/pdftex.def)
+(/usr/share/texmf/tex/latex/graphics/mathcolor.ltx))
+(/usr/share/texmf/tex/latex/hyperref/hyperref.sty
+(/usr/share/texmf/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/usr/share/texmf/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/share/texmf/tex/generic/pdfescape/pdfescape.sty
+(/usr/share/texmf/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/share/texmf/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/share/texmf/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/share/texmf/tex/latex/hycolor/hycolor.sty)
+(/usr/share/texmf/tex/latex/auxhook/auxhook.sty)
+(/usr/share/texmf/tex/latex/hyperref/nameref.sty
+(/usr/share/texmf/tex/latex/refcount/refcount.sty)
+(/usr/share/texmf/tex/generic/gettitlestring/gettitlestring.sty
+(/usr/share/texmf/tex/latex/kvoptions/kvoptions.sty)))
+(/usr/share/texmf/tex/latex/etoolbox/etoolbox.sty)
+(/usr/share/texmf/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texmf/tex/generic/intcalc/intcalc.sty)
+(/usr/share/texmf/tex/latex/hyperref/puenc.def)
+(/usr/share/texmf/tex/generic/bitset/bitset.sty
+(/usr/share/texmf/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/share/texmf/tex/latex/base/atbegshi-ltx.sty))
+(/usr/share/texmf/tex/latex/hyperref/hpdftex.def
+(/usr/share/texmf/tex/latex/base/atveryend-ltx.sty)
+(/usr/share/texmf/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/share/texmf/tex/generic/uniquecounter/uniquecounter.sty))))
+(/usr/share/texmf/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/share/texmf/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texmf/tex/latex/l3backend/l3backend-pdftex.def)
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+(/usr/share/texmf/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+(/usr/share/texmf/tex/latex/inconsolata/t1zi4.fd)
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd)
+(/usr/share/texmf/tex/latex/jknapltx/ursfs.fd)
+(/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd)
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/u
+pdmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}{/usr/share/texm
+f/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2])
+(/usr/share/texmf/tex/latex/inconsolata/ts1zi4.fd) [3{/usr/share/texmf/fonts/en
+c/dvips/inconsolata/i4-ts1.enc}] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+[13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
+Overfull \hbox (1.26762pt too wide) in paragraph at lines 1629--1630
+[]\T1/ptm/m/n/10 This method com-putes the []\T1/zi4/m/n/10 FLStock []\T1/ptm/m
+/n/10 slots con-sis-tently with the in-for-ma-tion pro-vided by the []\T1/zi4/m
+/n/10 FLQuant[]\T1/ptm/m/n/10 .
+[27] [28] [29] [30] [31] [32] [33] [34]
+Overfull \hbox (1.28835pt too wide) in paragraph at lines 2058--2059
+[]\T1/ptm/m/n/10 the max-i-mum age in the re-turned []\T1/zi4/m/n/10 FLQuant[]\
+T1/ptm/m/n/10 ; all ages above this are set to []\T1/zi4/m/n/10 max_age[]\T1/pt
+m/m/n/10 ;
+[35] [36]
+Overfull \hbox (15.76555pt too wide) in paragraph at lines 2177--2177
+ []  \T1/zi4/m/n/9 params=FLPar(matrix(c(0.4,10,0.5,11), ncol=2, dimnames=list(
+params=c("k","t"), iter=1:2))),[] 
+[37]
+Overfull \hbox (3.74101pt too wide) in paragraph at lines 2182--2182
+ []\T1/zi4/m/n/9 # ...and with randomly generated iters (based on the medians f
+or params(mod2) and vcov(mod2))[] 
+[38] [39] [40] [41]
+Overfull \hbox (30.75021pt too wide) in paragraph at lines 2426--2426
+ []\T1/zi4/m/n/9 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=
+0.086), list(a=0, b=0.005, c=0.001))[] 
+[42] [43]
+Overfull \hbox (30.75021pt too wide) in paragraph at lines 2580--2580
+ []\T1/zi4/m/n/9 pars <- list(list(a=50, b=100, c=58.5), list(a=0.06, b=0.2, c=
+0.086), list(a=0, b=0.005, c=0.001))[] 
+[44] [45] [46] [47]
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.plot\040m
+etrics\040of\040multiple\040fits}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2752 ...ple fits}{plot metrics of multiple fits}
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.plot\040m
+etrics\040of\040multiple\040fits.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2752 ...ple fits}{plot metrics of multiple fits}
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{Rfn.missing.R
+dash.method}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.2753 ... of multiple fits}{missing.Rdash.method}
+                                                   [48] [49] [50] [51] [52]
+[53] [54] [55] [56]
+Overfull \hbox (0.74408pt too wide) in paragraph at lines 3227--3227
+ []\T1/zi4/m/n/9 fit6 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = rmodel
+, ple4, FLIndices(ple4.index))[] 
+
+Overfull \hbox (0.74408pt too wide) in paragraph at lines 3231--3231
+ []\T1/zi4/m/n/9 fit7 <- sca(fmodel = fmodel, qmodel = qmodel, srmodel = rmodel
+, ple4, FLIndices(ple4.index))[] 
+[57] [58] [59]
+Underfull \vbox (badness 10000) has occurred while \output is active [60]
+[61] [62] [63] [64] [65] [66] [67] [68] [69]
+(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.ind [70]
+
+LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
+(Font)              using `T1/zi4/m/n' instead on input line 7.
+
+
+Overfull \hbox (5.8567pt too wide) in paragraph at lines 21--23
+[]\T1/zi4/m/it/10 [[<-,submodels,character,missing-method 
+[71]
+Overfull \hbox (0.8567pt too wide) in paragraph at lines 138--140
+[]\T1/zi4/m/it/10 bubbles,a4aFitResiduals,missing-method 
+
+Overfull \hbox (10.8567pt too wide) in paragraph at lines 199--201
+[]\T1/zi4/m/it/10 coefficients<-,a4aStkParams,FLPar-method 
+[72]
+Overfull \hbox (55.8567pt too wide) in paragraph at lines 319--321
+[]\T1/zi4/m/it/10 genFLStock,FLStock,FLQuant,FLQuant,missing-method 
+
+Overfull \hbox (55.8567pt too wide) in paragraph at lines 321--323
+[]\T1/zi4/m/it/10 genFLStock,FLStock,FLQuant,missing,FLQuant-method 
+
+Overfull \hbox (55.8567pt too wide) in paragraph at lines 323--325
+[]\T1/zi4/m/it/10 genFLStock,FLStock,missing,FLQuant,FLQuant-method 
+[73]
+Overfull \hbox (30.8567pt too wide) in paragraph at lines 472--474
+[]\T1/zi4/m/it/10 mvrnorm,numeric,a4aGr,ANY,ANY,ANY,ANY-method 
+
+Overfull \hbox (105.8567pt too wide) in paragraph at lines 476--478
+[]\T1/zi4/m/it/10 mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
+[74] [75] [76]) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information)</usr/share/texmf/fonts/typ
+e1/public/inconsolata/Inconsolata-zi4r.pfb></usr/share/texmf/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/type1/ur
+w/times/utmr8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (76 pages, 240219 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘FLa4a-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /tmp/Rtmp88jBE7/Rd2pdf1216fa79674'

@@ -1,0 +1,8 @@
+26c26
+< This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+---
+> This is FLa4a 1.9.7. For overview type 'help(package="FLa4a")'
+87c87
+<   1.379   0.094   1.462 
+---
+>   1.296   0.101   1.388 

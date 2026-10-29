@@ -1,0 +1,56 @@
+26c26
+< This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+---
+> This is FLa4a 1.9.7. For overview type 'help(package="FLa4a")'
+81,87d80
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+93,99d85
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+128,134d113
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+165,171d143
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+225,231d196
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+315,321d279
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+377c335
+<  13.966   0.127  14.094 
+---
+>   9.318   0.652   9.965 

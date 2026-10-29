@@ -1,0 +1,122 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #====================================================================
+> # tests for sca
+> #====================================================================
+> library(FLa4a)
+Loading required package: FLCore
+Loading required package: lattice
+FLCore (Version 2.6.33, packaged: 2026-08-05 06:08:38 UTC)
+Loading required package: triangle
+This is FLa4a 1.9.7. For overview type 'help(package="FLa4a")'
+
+> data(ple4)
+> data(ple4.indices)
+> ple4.indices <- ple4.indices[c(3,4,5)]
+> data(ple4.index)
+> 
+> #====================================================================
+> # run sca
+> #====================================================================
+> fit0 <-  sca(ple4, FLIndices(ple4.index))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> #====================================================================
+> # bevholt
+> #====================================================================
+> fitbh <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholt(CV=0.2))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> fitbhsv <-  sca(ple4, FLIndices(ple4.index), srmodel=~bevholtSV(CV=0.2))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> #====================================================================
+> # ricker
+> #====================================================================
+> 
+> fitr <-  sca(ple4, FLIndices(ple4.index), srmodel=~ricker(CV=0.2))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> #====================================================================
+> # hockey-stick
+> #====================================================================
+> 
+> fith <-  sca(ple4, FLIndices(ple4.index), srmodel=~hockey(CV=0.2))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> #====================================================================
+> # geomean
+> #====================================================================
+> 
+> fitg <-  sca(ple4, FLIndices(ple4.index), srmodel=~geomean(CV=0.2))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> #====================================================================
+> # mean
+> #====================================================================
+> 
+> fitm <-  sca(ple4, FLIndices(ple4.index), srmodel=~1)
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+ 26.571   2.176  28.751 

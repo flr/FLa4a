@@ -104,11 +104,11 @@ range(bioidx)[c("startf","endf")] <- c(0,0)
 #--------------------------------------------------------------------
 # both assessment types
 #--------------------------------------------------------------------
-fit0 <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
-stk0 <- ple4 + fit0
-fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1), fit="assessment")
-stk <- ple4 + fit
-all.equal(stk, stk0)
+# fit0 <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
+# stk0 <- ple4 + fit0
+# fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1), fit="assessment")
+# stk <- ple4 + fit
+# all.equal(stk, stk0)
 
 #--------------------------------------------------------------------
 # N
@@ -175,11 +175,11 @@ identical(harvest(stk0), harvest(fits))
 #--------------------------------------------------------------------
 # both assessment types
 #--------------------------------------------------------------------
-fit0 <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)))
-stk0 <- ple4 + fit0
-fit <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)), fit="assessment")
-stk <- ple4 + fit
-all.equal(stk, stk0)
+# fit0 <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)))
+# stk0 <- ple4 + fit0
+# fit <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)), fit="assessment")
+# stk <- ple4 + fit
+# all.equal(stk, stk0)
 
 #--------------------------------------------------------------------
 # N

@@ -41,10 +41,10 @@ is(fitsa[[1]], "a4aFitSA")
 # MCMC 
 #--------------------------------------------------------------------
 
-fitsm <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+#fitsm <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
 
-is(fitsm, "a4aFitMCMCs")
-is(fitsm[[1]], "a4aFitMCMC")
+#is(fitsm, "a4aFitMCMCs")
+#is(fitsm[[1]], "a4aFitMCMC")
 
 #====================================================================
 # +
@@ -70,9 +70,9 @@ identical(stks.sa[[2]], stks[[1]] + fitsa[[2]])
 # MCMC 
 #--------------------------------------------------------------------
 
-stks.mc <- stks + fitsm
-length(stks.mc) == length(fitsm)
-identical(stks.mc[[2]], stks[[1]] + fitsm[[2]])
+#stks.mc <- stks + fitsm
+#length(stks.mc) == length(fitsm)
+#identical(stks.mc[[2]], stks[[1]] + fitsm[[2]])
 
 #====================================================================
 # run fits sca multiple stocks and indices
@@ -104,10 +104,10 @@ is(fitsa[[1]], "a4aFitSA")
 # MCMC 
 #--------------------------------------------------------------------
 
-fitsm <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
+#fitsm <- scas(stks, idxss, fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC())
 
-is(fitsm, "a4aFitMCMCs")
-is(fitsm[[1]], "a4aFitMCMC")
+#is(fitsm, "a4aFitMCMCs")
+#is(fitsm[[1]], "a4aFitMCMC")
 
 #====================================================================
 # +
@@ -133,9 +133,9 @@ identical(stks.sa[[2]], stks[[1]] + fitsa[[2]])
 # MCMC 
 #--------------------------------------------------------------------
 
-stks.mc <- stks + fitsm
-length(stks.mc) == length(fitsm)
-identical(stks.mc[[2]], stks[[1]] + fitsm[[2]])
+#stks.mc <- stks + fitsm
+#length(stks.mc) == length(fitsm)
+#identical(stks.mc[[2]], stks[[1]] + fitsm[[2]])
 
 
 

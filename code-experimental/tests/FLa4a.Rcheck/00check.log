@@ -1,0 +1,177 @@
+* using log directory ‘/home/ernesto/github/FLa4a_1.9.7/FLa4a.Rcheck’
+* using R version 4.5.2 (2025-10-31)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (SUSE Linux) 15.1.1 20250714
+    GNU Fortran (SUSE Linux) 15.1.1 20250714
+* running under: openSUSE Leap 16.0
+* using session charset: UTF-8
+* checking for file ‘FLa4a/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘FLa4a’ version ‘1.9.7’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... INFO
+Vignette dependency required without any vignettes: ‘knitr’
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... WARNING
+Found the following executable files:
+  inst/bin/linux/a4a
+  inst/bin/osx/a4a
+  inst/bin/windows/a4a.exe
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘FLa4a’ can be installed ... OK
+* checking installed package size ... INFO
+  installed size is 10.8Mb
+  sub-directories of 1Mb or more:
+    R     1.1Mb
+    bin   8.8Mb
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking whether startup messages can be suppressed ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+sca.sa: no visible global function definition for ‘track<-’
+sep.sa: no visible global function definition for ‘track<-’
+l2a,FLStockLen-matrix: no visible binding for global variable ‘alk’
+plot,a4aFitCatchDiagn-missing : plot_ribbon: no visible global function
+  definition for ‘grid’
+plot,a4aFitCatchDiagn-missing : plot_ribbon: no visible global function
+  definition for ‘polygon’
+plot,a4aFitCatchDiagn-missing : plot_ribbon: no visible global function
+  definition for ‘lines’
+plot,a4aFitCatchDiagn-missing : plot_lollipop: no visible global
+  function definition for ‘grid’
+plot,a4aFitCatchDiagn-missing : plot_lollipop: no visible global
+  function definition for ‘segments’
+plot,a4aFitCatchDiagn-missing : plot_lollipop: no visible global
+  function definition for ‘points’
+plot,a4aFits-missing: no visible global function definition for ‘grid’
+plot,a4aFits-missing: no visible global function definition for ‘lines’
+plot,a4aFits-missing: no visible global function definition for
+  ‘points’
+Undefined global functions or variables:
+  alk grid lines points polygon segments track<-
+Consider adding
+  importFrom("graphics", "grid", "lines", "points", "polygon",
+             "segments")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... WARNING
+Rd files with duplicated name 'plot metrics of multiple fits':
+  ‘plot-mfits.Rd’ ‘plot-mmcfits.Rd’
+Rd files with duplicated alias 'missing-method':
+  ‘plot-mfits.Rd’ ‘plot-mmcfits.Rd’
+Rd files with duplicated alias 'plot metrics of multiple fits':
+  ‘plot-mfits.Rd’ ‘plot-mmcfits.Rd’
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented S4 methods:
+  generic '*' and siglist 'FLIndices,SCAPars'
+  generic '*' and siglist 'FLStock,SCAPars'
+  generic 'getADMBCallArgs' and siglist 'SCAMCMC'
+  generic 'l2a' and siglist 'FLStockLen,matrix'
+  generic 'plot' and siglist 'a4aFitMCMCs,missing'
+  generic 'plot' and siglist 'a4aFits,missing'
+  generic 'residuals' and siglist 'a4aFitSA'
+All user-level objects in a package (including S4 classes and methods)
+should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... WARNING
+Codoc mismatches from Rd file 'plot-catch.Rd':
+\S4method{plot}{a4aFitCatchDiagn,missing}
+  Code: function(x, y = missing, probs = c(0.1, 0.9), type = "all", cex
+                 = 1, ...)
+  Docs: function(x, y = missing, probs = c(0.1, 0.9), type = "all",
+                 ...)
+  Argument names in code not in docs:
+    cex
+  Mismatches in argument names:
+    Position: 5 Code: cex Docs: ...
+
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in Rd file 'a4aFit-class.Rd'
+  ‘stock’
+
+Documented arguments not in \usage in Rd file 'a4aFitCatchDiagn-class.Rd':
+  ‘stock’ ‘indices’
+
+Undocumented arguments in Rd file 'getX-methods.Rd'
+  ‘tol’
+
+Undocumented arguments in Rd file 'plot-catch.Rd'
+  ‘probs’ ‘type’
+
+Objects in \usage without \alias in Rd file 'plot-mfits.Rd':
+  ‘\S4method{plot}{a4aFits,missing}’
+
+Objects in \usage without \alias in Rd file 'plot-mmcfits.Rd':
+  ‘\S4method{plot}{a4aFitMCMCs,missing}’
+
+Undocumented arguments in Rd file 'sca.sa.Rd'
+  ‘args’ ‘tracking’
+Documented arguments not in \usage in Rd file 'sca.sa.Rd':
+  ‘genArgs’
+
+Undocumented arguments in Rd file 'scas.Rd'
+  ‘workers’
+Documented arguments not in \usage in Rd file 'scas.Rd':
+  ‘stock’
+
+Undocumented arguments in Rd file 'sep.sa.Rd'
+  ‘args’
+Documented arguments not in \usage in Rd file 'sep.sa.Rd':
+  ‘genArgs’
+
+Undocumented arguments in Rd file 'simulate-methods.Rd'
+  ‘obserror’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking examples ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘addition.R’
+  Running ‘l2a.R’
+  Running ‘m.R’
+  Running ‘mcmc.R’
+  Running ‘predict.R’
+  Running ‘residuals.R’
+  Running ‘sca.R’
+  Running ‘scas.R’
+  Running ‘scssr.R’
+  Running ‘simulate.R’
+  Running ‘wcsam.R’
+* checking PDF version of manual ... OK
+* DONE
+Status: 5 WARNINGs, 1 NOTE

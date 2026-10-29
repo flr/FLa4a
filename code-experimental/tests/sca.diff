@@ -1,0 +1,118 @@
+26c26
+< This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+---
+> This is FLa4a 1.9.7. For overview type 'help(package="FLa4a")'
+87c87
+< [1] FALSE
+---
+> [1] TRUE
+89c89
+< [1] FALSE
+---
+> [1] TRUE
+91c91
+< [1] FALSE
+---
+> [1] TRUE
+93c93
+< [1] FALSE
+---
+> [1] TRUE
+95c95
+< [1] FALSE
+---
+> [1] TRUE
+97c97
+< [1] FALSE
+---
+> [1] TRUE
+117c117
+< [1] FALSE
+---
+> [1] TRUE
+119c119
+< [1] FALSE
+---
+> [1] TRUE
+121c121
+< [1] FALSE
+---
+> [1] TRUE
+123c123
+< [1] FALSE
+---
+> [1] TRUE
+125c125
+< [1] FALSE
+---
+> [1] TRUE
+127c127
+< [1] FALSE
+---
+> [1] TRUE
+147c147
+< [1] FALSE
+---
+> [1] TRUE
+149c149
+< [1] FALSE
+---
+> [1] TRUE
+151c151
+< [1] FALSE
+---
+> [1] TRUE
+153c153
+< [1] FALSE
+---
+> [1] TRUE
+155c155
+< [1] FALSE
+---
+> [1] TRUE
+157c157
+< [1] FALSE
+---
+> [1] TRUE
+454c454
+< [1] "Mean relative difference: 2.27965e-05"
+---
+> [1] TRUE
+456c456
+< [1] "Mean relative difference: 5.520996e-07"
+---
+> [1] TRUE
+458c458
+< [1] "Mean relative difference: 2.78807e-07"
+---
+> [1] TRUE
+460c460
+< [1] "Mean relative difference: 1.068724e-07"
+---
+> [1] TRUE
+719,720d718
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+749,752d746
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+783,786d776
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+817,820d806
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+< Note: Provided variances will be used to weight observations.
+< 	Weighting assumes variances are on the log scale or equivalently log(CV^2 + 1).
+1032c1018
+< [1] FALSE
+---
+> [1] TRUE
+1037c1023
+< 260.486   0.354 260.912 
+---
+> 149.539  13.339 162.959 

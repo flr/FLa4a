@@ -1,0 +1,66 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # library(FLa4a)
+> # data(ple4)
+> # data(ple4.indices)
+> # ple4.indices <- ple4.indices[c(3,4,5)]
+> # data(ple4.index)
+> #
+> # # creating idx 1
+> # bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
+> # index(bioidx) <- stock(ple4)*0.001
+> # index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
+> # range(bioidx)[c("startf","endf")] <- c(0,0)
+> #
+> # # creating idx 2
+> # stkn <- stock.n(ple4)*exp(-z(ple4))*0.5
+> # bioidx2 <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
+> # index(bioidx2) <- quantSums(stkn*stock.wt(ple4))*0.001
+> # index(bioidx2) <- index(bioidx2)*exp(rnorm(index(bioidx2), sd=0.1))
+> # range(bioidx2)[c("startf","endf")] <- c(0,1)
+> #
+> # # FLIndices
+> # idxs <- FLIndices(c(ple4.indices, b1 = bioidx, b2 = bioidx2))
+> #
+> # # fitting the model
+> # fit <- sca(ple4, idxs, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3), ~1, ~1))
+> # res <- residuals(fit, ple4, idxs)
+> # length(res) == 7
+> #
+> # # FLIndex
+> # fit <- sca(ple4, ple4.index)
+> # res <- try(residuals(fit, ple4, ple4.index))
+> # !is(res, 'try-error')
+> #
+> # # flquantdistr
+> # catch.n(ple4) <- FLQuantDistr(catch.n(ple4), catch.n(ple4))
+> # var(catch.n(ple4))[] <- 0.2
+> # index.var(ple4.index)[] <- 0.2
+> #
+> # fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~1))
+> # res <- residuals(fit, ple4, FLIndices(ple4.index))
+> # length(res) == 3
+> #
+> #
+> #
+> #
+> #
+> 
+> proc.time()
+   user  system elapsed 
+  0.077   0.017   0.086 

@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html>
+<head><title>R: A Simple and Robust Statistical Catch at Age Model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body><div class="container">
+<h1> A Simple and Robust Statistical Catch at Age Model
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]">
+</h1>
+<hr>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]"></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]"></a>
+</div><h2>Documentation for package &lsquo;FLa4a&rsquo; version 1.9.99-002</h2>
+
+<ul><li><a href="../DESCRIPTION" type="text/plain; charset=utf-8">DESCRIPTION file</a>.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#misc">misc</a>
+</p>
+
+
+<h2><a id="A">-- A --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFit</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFit-class</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFit-method</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFit-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFit-methods</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitCatchDiagn-class.html">a4aFitCatchDiagn</a></td>
+<td>S4 class 'a4aFitCatchDiagn'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitCatchDiagn-class.html">a4aFitCatchDiagn-class</a></td>
+<td>S4 class 'a4aFitCatchDiagn'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitCatchDiagn-class.html">a4aFitCatchDiagn-methods</a></td>
+<td>S4 class 'a4aFitCatchDiagn'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMC</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMC-class</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMC-methods</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMCs</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMCs-class</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMCs-method</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitMCMCs-methods</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitResiduals-class.html">a4aFitResiduals</a></td>
+<td>S4 class 'a4aFitResiduals'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitResiduals-class.html">a4aFitResiduals-class</a></td>
+<td>S4 class 'a4aFitResiduals'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitResiduals-class.html">a4aFitResiduals-methods</a></td>
+<td>S4 class 'a4aFitResiduals'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFits</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFits-class</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFits-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">a4aFits-methods</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSA</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSA-class</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">a4aFitSA-method</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSA-methods</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSAs</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSAs-class</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSAs-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">a4aFitSAs-methods</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">a4aGr</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">a4aGr-class</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">a4aGr-method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">a4aGr-methods</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aInternal.html">a4aInternal</a></td>
+<td>Stock assessment model advanced method</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">a4aM</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">a4aM-class</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">a4aM-method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">a4aM-methods</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="deprecated.html">a4aSCA</a></td>
+<td>deprecated</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">a4aStkParams</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">a4aStkParams-class</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">a4aStkParams-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">a4aStkParams-methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="addition-methods.html">addition</a></td>
+<td>+ methods</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">as.mcmc</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">as.mcmc-method</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">as.mcmc-methods</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">assorted methods</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+</table>
+
+<h2><a id="B">-- B --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="breakpts.html">breakpts</a></td>
+<td>Breakpoints</td></tr>
+<tr><td style="width: 25%;"><a href="breakpts.html">breakpts-method</a></td>
+<td>Breakpoints</td></tr>
+<tr><td style="width: 25%;"><a href="breakpts.html">breakpts-methods</a></td>
+<td>Breakpoints</td></tr>
+<tr><td style="width: 25%;"><a href="bubbles-methods.html">bubble plot of residuals</a></td>
+<td>Bubbles plot of standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="bubbles-methods.html">bubbles-method</a></td>
+<td>Bubbles plot of standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">burnin</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">burnin-method</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitMCMC-class.html">burnin-methods</a></td>
+<td>S4 class 'a4aFitMCMC'</td></tr>
+</table>
+
+<h2><a id="C">-- C --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">catch.n-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">clock</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">clock-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">clock-methods</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">coef</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">coef,a4aFitSA-methods</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">coef-method</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">coef&lt;-</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">coef&lt;-,a4aFitSA-methods</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">coef&lt;--method</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">coefficients</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">coefficients-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">coefficients-methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">coefficients&lt;-</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">coefficients&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">coefficients&lt;--methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="collapseSeasons.html">collapseSeasons</a></td>
+<td>Collapse seasons</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitCatchDiagn-class.html">computeCatchDiagnostics</a></td>
+<td>S4 class 'a4aFitCatchDiagn'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">computeCatchDiagnostics-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">corBlock-methods</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">corBlocks</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">corBlocks-method</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">corBlocks&lt;-</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">corBlocks&lt;--method</a></td>
+<td>Submodels class</td></tr>
+</table>
+
+<h2><a id="D">-- D --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="defaultsubmodels.html">defaultFmod</a></td>
+<td>Default sub-models</td></tr>
+<tr><td style="width: 25%;"><a href="defaultsubmodels.html">defaultN1mod</a></td>
+<td>Default sub-models</td></tr>
+<tr><td style="width: 25%;"><a href="defaultsubmodels.html">defaultQmod</a></td>
+<td>Default sub-models</td></tr>
+<tr><td style="width: 25%;"><a href="defaultsubmodels.html">defaultSRmod</a></td>
+<td>Default sub-models</td></tr>
+<tr><td style="width: 25%;"><a href="defaultsubmodels.html">defaultSubModels</a></td>
+<td>Default sub-models</td></tr>
+<tr><td style="width: 25%;"><a href="defaultsubmodels.html">defaultVmod</a></td>
+<td>Default sub-models</td></tr>
+<tr><td style="width: 25%;"><a href="deprecated.html">deprecated</a></td>
+<td>deprecated</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">dims-method</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">distr-method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">distr-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">distr&lt;--method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">distr&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="dps567.html">dps567</a></td>
+<td>dps567</td></tr>
+<tr><td style="width: 25%;"><a href="dps567.idx.html">dps567.idx</a></td>
+<td>dps567.idx</td></tr>
+</table>
+
+<h2><a id="F">-- F --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fCovar</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fCovar-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fCovar-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fFrml</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fFrml-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fFrml-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">fitSumm</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">fitSumm-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">fitSumm-methods</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">fMod</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">fMod-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">fMod-methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">fMod&lt;-</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">fMod&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">fMod&lt;--methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fmodel</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fmodel-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">fmodel-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fmodel-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">formula-method</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">formula-method</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">formula&lt;-</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="coef-methods.html">formula&lt;--method</a></td>
+<td>coefficients extract and replacement</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fPars</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fPars-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">fPars-methods</a></td>
+<td>Model parameters class</td></tr>
+</table>
+
+<h2><a id="G">-- G --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="genFLIndex-methods.html">genFLIndex</a></td>
+<td>Methods to generate FLIndex objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLIndex-methods.html">genFLIndex-method</a></td>
+<td>Methods to generate FLIndex objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLIndex-methods.html">genFLIndex-methods</a></td>
+<td>Methods to generate FLIndex objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLQuant-methods.html">genFLQuant</a></td>
+<td>Methods to generate FLQuant objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLQuant-methods.html">genFLQuant-method</a></td>
+<td>Methods to generate FLQuant objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLQuant-methods.html">genFLQuant-methods</a></td>
+<td>Methods to generate FLQuant objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLStock-methods.html">genFLStock</a></td>
+<td>Methods to generate FLStock objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLStock-methods.html">genFLStock-method</a></td>
+<td>Methods to generate FLStock objects</td></tr>
+<tr><td style="width: 25%;"><a href="genFLStock-methods.html">genFLStock-methods</a></td>
+<td>Methods to generate FLStock objects</td></tr>
+<tr><td style="width: 25%;"><a href="getAcor-methods.html">getAcor</a></td>
+<td>compute log-correlation matrix</td></tr>
+<tr><td style="width: 25%;"><a href="getAcor-methods.html">getAcor-method</a></td>
+<td>compute log-correlation matrix</td></tr>
+<tr><td style="width: 25%;"><a href="getAcor-methods.html">getAcor-methods</a></td>
+<td>compute log-correlation matrix</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">getADMBCallArgs</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">getADMBCallArgs-methods</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="getADMBHessian.html">getADMBCovariance</a></td>
+<td>Get ADMB Hessian</td></tr>
+<tr><td style="width: 25%;"><a href="getADMBHessian.html">getADMBHessian</a></td>
+<td>Get ADMB Hessian</td></tr>
+<tr><td style="width: 25%;"><a href="getCov-methods.html">getCov</a></td>
+<td>Get covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="getK.html">getK</a></td>
+<td>Get K</td></tr>
+<tr><td style="width: 25%;"><a href="getK.html">getK-method</a></td>
+<td>Get K</td></tr>
+<tr><td style="width: 25%;"><a href="getK.html">getK-methods</a></td>
+<td>Get K</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">getN</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">getN-method</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">getN-methods</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="getTPL.html">getTPL</a></td>
+<td>Get TPL with ADMB code</td></tr>
+<tr><td style="width: 25%;"><a href="getX-methods.html">getX</a></td>
+<td>Get model matrix</td></tr>
+<tr><td style="width: 25%;"><a href="getX-methods.html">getX-method</a></td>
+<td>Get model matrix</td></tr>
+<tr><td style="width: 25%;"><a href="getX-methods.html">getX-methods</a></td>
+<td>Get model matrix</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">getYidx</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">getYidx-method</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">getYidx-methods</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grInvMod</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grInvMod-method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grInvMod-methods</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grInvMod&lt;-</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grInvMod&lt;--method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grInvMod&lt;--methods</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grMod</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grMod-method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grMod-methods</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grMod&lt;-</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grMod&lt;--method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">grMod&lt;--methods</a></td>
+<td>Individual growth class</td></tr>
+</table>
+
+<h2><a id="H">-- H --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="hakeGSA7.html">hakeGSA7</a></td>
+<td>hakeGSA7</td></tr>
+<tr><td style="width: 25%;"><a href="hakeGSA7.idx.html">hakeGSA7.idx</a></td>
+<td>hakeGSA7.idx</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">harvest-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="hke1567.html">hke1567</a></td>
+<td>hke1567</td></tr>
+<tr><td style="width: 25%;"><a href="hke1567.idx.html">hke1567.idx</a></td>
+<td>hke1567.idx</td></tr>
+</table>
+
+<h2><a id="I">-- I --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">index-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="index_cd_len.html">index_cd_len</a></td>
+<td>index_cd_len</td></tr>
+<tr><td style="width: 25%;"><a href="index_pt_len.html">index_pt_len</a></td>
+<td>index_pt_len</td></tr>
+<tr><td style="width: 25%;"><a href="index_sp_len.html">index_sp_len</a></td>
+<td>index_sp_len</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">is.empty</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">iter-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">iter-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">iter-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">iter-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">iter-method</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">iter-method</a></td>
+<td>Submodels class</td></tr>
+</table>
+
+<h2><a id="L">-- L --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="l2a.html">l2a</a></td>
+<td>Method to convert length-based data to age-based</td></tr>
+<tr><td style="width: 25%;"><a href="l2a.html">l2a-method</a></td>
+<td>Method to convert length-based data to age-based</td></tr>
+<tr><td style="width: 25%;"><a href="l2a.html">l2a-methods</a></td>
+<td>Method to convert length-based data to age-based</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">level</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">level-method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">level-methods</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">level&lt;-</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">level&lt;--method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">level&lt;--methods</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">logLik-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+</table>
+
+<h2><a id="M">-- M --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="m.html">m</a></td>
+<td>natural mortality</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">m-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">m-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">m-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="m.html">m-method</a></td>
+<td>natural mortality</td></tr>
+<tr><td style="width: 25%;"><a href="ma-methods.html">ma</a></td>
+<td>Model averaging (experimental)</td></tr>
+<tr><td style="width: 25%;"><a href="ma-methods.html">ma-method</a></td>
+<td>Model averaging (experimental)</td></tr>
+<tr><td style="width: 25%;"><a href="ma-methods.html">ma-methods</a></td>
+<td>Model averaging (experimental)</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">mat-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="plot-mfits.html">missing-method</a></td>
+<td>Plot of metrics of multiple fits</td></tr>
+<tr><td style="width: 25%;"><a href="plot-mmcfits.html">missing-method</a></td>
+<td>Plot of metrics of multiple fits</td></tr>
+<tr><td style="width: 25%;"><a href="mut09.html">mut09</a></td>
+<td>mut09</td></tr>
+<tr><td style="width: 25%;"><a href="mut09.idx.html">mut09.idx</a></td>
+<td>mut09.idx</td></tr>
+<tr><td style="width: 25%;"><a href="mvnorm-a4aM.html">mvnorm</a></td>
+<td>natural mortality</td></tr>
+<tr><td style="width: 25%;"><a href="mvrcop.html">mvrcop</a></td>
+<td>Simulation using copula models</td></tr>
+<tr><td style="width: 25%;"><a href="mvrcop-a4aGr.html">mvrcop for a4aGr</a></td>
+<td>mvrcop</td></tr>
+<tr><td style="width: 25%;"><a href="mvrcop-a4aGr.html">mvrcop-method</a></td>
+<td>mvrcop</td></tr>
+<tr><td style="width: 25%;"><a href="mvrcop.html">mvrcop-method</a></td>
+<td>Simulation using copula models</td></tr>
+<tr><td style="width: 25%;"><a href="mvrnorm-a4aGr.html">mvrnorm for a4aGR</a></td>
+<td>mvrnorm</td></tr>
+<tr><td style="width: 25%;"><a href="mvnorm-a4aM.html">mvrnorm-method</a></td>
+<td>natural mortality</td></tr>
+<tr><td style="width: 25%;"><a href="mvrnorm-a4aGr.html">mvrnorm-method</a></td>
+<td>mvrnorm</td></tr>
+<tr><td style="width: 25%;"><a href="mvrtriangle.html">mvrtriangle</a></td>
+<td>Simulation with a copula model and triangular distributions</td></tr>
+<tr><td style="width: 25%;"><a href="mvrtriangle-a4aGr.html">mvrtriangle for a4aGr</a></td>
+<td>mvrtriangle</td></tr>
+<tr><td style="width: 25%;"><a href="mvrtriangle-a4aGr.html">mvrtriangle-method</a></td>
+<td>mvrtriangle</td></tr>
+<tr><td style="width: 25%;"><a href="mvrtriangle.html">mvrtriangle-method</a></td>
+<td>Simulation with a copula model and triangular distributions</td></tr>
+</table>
+
+<h2><a id="N">-- N --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">n1Mod</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">n1Mod-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">n1Mod-methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">n1Mod&lt;-</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">n1Mod&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">n1Mod&lt;--methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">n1model</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">n1model-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">n1model-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">n1model-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">niters</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">niters-method</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">niters-methods</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+</table>
+
+<h2><a id="P">-- P --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">params-method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">params-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">params-method</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">params-method</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">params&lt;--method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">params&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">pars</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">pars-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">pars-methods</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="pars2dim-methods.html">pars2dim</a></td>
+<td>Check that the second dimension in params is "iter"</td></tr>
+<tr><td style="width: 25%;"><a href="pars2dim-methods.html">pars2dim-method</a></td>
+<td>Check that the second dimension in params is "iter"</td></tr>
+<tr><td style="width: 25%;"><a href="pars2dim-methods.html">pars2dim-methods</a></td>
+<td>Check that the second dimension in params is "iter"</td></tr>
+<tr><td style="width: 25%;"><a href="plotc.html">plot for fitted catch-at-age</a></td>
+<td>plot for fitted catch-at-age</td></tr>
+<tr><td style="width: 25%;"><a href="ploti.html">plot for fitted indices-at-age</a></td>
+<td>Plot for fitted indices-at-age</td></tr>
+<tr><td style="width: 25%;"><a href="plot-mfits.html">plot metrics of multiple fits</a></td>
+<td>Plot of metrics of multiple fits</td></tr>
+<tr><td style="width: 25%;"><a href="plot-mmcfits.html">plot metrics of multiple fits</a></td>
+<td>Plot of metrics of multiple fits</td></tr>
+<tr><td style="width: 25%;"><a href="plot-catch.html">plot of catch residuals</a></td>
+<td>Plot of aggregated catch standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="plot-res.html">plot of residuals</a></td>
+<td>Plot of standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="plot-mmcfits.html">plot,a4aFitMCMCs,</a></td>
+<td>Plot of metrics of multiple fits</td></tr>
+<tr><td style="width: 25%;"><a href="plot-mfits.html">plot,a4aFits,</a></td>
+<td>Plot of metrics of multiple fits</td></tr>
+<tr><td style="width: 25%;"><a href="plot-catch.html">plot-method</a></td>
+<td>Plot of aggregated catch standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="plot-res.html">plot-method</a></td>
+<td>Plot of standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="plotc.html">plot-method</a></td>
+<td>plot for fitted catch-at-age</td></tr>
+<tr><td style="width: 25%;"><a href="ploti.html">plot-method</a></td>
+<td>Plot for fitted indices-at-age</td></tr>
+<tr><td style="width: 25%;"><a href="predict-a4aGr.html">predict for a4aGr</a></td>
+<td>predict for 'a4aGr'</td></tr>
+<tr><td style="width: 25%;"><a href="predict-methods.html">predict for sca</a></td>
+<td>Predict methods for SCA</td></tr>
+<tr><td style="width: 25%;"><a href="predict-a4aGr.html">predict-method</a></td>
+<td>predict for 'a4aGr'</td></tr>
+<tr><td style="width: 25%;"><a href="predict-methods.html">predict-method</a></td>
+<td>Predict methods for SCA</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">propagate-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">propagate-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">propagate-method</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">propagate-method</a></td>
+<td>Submodels class</td></tr>
+</table>
+
+<h2><a id="Q">-- Q --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qCovar</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qCovar-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qCovar-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qFrml</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qFrml-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qFrml-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qMod</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qMod-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qMod-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qmodel</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qmodel-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">qmodel-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qmodel-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qPars</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qPars-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">qPars-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="qqmath-methods.html">qqmath-method</a></td>
+<td>qqplot of standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="qqmath-methods.html">qqplot of residuals</a></td>
+<td>qqplot of standardized log residuals</td></tr>
+</table>
+
+<h2><a id="R">-- R --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="range-a4aM.html">range&lt;--method</a></td>
+<td>range for a4aM objects</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">replaceZeros</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">replaceZeros-method</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="assorted-methods.html">replaceZeros-methods</a></td>
+<td>Assorted methods needed by FLa4a</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitResiduals-class.html">residuals-method</a></td>
+<td>S4 class 'a4aFitResiduals'</td></tr>
+<tr><td style="width: 25%;"><a href="rfLen.html">rfLen</a></td>
+<td>redfish length data</td></tr>
+<tr><td style="width: 25%;"><a href="rfLen.stk.html">rfLen.stk</a></td>
+<td>rfLen.stk</td></tr>
+<tr><td style="width: 25%;"><a href="rfTrawl.idx.html">rfTrawl.idx</a></td>
+<td>rfTrawl.idx</td></tr>
+<tr><td style="width: 25%;"><a href="rfTrawlJmp.idx.html">rfTrawlJmp.idx</a></td>
+<td>rfTrawlJmp.idx</td></tr>
+<tr><td style="width: 25%;"><a href="rfTrawlTrd.idx.html">rfTrawlTrd.idx</a></td>
+<td>rfTrawlTrd.idx</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">rMod-methods</a></td>
+<td>Stock parameters class</td></tr>
+</table>
+
+<h2><a id="S">-- S --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="sca.html">sca</a></td>
+<td>Statistical catch-at-age method</td></tr>
+<tr><td style="width: 25%;"><a href="sca.html">sca-method</a></td>
+<td>Statistical catch-at-age method</td></tr>
+<tr><td style="width: 25%;"><a href="sca.html">sca-methods</a></td>
+<td>Statistical catch-at-age method</td></tr>
+<tr><td style="width: 25%;"><a href="sca.sa.html">sca.sa</a></td>
+<td>Call sca inside the mp function</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">SCAMCMC</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">SCAMCMC-class</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">SCAMCMC-method</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAMCMC-class.html">SCAMCMC-methods</a></td>
+<td>MCMC settings class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">SCAPars</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">SCAPars-class</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">SCAPars-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">SCAPars-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="scas.html">scas</a></td>
+<td>Run several stock assessments in a single run</td></tr>
+<tr><td style="width: 25%;"><a href="sep.sa.html">sep.sa</a></td>
+<td>Call a separable SA inside the mp function</td></tr>
+<tr><td style="width: 25%;"><a href="shake_len.html">shake_len</a></td>
+<td>shake_len</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">shape</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">shape-method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">shape-methods</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">shape&lt;-</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">shape&lt;--method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">shape&lt;--methods</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">show-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">show-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">show-method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="simulate-methods.html">simulate</a></td>
+<td>Simulation methods for SCA</td></tr>
+<tr><td style="width: 25%;"><a href="simulate-methods.html">simulate-method</a></td>
+<td>Simulation methods for SCA</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">sMod</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">sMod-method</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">sMod-method</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">sMod-methods</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="southernHakeLen.html">southernHakeLen</a></td>
+<td>Southern hake length data</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srCovar</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srCovar-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srCovar-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srFrml</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srFrml-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srFrml-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">srMod</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">srMod-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">srMod&lt;-</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">srMod&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">srMod&lt;--methods</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srmodel</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srmodel-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">srmodel-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srmodel-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srPars</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srPars-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">srPars-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="stdlogres-methods.html">stdlogres</a></td>
+<td>Standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="stdlogres-methods.html">stdlogres-method</a></td>
+<td>Standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="stdlogres-methods.html">stdlogres-methods</a></td>
+<td>Standardized log residuals</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">stkmodel</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">stkmodel-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">stkmodel-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">stkmodel-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFit-class.html">stock.n-method</a></td>
+<td>S4 class 'a4aFit'</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">submodel</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">submodel-class</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">submodel-method</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodel-class.html">submodel-methods</a></td>
+<td>Submodel class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">submodels</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">submodels-class</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">submodels-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">submodels-methods</a></td>
+<td>Submodels class</td></tr>
+</table>
+
+<h2><a id="T">-- T --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="a4aM-class.html">trend</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">trend-method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">trend-methods</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">trend&lt;-</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">trend&lt;--method</a></td>
+<td>Natural mortality class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aM-class.html">trend&lt;--methods</a></td>
+<td>Natural mortality class</td></tr>
+</table>
+
+<h2><a id="V">-- V --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="vcov-methods.html">vcov</a></td>
+<td>Variance-covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">vcov-method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">vcov-method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="vcov-methods.html">vcov-method</a></td>
+<td>Variance-covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="a4aGr-class.html">vcov&lt;--method</a></td>
+<td>Individual growth class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">vcov&lt;--method</a></td>
+<td>Stock parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="vcov-methods.html">vcov&lt;--method</a></td>
+<td>Variance-covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vCovar</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vCovar-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vCovar-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vFrml</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vFrml-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vFrml-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vMod</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vMod-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vMod-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vmodel</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vmodel-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">vmodel-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vmodel-methods</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vPars</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vPars-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">vPars-methods</a></td>
+<td>Model parameters class</td></tr>
+</table>
+
+<h2><a id="W">-- W --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="wireframe.html">wireframe plot for FLQuant</a></td>
+<td>wireframe plot for FLQuant</td></tr>
+<tr><td style="width: 25%;"><a href="wireframe.html">wireframe-method</a></td>
+<td>wireframe plot for FLQuant</td></tr>
+<tr><td style="width: 25%;"><a href="SCAPars-class.html">wt-method</a></td>
+<td>Model parameters class</td></tr>
+<tr><td style="width: 25%;"><a href="a4aFitSA-class.html">wt-method</a></td>
+<td>S4 class 'a4aFitSA'</td></tr>
+<tr><td style="width: 25%;"><a href="a4aStkParams-class.html">wt-method</a></td>
+<td>Stock parameters class</td></tr>
+</table>
+
+<h2><a id="misc">-- misc --</a></h2>
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="submodels-class.html">$&lt;--method</a></td>
+<td>Submodels class</td></tr>
+<tr><td style="width: 25%;"><a href="multiplication-methods.html">*</a></td>
+<td>* methods</td></tr>
+<tr><td style="width: 25%;"><a href="multiplication-methods.html">*-method</a></td>
+<td>* methods</td></tr>
+<tr><td style="width: 25%;"><a href="addition-methods.html">+-method</a></td>
+<td>+ methods</td></tr>
+<tr><td style="width: 25%;"><a href="submodels-class.html">[[&lt;--method</a></td>
+<td>Submodels class</td></tr>
+</table>
+</div></body></html>

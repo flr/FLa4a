@@ -1,0 +1,191 @@
+1c1
+< * using log directory ‘/home/ernesto/github/FLa4a.Rcheck’
+---
+> * using log directory ‘/home/ernesto/github/FLa4a_1.9.7/FLa4a.Rcheck’
+11c11
+< * this is package ‘FLa4a’ version ‘1.9.99-002’
+---
+> * this is package ‘FLa4a’ version ‘1.9.7’
+16,19c16
+< * checking if this is a source package ... WARNING
+< Subdirectory ‘FLa4a/src’ contains apparent object files/libraries
+<   FLa4a.o FLa4a.so
+< Object files/libraries should not be included in a source package.
+---
+> * checking if this is a source package ... OK
+21,42c18,23
+< * checking for executable files ... OK
+< * checking for hidden files and directories ... NOTE
+< Found the following hidden files and directories:
+<   .gitignore
+<   docs/manual/.install_extras
+<   .git
+< These were most likely included in error. See section ‘Package
+< structure’ in the ‘Writing R Extensions’ manual.
+< * checking for portable file names ... WARNING
+< Found the following files with non-portable file names:
+<   docs/articles/index (copy).html
+<   docs/reference/bubble plot of residuals-2.png
+<   docs/reference/mvrcop for a4aGr-2.png
+<   docs/reference/mvrtriangle for a4aGr-2.png
+<   docs/reference/mvrtriangle for a4aGr-4.png
+<   docs/reference/plot for fitted catch-at-age-2.png
+<   docs/reference/plot for fitted indices-at-age-2.png
+<   docs/reference/plot of residuals-2.png
+<   docs/reference/qqmath plot of residuals-2.png
+<   docs/reference/qqplot of residuals-2.png
+<   docs/reference/wireframe plot for FLQuant-2.png
+< These are not fully portable file names.
+---
+> * checking for executable files ... WARNING
+> Found the following executable files:
+>   inst/bin/linux/a4a
+>   inst/bin/osx/a4a
+>   inst/bin/windows/a4a.exe
+> Source packages should not contain undeclared executable files.
+43a25,26
+> * checking for hidden files and directories ... OK
+> * checking for portable file names ... OK
+46d28
+< * used C++ compiler: ‘g++ (SUSE Linux) 15.3.0’
+48c30
+<   installed size is 39.0Mb
+---
+>   installed size is 10.8Mb
+50,51c32,33
+<     R      1.1Mb
+<     libs  37.2Mb
+---
+>     R     1.1Mb
+>     bin   8.8Mb
+53,54c35
+< * checking DESCRIPTION meta-information ... NOTE
+< Checking should be performed on sources prepared by ‘R CMD build’.
+---
+> * checking DESCRIPTION meta-information ... OK
+74a56,72
+> l2a,FLStockLen-matrix: no visible binding for global variable ‘alk’
+> plot,a4aFitCatchDiagn-missing : plot_ribbon: no visible global function
+>   definition for ‘grid’
+> plot,a4aFitCatchDiagn-missing : plot_ribbon: no visible global function
+>   definition for ‘polygon’
+> plot,a4aFitCatchDiagn-missing : plot_ribbon: no visible global function
+>   definition for ‘lines’
+> plot,a4aFitCatchDiagn-missing : plot_lollipop: no visible global
+>   function definition for ‘grid’
+> plot,a4aFitCatchDiagn-missing : plot_lollipop: no visible global
+>   function definition for ‘segments’
+> plot,a4aFitCatchDiagn-missing : plot_lollipop: no visible global
+>   function definition for ‘points’
+> plot,a4aFits-missing: no visible global function definition for ‘grid’
+> plot,a4aFits-missing: no visible global function definition for ‘lines’
+> plot,a4aFits-missing: no visible global function definition for
+>   ‘points’
+76c74,78
+<   track<-
+---
+>   alk grid lines points polygon segments track<-
+> Consider adding
+>   importFrom("graphics", "grid", "lines", "points", "polygon",
+>              "segments")
+> to your NAMESPACE file.
+87a90,91
+>   generic '*' and siglist 'FLIndices,SCAPars'
+>   generic '*' and siglist 'FLStock,SCAPars'
+88a93
+>   generic 'l2a' and siglist 'FLStockLen,matrix'
+96c101,112
+< * checking for code/documentation mismatches ... OK
+---
+> * checking for code/documentation mismatches ... WARNING
+> Codoc mismatches from Rd file 'plot-catch.Rd':
+> \S4method{plot}{a4aFitCatchDiagn,missing}
+>   Code: function(x, y = missing, probs = c(0.1, 0.9), type = "all", cex
+>                  = 1, ...)
+>   Docs: function(x, y = missing, probs = c(0.1, 0.9), type = "all",
+>                  ...)
+>   Argument names in code not in docs:
+>     cex
+>   Mismatches in argument names:
+>     Position: 5 Code: cex Docs: ...
+> 
+103a120,125
+> Undocumented arguments in Rd file 'getX-methods.Rd'
+>   ‘tol’
+> 
+> Undocumented arguments in Rd file 'plot-catch.Rd'
+>   ‘probs’ ‘type’
+> 
+114a137,138
+> Undocumented arguments in Rd file 'scas.Rd'
+>   ‘workers’
+122a147,149
+> Undocumented arguments in Rd file 'simulate-methods.Rd'
+>   ‘obserror’
+> 
+134,192c161
+< * checking line endings in C/C++/Fortran sources/headers ... OK
+< * checking line endings in Makefiles ... WARNING
+< Found the following Makefile(s) with CR or CRLF line endings:
+<   code-experimental/Makefile
+<   code-experimental/makeTemplate/Makefile
+< Some Unix ‘make’ programs require LF line endings.
+< * checking for GNU extensions in Makefiles ... WARNING
+< Found the following file(s) containing GNU extensions:
+<   Makefile
+<   code-experimental/Makefile
+<   code-experimental/makeTemplate/Makefile
+< Portable Makefiles do not use GNU extensions such as +=, :=, $(shell),
+< $(wildcard), ifeq ... endif, .NOTPARALLEL See section ‘Writing portable
+< packages’ in the ‘Writing R Extensions’ manual.
+< * checking include directives in Makefiles ... OK
+< * checking compiled code ... WARNING
+< File ‘FLa4a/libs/FLa4a.so’:
+<   Found ‘_ZSt4cout’, possibly from ‘std::cout’ (C++)
+<     Object: ‘FLa4a.o’
+<   Found ‘exit’, possibly from ‘exit’ (C)
+<     Object: ‘FLa4a.o’
+< 
+< Compiled code should not call entry points which might terminate R nor
+< write to stdout/stderr instead of to the console, nor use Fortran I/O
+< nor system RNGs nor [v]sprintf.
+< 
+< See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
+< * checking examples ... ERROR
+< Running examples in ‘FLa4a-Ex.R’ failed
+< The error most likely occurred in:
+< 
+< > ### Name: getADMBHessian
+< > ### Title: Get ADMB Hessian
+< > ### Aliases: getADMBHessian getADMBCovariance
+< > 
+< > ### ** Examples
+< > 
+< > # load some data
+< > data(ple4)
+< > data(ple4.indices)
+< > # choose a working directory
+< > wkdir <- tempfile()
+< > # do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
+< > fit <- sca(stock=ple4,indices=ple4.indices,wkdir=wkdir)
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+< > hessInfo <- getADMBHessian(wkdir)
+< Error in file(paste0(wkdir, "/admodel.hes"), "rb") : 
+<   cannot open the connection
+< Calls: getADMBHessian -> file
+< In addition: Warning message:
+< In file(paste0(wkdir, "/admodel.hes"), "rb") :
+<   cannot open file '/tmp/RtmpJemnsg/file15ab65367651/admodel.hes': No such file or directory
+< Execution halted
+---
+> * checking examples ... OK
+208c177
+< Status: 1 ERROR, 8 WARNINGs, 3 NOTEs
+---
+> Status: 5 WARNINGs, 1 NOTE

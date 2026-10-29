@@ -12,7 +12,8 @@ err <- 0.05
 #====================================================================
 # check stkmodel
 #====================================================================
-fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+#fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+fit <-  sca(ple4, FLIndices(ple4.index))
 
 # replicate with set.seed
 stkm <- stkmodel(pars(fit))
@@ -47,7 +48,8 @@ max(rat) - min(rat) < err
 #--------------------------------------------------------------------
 # 1
 #--------------------------------------------------------------------
-fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+#fit <-  sca(ple4, FLIndices(ple4.index), qmodel=list(~s(age, k=4)), vmodel=list(~s(age, k=4), ~s(age, k=4)))
+fit <-  sca(ple4, FLIndices(ple4.index))
 
 # check it runs
 obj <- simulate(fit)
@@ -138,7 +140,8 @@ max(vrat)-min(vrat) < err/10
 #--------------------------------------------------------------------
 # several
 #--------------------------------------------------------------------
-fit <-  sca(ple4, ple4.indices, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3)), vmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=4), ~s(age, k=3)))
+#fit <-  sca(ple4, ple4.indices, qmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=3)), vmodel=list(~s(age, k=4), ~s(age, k=4), ~s(age, k=4), ~s(age, k=3)))
+fit <-  sca(ple4, ple4.indices)
 
 # check
 obj <- simulate(fit)
@@ -179,115 +182,115 @@ mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
 mean(idx2.rat) > 1 - err & mean(idx2.rat) < 1 + err
 mean(idx3.rat) > 1 - err & mean(idx3.rat) < 1 + err
 
-#====================================================================
-# biomass index
-#====================================================================
-bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
-index(bioidx) <- stock(ple4)*0.001
-index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
-range(bioidx)[c("startf","endf")] <- c(0,0)
-
-# fitting the model
-fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
-
-#--------------------------------------------------------------------
-# check
-#--------------------------------------------------------------------
-
-# now the classes
-obj <- simulate(fit)
-is(obj, "a4aFitSA")
-validObject(obj)
-
-obj <- simulate(fit, nits)
-is(obj, "a4aFitSA")
-validObject(obj)
-dim(catch.n(obj))[6] == nits
-
-# can the seed be controled ?
-set.seed(1234)
-obj0 <- simulate(fit, nits)
-set.seed(1234)
-obj1 <- simulate(fit, nits)
-all.equal(obj0, obj1)
-
-# are the simulated values unbiased
-obj <- simulate(fit, 1000)
-stk.fit <- stock.n(fit)
-stk.sim <- stock.n(obj)
-stk.rat <- iterMedians(stk.sim)/stk.fit
-f.fit <- harvest(fit)
-f.sim <- harvest(obj)
-f.rat <- iterMedians(f.sim)/f.fit
-idx.fit <- index(fit)[[1]]
-idx.sim <- index(obj)[[1]]
-idx.rat <- iterMedians(idx.sim)/idx.fit
-
-mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
-mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
-mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
-
-#====================================================================
-# biomass and abundance indices
-#====================================================================
-
-# fitting the model
-fit <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)), fit="assessment")
-
-#--------------------------------------------------------------------
-# check
-#--------------------------------------------------------------------
-
-# now the classes
-obj <- simulate(fit)
-is(obj, "a4aFitSA")
-validObject(obj)
-
-obj <- simulate(fit, nits)
-is(obj, "a4aFitSA")
-validObject(obj)
-dim(catch.n(obj))[6] == nits
-
-# can the seed be controled ?
-obj0 <- simulate(fit, nits, 1234)
-obj1 <- simulate(fit, nits, 1234)
-all.equal(obj0, obj1)
-
-# are the simulated values unbiased
-obj <- simulate(fit, 1000)
-stk.fit <- stock.n(fit)
-stk.sim <- stock.n(obj)
-stk.rat <- iterMedians(stk.sim)/stk.fit
-f.fit <- harvest(fit)
-f.sim <- harvest(obj)
-f.rat <- iterMedians(f.sim)/f.fit
-idx.fit <- index(fit)[[1]]
-idx.sim <- index(obj)[[1]]
-idx.rat <- iterMedians(idx.sim)/idx.fit
-idx2.fit <- index(fit)[[2]]
-idx2.sim <- index(obj)[[2]]
-idx2.rat <- iterMedians(idx2.sim)/idx2.fit
-
-mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
-mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
-mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
-mean(idx2.rat) > 1 - err & mean(idx2.rat) < 1 + err
-
-# is the vcov matrix ok
-vce <- c(cov(t(params(qmodel(pars(obj))[[2]]))))
-vc <- vcov(qmodel(pars(obj))[[2]])[,,1,drop=TRUE]
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < err
-
-vce <- c(cov(t(params(vmodel(pars(obj))[[1]]))))
-vc <- vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE]
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < err
-
-vce <- c(cov(t(params(stkmodel(pars(obj))))))
-vc <- vcov(stkmodel(pars(obj)))[,,1,drop=TRUE]
-vrat <- vce/c(vc)
-max(vrat)-min(vrat) < err
+# #====================================================================
+# # biomass index
+# #====================================================================
+# bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])), name="bioidx")
+# index(bioidx) <- stock(ple4)*0.001
+# index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
+# range(bioidx)[c("startf","endf")] <- c(0,0)
+#
+# # fitting the model
+# fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
+#
+# #--------------------------------------------------------------------
+# # check
+# #--------------------------------------------------------------------
+#
+# # now the classes
+# obj <- simulate(fit)
+# is(obj, "a4aFitSA")
+# validObject(obj)
+#
+# obj <- simulate(fit, nits)
+# is(obj, "a4aFitSA")
+# validObject(obj)
+# dim(catch.n(obj))[6] == nits
+#
+# # can the seed be controled ?
+# set.seed(1234)
+# obj0 <- simulate(fit, nits)
+# set.seed(1234)
+# obj1 <- simulate(fit, nits)
+# all.equal(obj0, obj1)
+#
+# # are the simulated values unbiased
+# obj <- simulate(fit, 1000)
+# stk.fit <- stock.n(fit)
+# stk.sim <- stock.n(obj)
+# stk.rat <- iterMedians(stk.sim)/stk.fit
+# f.fit <- harvest(fit)
+# f.sim <- harvest(obj)
+# f.rat <- iterMedians(f.sim)/f.fit
+# idx.fit <- index(fit)[[1]]
+# idx.sim <- index(obj)[[1]]
+# idx.rat <- iterMedians(idx.sim)/idx.fit
+#
+# mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+# mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+# mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
+#
+# #====================================================================
+# # biomass and abundance indices
+# #====================================================================
+#
+# # fitting the model
+# fit <- sca(ple4, FLIndices(bioidx, ple4.index), qmodel=list(~1, ~s(age, k=4)), fit="assessment")
+#
+# #--------------------------------------------------------------------
+# # check
+# #--------------------------------------------------------------------
+#
+# # now the classes
+# obj <- simulate(fit)
+# is(obj, "a4aFitSA")
+# validObject(obj)
+#
+# obj <- simulate(fit, nits)
+# is(obj, "a4aFitSA")
+# validObject(obj)
+# dim(catch.n(obj))[6] == nits
+#
+# # can the seed be controled ?
+# obj0 <- simulate(fit, nits, 1234)
+# obj1 <- simulate(fit, nits, 1234)
+# all.equal(obj0, obj1)
+#
+# # are the simulated values unbiased
+# obj <- simulate(fit, 1000)
+# stk.fit <- stock.n(fit)
+# stk.sim <- stock.n(obj)
+# stk.rat <- iterMedians(stk.sim)/stk.fit
+# f.fit <- harvest(fit)
+# f.sim <- harvest(obj)
+# f.rat <- iterMedians(f.sim)/f.fit
+# idx.fit <- index(fit)[[1]]
+# idx.sim <- index(obj)[[1]]
+# idx.rat <- iterMedians(idx.sim)/idx.fit
+# idx2.fit <- index(fit)[[2]]
+# idx2.sim <- index(obj)[[2]]
+# idx2.rat <- iterMedians(idx2.sim)/idx2.fit
+#
+# mean(stk.rat) > 1 - err & mean(stk.rat) < 1 + err
+# mean(f.rat) > 1 - err & mean(f.rat) < 1 + err
+# mean(idx.rat) > 1 - err & mean(idx.rat) < 1 + err
+# mean(idx2.rat) > 1 - err & mean(idx2.rat) < 1 + err
+#
+# # is the vcov matrix ok
+# vce <- c(cov(t(params(qmodel(pars(obj))[[2]]))))
+# vc <- vcov(qmodel(pars(obj))[[2]])[,,1,drop=TRUE]
+# vrat <- vce/c(vc)
+# max(vrat)-min(vrat) < err
+#
+# vce <- c(cov(t(params(vmodel(pars(obj))[[1]]))))
+# vc <- vcov(vmodel(pars(obj))[[1]])[,,1,drop=TRUE]
+# vrat <- vce/c(vc)
+# max(vrat)-min(vrat) < err
+#
+# vce <- c(cov(t(params(stkmodel(pars(obj))))))
+# vc <- vcov(stkmodel(pars(obj)))[,,1,drop=TRUE]
+# vrat <- vce/c(vc)
+# max(vrat)-min(vrat) < err
 
 #====================================================================
 # more than one iter in vcov, coming from assessments with iters

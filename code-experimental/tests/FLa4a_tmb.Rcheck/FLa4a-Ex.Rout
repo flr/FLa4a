@@ -1,0 +1,558 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "FLa4a"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('FLa4a')
+Loading required package: FLCore
+Loading required package: lattice
+FLCore (Version 2.6.33, packaged: 2026-08-05 06:08:38 UTC)
+Loading required package: triangle
+This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("a4aFit-class")
+> ### * a4aFit-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aFit-class
+> ### Title: S4 class 'a4aFit'
+> ### Aliases: a4aFit-class a4aFit a4aFit-methods clock clock-methods
+> ###   clock,a4aFit-method fitSumm fitSumm-methods fitSumm,a4aFit-method
+> ###   stock.n,a4aFit-method harvest,a4aFit,ANY-method catch.n,a4aFit-method
+> ###   index,a4aFit-method show,a4aFit-method logLik,a4aFit-method
+> ###   iter,a4aFit-method a4aFits-class a4aFits a4aFits-methods
+> ###   a4aFits,list-method a4aFits,a4aFit-method a4aFits,missing-method
+> ###   computeCatchDiagnostics,a4aFit-method
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> data(ple4.index)
+> 
+> obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> obj
+a4a model fit for: PLE 
+
+Call:
+.local(stock = stock, indices = indices)
+
+Time used:
+ Pre-processing     Running a4a Post-processing           Total 
+     0.18037295      4.54516125      0.09179664      4.81733084 
+
+Submodels:
+	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
+	srmodel: ~factor(year)
+	n1model: ~s(age, k = 3)
+	 qmodel:
+	   BTS-Combined (all): ~s(age, k = 6)
+	 vmodel:
+	   catch:              ~s(age, k = 3)
+	   BTS-Combined (all): ~1
+> 
+> slotNames(obj)
+ [1] "pars"    "call"    "clock"   "fitSumm" "stock.n" "harvest" "catch.n"
+ [8] "index"   "name"    "desc"    "range"  
+> clock(obj)
+ Pre-processing     Running a4a Post-processing           Total 
+     0.18037295      4.54516125      0.09179664      4.81733084 
+> fitSumm(obj)
+             iters
+                          1
+  nopar        2.540000e+02
+  nlogl       -1.015242e+03
+  maxgrad      2.972027e-10
+  nobs         8.300000e+02
+  gcv          1.072680e-01
+  convergence  0.000000e+00
+  accrate                NA
+  nlogl_comp1 -1.070554e+03
+  nlogl_comp2  5.531205e+01
+  nlogl_comp3  0.000000e+00
+> 
+> flq <- stock.n(obj)
+> is(flq)
+[1] "FLQuant"   "FLArray"   "array"     "structure" "vector"   
+> flq <- index(obj)
+> is(flq)
+[1] "FLQuants" "FLlst"    "list"     "vector"  
+> 
+> logLik(obj)
+'log Lik.' 1015.242 (df=254)
+> AIC(obj)
+[1] -1522.484
+> BIC(obj)
+[1] -323.2414
+> 
+> 
+> 
+> cleanEx()
+> nameEx("a4aFitCatchDiagn-class")
+> ### * a4aFitCatchDiagn-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aFitCatchDiagn-class
+> ### Title: S4 class 'a4aFitCatchDiagn'
+> ### Aliases: a4aFitCatchDiagn-class computeCatchDiagnostics
+> ###   a4aFitCatchDiagn a4aFitCatchDiagn-methods
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> data(ple4.index)
+> fit <- sca(ple4, ple4.index)
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> flqs <- computeCatchDiagnostics(fit, ple4)
+Warning messages:
+1: *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+2: *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("a4aFitMCMC-class")
+> ### * a4aFitMCMC-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aFitMCMC-class
+> ### Title: S4 class 'a4aFitMCMC'
+> ### Aliases: a4aFitMCMC-class a4aFitMCMC a4aFitMCMC-methods
+> ###   a4aFitSA,a4aFitMCMC-method a4aFit,a4aFitMCMC-method as.mcmc
+> ###   as.mcmc-methods as.mcmc,a4aFitMCMC-method burnin burnin-methods
+> ###   burnin,a4aFitMCMC-method a4aFitMCMCs-class a4aFitMCMCs
+> ###   a4aFitMCMCs-methods a4aFitMCMCs,list-method
+> ###   a4aFitMCMCs,a4aFitMCMC-method a4aFitMCMCs,missing-method
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> data(ple4.index)
+> 
+> obj <- sca(stock=ple4, indices=FLIndices(ple4.index), fit="assessment")
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> obj
+a4a model fit for: PLE 
+
+Call:
+.local(stock = stock, indices = indices, fit = "assessment")
+
+Time used:
+ Pre-processing     Running a4a Post-processing           Total 
+     0.18846107      6.04617643      0.04082513      6.27546263 
+
+Submodels:
+	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
+	srmodel: ~factor(year)
+	n1model: ~s(age, k = 3)
+	 qmodel:
+	   BTS-Combined (all): ~s(age, k = 6)
+	 vmodel:
+	   catch:              ~s(age, k = 3)
+	   BTS-Combined (all): ~1
+> 
+> slotNames(obj)
+ [1] "pars"    "call"    "clock"   "fitSumm" "stock.n" "harvest" "catch.n"
+ [8] "index"   "name"    "desc"    "range"  
+> clock(obj)
+ Pre-processing     Running a4a Post-processing           Total 
+     0.18846107      6.04617643      0.04082513      6.27546263 
+> fitSumm(obj)
+             iters
+                          1
+  nopar        2.540000e+02
+  nlogl       -1.015242e+03
+  maxgrad      2.972027e-10
+  nobs         8.300000e+02
+  gcv          1.072680e-01
+  convergence  0.000000e+00
+  accrate                NA
+  nlogl_comp1 -1.070554e+03
+  nlogl_comp2  5.531205e+01
+  nlogl_comp3  0.000000e+00
+> 
+> flq <- stock.n(obj)
+> is(flq)
+[1] "FLQuant"   "FLArray"   "array"     "structure" "vector"   
+> flq <- index(obj)
+> is(flq)
+[1] "FLQuants" "FLlst"    "list"     "vector"  
+> 
+> logLik(obj)
+'log Lik.' 1015.242 (df=254)
+> AIC(obj)
+[1] -1522.484
+> BIC(obj)
+[1] -323.2414
+> 
+> is(pars(obj))
+[1] "SCAPars"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("a4aFitResiduals-class")
+> ### * a4aFitResiduals-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aFitResiduals-class
+> ### Title: S4 class 'a4aFitResiduals'
+> ### Aliases: a4aFitResiduals-class residuals,a4aFit-method a4aFitResiduals
+> ###   a4aFitResiduals-methods
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> data(ple4.index)
+> obj <- sca(stock=ple4, indices=FLIndices(ple4.index))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("a4aFitSA-class")
+> ### * a4aFitSA-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aFitSA-class
+> ### Title: S4 class 'a4aFitSA'
+> ### Aliases: a4aFitSA-class a4aFitSA a4aFitSA-methods
+> ###   a4aFit,a4aFitSA-method pars pars-methods pars,a4aFitSA-method
+> ###   m,a4aFitSA-method wt,a4aFitSA-method qmodel,a4aFitSA-method
+> ###   fmodel,a4aFitSA-method srmodel,a4aFitSA-method
+> ###   n1model,a4aFitSA-method vmodel,a4aFitSA-method
+> ###   stkmodel,a4aFitSA-method show,a4aFitSA-method
+> ###   submodels,a4aFitSA-method iter,a4aFitSA-method a4aFitSAs-class
+> ###   a4aFitSAs a4aFitSAs-methods a4aFitSAs,list-method
+> ###   a4aFitSAs,a4aFitSA-method a4aFitSAs,missing-method
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> data(ple4.index)
+> 
+> obj <- sca(stock=ple4, indices=FLIndices(ple4.index), fit="assessment")
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> obj
+a4a model fit for: PLE 
+
+Call:
+.local(stock = stock, indices = indices, fit = "assessment")
+
+Time used:
+ Pre-processing     Running a4a Post-processing           Total 
+     0.12778449      7.11955404      0.07131791      7.31865644 
+
+Submodels:
+	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
+	srmodel: ~factor(year)
+	n1model: ~s(age, k = 3)
+	 qmodel:
+	   BTS-Combined (all): ~s(age, k = 6)
+	 vmodel:
+	   catch:              ~s(age, k = 3)
+	   BTS-Combined (all): ~1
+> 
+> slotNames(obj)
+ [1] "pars"    "call"    "clock"   "fitSumm" "stock.n" "harvest" "catch.n"
+ [8] "index"   "name"    "desc"    "range"  
+> clock(obj)
+ Pre-processing     Running a4a Post-processing           Total 
+     0.12778449      7.11955404      0.07131791      7.31865644 
+> fitSumm(obj)
+             iters
+                          1
+  nopar        2.540000e+02
+  nlogl       -1.015242e+03
+  maxgrad      2.972027e-10
+  nobs         8.300000e+02
+  gcv          1.072680e-01
+  convergence  0.000000e+00
+  accrate                NA
+  nlogl_comp1 -1.070554e+03
+  nlogl_comp2  5.531205e+01
+  nlogl_comp3  0.000000e+00
+> 
+> flq <- stock.n(obj)
+> is(flq)
+[1] "FLQuant"   "FLArray"   "array"     "structure" "vector"   
+> flq <- index(obj)
+> is(flq)
+[1] "FLQuants" "FLlst"    "list"     "vector"  
+> 
+> logLik(obj)
+'log Lik.' 1015.242 (df=254)
+> AIC(obj)
+[1] -1522.484
+> BIC(obj)
+[1] -323.2414
+> 
+> is(pars(obj))
+[1] "SCAPars"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("a4aGr-class")
+> ### * a4aGr-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aGr
+> ### Title: Individual growth class
+> ### Aliases: a4aGr a4aGr-class a4aGr-methods a4aGr,missing-method grMod
+> ###   grMod-methods grMod,a4aGr-method grMod<- grMod<--methods
+> ###   grMod<-,a4aGr,formula-method grInvMod grInvMod-methods
+> ###   grInvMod,a4aGr-method grInvMod<- grInvMod<--methods
+> ###   grInvMod<-,a4aGr,formula-method params,a4aGr-method
+> ###   params<-,a4aGr,FLPar-method distr,a4aGr-method
+> ###   distr<-,a4aGr,character-method vcov,a4aGr-method
+> ###   vcov<-,a4aGr,numeric-method
+> 
+> ### ** Examples
+> 
+> mm <- matrix(NA, ncol=3, nrow=3)
+> diag(mm) <- c(50, 0.001,0.001)
+> mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+> md <- ~linf*(1-exp(-k*(t-t0)))
+> imd <- ~t0-1/k*log(1-len/linf)
+> prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+> vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("a4aM-class")
+> ### * a4aM-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: a4aM
+> ### Title: Natural mortality class
+> ### Aliases: a4aM a4aM-class a4aM-methods a4aM,missing-method
+> ###   show,a4aM-method shape shape-methods shape,a4aM-method shape<-
+> ###   shape<--methods shape<-,a4aM-method level level-methods
+> ###   level,a4aM-method level<- level<--methods level<-,a4aM-method trend
+> ###   trend-methods trend,a4aM-method trend<- trend<--methods
+> ###   trend<-,a4aM-method
+> 
+> ### ** Examples
+> 
+> mod1 <- FLModelSim(model=~exp(-age-0.5))
+> mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+> m1 <- a4aM(shape=mod1, level=mod2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("assorted-methods")
+> ### * assorted-methods
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: assorted methods
+> ### Title: Assorted methods needed by FLa4a
+> ### Aliases: 'assorted methods' getYidx getYidx-methods
+> ###   getYidx,FLQuant-method is.empty niters niters-methods
+> ###   niters,FLModelSim-method niters,a4aGr-method dims,a4aStkParams-method
+> ###   replaceZeros replaceZeros-methods replaceZeros,FLQuant-method
+> ###   replaceZeros,FLStock-method replaceZeros,FLI-method
+> ###   replaceZeros,FLIndices-method
+> 
+> ### ** Examples
+> 
+> #Example use of getYidx:
+> data(ple4)
+> flq <- catch(ple4)
+> getYidx(flq, 2000:2004)
+[1] 44 45 46 47 48
+> flq[, getYidx(flq, 2000:2004)]
+An object of class "FLQuant"
+, , unit = unique, season = all, area = unique
+
+     year
+age   2000   2001   2002   2003   2004  
+  all 145998 128107 143807 154029 140056
+
+units:  t 
+> #Example use of is.empty:
+> is.empty(list())
+[1] TRUE
+> is.empty(list(a=2))
+[1] FALSE
+> #Example use of niters:
+> mm <- matrix(NA, ncol=3, nrow=3)
+> diag(mm) <- c(50, 0.001,0.001)
+> mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.01,0.00004)
+> md <- ~linf*(1-exp(-k*(t-t0)))
+> imd <- ~t0-1/k*log(1-len/linf)
+> prs <- FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","yr^-1","yr"))
+> vbObj <- a4aGr(grMod=md, grInvMod=imd, params=prs, vcov=mm, distr="norm")
+> # Generate 100 sample sets
+> vbObj <- mvrnorm(100,vbObj)
+> niters(vbObj)
+[1] 100
+> #Example use of dims:
+> dims(FLPar())
+$iter
+[1] 1
+
+$params
+[1] ""
+
+> #Example use of getYidx:
+> data(ple4)
+> flq <- catch(ple4)
+> flq <- replaceZeros(flq, 0.25)
+> catch(ple4) <- flq
+> 
+> 
+> 
+> cleanEx()
+> nameEx("bubbles-methods")
+> ### * bubbles-methods
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: bubble plot of residuals
+> ### Title: Bubbles plot of standardized log residuals
+> ### Aliases: 'bubble plot of residuals'
+> ###   bubbles,a4aFitResiduals,missing-method
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> data(ple4.index)
+> obj <- sca(ple4, FLIndices(ple4.index))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> flqs <- residuals(obj, ple4, FLIndices(idx=ple4.index))
+> bubbles(flqs)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("genFLQuant-methods")
+> ### * genFLQuant-methods
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: genFLQuant
+> ### Title: Methods to generate FLQuant objects
+> ### Aliases: genFLQuant genFLQuant-methods genFLQuant,FLQuant-method
+> ###   genFLQuant,submodel-method genFLQuant,submodels-method
+> ###   genFLQuant,a4aStkParams-method
+> 
+> ### ** Examples
+> 
+> data(ple4)
+> sim.F <- genFLQuant(harvest(ple4))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("getADMBHessian")
+> ### * getADMBHessian
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: getADMBHessian
+> ### Title: Get ADMB Hessian
+> ### Aliases: getADMBHessian getADMBCovariance
+> 
+> ### ** Examples
+> 
+> # load some data
+> data(ple4)
+> data(ple4.indices)
+> # choose a working directory
+> wkdir <- tempfile()
+> # do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
+> fit <- sca(stock=ple4,indices=ple4.indices,wkdir=wkdir)
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> hessInfo <- getADMBHessian(wkdir)
+Error in file(paste0(wkdir, "/admodel.hes"), "rb") : 
+  cannot open the connection
+Calls: getADMBHessian -> file
+In addition: Warning message:
+In file(paste0(wkdir, "/admodel.hes"), "rb") :
+  cannot open file '/tmp/RtmpJemnsg/file15ab65367651/admodel.hes': No such file or directory
+Execution halted

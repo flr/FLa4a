@@ -1,0 +1,28 @@
+23c23
+< This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+---
+> This is FLa4a 1.9.7. For overview type 'help(package="FLa4a")'
+41,47d40
+< Warning message:
+< *** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+<     i will remove the redundant ones:
+< 	s(age).2
+< 	s(age).3
+< 	s(age).4
+< 	s(age).5 
+68c61
+< [1] FALSE
+---
+> [1] TRUE
+70c63
+< [1] FALSE
+---
+> [1] TRUE
+72c65
+< [1] FALSE
+---
+> [1] TRUE
+79c72
+< 2478.408    0.507 2479.775 
+---
+> 2023.813  215.514 2240.179 

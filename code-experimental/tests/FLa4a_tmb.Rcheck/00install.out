@@ -1,0 +1,22 @@
+* installing *source* package ‘FLa4a’ ...
+** this is package ‘FLa4a’ version ‘1.9.99-002’
+** using staged installation
+** libs
+using C++ compiler: ‘g++ (SUSE Linux) 15.3.0’
+make: Nothing to be done for 'all'.
+make: 'symbols.rds' is up to date.
+installing to /home/ernesto/github/FLa4a.Rcheck/00LOCK-FLa4a/00new/FLa4a/libs
+** R
+** data
+*** moving datasets to lazyload DB
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (FLa4a)

@@ -1,0 +1,79 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(FLa4a)
+Loading required package: FLCore
+Loading required package: lattice
+FLCore (Version 2.6.33, packaged: 2026-08-05 06:08:38 UTC)
+Loading required package: triangle
+This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
+
+> data(ple4)
+> data(ple4.indices)
+> ple4.indices <- ple4.indices[c(3,4,5)]
+> err <- 0.1
+> nits <- 250
+> 
+> fit <-  sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)))
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> fit.sim <- simulate(fit, nits, 1234)
+Warning message:
+*** ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6) has 4 too many parameter(s)!!
+    i will remove the redundant ones:
+	s(age).2
+	s(age).3
+	s(age).4
+	s(age).5 
+> 
+> idx.sim <- ple4.indices[1]
+> index(idx.sim[[1]]) <- index(fit.sim)[[1]]
+> stk.sim <- propagate(ple4, nits) + fit.sim 
+> 
+> fit2 <-  sca(stk.sim, idx.sim, qmodel=list(~s(age, k=4)), fit="MP")
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> # are the simulated values unbiased
+> stk.fit <- stock.n(fit)
+> stk.sim <- stock.n(fit2)
+> stk.rat <- iterMedians(stk.sim)/stk.fit
+> f.fit <- harvest(fit)
+> f.sim <- harvest(fit2)
+> f.rat <- iterMedians(f.sim)/f.fit
+> cth.fit <- catch.n(fit)
+> cth.sim <- catch.n(fit2)
+> cth.rat <- iterMedians(cth.sim)/cth.fit
+> 
+> max(stk.rat)-min(stk.rat) < err
+[1] FALSE
+> max(f.rat)-min(f.rat) < err
+[1] FALSE
+> max(cth.rat)-min(cth.rat) < err
+[1] FALSE
+> 
+> 
+> 
+> 
+> proc.time()
+    user   system  elapsed 
+2478.408    0.507 2479.775 
