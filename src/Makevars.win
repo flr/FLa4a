@@ -1,9 +1,13 @@
 CXX_STD = CXX17
-PKG_CXXFLAGS = -O2 -g0
 
-all: $(SHLIB) strippedLib
+ifndef NO_STRIP
+all: $(SHLIB) strip-shlib
+else
+all: $(SHLIB)
+endif
 
-strippedLib: $(SHLIB)
-	@if test -e "/usr/bin/strip"; then /usr/bin/strip --strip-debug $(SHLIB); fi
+strip-shlib: $(SHLIB)
+	@if [ -n "$(STRIP_SHARED_LIB)" ]; then $(STRIP_SHARED_LIB) $(SHLIB); \
+	elif command -v strip >/dev/null 2>&1; then strip --strip-unneeded $(SHLIB); fi
 
-.PHONY: strippedLib
+.PHONY: all strip-shlib
