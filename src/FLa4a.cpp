@@ -174,8 +174,7 @@ Type objective_function<Type>::operator()()
       break; // f - 1, because there is one commercial fleet
 
     default:
-      std::cout << "Error: This fleet type not implemented yet." << std::endl;
-      exit(EXIT_FAILURE);
+      Rf_error("Error: This fleet type not implemented yet.");
       break;
     }
   }
@@ -248,9 +247,7 @@ Type objective_function<Type>::operator()()
         break;
 
       default:
-        std::cout
-            << "Stock recruitment code not implemented yet." << std::endl;
-        exit(EXIT_FAILURE);
+        Rf_error("Stock recruitment code not implemented yet.");
         break;
       }
     }
