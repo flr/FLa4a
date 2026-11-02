@@ -245,7 +245,7 @@ setMethod(
     grid <- do.call(expand.grid, c(dimnames(catch.n(stock))[c(3, 5)], list(iter = 1:max(dms$iter))))
     # if (!identical(sort(unique(dms$iter)), sort(unique(c(1L, max(dms$iter))))))
     if (length(unique(dms$iter[dms$iter > 1])) > 1) {
-      stop("incosistent number of iterations in stock and indices")
+      stop("inconsistent number of iterations in stock and indices")
     }
     it <- max(dms$iter)
     if (fit == "MCMC") stop("MCMC not yet implemented for TMB version of a4a")
@@ -1019,6 +1019,8 @@ fitTMB <- function(fit, df.data, stock, indices, full.df,
     )
 
   opt <- nlminb(obj$par, obj$fn, obj$gr, control = list(iter.max = 10000, eval.max = 10000))
+
+  # browser()
 
   if (fit != "MP") {
     # The accuracy is good without these steps
