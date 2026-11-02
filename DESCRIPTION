@@ -73,6 +73,6 @@ Collate:
     'southern_hake-data.R'
     'a4amse-sa.R'
     'a4aFitCatchDiagn-class.R'
-RoxygenNote: 7.3.2
 Encoding: UTF-8
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.1

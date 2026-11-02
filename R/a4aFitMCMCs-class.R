@@ -90,6 +90,7 @@ setMethod("a4aFitMCMCs", signature(object="missing"),
 #' @examples
 #' data(ple4)
 #' data(ple4.index)
+#' \dontrun{
 #' qmods <- list(list(~s(age, k=6)))
 #' fmods = list()
 #' for(i in 1:6) {
@@ -104,6 +105,7 @@ setMethod("a4aFitMCMCs", signature(object="missing"),
 #'     fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC()
 #'   )
 #' plot(myFits)
+#' }
 
 setMethod("plot", c("a4aFitMCMCs", "missing"), function(x, y=missing, ...){
 	args <- list()

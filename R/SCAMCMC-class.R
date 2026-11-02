@@ -86,27 +86,6 @@ setMethod("SCAMCMC", signature(object="missing"),
 
 
 #' @rdname SCAMCMC-class
-#' @aliases getADMBCallArgs getADMBCallArgs-methods
-setGeneric("getADMBCallArgs", function(object, ...) standardGeneric("getADMBCallArgs"))
-
-setMethod("getADMBCallArgs", signature(object="SCAMCMC"),
-  function(object, ...) {
-	slts <- getSlots("SCAMCMC")
-	lslts <- slts[slts=="logical"]
-	nslts <- slts[slts!="logical"]
-	callargs <- c("")
-	for(i in names(lslts)){
-		if(isTRUE(slot(object, i))) callargs <- paste(callargs, " -", i, sep="")
-	}
-
-	for(i in names(nslts)){
-		if(!is.na(slot(object, i))) callargs <- paste(callargs, " -", i, " ", slot(object, i), sep="")
-	}
-	callargs
-  }
-)
-
-#' @rdname SCAMCMC-class
 #' @aliases getN getN-methods
 setGeneric("getN", function(object, ...) standardGeneric("getN"))
 #' @rdname SCAMCMC-class

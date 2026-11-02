@@ -86,61 +86,6 @@ setMethod("niters", "a4aGr", function(object){
 	dim(params(object))[2]
 })
 
-#' @title Get ADMB Hessian
-#' @name getADMBHessian
-#' @rdname getADMBHessian
-#' @description Reads the hessian file from any ADMB fit.  Used here with the a4a model.
-#' @param wkdir the location of the admb output
-#' @return a list with the following elements
-#' @note \code{getADMBHessian} is intended to be used internally
-#' @aliases getADMBHessian
-#' @examples
-#' # load some data
-#' data(ple4)
-#' data(ple4.indices)
-#' # choose a working directory
-#' wkdir <- tempfile()
-#' # do an 'assessment' fit with default settings (not recomended!) and keep results in wkdir
-#' fit <- sca(stock=ple4,indices=ple4.indices,wkdir=wkdir)
-#' hessInfo <- getADMBHessian(wkdir)
-#' str(hessInfo)
-#' # calculate covariance matrix
-#' Sigma <- solve(hessInfo$hes)
-
-getADMBHessian <- function(wkdir) {
-## This function reads in all of the information contained in the
-## admodel.hes file. Some of this is needed for relaxing the covariance
-## matrix, and others just need to be recorded and rewritten to file so ADMB
-## 'sees' what it's expecting.
-  filename <- file(paste0(wkdir,"/admodel.hes"), "rb")
-  on.exit(close(filename))
-  num.pars <- readBin(filename, "integer", 1)
-  hes.vec <- readBin(filename, "numeric", num.pars^2)
-  hes <- matrix(hes.vec, ncol=num.pars, nrow=num.pars)
-  hybrid_bounded_flag <- readBin(filename, "integer", 1)
-  scale <- readBin(filename, "numeric", num.pars)
-
-  list(num.pars = num.pars, hes = hes, hybrid_bounded_flag = hybrid_bounded_flag, scale = scale)
-}
-
-
-#' @rdname getADMBHessian
-#' @aliases getADMBCovariance
-getADMBCovariance <- function(wkdir) {
-## This function reads in all of the information contained in the
-## admodel.hes file. Some of this is needed for relaxing the covariance
-## matrix, and others just need to be recorded and rewritten to file so ADMB
-## 'sees' what it's expecting.
-  filename <- file(paste0(wkdir,"/admodel.cov"), "rb")
-  on.exit(close(filename))
-  num.pars <- readBin(filename, "integer", 1)
-  cov.vec <- readBin(filename, "numeric", num.pars^2)
-  cov <- matrix(cov.vec, ncol=num.pars, nrow=num.pars)
-  hybrid_bounded_flag <- readBin(filename, "integer", 1)
-  scale <- readBin(filename, "numeric", num.pars)
-  list(num.pars = num.pars, cov = cov, hybrid_bounded_flag = hybrid_bounded_flag, scale = scale)
-}
-
 #' @rdname assorted-methods
 #' @param obj an object
 #' @section dims:

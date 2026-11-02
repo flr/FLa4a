@@ -6,8 +6,6 @@
 \alias{SCAMCMC-class}
 \alias{SCAMCMC-methods}
 \alias{SCAMCMC,missing-method}
-\alias{getADMBCallArgs}
-\alias{getADMBCallArgs-methods}
 \alias{getN}
 \alias{getN-methods}
 \alias{getN,SCAMCMC-method}
@@ -16,8 +14,6 @@
 SCAMCMC(object, ...)
 
 \S4method{SCAMCMC}{missing}(object, ...)
-
-getADMBCallArgs(object, ...)
 
 getN(object, ...)
 

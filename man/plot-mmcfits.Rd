@@ -25,6 +25,7 @@ Method to plot fitting statistics of multiple fits, useful to compare fits.
 \examples{
 data(ple4)
 data(ple4.index)
+\dontrun{
 qmods <- list(list(~s(age, k=6)))
 fmods = list()
 for(i in 1:6) {
@@ -39,4 +40,5 @@ myFits <-
     fmodel = fmods, qmodel=qmods, fit="MCMC", mcmc=SCAMCMC()
   )
 plot(myFits)
+}
 }
