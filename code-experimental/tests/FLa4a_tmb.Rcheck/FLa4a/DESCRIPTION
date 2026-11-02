@@ -35,4 +35,4 @@ Collate: 'FLCompMethods.R' 'FLModelSimMethods.R' 'a4aM-class.R'
 RoxygenNote: 7.3.2
 Encoding: UTF-8
 Config/testthat/edition: 3
-Built: R 4.5.2; x86_64-pc-linux-gnu; 2026-10-28 18:40:06 UTC; unix
+Built: R 4.5.2; x86_64-pc-linux-gnu; 2026-10-29 15:05:53 UTC; unix

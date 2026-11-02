@@ -17,8 +17,22 @@ Vignette dependency required without any vignettes: ‘knitr’
 Subdirectory ‘FLa4a/src’ contains apparent object files/libraries
   FLa4a.o FLa4a.so
 Object files/libraries should not be included in a source package.
+
+In addition to the above warning(s), found the following notes:
+
+Found the following apparent object files/libraries:
+  code-experimental/tests/FLa4a_tmb.Rcheck/FLa4a/libs/FLa4a.so
+Object files/libraries should not be included in a source package.
+
+Subdirectory ‘code-experimental/tests/FLa4a.Rcheck/FLa4a’ seems to contain an installed version of the package.
 * checking if there is a namespace ... OK
-* checking for executable files ... OK
+* checking for executable files ... WARNING
+Found the following executable files:
+  code-experimental/tests/FLa4a.Rcheck/FLa4a/bin/linux/a4a
+  code-experimental/tests/FLa4a.Rcheck/FLa4a/bin/osx/a4a
+  code-experimental/tests/FLa4a.Rcheck/FLa4a/bin/windows/a4a.exe
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
 * checking for hidden files and directories ... NOTE
 Found the following hidden files and directories:
   .gitignore
@@ -44,18 +58,23 @@ See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
 * checking for sufficient/correct file permissions ... OK
 * checking whether package ‘FLa4a’ can be installed ... OK
 * used C++ compiler: ‘g++ (SUSE Linux) 15.3.0’
-* checking installed package size ... INFO
-  installed size is 39.0Mb
-  sub-directories of 1Mb or more:
-    R      1.1Mb
-    libs  37.2Mb
+* checking C++ specification ... OK
+* checking installed package size ... OK
 * checking package directory ... OK
 * checking DESCRIPTION meta-information ... NOTE
 Checking should be performed on sources prepared by ‘R CMD build’.
 * checking top-level files ... OK
 * checking for left-over files ... OK
 * checking index information ... OK
-* checking package subdirectories ... OK
+* checking package subdirectories ... WARNING
+Found the following directories with names of check directories:
+  ./code-experimental/tests/FLa4a.Rcheck
+  ./code-experimental/tests/FLa4a_tmb.Rcheck
+Most likely, these were included erroneously.
+Found the following CITATION files in a non-standard place:
+  code-experimental/tests/FLa4a.Rcheck/FLa4a/CITATION
+  code-experimental/tests/FLa4a_tmb.Rcheck/FLa4a/CITATION
+Most likely ‘inst/CITATION’ should be used instead.
 * checking code files for non-ASCII characters ... OK
 * checking R files for syntax errors ... OK
 * checking whether the package can be loaded ... OK
@@ -137,6 +156,9 @@ Found the following Makefile(s) with CR or CRLF line endings:
   code-experimental/Makefile
   code-experimental/makeTemplate/Makefile
 Some Unix ‘make’ programs require LF line endings.
+* checking compilation flags in Makevars ... WARNING
+Non-portable flags in variable 'PKG_CXXFLAGS':
+  -O2
 * checking for GNU extensions in Makefiles ... WARNING
 Found the following file(s) containing GNU extensions:
   Makefile
@@ -145,6 +167,8 @@ Found the following file(s) containing GNU extensions:
 Portable Makefiles do not use GNU extensions such as +=, :=, $(shell),
 $(wildcard), ifeq ... endif, .NOTPARALLEL See section ‘Writing portable
 packages’ in the ‘Writing R Extensions’ manual.
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
 * checking include directives in Makefiles ... OK
 * checking compiled code ... WARNING
 File ‘FLa4a/libs/FLa4a.so’:
@@ -188,7 +212,7 @@ Error in file(paste0(wkdir, "/admodel.hes"), "rb") :
 Calls: getADMBHessian -> file
 In addition: Warning message:
 In file(paste0(wkdir, "/admodel.hes"), "rb") :
-  cannot open file '/tmp/RtmpJemnsg/file15ab65367651/admodel.hes': No such file or directory
+  cannot open file '/tmp/Rtmp5nhquS/file80447d85ff80/admodel.hes': No such file or directory
 Execution halted
 * checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... OK
@@ -205,4 +229,4 @@ Execution halted
   Running ‘wcsam.R’
 * checking PDF version of manual ... OK
 * DONE
-Status: 1 ERROR, 8 WARNINGs, 3 NOTEs
+Status: 1 ERROR, 11 WARNINGs, 3 NOTEs

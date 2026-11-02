@@ -67,7 +67,7 @@ Call:
 
 Time used:
  Pre-processing     Running a4a Post-processing           Total 
-     0.18037295      4.54516125      0.09179664      4.81733084 
+     0.17329001      4.75783157      0.09546113      5.02658272 
 
 Submodels:
 	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
@@ -84,7 +84,7 @@ Submodels:
  [8] "index"   "name"    "desc"    "range"  
 > clock(obj)
  Pre-processing     Running a4a Post-processing           Total 
-     0.18037295      4.54516125      0.09179664      4.81733084 
+     0.17329001      4.75783157      0.09546113      5.02658272 
 > fitSumm(obj)
              iters
                           1
@@ -191,7 +191,7 @@ Call:
 
 Time used:
  Pre-processing     Running a4a Post-processing           Total 
-     0.18846107      6.04617643      0.04082513      6.27546263 
+     0.10334969      4.56480598      0.03918242      4.70733809 
 
 Submodels:
 	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
@@ -208,7 +208,7 @@ Submodels:
  [8] "index"   "name"    "desc"    "range"  
 > clock(obj)
  Pre-processing     Running a4a Post-processing           Total 
-     0.18846107      6.04617643      0.04082513      6.27546263 
+     0.10334969      4.56480598      0.03918242      4.70733809 
 > fitSumm(obj)
              iters
                           1
@@ -308,7 +308,7 @@ Call:
 
 Time used:
  Pre-processing     Running a4a Post-processing           Total 
-     0.12778449      7.11955404      0.07131791      7.31865644 
+     0.12917042      4.57343197      0.04150462      4.74410701 
 
 Submodels:
 	 fmodel: ~te(age, year, k = c(6, 30), bs = "tp") + s(age, k = 6)
@@ -325,7 +325,7 @@ Submodels:
  [8] "index"   "name"    "desc"    "range"  
 > clock(obj)
  Pre-processing     Running a4a Post-processing           Total 
-     0.12778449      7.11955404      0.07131791      7.31865644 
+     0.12917042      4.57343197      0.04150462      4.74410701 
 > fitSumm(obj)
              iters
                           1
@@ -554,5 +554,5 @@ Error in file(paste0(wkdir, "/admodel.hes"), "rb") :
 Calls: getADMBHessian -> file
 In addition: Warning message:
 In file(paste0(wkdir, "/admodel.hes"), "rb") :
-  cannot open file '/tmp/RtmpJemnsg/file15ab65367651/admodel.hes': No such file or directory
+  cannot open file '/tmp/Rtmp5nhquS/file80447d85ff80/admodel.hes': No such file or directory
 Execution halted

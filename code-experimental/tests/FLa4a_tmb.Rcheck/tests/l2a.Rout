@@ -69,4 +69,4 @@ In .local(object, model, ...) :
 > 
 > proc.time()
    user  system elapsed 
-  1.471   0.109   1.570 
+  1.409   0.113   1.512 
