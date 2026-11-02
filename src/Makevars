@@ -1,12 +1,8 @@
 CXX_STD = CXX17
 
-ifndef NO_STRIP
-all: $(SHLIB) strip-shlib
-else
-all: $(SHLIB)
-endif
+all: $(SHLIB) strippedLib
 
-strip-shlib: $(SHLIB)
-	@if [ -n "$(STRIP_SHARED_LIB)" ]; then $(STRIP_SHARED_LIB) $(SHLIB); fi
+strippedLib: $(SHLIB)
+	@if test -n "$(STRIP_SHARED_LIB)"; then $(STRIP_SHARED_LIB) $(SHLIB); fi
 
-.PHONY: all strip-shlib
+.PHONY: strip-shlib
