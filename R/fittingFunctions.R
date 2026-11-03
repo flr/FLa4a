@@ -29,10 +29,9 @@ defaultFmod <- function(stock, dfm=c(0.5, 0.7)){
 	KA=ceiling(dfm[2] *dis$age)
 	if (KA >= 3) {
 		KA <- min(max(3, KA), 6)
-		KB <- min(max(3, KA), 10)
-	    fmodel <- formula(paste("~ te(age, year, k = c(", KA,",", KY,"), bs = 'tp') + s(age, k=", KB, ")"))
+	    fmodel <- formula(paste("~ s(age, k=", KA,", bs=\"cr\") + s(year, k=", KY,", bs=\"cr\") + ti(age, year, k = c(", KA,",", KY,"))"))
 	  } else {
-		fmodel <- formula(paste("~ age + s(year, k = ", KY,")"))
+		fmodel <- formula(paste("~ age + s(year, k = ", KY,", bs=\"cr\")"))
 	  }
 	fmodel
 }
@@ -47,7 +46,7 @@ defaultQmod <- function(indices, dfm=0.6){
 		} else if(x$age>1 & x$age<=3){
 			frm <- ~factor(age)
 		} else {
-			frm <- substitute(~s(age, k=KA), list(KA=min(ceiling(dfm * x$age), 6)))
+			frm <- substitute(~s(age, k=KA, bs="cr"), list(KA=min(ceiling(dfm * x$age), 6)))
 		}
 		as.formula(frm)
 	})
@@ -63,7 +62,7 @@ defaultN1mod <- function(stock){
   } else if(dis$age>1 & dis$age<=3){
 	frm <- ~factor(age)
   } else {
-	frm <- ~ s(age, k = 3)
+	frm <- ~ s(age, k = 3, bs="cr")
   }
   as.formula(frm)
 }
@@ -78,7 +77,7 @@ defaultVmod <- function(stock, indices){
   } else if(dis$age>1 & dis$age<=3){
 	frm <- ~factor(age)
   } else {
-	frm <- ~ s(age, k = 3)
+	frm <- ~ s(age, k = 3, bs="cr")
   }
   vmodel[[1]] <- frm
   vmodel
