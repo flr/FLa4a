@@ -46,7 +46,7 @@ defaultQmod <- function(indices, dfm=0.6){
 		} else if(x$age>1 & x$age<=3){
 			frm <- ~factor(age)
 		} else {
-			frm <- substitute(~s(age, k=KA, bs="cr"), list(KA=min(ceiling(dfm * x$age), 6)))
+			frm <- substitute(~s(age, k=KA), list(KA=min(ceiling(dfm * x$age), 6)))
 		}
 		as.formula(frm)
 	})
@@ -62,7 +62,7 @@ defaultN1mod <- function(stock){
   } else if(dis$age>1 & dis$age<=3){
 	frm <- ~factor(age)
   } else {
-	frm <- ~ s(age, k = 3, bs="cr")
+	frm <- ~ s(age, k = 3)
   }
   as.formula(frm)
 }
@@ -77,7 +77,7 @@ defaultVmod <- function(stock, indices){
   } else if(dis$age>1 & dis$age<=3){
 	frm <- ~factor(age)
   } else {
-	frm <- ~ s(age, k = 3, bs="cr")
+	frm <- ~ s(age, k = 3)
   }
   vmodel[[1]] <- frm
   vmodel
