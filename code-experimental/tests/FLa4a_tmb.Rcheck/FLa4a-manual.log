@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux) (preloaded format=pdflatex 2025.12.15)  28 OCT 2026 19:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux) (preloaded format=pdflatex 2025.12.15)  29 OCT 2026 15:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -348,7 +348,7 @@ File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count294
 \l__pdf_internal_box=\box58
 )
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -385,8 +385,8 @@ LaTeX Font Info:    ... okay on input line 8.
 \everyMPtoPDFconversion=\toks28
 )
 Package hyperref Info: Link coloring ON on input line 8.
- (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+ (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.out)
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -422,7 +422,7 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 4
 (/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.toc [1
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.toc [1
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
@@ -520,7 +520,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [60]
 [61] [62] [63] [64] [65] [66] [67] [68] [69]
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.ind [70]
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.ind [70]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 7.
@@ -569,7 +569,7 @@ Overfull \hbox (105.8567pt too wide) in paragraph at lines 476--478
 []\T1/zi4/m/it/10 mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
  []
 
-[74] [75] [76]) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+[74] [75] [76]) (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -583,7 +583,7 @@ Package rerunfilecheck Info: File `Rd2.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  11570 strings out of 474116
- 176102 string characters out of 5752735
+ 176115 string characters out of 5752735
  1944187 words of memory out of 5000000
  32781 multiletter control sequences out of 15000+600000
  592514 words of font info for 81 fonts, out of 8000000 for 9000

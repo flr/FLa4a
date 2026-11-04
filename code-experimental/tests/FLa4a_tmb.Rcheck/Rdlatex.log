@@ -141,7 +141,7 @@ Overfull \hbox (0.74408pt too wide) in paragraph at lines 3231--3231
 Underfull \vbox (badness 10000) has occurred while \output is active [59]
 [60] [61] [62] [63] [64] [65] [66] [67] [68]
 No file Rd2.ind.
-[69] (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+[69] (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
 
 Package rerunfilecheck Warning: File `Rd2.out' has changed.
 (rerunfilecheck)                Rerun to get outlines right
@@ -228,19 +228,19 @@ For additional information on amsmath, use the `?' option.
 Writing index file Rd2.idx
 (/usr/share/texmf/tex/latex/psnfss/t1ptm.fd)
 (/usr/share/texmf/tex/latex/l3backend/l3backend-pdftex.def)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
 (/usr/share/texmf/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+) (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.out)
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.out)
 (/usr/share/texmf/tex/latex/inconsolata/t1zi4.fd)
 (/usr/share/texmf/tex/latex/amsfonts/umsa.fd)
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd)
 (/usr/share/texmf/tex/latex/jknapltx/ursfs.fd)
 (/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/u
-pdmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}{/usr/share/texm
-f/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2])
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/
+updmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}{/usr/share/tex
+mf/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2])
 (/usr/share/texmf/tex/latex/inconsolata/ts1zi4.fd) [3{/usr/share/texmf/fonts/en
 c/dvips/inconsolata/i4-ts1.enc}] [4] [5] [6] [7] [8] [9] [10] [11] [12]
 [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
@@ -299,7 +299,7 @@ Overfull \hbox (0.74408pt too wide) in paragraph at lines 3231--3231
 [57] [58] [59]
 Underfull \vbox (badness 10000) has occurred while \output is active [60]
 [61] [62] [63] [64] [65] [66] [67] [68] [69]
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.ind [70]
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.ind [70]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 7.
@@ -328,7 +328,7 @@ Overfull \hbox (30.8567pt too wide) in paragraph at lines 472--474
 
 Overfull \hbox (105.8567pt too wide) in paragraph at lines 476--478
 []\T1/zi4/m/it/10 mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
-[74] [75] [76]) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+[74] [75] [76]) (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -418,19 +418,19 @@ For additional information on amsmath, use the `?' option.
 Writing index file Rd2.idx
 (/usr/share/texmf/tex/latex/psnfss/t1ptm.fd)
 (/usr/share/texmf/tex/latex/l3backend/l3backend-pdftex.def)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
 (/usr/share/texmf/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.out)
+) (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.out)
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.out)
 (/usr/share/texmf/tex/latex/inconsolata/t1zi4.fd)
 (/usr/share/texmf/tex/latex/amsfonts/umsa.fd)
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd)
 (/usr/share/texmf/tex/latex/jknapltx/ursfs.fd)
 (/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd)
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/u
-pdmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}{/usr/share/texm
-f/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2])
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/
+updmap/pdftex.map}{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}{/usr/share/tex
+mf/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2])
 (/usr/share/texmf/tex/latex/inconsolata/ts1zi4.fd) [3{/usr/share/texmf/fonts/en
 c/dvips/inconsolata/i4-ts1.enc}] [4] [5] [6] [7] [8] [9] [10] [11] [12]
 [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
@@ -489,7 +489,7 @@ Overfull \hbox (0.74408pt too wide) in paragraph at lines 3231--3231
 [57] [58] [59]
 Underfull \vbox (badness 10000) has occurred while \output is active [60]
 [61] [62] [63] [64] [65] [66] [67] [68] [69]
-(/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.ind [70]
+(/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.ind [70]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 7.
@@ -518,7 +518,7 @@ Overfull \hbox (30.8567pt too wide) in paragraph at lines 472--474
 
 Overfull \hbox (105.8567pt too wide) in paragraph at lines 476--478
 []\T1/zi4/m/it/10 mvrnorm,numeric,a4aM,missing,missing,missing,missing-method 
-[74] [75] [76]) (/tmp/Rtmp88jBE7/Rd2pdf1216fa79674/Rd2.aux)
+[74] [75] [76]) (/tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -532,4 +532,4 @@ Output written on Rd2.pdf (76 pages, 240219 bytes).
 Transcript written on Rd2.log.
 Saving output to ‘FLa4a-manual.pdf’ ...
 Done
-You may want to clean up by 'rm -Rf /tmp/Rtmp88jBE7/Rd2pdf1216fa79674'
+You may want to clean up by 'rm -Rf /tmp/RtmpG7OIQc/Rd2pdf7e5d45c994c0'

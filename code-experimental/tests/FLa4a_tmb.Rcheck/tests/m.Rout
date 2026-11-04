@@ -84,4 +84,4 @@ This is FLa4a 1.9.99-002. For overview type 'help(package="FLa4a")'
 > 
 > proc.time()
    user  system elapsed 
-  1.379   0.094   1.462 
+  1.366   0.090   1.448 
