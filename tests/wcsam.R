@@ -6,29 +6,22 @@ err <- 0.1
 nits <- 250
 
 fit <-  sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)))
-
 fit.sim <- simulate(fit, nits, 1234)
 
 idx.sim <- ple4.indices[1]
 index(idx.sim[[1]]) <- index(fit.sim)[[1]]
-stk.sim <- propagate(ple4, nits) + fit.sim 
+stk.sim <- ple4 + fit.sim
 
 fit2 <-  sca(stk.sim, idx.sim, qmodel=list(~s(age, k=4)), fit="MP")
 
 # are the simulated values unbiased
 stk.fit <- stock.n(fit)
-stk.sim <- stock.n(fit2)
-stk.rat <- iterMedians(stk.sim)/stk.fit
+stk.q <- apply(stock.n(fit2), c(1:5), quantile, probs=c(err/2, 1-err/2))
 f.fit <- harvest(fit)
-f.sim <- harvest(fit2)
-f.rat <- iterMedians(f.sim)/f.fit
+f.q <- apply(harvest(fit2), c(1:5), quantile, probs=c(err/2, 1-err/2))
 cth.fit <- catch.n(fit)
-cth.sim <- catch.n(fit2)
-cth.rat <- iterMedians(cth.sim)/cth.fit
+cth.q <- apply(catch.n(fit2), c(1:5), quantile, probs=c(err/2, 1-err/2))
 
-max(stk.rat)-min(stk.rat) < err
-max(f.rat)-min(f.rat) < err
-max(cth.rat)-min(cth.rat) < err
-
-
-
+mean(iter(stk.q, 1) < stk.fit & iter(stk.q,2) > stk.fit)==1
+mean(iter(f.q, 1) < f.fit & iter(f.q,2) > f.fit)==1
+mean(iter(cth.q, 1) < cth.fit & iter(cth.q,2) > cth.fit)==1
