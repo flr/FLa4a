@@ -21,4 +21,7 @@ inst/doc/*
 
 docs/manual/cache/*
 
+src/FLa4a.so
 src/FLa4a.o
+
+_*.*
