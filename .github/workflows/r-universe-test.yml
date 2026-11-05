@@ -1,0 +1,14 @@
+name: Test R-universe
+
+on:
+  push:
+    branches:
+      - tmb_translation
+  pull_request:
+
+jobs:
+  build:
+    name: R-universe testing
+    uses: r-universe-org/workflows/.github/workflows/build.yml@v3
+    with:
+      universe: iagomosqueira
