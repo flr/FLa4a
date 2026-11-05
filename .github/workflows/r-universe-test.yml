@@ -5,10 +5,12 @@ on:
     branches:
       - tmb_translation
   pull_request:
+    branches:
+      - tmb_translation
 
 jobs:
   build:
     name: R-universe testing
     uses: r-universe-org/workflows/.github/workflows/build.yml@v3
     with:
-      universe: iagomosqueira
+      universe: flr
