@@ -29,9 +29,11 @@ defaultFmod <- function(stock, dfm=c(0.5, 0.7)){
 	KA=ceiling(dfm[2] *dis$age)
 	if (KA >= 3) {
 		KA <- min(max(3, KA), 6)
-	    fmodel <- formula(paste("~ s(age, k=", KA,", bs=\"cr\") + s(year, k=", KY,", bs=\"cr\") + ti(age, year, k = c(", KA,",", KY,"))"))
+#	    fmodel <- formula(paste("~ s(age, k=", KA,", bs=\"cr\") + s(year, k=", KY,", bs=\"cr\") + ti(age, year, k = c(", KA,",", KY,"))"))
+	    fmodel <- formula(paste("~ s(age, k=", KA,") + s(year, k=", KY,") + ti(age, year, k = c(", KA,",", KY,"))"))
 	  } else {
-		fmodel <- formula(paste("~ age + s(year, k = ", KY,", bs=\"cr\")"))
+#		fmodel <- formula(paste("~ age + s(year, k = ", KY,", bs=\"cr\")"))
+		fmodel <- formula(paste("~ age + s(year, k = ", KY,")"))
 	  }
 	fmodel
 }
