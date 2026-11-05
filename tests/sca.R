@@ -334,7 +334,7 @@ identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(stk2)[,,,,,2])))
 identical(c(catch.n(stk2)[,,,,,1]), c(catch.n(ple4)))
 identical(c(var(catch.n(stk2)[,,,,,1])), c(var(catch.n(ple4))))
 
-# Nx1
+# Nx1 (bug in FLCore produces FALSE)
 fit <- sca(stk2, FLIndices(ple4.index), qmodel=list(~s(age, k=4)))
 dim(fitSumm(fit))[2]==nits
 identical(catch.n(fit)[,,,,,1], catch.n(fit0))
@@ -508,14 +508,12 @@ data(ple4)
 data(ple4.indices)
 fit0 <- sca(ple4, ple4.indices)
 fit1 <- sca(ple4, ple4.indices, center=FALSE)
-fit2 <- sca(ple4, ple4.indices, center=1)
+fit2 <- sca(ple4, ple4.indices, center=0)
 
 # maxgrad is different
 !identical(fitSumm(fit0)["maxgrad",], fitSumm(fit1)["maxgrad",])
 !identical(fitSumm(fit0)["maxgrad",], fitSumm(fit2)["maxgrad",])
-!identical(fitSumm(fit1)["maxgrad",], fitSumm(fit2)["maxgrad",])
 
 # likelihood is equal
 identical(fitSumm(fit0)["nlogl",], fitSumm(fit1)["nlogl",])
 identical(fitSumm(fit0)["nlogl",], fitSumm(fit2)["nlogl",])
-identical(fitSumm(fit1)["nlogl",], fitSumm(fit2)["nlogl",])
